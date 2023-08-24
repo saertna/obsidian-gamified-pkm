@@ -133,7 +133,7 @@ export interface LevelData {
   export function statusPointsForLevel(targetLevel: number): number {
     let statusPoints = 0;
     for (const data of levelData) {
-      if (targetLevel <= data.level && statusPoints == 0) {
+      if (targetLevel == data.level && statusPoints == 0) {
         statusPoints = data.points;
       } 
     }
