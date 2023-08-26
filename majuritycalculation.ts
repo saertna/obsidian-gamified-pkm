@@ -393,14 +393,14 @@ export function count_inlinks_single(file_path: string, vault_path: string): num
 
 
 export function count_inlinks(file: TFile): number {
+    const { app: { metadataCache: { resolvedLinks } } } = this;
+    const { path } = file;
 
-	const { app: { metadataCache: { resolvedLinks } } } = this, { path } = file
-	const sumInlinks = Object.values(resolvedLinks)
-		.map(val => val[path] ?? 0)
-		.reduce((left, right) => left + right, 0)
-	// console.log(`sumInlinks: ${sumInlinks}`)
-	
-	return sumInlinks;
+    const sumInlinks = Object.values(resolvedLinks)
+        .map((val: { [key: string]: number }) => val[path] ?? 0)
+        .reduce((left, right) => left + right, 0);
+
+    return sumInlinks;
 }
 
 
