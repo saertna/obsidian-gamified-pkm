@@ -70,26 +70,44 @@ export default class gamification extends Plugin {
 		
 			// get file content length
 			const activeView = this.app.workspace.getActiveViewOfType(MarkdownView);
-			const fileContents = activeView.editor.getValue();
-			const fileName = activeView.file.basename;
-			const fileLength : number = countCharactersInActiveFile(fileContents, fileName);
-			const rateFileLength : number = rateNoteLength(fileLength);
-			
-			// get progressive summarization efficiency
-			const {charCount, highlightedCount, boldCount} = countLayer2AndLayer3Characters(fileContents, fileName, this.settings.progressiveSumLayer2, this.settings.progressiveSumLayer3);
-			const rateProgressiveSum : number = rateProgressiveSummarization(charCount, highlightedCount, boldCount);
+			const fileContents = activeView?.editor.getValue();
+			const fileName = activeView?.file.basename;
 
-			// get file name lenght
-			const fileNameRate : number = rateLengthFilename(file.name);
-			
-			// get inlink count
-			const inlinkNumber = count_inlinks(file);
-			const inlinkClass : number = rateInlinks(inlinkNumber)//, numAllFiles)
-			
-		
-			
+			let rateFileLength: number = 0;
+			let fileLength: number = 0;
+			let rateProgressiveSum: number = 0;
+
+			if (fileContents !== undefined && fileName !== undefined) {
+				fileLength = countCharactersInActiveFile(fileContents, fileName);
+				rateFileLength = rateNoteLength(fileLength);
+
+				// Check if fileContents and fileName are not null
+				if (fileContents !== null && fileName !== null) {
+					const { charCount, highlightedCount, boldCount } = countLayer2AndLayer3Characters(fileContents, fileName, this.settings.progressiveSumLayer2, this.settings.progressiveSumLayer3);
+					rateProgressiveSum = rateProgressiveSummarization(charCount, highlightedCount, boldCount);
+				}
+			}
+
+			let fileNameRate: number = 0;
+			//get inlink count
+			let inlinkNumber = 0;
+			let inlinkClass : number = 0;
 			// get outlink count
-			const rateOut : number = rateOutlinks(getNumberOfOutlinks(file));
+			let rateOut : number = 0;
+			
+			if (file !== null) {
+				// get file name lenght
+				fileNameRate = rateLengthFilename(file.name ?? '');
+				// get inlink count
+				inlinkNumber = count_inlinks(file);
+				inlinkClass = rateInlinks(inlinkNumber)//, numAllFiles)
+				// get outlink count
+				rateOut = rateOutlinks(getNumberOfOutlinks(file));
+			} else {
+				console.error('file was not found to calculate majurities. Make sure one is active.')
+			}
+			
+						
 
 			const noteMajurity = rateLevelOfMaturity(rateFileLength, fileNameRate, inlinkClass, rateOut, rateProgressiveSum);
 
