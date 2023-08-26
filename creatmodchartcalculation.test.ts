@@ -4,6 +4,9 @@ import { MockProxy, mock, mockDeep, DeepMockProxy } from 'jest-mock-extended';
 //import { App, TFile } from 'obsidian';
 import { App } from 'obsidian';
 
+
+
+/*
 export type Vault = {
     name: string;
     path: string;
@@ -37,9 +40,6 @@ export type Vault = {
     tryTrigger: string;
   };
 
-  
-
-
 
 export type TFile = {
     stat: {
@@ -54,7 +54,7 @@ export type TFile = {
     name: string;
     parent: null;
   };
-
+*/
 
 /*
 test('test', () => {
@@ -67,7 +67,7 @@ test('test', () => {
   expect(labTest1()).toEqual(fakeGetFilesResponse);
 });
 */
-
+/*
 export type DataAdapter = {
   basePath: string;
   files: null;
@@ -90,7 +90,7 @@ export type DataAdapter = {
   rename: string
   copy: string
 }
-
+*/
 
 /*
 const fakeGetFilesResponse: TFile[] = [
@@ -156,7 +156,7 @@ const fakeGetFilesResponse: TFile[] = [
   },
 ];
 */
-
+/*
 const files : TFile[] = [
   {
     stat: {
@@ -244,4 +244,40 @@ describe('findEarliestDateFile Test', () => {
     expect(findEarliestDateFile(files)).toEqual(files[0]);
   });
 });
+*/
 
+describe('monthsBetween', () => {
+  it('should return how many month are between March 22 and July 23', () => {
+  const actual = monthsBetween(new Date(2022,3), new Date(2023,6));
+  const expected = 16
+  expect(actual).toStrictEqual(expected);
+  });
+  
+  it('should return how many month are between March 22 and June 22', () => {
+    const actual = monthsBetween(new Date(2022,3), new Date(2022,6));
+    const expected = 4
+    expect(actual).toStrictEqual(expected);
+  });
+  
+  it('should return how many month are between March 22 and January 22', () => {
+    const actual = monthsBetween(new Date(2022,3), new Date(2022,1));
+    const expected = -1
+    expect(actual).toStrictEqual(expected);
+    });
+});
+
+
+describe('createChartFormat', () => {
+  it('should return how many month are between March 22 and July 23', () => {
+  const actual = createChartFormat("Jan 22, Feb 22, Mar 22, April 22","0, 1, 2, 3","0, 1, 2, 3",0);
+  const expected = '```chart\ntype: bar\nlabels: [Jan 22, Feb 22, Mar 22, April 22]\nseries:\n  - title: created\n    data: [0, 1, 2, 3]\n  - title: modified\n    data: [0, 1, 2, 3]\ntension: 0.2\nwidth: 80 %\nlabelColors: false\nfill: false\nbeginAtZero: false\nbestFit: false\nbestFitTitle: undefined\nbestFitNumber: 0\nstacked: true\nyTitle: \"Number of Notes\"\nxTitle: \"Months\"\nxMin: 0\n```'
+  expect(actual).toStrictEqual(expected);
+  });
+  
+  it('should return how many month are between March 22 and June 22', () => {
+    const actual = createChartFormat("Jan 22, Feb 22, Mar 22, April 22","0, 1, 2, 3","0, 1, 2, 3",2);
+    const expected = '```chart\ntype: bar\nlabels: [Jan 22, Feb 22, Mar 22, April 22]\nseries:\n  - title: created\n    data: [0, 1, 2, 3]\n  - title: modified\n    data: [0, 1, 2, 3]\ntension: 0.2\nwidth: 80 %\nlabelColors: false\nfill: false\nbeginAtZero: false\nbestFit: false\nbestFitTitle: undefined\nbestFitNumber: 0\nstacked: true\nyTitle: \"Number of Notes\"\nxTitle: \"Months\"\nxMin: 2\n```'
+    expect(actual).toBe(expected);
+  });
+  
+});
