@@ -357,6 +357,8 @@ export default class gamification extends Plugin {
 					setTimeout(async () => {
 						// Code that you want to execute after the delay
 						const initBadge : Badge = await getBadgeForInitLevel(this.settings.statusLevel);
+						new Notice(`You've earned the "${initBadge.name}" badge. ${initBadge.description}`)
+      					console.log(`You earned ${initBadge.name} - ${initBadge.description}`)
 						await this.giveInitBadgeInProfile(this.settings.avatarPageName, initBadge);
 						await this.removeBadgesWhenInitLevelHigher(this.settings.avatarPageName ,this.settings.statusLevel)
 						await this.boosterForInit()
@@ -1097,6 +1099,8 @@ export default class gamification extends Plugin {
 		newLevel.then((result: boolean)=> {
 			if(result){
 				const badge : Badge = getBadgeForLevel(this.settings.statusLevel, false)
+				new Notice(`You've earned the "${badge.name}" badge. ${badge.description}`)
+				console.log(`You've earned the "${badge.name}" badge. ${badge.description}`)
 				//console.log(`badge for level ${this.settings.statusLevel} is ${badge.name} - ${badge.level}`)
 				this.giveBadgeInProfile(this.settings.avatarPageName, badge)
 				this.settings.badgeBoosterState = false;
