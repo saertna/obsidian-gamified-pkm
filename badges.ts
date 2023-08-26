@@ -56,8 +56,9 @@ export function getBadgeForLevel(level: number, inform: boolean): Badge {
 
 
   export  function getBadgeForInitLevel(level: number): Badge {
-    const badgeLevels: number[] = [3, 7, 15, 23, 30, 35, 42, 50, 60, 75, 82, 90, 100];
+    const badgeLevels: number[] = [0, 3, 7, 15, 23, 30, 35, 42, 50, 60, 75, 82, 90, 100];
     const badgeNamesInit: Badge[] = [
+      { name: "Lore Seeker Initiate", description: "Welcome to the journey of knowledge! As a 'Lore Seeker Initiate,' you've taken your first steps into the world of organized wisdom. Your quest has just begun, and with each note you make, you lay the foundation for a future rich with insights and understanding. Your journey starts here, and the path ahead is filled with potential and discovery.", level: "level 1" },
       { name: "Lore Apprentice", description: "You've hit the ground running with your existing knowledge treasures! You're already an 'Lore Apprentice,' armed with a wealth of wisdom and ready to shape it further.", level: "level 3" },
       { name: "Savvy Scholar", description: "Your existing notes have given you a head start! You're now a 'Savvy Scholar,' confidently diving into the sea of information with a treasure trove of insights." , level: "level 7" },
       { name: "Sage's Foundation", description: "Building upon your pre-existing notes, you're establishing the 'Sage's Foundation' for an even grander edifice of knowledge. Your groundwork is impressive!" , level: "level 15" },
