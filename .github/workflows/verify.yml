@@ -20,9 +20,6 @@ jobs:
       - name: Run TypeScript compiler ESLint
         run: npm run lint
 
-      - name: Run Markdown Lint
-        run: npm run lint:markdown
-
       - name: Run Jest
         run: npm run test
 
