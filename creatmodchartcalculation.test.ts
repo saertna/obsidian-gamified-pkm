@@ -252,6 +252,12 @@ describe('monthsBetween', () => {
   const expected = 16
   expect(actual).toStrictEqual(expected);
   });
+
+  it('should return how many month are between March 22 and July 23', () => {
+    const actual = monthsBetween(new Date(2021,3), new Date(2023,6));
+    const expected = 28
+    expect(actual).toStrictEqual(expected);
+    });
   
   it('should return how many month are between March 22 and June 22', () => {
     const actual = monthsBetween(new Date(2022,3), new Date(2022,6));
