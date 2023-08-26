@@ -29,7 +29,7 @@ export default class gamification extends Plugin {
 		
 		const item = this.addStatusBarItem();
 	    let statusbarGamification = item.createEl("span", { text: "" });
-		this.updateStatusBar(statusbarGamification)
+		await this.updateStatusBar(statusbarGamification)
 
 		
 		this.addRibbonIcon("accessibility", "change text formatting", async () => {
@@ -37,8 +37,8 @@ export default class gamification extends Plugin {
 			// const pointsReceived = 500;
 			// new ModalInformationbox(this.app, `Finallized gamification initialistation!\nCongratulation, you earned ${pointsReceived} Points!\n\nCheck the Profile Page: \"${this.settings.avatarPageName}.md\".`).open();
 
-			// const newLevel = this.giveStatusPoints(this.settings.avatarPageName, 300)
-			// this.decisionIfBadge(newLevel,false)
+			const newLevel = this.giveStatusPoints(this.settings.avatarPageName, 300)
+			// this.decisionIfBadge(newLevel)
 
 			// const nextBadgeLevel = await this.whichLevelNextBadge(this.settings.statusLevel)
 			// console.log(`Nächste Badge mit Level ${nextBadgeLevel}`)
@@ -53,7 +53,7 @@ export default class gamification extends Plugin {
 
 			// change text in status bar
 			
-			this.updateStatusBar(statusbarGamification)
+			// this.updateStatusBar(statusbarGamification)
 			//statusbarGamification.setText("Hallo")
 
 		});
@@ -209,7 +209,7 @@ export default class gamification extends Plugin {
 			console.log(`note-maturity: ${noteMajurity}`);
 
 			new Notice('note majurity updated!');
-			this.updateStatusBar(statusbarGamification)
+			await this.updateStatusBar(statusbarGamification)
 			
 		});
 
@@ -360,6 +360,7 @@ export default class gamification extends Plugin {
 						await this.giveInitBadgeInProfile(this.settings.avatarPageName, initBadge);
 						await this.removeBadgesWhenInitLevelHigher(this.settings.avatarPageName ,this.settings.statusLevel)
 						await this.boosterForInit()
+						await this.updateStatusBar(statusbarGamification)
 					}, 2000); // 2000 milliseconds = 2 seconds
 
 
@@ -368,7 +369,7 @@ export default class gamification extends Plugin {
 					// await this.removeBadgesWhenInitLevelHigher(this.settings.avatarPageName ,this.settings.statusLevel)
 					// await this.boosterForInit()
 				
-					this.updateStatusBar(statusbarGamification)
+					
 					new ModalInformationbox(this.app, `Finallized gamification initialistation!\nCongratulation, you earned ${pointsReceived} Points!\n\nCheck the Profile Page: \"${this.settings.avatarPageName}.md\"\n\nYou received an initialisation Booster aktiv for your first level ups. Game on!`).open();
 					
 				},
@@ -406,7 +407,7 @@ export default class gamification extends Plugin {
 				this.settings.badgeBoosterFactor = 1
 				await this.saveData(this.settings);
 				this.giveStatusPoints(this.settings.avatarPageName,0)
-				this.updateStatusBar(statusbarGamification)
+				await this.updateStatusBar(statusbarGamification)
 				new ModalInformationbox(this.app, `Game is now reseted. Please delete the Profile Page: \"${this.settings.avatarPageName}.md\" manually.`).open();
 			},
 			
@@ -426,6 +427,7 @@ export default class gamification extends Plugin {
 			},
 		});
 
+		/*
 		// command: rate filename
 		this.addCommand({
 			id: 'rate-filename-length',
@@ -454,19 +456,9 @@ export default class gamification extends Plugin {
 						}
 					  }
 				}
-				this.updateStatusBar(statusbarGamification)
+				await this.updateStatusBar(statusbarGamification)
 			},
 		});
-
-		// command: change progressive summarzation symbols
-		this.addCommand({
-			id: 'change-progressive-formatting',
-			name: 'toggle progressive summarization formatting',
-			callback: async () => {
-				replaceFormatStrings(this.settings.progressiveSumLayer2, this.settings.progressiveSumLayer3);
-			},
-		});
-
 
 		// command: rate outlinks
 		this.addCommand({
@@ -496,7 +488,7 @@ export default class gamification extends Plugin {
 						}
 					  }
 				}
-				this.updateStatusBar(statusbarGamification)
+				await this.updateStatusBar(statusbarGamification)
 			},
 		});
 
@@ -532,7 +524,7 @@ export default class gamification extends Plugin {
 					  console.error(errorMessage);
 					}
 				  }
-				  this.updateStatusBar(statusbarGamification)
+				  await this.updateStatusBar(statusbarGamification)
 			},
 		});
 
@@ -569,7 +561,7 @@ export default class gamification extends Plugin {
 					  console.error(errorMessage);
 					}
 				}
-				this.updateStatusBar(statusbarGamification)
+				await this.updateStatusBar(statusbarGamification)
 			},
 		});
 
@@ -605,10 +597,10 @@ export default class gamification extends Plugin {
 					  console.error(errorMessage);
 					}
 				}
-				this.updateStatusBar(statusbarGamification)
+				await this.updateStatusBar(statusbarGamification)
 			},
 		});
-
+		*/
 		
 		// command: rate note maturity
 		this.addCommand({
@@ -745,19 +737,27 @@ export default class gamification extends Plugin {
 					  console.error(errorMessage);
 					}
 				  }
-
-				//console.log(`title-class: ${fileNameRate}`);
-				//console.log(`note-length-class: ${rateFileLength}`);
-				//console.log(`inlink-class: ${inlinkClass}`);
-				//console.log(`outlink-class: ${rateOut}`);
-				//console.log(`rateProgressiveSum: ${rateProgressiveSum}`);
-				//console.log(`note-maturity: ${noteMajurity}`);
 				new Notice('note majurity updated!');
-				this.updateStatusBar(statusbarGamification)
+				// Inside your function where you want to introduce a delay
+				setTimeout(async () => {
+					// Code that you want to execute after the delay
+					await this.updateStatusBar(statusbarGamification)
+				}, 1000); // 1000 milliseconds = 1 seconds
 				
+				//await this.updateStatusBar(statusbarGamification)
+
 			},
 		});
+		
 
+		// command: change progressive summarzation symbols
+		this.addCommand({
+			id: 'change-progressive-formatting',
+			name: 'toggle progressive summarization formatting',
+			callback: async () => {
+				replaceFormatStrings(this.settings.progressiveSumLayer2, this.settings.progressiveSumLayer3);
+			},
+		});
 
 		
 		
@@ -813,7 +813,7 @@ export default class gamification extends Plugin {
 		const existingFile = app.vault.getAbstractFileByPath(`${avatarPageName}.md`);
 		if (existingFile == null) {
 			console.log(`File ${avatarPageName}.md does not exist`);
-			return 0;
+			return false;
 			}
 		const file = existingFile as TFile;
 		
