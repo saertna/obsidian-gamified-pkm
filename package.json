@@ -9,7 +9,8 @@
 		"version": "node version-bump.mjs && git add manifest.json versions.json",
 		"lint:js": "eslint *.js",
 		"lint": "npm run lint:js",
-		"lint:markdown": "markdownlint \"**/*.md\""
+		"lint:markdown": "markdownlint \"**/*.md\"",
+		"test": "jest"
 	},
 	"keywords": [],
 	"author": "Andreas Trebing",
