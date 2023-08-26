@@ -929,13 +929,31 @@ export default class gamification extends Plugin {
 		// count how many files in each month
 		const creationDates = getCreationDates(files)
 		for (let i = 0; i < creationDates.length; i++){
-			fileDateMonthMap.set(format(creationDates[i], 'M.yyyy'),fileDateMonthMap.get(format(creationDates[i], 'M.yyyy'))+1)
+			//fileDateMonthMap.set(format(creationDates[i], 'M.yyyy'),fileDateMonthMap.get(format(creationDates[i], 'M.yyyy'))+1)
+			const formattedDate = format(creationDates[i], 'M.yyyy');
+			const currentCount = fileDateMonthMap.get(formattedDate);
+
+			if (currentCount !== undefined) {
+				fileDateMonthMap.set(formattedDate, currentCount + 1);
+			} else {
+				// If the key doesn't exist in the map, initialize it with a count of 1
+				fileDateMonthMap.set(formattedDate, 1);
+			}
 		}
-	
+		
 		// count how many mod files in each month
 		const modificationDates = getModificationDates(files)
 		for (let i = 0; i < modificationDates.length; i++){
-			fileDateMonthMapMod.set(format(modificationDates[i], 'M.yyyy'),fileDateMonthMapMod.get(format(modificationDates[i], 'M.yyyy'))+1)
+			//fileDateMonthMapMod.set(format(modificationDates[i], 'M.yyyy'),fileDateMonthMapMod.get(format(modificationDates[i], 'M.yyyy'))+1)
+			const formattedDate = format(creationDates[i], 'M.yyyy');
+			const currentCount = fileDateMonthMapMod.get(formattedDate);
+
+			if (currentCount !== undefined) {
+				fileDateMonthMapMod.set(formattedDate, currentCount + 1);
+			} else {
+				// If the key doesn't exist in the map, initialize it with a count of 1
+				fileDateMonthMapMod.set(formattedDate, 1);
+			}
 		}
 	
 	
