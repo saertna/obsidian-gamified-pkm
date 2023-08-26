@@ -63,170 +63,7 @@ export default class gamification extends Plugin {
 
 		this.addRibbonIcon("sprout", "Calculate Note Maturity", async () => {
 			//const file: TFile | null = this.app.workspace.getActiveFile();
-			const file: TFile | null= this.app.workspace.getActiveFile();
-			if (file == null) {
-				console.error('got no file, propably none is active')
-			}
-		
-			// get file content length
-			const activeView = this.app.workspace.getActiveViewOfType(MarkdownView);
-			const fileContents = activeView?.editor.getValue();
-			const fileName = activeView?.file.basename;
-
-			let rateFileLength: number = 0;
-			let fileLength: number = 0;
-			let rateProgressiveSum: number = 0;
-
-			if (fileContents !== undefined && fileName !== undefined) {
-				fileLength = countCharactersInActiveFile(fileContents, fileName);
-				rateFileLength = rateNoteLength(fileLength);
-
-				// Check if fileContents and fileName are not null
-				if (fileContents !== null && fileName !== null) {
-					const { charCount, highlightedCount, boldCount } = countLayer2AndLayer3Characters(fileContents, fileName, this.settings.progressiveSumLayer2, this.settings.progressiveSumLayer3);
-					rateProgressiveSum = rateProgressiveSummarization(charCount, highlightedCount, boldCount);
-				}
-			}
-
-			let fileNameRate: number = 0;
-			//get inlink count
-			let inlinkNumber = 0;
-			let inlinkClass : number = 0;
-			// get outlink count
-			let rateOut : number = 0;
-			
-			if (file !== null) {
-				// get file name lenght
-				fileNameRate = rateLengthFilename(file.name ?? '');
-				// get inlink count
-				inlinkNumber = count_inlinks(file);
-				inlinkClass = rateInlinks(inlinkNumber)//, numAllFiles)
-				// get outlink count
-				rateOut = rateOutlinks(getNumberOfOutlinks(file));
-			
-			
-						
-
-				const noteMajurity = rateLevelOfMaturity(rateFileLength, fileNameRate, inlinkClass, rateOut, rateProgressiveSum);
-
-				
-				
-				try {
-					await this.app.fileManager.processFrontMatter(file, (frontmatter) => {
-						if (frontmatter) {
-						// console.log('current metadata: ', frontmatter);
-						
-						// Status Points
-						const pointsNoteMajurity = 100;
-						const pointsMajurity = 10;
-						let pointsReceived = 0; // to have one message at the end how many points received
-						//console.log(`rate direction: ${rateDirectionForStatusPoints(frontmatter['note-maturity'], noteMajurity)}`)
-						if (rateDirectionForStatusPoints(frontmatter['note-maturity'], noteMajurity) >= 1){
-							//new Notice(`${pointsNoteMajurity*rateDirectionForStatusPoints(frontmatter['note-maturity'], noteMajurity)} Points received`)
-							pointsReceived += pointsNoteMajurity*rateDirectionForStatusPoints(frontmatter['note-maturity'], noteMajurity)
-							const newLevel = this.giveStatusPoints(this.settings.avatarPageName,pointsNoteMajurity*rateDirectionForStatusPoints("frontmatter['note-maturity']", noteMajurity))
-							this.decisionIfBadge(newLevel)
-
-						} else if ('note-maturity' in frontmatter == false){
-							//new Notice(`${pointsNoteMajurity*rateDirectionForStatusPoints("0", noteMajurity)} Points received`)
-							pointsReceived += pointsNoteMajurity*rateDirectionForStatusPoints("0", noteMajurity)
-							const newLevel = this.giveStatusPoints(this.settings.avatarPageName,pointsNoteMajurity*rateDirectionForStatusPoints("0", noteMajurity))
-							this.decisionIfBadge(newLevel)
-						}
-
-						if (rateDirectionForStatusPoints(frontmatter['title-class'], fileNameRate) >= 1 && 'title-class' in frontmatter){
-							//new Notice(`${pointsMajurity * rateDirectionForStatusPoints(frontmatter['title-class'], fileNameRate)} Points received`)
-							pointsReceived += pointsMajurity*rateDirectionForStatusPoints(frontmatter['title-class'], fileNameRate)
-							const newLevel = this.giveStatusPoints(this.settings.avatarPageName,pointsMajurity * rateDirectionForStatusPoints(frontmatter['title-class'], fileNameRate))
-							this.decisionIfBadge(newLevel)
-						} else if ('title-class' in frontmatter == false){
-							pointsReceived += pointsMajurity*rateDirectionForStatusPoints("0", fileNameRate)
-							const newLevel = this.giveStatusPoints(this.settings.avatarPageName,pointsMajurity*rateDirectionForStatusPoints("0", fileNameRate))
-							this.decisionIfBadge(newLevel)
-						}
-
-						if (rateDirectionForStatusPoints(frontmatter['note-length-class'], rateFileLength) >= 1){
-							//new Notice(`${pointsMajurity * rateDirectionForStatusPoints(frontmatter['note-length-class'], rateFileLength)} Points received`)
-							pointsReceived += pointsMajurity*rateDirectionForStatusPoints(frontmatter['note-length-class'], rateFileLength)
-							const newLevel = this.giveStatusPoints(this.settings.avatarPageName,pointsMajurity * rateDirectionForStatusPoints(frontmatter['note-length-class'], rateFileLength))
-							this.decisionIfBadge(newLevel)
-						}else if ('note-length-class' in frontmatter == false){
-							pointsReceived += pointsMajurity*rateDirectionForStatusPoints("0", rateFileLength)
-							const newLevel = this.giveStatusPoints(this.settings.avatarPageName,pointsMajurity*rateDirectionForStatusPoints("0", rateFileLength))
-							this.decisionIfBadge(newLevel)
-						}
-
-						if (rateDirectionForStatusPoints(frontmatter['inlink-class'], inlinkClass) >= 1){
-							//new Notice(`${pointsMajurity * rateDirectionForStatusPoints(frontmatter['inlink-class'], inlinkClass)} Points received`)
-							pointsReceived += pointsMajurity*rateDirectionForStatusPoints(frontmatter['inlink-class'], inlinkClass)
-							const newLevel = this.giveStatusPoints(this.settings.avatarPageName,pointsMajurity * rateDirectionForStatusPoints(frontmatter['inlink-class'], inlinkClass))
-							this.decisionIfBadge(newLevel)
-						}else if ('inlink-class' in frontmatter == false){
-							pointsReceived += pointsMajurity*rateDirectionForStatusPoints("0", inlinkClass)
-							const newLevel = this.giveStatusPoints(this.settings.avatarPageName,pointsMajurity*rateDirectionForStatusPoints("0", inlinkClass))
-							this.decisionIfBadge(newLevel)
-						}
-
-						if (rateDirectionForStatusPoints(frontmatter['outlink-class'], rateOut) >= 1){
-							//new Notice(`${pointsMajurity * rateDirectionForStatusPoints(frontmatter['outlink-class'], rateOut)} Points received`)
-							pointsReceived += pointsMajurity*rateDirectionForStatusPoints(frontmatter['outlink-class'], rateOut)
-							const newLevel = this.giveStatusPoints(this.settings.avatarPageName,pointsMajurity * rateDirectionForStatusPoints(frontmatter['outlink-class'], rateOut))
-							this.decisionIfBadge(newLevel)
-						}else if ('outlink-class' in frontmatter == false){
-							pointsReceived += pointsMajurity*rateDirectionForStatusPoints("0", rateOut)
-							const newLevel = this.giveStatusPoints(this.settings.avatarPageName,pointsMajurity*rateDirectionForStatusPoints("0", rateOut))
-							this.decisionIfBadge(newLevel)
-						}
-
-						if (rateDirectionForStatusPoints(frontmatter['progressive-sumarization-maturity'], rateProgressiveSum) >= 1){
-							//new Notice(`${pointsMajurity * rateDirectionForStatusPoints(frontmatter['progressive-sumarization-maturity'], rateProgressiveSum)} Points received`)
-							pointsReceived += pointsMajurity*rateDirectionForStatusPoints(frontmatter['progressive-sumarization-maturity'], rateProgressiveSum)
-							const newLevel = this.giveStatusPoints(this.settings.avatarPageName,pointsMajurity * rateDirectionForStatusPoints(frontmatter['progressive-sumarization-maturity'], rateProgressiveSum))
-							this.decisionIfBadge(newLevel)
-						}else if ('progressive-sumarization-maturity' in frontmatter == false){
-							pointsReceived += pointsMajurity*rateDirectionForStatusPoints(frontmatter['progressive-sumarization-maturity'], rateProgressiveSum)
-							const newLevel = this.giveStatusPoints(this.settings.avatarPageName,pointsMajurity*rateDirectionForStatusPoints("0", rateProgressiveSum))
-							this.decisionIfBadge(newLevel)
-						}
-
-						if (pointsReceived > 0){
-							new Notice(`${pointsReceived * this.settings.badgeBoosterFactor} Points received`)
-							console.log(`${pointsReceived} Points received`)
-						}
-						
-						frontmatter['title-class'] = rateDirection(frontmatter['title-class'], fileNameRate)
-						frontmatter['note-length-class'] = rateDirection(frontmatter['note-length-class'], rateFileLength)
-						frontmatter['inlink-class'] = rateDirection(frontmatter['inlink-class'], inlinkClass)
-						frontmatter['outlink-class'] = rateDirection(frontmatter['outlink-class'], rateOut)
-						frontmatter['progressive-sumarization-maturity'] = rateDirection(frontmatter['progressive-sumarization-maturity'], rateProgressiveSum)
-						frontmatter['note-maturity'] = rateDirection(frontmatter['note-maturity'], noteMajurity)
-
-					
-					}
-				}
-
-					);	
-				} catch (e) {
-					if (e?.name === 'YAMLParseError') {
-					const errorMessage = `Update majuritys failed Malformed frontamtter on this file : ${file.path} ${e.message}`;
-					new Notice(errorMessage, 4000);
-					console.error(errorMessage);
-					}
-				}
-				
-
-				console.log(`title-class: ${fileNameRate}`);
-				console.log(`note-length-class: ${rateFileLength}`);
-				console.log(`inlink-class: ${inlinkClass}`);
-				console.log(`outlink-class: ${rateOut}`);
-				console.log(`rateProgressiveSum: ${rateProgressiveSum}`);
-				console.log(`note-maturity: ${noteMajurity}`);
-
-				new Notice('note majurity updated!');
-				await this.updateStatusBar(statusbarGamification)
-			} else {
-				console.error('file was not found to calculate majurities. Make sure one is active.')
-			}
+			this.calculateNoteMajurity(statusbarGamification);
 		});
 
 
@@ -625,38 +462,84 @@ export default class gamification extends Plugin {
 			id: 'rate-note-maturity',
 			name: 'Rate note majurity',
 			callback: async () => {
-				// support values for all
-				const file: TFile | null = this.app.workspace.getActiveFile();
+				this.calculateNoteMajurity(statusbarGamification);
+			},
+		});
+		
 
-				// get file content length
-				const activeView = this.app.workspace.getActiveViewOfType(MarkdownView);
-				const fileContents = activeView.editor.getValue();
-				const fileName = activeView.file.basename;
-				const fileLength : number= countCharactersInActiveFile(fileContents, fileName);
-				const rateFileLength : number = rateNoteLength(fileLength);
+		// command: change progressive summarzation symbols
+		this.addCommand({
+			id: 'change-progressive-formatting',
+			name: 'toggle progressive summarization formatting',
+			callback: async () => {
+				replaceFormatStrings(this.settings.progressiveSumLayer2, this.settings.progressiveSumLayer3);
+			},
+		});
 
-				// get progressive summarization efficiency
-				const {charCount, highlightedCount, boldCount} = countLayer2AndLayer3Characters(fileContents, fileName, this.settings.progressiveSumLayer2, this.settings.progressiveSumLayer3);
-				const rateProgressiveSum : number = rateProgressiveSummarization(charCount, highlightedCount, boldCount);
+		
+		
 
+	}
+  
 
+	onunload() {
+		console.log('obsidian-pkm-gamification unloaded!');
+	}
+
+	async calculateNoteMajurity(statusbarGamification: HTMLSpanElement){
+		const file: TFile | null= this.app.workspace.getActiveFile();
+			if (file == null) {
+				console.error('got no file, propably none is active')
+			}
+		
+			// get file content length
+			const activeView = this.app.workspace.getActiveViewOfType(MarkdownView);
+			const fileContents = activeView?.editor.getValue();
+			const fileName = activeView?.file.basename;
+
+			let rateFileLength: number = 0;
+			let fileLength: number = 0;
+			let rateProgressiveSum: number = 0;
+
+			if (fileContents !== undefined && fileName !== undefined) {
+				fileLength = countCharactersInActiveFile(fileContents, fileName);
+				rateFileLength = rateNoteLength(fileLength);
+
+				// Check if fileContents and fileName are not null
+				if (fileContents !== null && fileName !== null) {
+					const { charCount, highlightedCount, boldCount } = countLayer2AndLayer3Characters(fileContents, fileName, this.settings.progressiveSumLayer2, this.settings.progressiveSumLayer3);
+					rateProgressiveSum = rateProgressiveSummarization(charCount, highlightedCount, boldCount);
+				}
+			}
+
+			let fileNameRate: number = 0;
+			//get inlink count
+			let inlinkNumber = 0;
+			let inlinkClass : number = 0;
+			// get outlink count
+			let rateOut : number = 0;
+			
+			if (file !== null) {
 				// get file name lenght
-				const fileNameRate : number= rateLengthFilename(file.name);
-			
+				fileNameRate = rateLengthFilename(file.name ?? '');
 				// get inlink count
-				const inlinkNumber = count_inlinks(file);
-				const inlinkClass : number = rateInlinks(inlinkNumber)//, numAllFiles)
-			
-
+				inlinkNumber = count_inlinks(file);
+				inlinkClass = rateInlinks(inlinkNumber)//, numAllFiles)
 				// get outlink count
-				const rateOut : number = rateOutlinks(getNumberOfOutlinks(file));
-
-				// get note majurity
-				const noteMajurity = rateLevelOfMaturity(rateFileLength, fileNameRate, inlinkClass, rateOut, rateProgressiveSum);
+				rateOut = rateOutlinks(getNumberOfOutlinks(file));
 			
+			
+						
+
+				const noteMajurity = rateLevelOfMaturity(rateFileLength, fileNameRate, inlinkClass, rateOut, rateProgressiveSum);
+
+				
+				
 				try {
 					await this.app.fileManager.processFrontMatter(file, (frontmatter) => {
-						//console.log('current metadata: ', frontmatter);
+						if (frontmatter) {
+						// console.log('current metadata: ', frontmatter);
+						
 						// Status Points
 						const pointsNoteMajurity = 100;
 						const pointsMajurity = 10;
@@ -732,60 +615,45 @@ export default class gamification extends Plugin {
 
 						if (pointsReceived > 0){
 							new Notice(`${pointsReceived * this.settings.badgeBoosterFactor} Points received`)
-							//console.log(`${pointsReceivedWithBooster} Points received`)
-							//console.log(`boosterFaktor: ${this.settings.badgeBoosterFactor}`)
+							console.log(`${pointsReceived} Points received`)
 						}
-						//console.log(`pointsReceived: ${pointsReceived}`)
-	
+						
 						frontmatter['title-class'] = rateDirection(frontmatter['title-class'], fileNameRate)
 						frontmatter['note-length-class'] = rateDirection(frontmatter['note-length-class'], rateFileLength)
 						frontmatter['inlink-class'] = rateDirection(frontmatter['inlink-class'], inlinkClass)
 						frontmatter['outlink-class'] = rateDirection(frontmatter['outlink-class'], rateOut)
 						frontmatter['progressive-sumarization-maturity'] = rateDirection(frontmatter['progressive-sumarization-maturity'], rateProgressiveSum)
 						frontmatter['note-maturity'] = rateDirection(frontmatter['note-maturity'], noteMajurity)
-	
-					});	
+
+					
+					}
+				}
+
+					);	
 				} catch (e) {
 					if (e?.name === 'YAMLParseError') {
-					  const errorMessage = `Gamification: Majurity Update failed!
-			  Malformed frontamtter on this file : ${file.path}
-			  
-			  ${e.message}`;
-					  new Notice(errorMessage, 4000);
-					  console.error(errorMessage);
+					const errorMessage = `Update majuritys failed Malformed frontamtter on this file : ${file.path} ${e.message}`;
+					new Notice(errorMessage, 4000);
+					console.error(errorMessage);
 					}
-				  }
-				new Notice('note majurity updated!');
-				// Inside your function where you want to introduce a delay
-				setTimeout(async () => {
-					// Code that you want to execute after the delay
-					await this.updateStatusBar(statusbarGamification)
-				}, 1000); // 1000 milliseconds = 1 seconds
+				}
 				
-				//await this.updateStatusBar(statusbarGamification)
 
-			},
-		});
-		
+				console.log(`title-class: ${fileNameRate}`);
+				console.log(`note-length-class: ${rateFileLength}`);
+				console.log(`inlink-class: ${inlinkClass}`);
+				console.log(`outlink-class: ${rateOut}`);
+				console.log(`rateProgressiveSum: ${rateProgressiveSum}`);
+				console.log(`note-maturity: ${noteMajurity}`);
 
-		// command: change progressive summarzation symbols
-		this.addCommand({
-			id: 'change-progressive-formatting',
-			name: 'toggle progressive summarization formatting',
-			callback: async () => {
-				replaceFormatStrings(this.settings.progressiveSumLayer2, this.settings.progressiveSumLayer3);
-			},
-		});
-
-		
-		
-
+				new Notice('note majurity updated!');
+				await this.updateStatusBar(statusbarGamification)
+			} else {
+				console.error('file was not found to calculate majurities. Make sure one is active.')
+			}
 	}
-  
 
-	onunload() {
-		console.log('obsidian-pkm-gamification unloaded!');
-	}
+
 
 	async updateStatusBar(statusbar: HTMLSpanElement){
 		/*
