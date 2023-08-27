@@ -37,34 +37,37 @@ export default class gamification extends Plugin {
 		await this.updateStatusBar(statusbarGamification)
 
 		
-		this.addRibbonIcon("accessibility", "change text formatting", async () => {
-			
-			// const pointsReceived = 500;
-			// new ModalInformationbox(this.app, `Finallized gamification initialistation!\nCongratulation, you earned ${pointsReceived} Points!\n\nCheck the Profile Page: \"${this.settings.avatarPageName}.md\".`).open();
+		if (this.settings.debug){
+			this.addRibbonIcon("accessibility", "change text formatting", async () => {
+				
+				// const pointsReceived = 500;
+				// new ModalInformationbox(this.app, `Finallized gamification initialistation!\nCongratulation, you earned ${pointsReceived} Points!\n\nCheck the Profile Page: \"${this.settings.avatarPageName}.md\".`).open();
 
-			//const newLevel = this.giveStatusPoints(this.settings.avatarPageName, 300)
-			// this.decisionIfBadge(newLevel)
+				// const newLevel = this.giveStatusPoints(this.settings.avatarPageName, 300)
+				// this.decisionIfBadge(newLevel)
 
-			// const nextBadgeLevel = await this.whichLevelNextBadge(this.settings.statusLevel)
-			// console.log(`Nächste Badge mit Level ${nextBadgeLevel}`)
+				// const nextBadgeLevel = await this.whichLevelNextBadge(this.settings.statusLevel)
+				// console.log(`Nächste Badge mit Level ${nextBadgeLevel}`)
 
-			
-			// const initBadge : Badge = await getBadgeForInitLevel(this.settings.statusLevel);
-			// await this.giveInitBadgeInProfile(this.settings.avatarPageName, initBadge);
-			// await this.removeBadgesWhenInitLevelHigher(this.settings.avatarPageName ,this.settings.statusLevel)
-			// await this.boosterForInit()
+				
+				// const initBadge : Badge = await getBadgeForInitLevel(this.settings.statusLevel);
+				// await this.giveInitBadgeInProfile(this.settings.avatarPageName, initBadge);
+				// await this.removeBadgesWhenInitLevelHigher(this.settings.avatarPageName ,this.settings.statusLevel)
+				// await this.boosterForInit()
 
-			// this.openAvatarFile()
+				// this.openAvatarFile()
 
-			// change text in status bar
-			
-			// this.updateStatusBar(statusbarGamification)
-			//statusbarGamification.setText("Hallo")
 
-			this.resetDailyGoals()
+				// change text in status bar
+				
+				// this.updateStatusBar(statusbarGamification)
+				//statusbarGamification.setText("Hallo")
 
-		});
+        this.resetDailyGoals()
 
+			});
+		}
+		
 		
 		
 

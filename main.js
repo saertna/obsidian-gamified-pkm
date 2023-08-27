@@ -60,7 +60,8 @@ var defaultSettings = {
   xpForNextLevel: 1e3,
   gamificationStartDate: "12.08.2023",
   badgeBoosterState: false,
-  badgeBoosterFactor: 1
+  badgeBoosterFactor: 1,
+  debug: false
 };
 var GamificationPluginSettings = class extends import_obsidian.PluginSettingTab {
   constructor(app2, plugin) {
@@ -2300,6 +2301,11 @@ var gamification = class extends import_obsidian2.Plugin {
     this.addRibbonIcon("accessibility", "change text formatting", async () => {
       this.resetDailyGoals();
     });
+    if (this.settings.debug) {
+      this.addRibbonIcon("accessibility", "change text formatting", async () => {
+        const newLevel = this.giveStatusPoints(this.settings.avatarPageName, 300);
+      });
+    }
     this.addRibbonIcon("sprout", "Calculate Note Maturity", async () => {
       this.calculateNoteMajurity(statusbarGamification);
     });
