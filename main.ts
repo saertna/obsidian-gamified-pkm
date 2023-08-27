@@ -11,7 +11,9 @@ import {getLevelForPoints, LevelData, statusPointsForLevel} from './levels'
 export default class gamification extends Plugin {
 	//settings: gamificationSettings // überbleibsel aus dem Bsp.
 	public settings: GamificationPluginSettings;
-	
+	private timerInterval: number;
+  	private timerId: number | null;
+
 	async onload() {
 		console.log('obsidian-pkm-gamification loaded!');
 
@@ -26,6 +28,9 @@ export default class gamification extends Plugin {
 			console.log(`file got closed: ${file.getRoot.name}`);
 		});
 
+		// to set timer for reseting daily and weekly goals
+		this.timerInterval = 10 * 60 * 1000; // Anzahl Minuten x Minuten x Sekunden 
+		this.timerId = window.setInterval(this.resetDailyGoals.bind(this), this.timerInterval);
 		
 		const item = this.addStatusBarItem();
 	    let statusbarGamification = item.createEl("span", { text: "" });
@@ -654,6 +659,9 @@ export default class gamification extends Plugin {
 	}
 
 
+	async resetDailyGoals(){
+		console.log('This function is called regularly.');
+	}
 
 	async updateStatusBar(statusbar: HTMLSpanElement){
 		/*
