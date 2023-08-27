@@ -98,6 +98,7 @@ export default class gamification extends Plugin {
 					const pointsNoteMajurity = 100;
 					const pointsMajurity = 10;
 					let newLevel : Promise<boolean>;
+					
 
 					for (const fileName of fileCountMap) {
 						let file = fileName
@@ -117,7 +118,8 @@ export default class gamification extends Plugin {
 						const inlinkClass = rateInlinks(inlinkNumber)//, fileCountMap.size);
 						const rateOut = rateOutlinks(getNumberOfOutlinks(file));
 						const noteMajurity = rateLevelOfMaturity(rateFileLength, fileNameRate, inlinkClass, rateOut, rateProgressiveSum);
-				
+						
+
 						console.log(`Processing file ${fileName.basename} in path ${fileName.path}`);
 											
 						try {
@@ -132,7 +134,6 @@ export default class gamification extends Plugin {
 								} else if ('note-maturity' in frontmatter == false){
 									pointsReceived += pointsNoteMajurity*rateDirectionForStatusPoints("0", noteMajurity)
 									newLevel = this.giveStatusPoints(this.settings.avatarPageName,pointsNoteMajurity*rateDirectionForStatusPoints("0", noteMajurity))
-									
 								}
 
 								if (rateDirectionForStatusPoints(frontmatter['title-class'], fileNameRate) >= 1 && 'title-class' in frontmatter){
@@ -187,24 +188,15 @@ export default class gamification extends Plugin {
 								//console.log(`pointsReceived: ${pointsReceived}\tnext are frontmatters …`)
 
 								
-								//try {
 								frontmatter['title-class'] = rateDirection(frontmatter['title-class'], fileNameRate)
 								frontmatter['note-length-class'] = rateDirection(frontmatter['note-length-class'], rateFileLength)
 								frontmatter['inlink-class'] = rateDirection(frontmatter['inlink-class'], inlinkClass)
 								frontmatter['outlink-class'] = rateDirection(frontmatter['outlink-class'], rateOut)
 								frontmatter['progressive-sumarization-maturity'] = rateDirection(frontmatter['progressive-sumarization-maturity'], rateProgressiveSum)
 								frontmatter['note-maturity'] = rateDirection(frontmatter['note-maturity'], noteMajurity)
-								//} catch (e) {
-								//	console.error(e)
-								//}
-				
 								});	
 						} catch (e) {
-							if (e?.name === 'YAMLParseError') {
-							  const errorMessage = `Update majuritys failed
-					  Malformed frontamtter on this file : ${file.path}
-					  
-					  ${e.message}`;
+							if (e?.name === 'YAMLParseError') {const errorMessage = `Update majuritys failed Malformed frontamtter on this file : ${file.path} ${e.message}`;
 							  new Notice(errorMessage, 4000);
 							  console.error(errorMessage);
 							}
@@ -214,7 +206,6 @@ export default class gamification extends Plugin {
 						new Notice(`${pointsReceived} Points received`)
 						console.log(`${pointsReceived} Points received`)
 					}
-					
 					
 					// Inside your function where you want to introduce a delay
 					setTimeout(async () => {
@@ -508,6 +499,9 @@ export default class gamification extends Plugin {
 				console.error('got no file, propably none is active')
 			}
 		
+			// to detect if NoteIsFirstlyRated
+			let firstTimeNoteRating : boolean = false; 
+
 			// get file content length
 			const activeView = this.app.workspace.getActiveViewOfType(MarkdownView);
 			const fileContents = activeView?.editor.getValue();
@@ -571,7 +565,8 @@ export default class gamification extends Plugin {
 							//new Notice(`${pointsNoteMajurity*rateDirectionForStatusPoints("0", noteMajurity)} Points received`)
 							pointsReceived += pointsNoteMajurity*rateDirectionForStatusPoints("0", noteMajurity)
 							const newLevel = this.giveStatusPoints(this.settings.avatarPageName,pointsNoteMajurity*rateDirectionForStatusPoints("0", noteMajurity))
-							this.decisionIfBadge(newLevel)
+							this.decisionIfBadge(newLevel);
+							firstTimeNoteRating = true;
 						}
 
 						if (rateDirectionForStatusPoints(frontmatter['title-class'], fileNameRate) >= 1 && 'title-class' in frontmatter){
@@ -667,11 +662,28 @@ export default class gamification extends Plugin {
 			} else {
 				console.error('file was not found to calculate majurities. Make sure one is active.')
 			}
+			if (firstTimeNoteRating){
+				this.increaseDailyCreatedNoteCount();
+			}
 	}
 
 
 	async resetDailyGoals(){
-		console.log('This function is called regularly.');
+		this.settings.dailyNoteCreationTask = 0;
+		this.saveSettings();
+		console.log(`dailyNoteCreationTask: ${this.settings.dailyNoteCreationTask}`)
+	}
+
+	async increaseDailyCreatedNoteCount(){
+		let newDailyNoteCreationTask = this.settings.dailyNoteCreationTask + 1;
+		this.settings.dailyNoteCreationTask = newDailyNoteCreationTask;
+		this.saveSettings();
+
+		if(newDailyNoteCreationTask == 2){
+			console.log(`daily Challenge reached! ${newDailyNoteCreationTask}/2 created.`)
+		} else {
+			console.log(`${newDailyNoteCreationTask}/2 Notes created today.`)
+		}
 	}
 
 	async updateStatusBar(statusbar: HTMLSpanElement){
