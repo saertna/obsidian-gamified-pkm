@@ -1221,6 +1221,11 @@ xTitle: "progress"
 legend: false
 \`\`\`
 
+|  |     |
+| ---- | --- |
+| daily Notes     |  0/2   |
+^dailyNotesChallenge
+
 | Level | Count |
 | :---: | :---: |
 | Majurity 5 |\`$=dv.pages().where(p => [5, '5', '5➡️', '5⬇️', '5⬆️'].includes(p.file.frontmatter['note-maturity'])).length\`|
