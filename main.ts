@@ -11,7 +11,9 @@ import {getLevelForPoints, LevelData, statusPointsForLevel} from './levels'
 export default class gamification extends Plugin {
 	//settings: gamificationSettings // überbleibsel aus dem Bsp.
 	public settings: GamificationPluginSettings;
-	
+	private timerInterval: number;
+  	private timerId: number | null;
+
 	async onload() {
 		console.log('obsidian-pkm-gamification loaded!');
 
@@ -26,18 +28,22 @@ export default class gamification extends Plugin {
 			console.log(`file got closed: ${file.getRoot.name}`);
 		});
 
+		// to set timer for reseting daily and weekly goals
+		this.timerInterval = 1 * 60 * 60 * 1000; // Stunden x Minuten x Sekunden x Millisekunden 
+		this.timerId = window.setInterval(this.resetDailyGoals.bind(this), this.timerInterval);
 		
 		const item = this.addStatusBarItem();
 	    let statusbarGamification = item.createEl("span", { text: "" });
 		await this.updateStatusBar(statusbarGamification)
 
+		
 		if (this.settings.debug){
 			this.addRibbonIcon("accessibility", "change text formatting", async () => {
 				
 				// const pointsReceived = 500;
 				// new ModalInformationbox(this.app, `Finallized gamification initialistation!\nCongratulation, you earned ${pointsReceived} Points!\n\nCheck the Profile Page: \"${this.settings.avatarPageName}.md\".`).open();
 
-				const newLevel = this.giveStatusPoints(this.settings.avatarPageName, 300)
+				// const newLevel = this.giveStatusPoints(this.settings.avatarPageName, 300)
 				// this.decisionIfBadge(newLevel)
 
 				// const nextBadgeLevel = await this.whichLevelNextBadge(this.settings.statusLevel)
@@ -51,10 +57,13 @@ export default class gamification extends Plugin {
 
 				// this.openAvatarFile()
 
+
 				// change text in status bar
 				
 				// this.updateStatusBar(statusbarGamification)
 				//statusbarGamification.setText("Hallo")
+
+        this.resetDailyGoals()
 
 			});
 		}
@@ -485,6 +494,12 @@ export default class gamification extends Plugin {
 
 	onunload() {
 		console.log('obsidian-pkm-gamification unloaded!');
+		
+		// Clear the timer when the plugin is unloaded
+		if (this.timerId !== null) {
+			clearInterval(this.timerId);
+			this.timerId = null;
+		  }
 	}
 
 	async calculateNoteMajurity(statusbarGamification: HTMLSpanElement){
@@ -655,6 +670,9 @@ export default class gamification extends Plugin {
 	}
 
 
+	async resetDailyGoals(){
+		console.log('This function is called regularly.');
+	}
 
 	async updateStatusBar(statusbar: HTMLSpanElement){
 		/*
