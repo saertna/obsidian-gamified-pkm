@@ -681,23 +681,26 @@ export default class gamification extends Plugin {
 			this.saveSettings();
 			console.log(`daily Challenge reseted`)
 			// update Avatar-Page daily Goals
+			this.dailyChallengeUpdateProfile(this.settings.avatarPageName, 0)
 		}
 	}
 
 	async increaseDailyCreatedNoteCount(){
-		let newDailyNoteCreationTask = this.settings.dailyNoteCreationTask + 1;
+		let newDailyNoteCreationTask = this.settings.dailyNoteCreationTask;
+		newDailyNoteCreationTask ++;
 		this.settings.dailyNoteCreationTask = newDailyNoteCreationTask;
 		this.saveSettings();
-
+		
 		if(newDailyNoteCreationTask == 1){
 			// update Avatar Page
+			await this.dailyChallengeUpdateProfile(this.settings.avatarPageName, newDailyNoteCreationTask)
 			console.log(`${newDailyNoteCreationTask}/2 Notes created today.`)
 		} else if (newDailyNoteCreationTask == 2) {
-			// mark daily challenge as done
-			// giveStatusPoints
+			await this.dailyChallengeUpdateProfile(this.settings.avatarPageName, newDailyNoteCreationTask)
+			this.giveStatusPoints(this.settings.avatarPageName, 500)
 			console.log(`daily Challenge reached! ${newDailyNoteCreationTask}/2 created.`)
 		} else {
-			// nothing else to do here
+			// nothing else to do here 
 			console.log(`${newDailyNoteCreationTask}/2 Notes created today.`)
 		}
 	}
@@ -1141,8 +1144,36 @@ export default class gamification extends Plugin {
 		}
 	}
 
-	async dailyChallengeUpdateProfile(){
+	async dailyChallengeUpdateProfile(avatarPageName: string, createdNotes: number){
+		const existingFile = app.vault.getAbstractFileByPath(`${avatarPageName}.md`);
+		if (existingFile == null) {
+			console.log(`File ${avatarPageName}.md does not exist`);
+			return;
+			}
+		const file = existingFile as TFile;
+
+		const content = await app.vault.read(file);
+		let reference: number | null = null;
+		let end: number | null = null;
+		let start: number | null = null;
+
+		const newString = '| daily Notes     |  ' + createdNotes + '/2   |'
 		
+		const lines = content.split("\n");
+		for (let i = 0; i < lines.length; i++) {
+			const line = lines[i].trim();
+			if (line === "^dailyNotesChallenge") {
+				if (reference === null) {
+					reference = i;
+				}
+			}		
+		}
+		if (reference != null ){
+			start = reference - 1;
+			end = reference;
+			const newLines = [...lines.slice(0, start), newString, ...lines.slice(end)];
+			await app.vault.modify(file, newLines.join("\n"));
+		}
 	}
 }	  
 
