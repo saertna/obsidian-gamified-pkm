@@ -19,6 +19,7 @@ export const defaultSettings: Partial<ISettings> = {
   gamificationStartDate: '12.08.2023',
   badgeBoosterState: false,
   badgeBoosterFactor: 1,
+  debug: false,
 };
 
 export interface ISettings {
@@ -39,6 +40,7 @@ export interface ISettings {
   gamificationStartDate: string;
   badgeBoosterState: boolean;
   badgeBoosterFactor: number;
+  debug: boolean;
 }
 
 
@@ -62,6 +64,7 @@ export class GamificationPluginSettings extends PluginSettingTab {
   public gamificationStartDate: string;
   public badgeBoosterState: boolean;
   public badgeBoosterFactor: number;
+  public debug: boolean;
 
 	constructor(app: App, plugin: gamification) {
 	  super(app, plugin);
