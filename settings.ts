@@ -21,6 +21,7 @@ export const defaultSettings: Partial<ISettings> = {
   badgeBoosterFactor: 1,
   debug: false,
   dailyNoteCreationTask: 0,
+  dailyNoteCreationDate: '',
 };
 
 export interface ISettings {
@@ -43,6 +44,7 @@ export interface ISettings {
   badgeBoosterFactor: number;
   debug: boolean;
   dailyNoteCreationTask: number;
+  dailyNoteCreationDate: string;
 }
 
 
@@ -68,6 +70,7 @@ export class GamificationPluginSettings extends PluginSettingTab {
   public badgeBoosterFactor: number;
   public debug: boolean;
   public dailyNoteCreationTask: number;
+  public dailyNoteCreationDate: string;
 
 	constructor(app: App, plugin: gamification) {
 	  super(app, plugin);

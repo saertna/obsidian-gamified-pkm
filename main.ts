@@ -7,6 +7,9 @@ import {countLayer2AndLayer3Characters, rateProgressiveSummarization, rateLevelO
 import {findEarliestCreatedFile, findEarliestModifiedFile, findEarliestDateFile, monthsBetween, getCreationDates, getModificationDates, createChartFormat, replaceChartContent} from './creatmodchartcalculation'
 import {getBadgeForLevel, getBadgeForInitLevel, checkIfReceiveABadge, Badge} from './badges' 
 import {getLevelForPoints, LevelData, statusPointsForLevel} from './levels' 
+import { isToday } from 'date-fns';
+// import { Moment } from 'moment';
+import type { Moment } from 'moment';
 
 export default class gamification extends Plugin {
 	//settings: gamificationSettings // überbleibsel aus dem Bsp.
@@ -22,11 +25,13 @@ export default class gamification extends Plugin {
 		// load settings tab für die Einstellungen
 		this.addSettingTab(new GamificationPluginSettings(this.app, this));
 
+		/*
 		// Register an event listener for the app:file-closed event
 		this.app.workspace.on('window-close', async (file) => {
 			// Check if the closed file has a specific tag
 			console.log(`file got closed: ${file.getRoot.name}`);
 		});
+		*/
 
 		// to set timer for reseting daily and weekly goals
 		this.timerInterval = 1 * 60 * 60 * 1000; // Stunden x Minuten x Sekunden x Millisekunden 
@@ -63,7 +68,8 @@ export default class gamification extends Plugin {
 				// this.updateStatusBar(statusbarGamification)
 				//statusbarGamification.setText("Hallo")
 
-        this.resetDailyGoals()
+				//this.loadSettings()
+        		this.resetDailyGoals()
 
 			});
 		}
@@ -669,9 +675,13 @@ export default class gamification extends Plugin {
 
 
 	async resetDailyGoals(){
-		this.settings.dailyNoteCreationTask = 0;
-		this.saveSettings();
-		console.log(`dailyNoteCreationTask: ${this.settings.dailyNoteCreationTask}`)
+		if(!isSameDay(window.moment(this.settings.dailyNoteCreationDate, 'DD.MM.YYYY'))){
+			this.settings.dailyNoteCreationTask = 0;
+			this.settings.dailyNoteCreationDate = window.moment().format('DD.MM.YYYY')
+			this.saveSettings();
+			console.log(`daily Challenge reseted`)
+			// update Avatar-Page daily Goals
+		}
 	}
 
 	async increaseDailyCreatedNoteCount(){
@@ -679,12 +689,20 @@ export default class gamification extends Plugin {
 		this.settings.dailyNoteCreationTask = newDailyNoteCreationTask;
 		this.saveSettings();
 
-		if(newDailyNoteCreationTask == 2){
+		if(newDailyNoteCreationTask == 1){
+			// update Avatar Page
+			console.log(`${newDailyNoteCreationTask}/2 Notes created today.`)
+		} else if (newDailyNoteCreationTask == 2) {
+			// mark daily challenge as done
+			// giveStatusPoints
 			console.log(`daily Challenge reached! ${newDailyNoteCreationTask}/2 created.`)
 		} else {
+			// nothing else to do here
 			console.log(`${newDailyNoteCreationTask}/2 Notes created today.`)
 		}
 	}
+
+
 
 	async updateStatusBar(statusbar: HTMLSpanElement){
 		/*
@@ -1122,7 +1140,19 @@ export default class gamification extends Plugin {
 			console.log("File not found or unable to open.");
 		}
 	}
+
+	async dailyChallengeUpdateProfile(){
+		
+	}
 }	  
+
+
+function isSameDay(inputDate: Moment): boolean {
+    const currentDate = window.moment(); // Get the current date
+	console.log(`isSameDay: currentDate=${currentDate}`)
+	console.log(`isSameDay: inputDate: ${inputDate}`)
+	return currentDate.isSame(inputDate, 'day'); // Check if they are the same day
+}
 
 async function createAvatarFile(app: App, fileName: string): Promise<void> {
 	//settings: GamificationPluginSettings;
