@@ -687,24 +687,24 @@ export default class gamification extends Plugin {
 
 	async increaseDailyCreatedNoteCount(){
 		let newDailyNoteCreationTask = this.settings.dailyNoteCreationTask;
-		newDailyNoteCreationTask ++;
-		this.settings.dailyNoteCreationTask = newDailyNoteCreationTask;
-		this.saveSettings();
-		
-		if(newDailyNoteCreationTask == 1){
-			// update Avatar Page
-			await this.dailyChallengeUpdateProfile(this.settings.avatarPageName, newDailyNoteCreationTask)
-			console.log(`${newDailyNoteCreationTask}/2 Notes created today.`)
-		} else if (newDailyNoteCreationTask == 2) {
-			await this.dailyChallengeUpdateProfile(this.settings.avatarPageName, newDailyNoteCreationTask)
-			this.giveStatusPoints(this.settings.avatarPageName, 500)
-			console.log(`daily Challenge reached! ${newDailyNoteCreationTask}/2 created.`)
-		} else {
-			// nothing else to do here 
-			console.log(`${newDailyNoteCreationTask}/2 Notes created today.`)
+		if (newDailyNoteCreationTask < 2){
+			newDailyNoteCreationTask ++;
+			this.settings.dailyNoteCreationTask = newDailyNoteCreationTask;
+			this.saveSettings();
+			
+			if(newDailyNoteCreationTask == 1){
+				// update Avatar Page
+				this.updateAvatarPage(this.settings.avatarPageName);
+				console.log(`${newDailyNoteCreationTask}/2 Notes created today.`)
+			} else if (newDailyNoteCreationTask == 2) {
+				this.giveStatusPoints(this.settings.avatarPageName, 500)
+				console.log(`daily Challenge reached! ${newDailyNoteCreationTask}/2 created.`)
+			} else {
+				// nothing else to do here 
+				console.log(`${newDailyNoteCreationTask}/2 Notes created today.`)
+			}
 		}
 	}
-
 
 
 	async updateStatusBar(statusbar: HTMLSpanElement){
@@ -748,13 +748,14 @@ export default class gamification extends Plugin {
 	  }  
 	  
 	async giveStatusPoints(avatarPageName: string, pointsToAdd: number): Promise<boolean>{
+		/*
 		const existingFile = app.vault.getAbstractFileByPath(`${avatarPageName}.md`);
 		if (existingFile == null) {
 			console.log(`File ${avatarPageName}.md does not exist`);
 			return false;
 			}
 		const file = existingFile as TFile;
-		
+		*/
 		// booster Faktor for Points
 		let boosterFactor = 1;
 		//load from settings if booster is aktiv
@@ -762,6 +763,7 @@ export default class gamification extends Plugin {
 			boosterFactor = this.settings.badgeBoosterFactor;
 		}
 
+		/*
 		//console.log(`current statusPoints: ${this.settings.statusPoints}`)
 		const content = await app.vault.read(file);
 		let reference: number | null = null;
@@ -777,13 +779,17 @@ export default class gamification extends Plugin {
 				}
 			}
 		}
+		*/
 		// read current Points from settings
 		const newPoints = pointsToAdd * boosterFactor + this.settings.statusPoints
 		
 		// write to settings value
 		this.settings.statusPoints = newPoints
 		await this.saveData(this.settings)
+
+		const receiveBadge = this.updateAvatarPage(this.settings.avatarPageName);
 		
+		/*
 		const level = getLevelForPoints(newPoints);
 		let newLevel = 0;
 		let nextLevelAt = this.settings.xpForNextLevel;
@@ -811,8 +817,78 @@ export default class gamification extends Plugin {
 		}
 		//console.log(`newLevel: ${newLevel}\npointsToAdd: ${pointsToAdd * boosterFactor}`)
 		//new Notice(`${pointsToAdd * boosterFactor} points received`)
+		*/
 		return receiveBadge
 		
+		
+	}  
+
+
+	async updateAvatarPage(avatarPageName: string): Promise<boolean>{
+		const existingFile = app.vault.getAbstractFileByPath(`${avatarPageName}.md`);
+		if (existingFile == null) {
+			console.log(`File ${avatarPageName}.md does not exist`);
+			return false;
+			}
+		const file = existingFile as TFile;
+		
+
+		//console.log(`current statusPoints: ${this.settings.statusPoints}`)
+		const content = await app.vault.read(file);
+		let reference: number | null = null;
+		let reference2: number | null = null;
+		let end: number | null = null;
+		let start: number | null = null;
+		let end2: number | null = null;
+		let start2: number | null = null;
+	
+		const lines = content.split("\n");
+		for (let i = 0; i < lines.length; i++) {
+			const line = lines[i].trim();
+			if (line === "^levelAndPoints") {
+				if (reference === null) {
+					reference = i;
+				}
+			}
+			if (line === "^dailyNotesChallenge") {
+				if (reference2 === null) {
+					reference2 = i;
+				}
+			}
+		}
+		// read current Points from settings
+		const newPoints = this.settings.statusPoints
+		
+		const level = getLevelForPoints(newPoints);
+		let newLevel = 0;
+		let nextLevelAt = this.settings.xpForNextLevel;
+		let receiveBadge: boolean = false
+		if (this.settings.statusLevel < level.level){
+			// Level Up archived
+			new Notice(`With ${newPoints} points, the current level is ${level.level}.`)
+			// check first if this means a new badge
+			receiveBadge = checkIfReceiveABadge(this.settings.statusLevel, level.level)
+			this.settings.statusLevel = level.level;
+			newLevel = level.level;
+			nextLevelAt = level.pointsNext;
+			this.settings.xpForNextLevel = level.pointsNext;
+			await this.saveData(this.settings)
+		}
+
+		const progressBarEnd = nextLevelAt - newPoints;
+		//console.log(`newPoints: ${newPoints}\nnextLevel@: ${nextLevelAt}\nproglessBarEnd: ${progressBarEnd}`)
+		const newPointsString = '| Level  | ' + level.level + ' |\n| Points | ' + newPoints + '    |\n^levelAndPoints\n\`\`\`chart\ntype: bar\nlabels: [Expririence]\nseries:\n  - title: points reached\n    data: [' + newPoints + ']\n  - title: points to earn to level up\n    data: [' + progressBarEnd + ']\nxMin: ' + level.points + '\nxMax: ' + level.pointsNext + '\ntension: 0.2\nwidth: 40%\nlabelColors: false\nfill: false\nbeginAtZero: false\nbestFit: false\nbestFitTitle: undefined\nbestFitNumber: 0\nstacked: true\nindexAxis: y\nxTitle: "progress"\nlegend: false\n\`\`\`'
+		const newString = '| daily Notes     |  ' + this.settings.dailyNoteCreationTask + '/2   |';
+		if (reference != null && reference2 != null){
+			end = reference + 24;
+			start = reference - 2;
+			start2 = reference2 - 1 - 25; // no idea wby offset 25 is needed
+			end2 = reference2 - 25; // no idea wby offset 25 is needed
+			const newLines = [...lines.slice(0, start), newPointsString, ...lines.slice(end)];
+			const newLines2 = [...newLines.slice(0, start2), newString, ...newLines.slice(end2)];
+			await app.vault.modify(file, newLines2.join("\n"));
+		}
+		return receiveBadge
 	}  
 
 
