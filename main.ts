@@ -678,8 +678,8 @@ export default class gamification extends Plugin {
 				console.error('file was not found to calculate majurities. Make sure one is active.')
 			}
 			if (firstTimeNoteRating){
-				this.increaseDailyCreatedNoteCount();
-				this.increaseWeeklyCreatedNoteCount();
+				await this.increaseDailyCreatedNoteCount();
+				await this.increaseWeeklyCreatedNoteCount();
 			}
 	}
 
@@ -695,7 +695,7 @@ export default class gamification extends Plugin {
 		}
 		if(!isOneDayBefore(window.moment(this.settings.weeklyNoteCreationDate, 'DD.MM.YYYY')) || !isSameDay(window.moment(this.settings.dailyNoteCreationDate, 'DD.MM.YYYY'))){
 			this.settings.weeklyNoteCreationTask = 0;
-			this.settings.weeklyNoteCreationDate = window.moment().format('DD.MM.YYYY')
+			this.settings.weeklyNoteCreationDate = window.moment().subtract(1, 'day').format('DD.MM.YYYY')
 			this.saveSettings();
 			console.log(`weekly Challenge reseted`)
 			reset = true;
@@ -736,6 +736,7 @@ export default class gamification extends Plugin {
 			let newWeeklyNoteCreationTask = this.settings.weeklyNoteCreationTask;
 			if (newWeeklyNoteCreationTask < 7){
 				newWeeklyNoteCreationTask ++;
+				this.settings.weeklyNoteCreationDate = window.moment().format('DD.MM.YYYY')
 				this.settings.weeklyNoteCreationTask = newWeeklyNoteCreationTask;
 				this.saveSettings();
 				
@@ -751,9 +752,12 @@ export default class gamification extends Plugin {
 					console.log(`${newWeeklyNoteCreationTask}/7 Notes created in a chain.`)
 				}
 			}
+		} else {
+			this.settings.weeklyNoteCreationDate = window.moment().format('DD.MM.YYYY')
+			this.settings.weeklyNoteCreationTask = 1;
+			this.saveSettings();
 		}
 	}
-
 
 	async updateStatusBar(statusbar: HTMLSpanElement){
 		/*
@@ -785,9 +789,11 @@ export default class gamification extends Plugin {
 		console.log('loadSettings()')
 	}
 
+
 	async saveSettings() {
 		await this.saveData(this.settings);
 	}	
+
 
 	async getCreationTime(file: TFile): Promise<Date> {
 		const filePath = path.join(this.app.vault.getResourcePath(file)); // path.join(this.obsidian.vault.path, file);
@@ -795,6 +801,7 @@ export default class gamification extends Plugin {
 		return new Date(creationTime);
 	  }  
 	  
+
 	async giveStatusPoints(avatarPageName: string, pointsToAdd: number): Promise<boolean>{
 		/*
 		const existingFile = app.vault.getAbstractFileByPath(`${avatarPageName}.md`);
