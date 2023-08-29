@@ -37,6 +37,7 @@
 	"dependencies": {
 		"date-fns": "^2.30.0",
 		"markdown-it": "^13.0.1",
+		"moment": "^2.29.4",
 		"obsidian-dataview": "^0.4.21",
 		"react": "^18.2.0",
 		"react-dom": "^18.2.0",

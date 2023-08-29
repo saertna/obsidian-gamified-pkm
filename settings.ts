@@ -20,6 +20,10 @@ export const defaultSettings: Partial<ISettings> = {
   badgeBoosterState: false,
   badgeBoosterFactor: 1,
   debug: false,
+  dailyNoteCreationTask: 0,
+  dailyNoteCreationDate: '12.08.2023',
+  weeklyNoteCreationTask: 0,
+  weeklyNoteCreationDate: '12.08.2023',
 };
 
 export interface ISettings {
@@ -41,6 +45,10 @@ export interface ISettings {
   badgeBoosterState: boolean;
   badgeBoosterFactor: number;
   debug: boolean;
+  dailyNoteCreationTask: number;
+  dailyNoteCreationDate: string;
+  weeklyNoteCreationTask: number,
+  weeklyNoteCreationDate: string,
 }
 
 
@@ -65,6 +73,10 @@ export class GamificationPluginSettings extends PluginSettingTab {
   public badgeBoosterState: boolean;
   public badgeBoosterFactor: number;
   public debug: boolean;
+  public dailyNoteCreationTask: number;
+  public dailyNoteCreationDate: string;
+  public weeklyNoteCreationTask: number;
+  public weeklyNoteCreationDate: string;
 
 	constructor(app: App, plugin: gamification) {
 	  super(app, plugin);
