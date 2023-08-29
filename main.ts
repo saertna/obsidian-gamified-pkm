@@ -1263,10 +1263,15 @@ export default class gamification extends Plugin {
 
 function isSameDay(inputDate: Moment): boolean {
     const currentDate = window.moment(); // Get the current date
-	console.log(`isSameDay: currentDate=${currentDate}`)
-	console.log(`isSameDay: inputDate: ${inputDate}`)
 	return currentDate.isSame(inputDate, 'day'); // Check if they are the same day
 }
+
+function isOneDayBefore(inputDate: Moment): boolean {
+    const currentDate = window.moment(); // Get the current date
+    const oneDayBeforeCurrent = window.moment().subtract(1, 'day'); // Calculate one day before current date
+    return inputDate.isSame(oneDayBeforeCurrent, 'day'); 
+}
+
 
 async function createAvatarFile(app: App, fileName: string): Promise<void> {
 	//settings: GamificationPluginSettings;
@@ -1308,6 +1313,33 @@ legend: false
 | ---- | --- |
 | daily Notes     |  0/2   |
 ^dailyNotesChallenge
+|  |     |
+| ---- | --- |
+| weekly Notes     |  0/7   |
+^weeklyNotesChallenge
+\`\`\`chart
+type: bar
+labels: [Notes]
+series:
+  - title: days done in a row
+    data: [0]
+  - title: days to do in a row
+    data: [7]
+xMin: 0
+xMax: 7
+tension: 0.2
+width: 40%
+labelColors: false
+fill: false
+beginAtZero: false
+bestFit: false
+bestFitTitle: undefined
+bestFitNumber: 0
+stacked: true
+indexAxis: y
+xTitle: "days"
+legend: false
+\`\`\`
 
 | Level | Count |
 | :---: | :---: |
