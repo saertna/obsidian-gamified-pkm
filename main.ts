@@ -25,6 +25,12 @@ export default class gamification extends Plugin {
 		// load settings tab für die Einstellungen
 		this.addSettingTab(new GamificationPluginSettings(this.app, this));
 
+		// take care to reset when opened on a new day, don't wait for trigger
+		setTimeout(async () => {
+			// Code that you want to execute after the delay
+			this.resetDailyGoals()
+		}, 2000); // 2000 milliseconds = 2 seconds
+
 		/*
 		// Register an event listener for the app:file-closed event
 		this.app.workspace.on('window-close', async (file) => {
@@ -32,9 +38,10 @@ export default class gamification extends Plugin {
 			console.log(`file got closed: ${file.getRoot.name}`);
 		});
 		*/
+		
 
 		// to set timer for reseting daily and weekly goals
-		this.timerInterval = 1 * 60 * 60 * 1000; // Stunden x Minuten x Sekunden x Millisekunden 
+		this.timerInterval = 30 * 60 * 1000; // Minuten x Sekunden x Millisekunden 
 		this.timerId = window.setInterval(this.resetDailyGoals.bind(this), this.timerInterval);
 		
 		const item = this.addStatusBarItem();
