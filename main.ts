@@ -682,14 +682,25 @@ export default class gamification extends Plugin {
 
 
 	async resetDailyGoals(){
+		let reset : Boolean = false;
 		if(!isSameDay(window.moment(this.settings.dailyNoteCreationDate, 'DD.MM.YYYY'))){
 			this.settings.dailyNoteCreationTask = 0;
 			this.settings.dailyNoteCreationDate = window.moment().format('DD.MM.YYYY')
 			this.saveSettings();
 			console.log(`daily Challenge reseted`)
-			// update Avatar-Page daily Goals
+			reset = true;
+		}
+		if(!isOneDayBefore(window.moment(this.settings.weeklyNoteCreationDate, 'DD.MM.YYYY'))){
+			this.settings.weeklyNoteCreationTask
+			this.settings.weeklyNoteCreationDate = window.moment().format('DD.MM.YYYY')
+			this.saveSettings();
+			console.log(`weekly Challenge reseted`)
+			reset = true;
+		}
+		if (reset){
 			this.dailyChallengeUpdateProfile(this.settings.avatarPageName, 0)
 		}
+		
 	}
 
 	async increaseDailyCreatedNoteCount(){
