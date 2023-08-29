@@ -679,6 +679,7 @@ export default class gamification extends Plugin {
 			}
 			if (firstTimeNoteRating){
 				this.increaseDailyCreatedNoteCount();
+				this.increaseWeeklyCreatedNoteCount();
 			}
 	}
 
@@ -692,15 +693,19 @@ export default class gamification extends Plugin {
 			console.log(`daily Challenge reseted`)
 			reset = true;
 		}
-		if(!isOneDayBefore(window.moment(this.settings.weeklyNoteCreationDate, 'DD.MM.YYYY'))){
-			this.settings.weeklyNoteCreationTask
+		if(!isOneDayBefore(window.moment(this.settings.weeklyNoteCreationDate, 'DD.MM.YYYY')) || !isSameDay(window.moment(this.settings.dailyNoteCreationDate, 'DD.MM.YYYY'))){
+			this.settings.weeklyNoteCreationTask = 0;
 			this.settings.weeklyNoteCreationDate = window.moment().format('DD.MM.YYYY')
 			this.saveSettings();
 			console.log(`weekly Challenge reseted`)
 			reset = true;
 		}
+		if(!isOneDayBefore(window.moment(this.settings.weeklyNoteCreationDate, 'DD.MM.YYYY')) && this.settings.weeklyNoteCreationTask == 7){
+			reset = true;
+		}
 		if (reset){
-			this.dailyChallengeUpdateProfile(this.settings.avatarPageName, 0)
+			//this.dailyChallengeUpdateProfile(this.settings.avatarPageName, 0)
+			this.updateAvatarPage(this.settings.avatarPageName);
 		}
 		
 	}
@@ -722,6 +727,29 @@ export default class gamification extends Plugin {
 			} else {
 				// nothing else to do here 
 				console.log(`${newDailyNoteCreationTask}/2 Notes created today.`)
+			}
+		}
+	}
+
+	async increaseWeeklyCreatedNoteCount(){
+		if(isOneDayBefore(window.moment(this.settings.weeklyNoteCreationDate, 'DD.MM.YYYY'))){
+			let newWeeklyNoteCreationTask = this.settings.weeklyNoteCreationTask;
+			if (newWeeklyNoteCreationTask < 7){
+				newWeeklyNoteCreationTask ++;
+				this.settings.weeklyNoteCreationTask = newWeeklyNoteCreationTask;
+				this.saveSettings();
+				
+				if(newWeeklyNoteCreationTask <= 6){
+					// update Avatar Page
+					this.updateAvatarPage(this.settings.avatarPageName);
+					console.log(`${newWeeklyNoteCreationTask}/7 Notes created in a chain.`)
+				} else if (newWeeklyNoteCreationTask == 7) {
+					this.giveStatusPoints(this.settings.avatarPageName, 2000)
+					console.log(`Weekly Challenge reached! ${newWeeklyNoteCreationTask}/7 created in a chain.`)
+				} else {
+					// nothing else to do here 
+					console.log(`${newWeeklyNoteCreationTask}/7 Notes created in a chain.`)
+				}
 			}
 		}
 	}
