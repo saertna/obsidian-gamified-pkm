@@ -76,7 +76,9 @@ export default class gamification extends Plugin {
 				//statusbarGamification.setText("Hallo")
 
 				//this.loadSettings()
-        		this.resetDailyGoals()
+        		//this.resetDailyGoals()
+
+				this.updateAvatarPage(this.settings.avatarPageName);
 
 			});
 		}
@@ -676,20 +678,36 @@ export default class gamification extends Plugin {
 				console.error('file was not found to calculate majurities. Make sure one is active.')
 			}
 			if (firstTimeNoteRating){
-				this.increaseDailyCreatedNoteCount();
+				await this.increaseDailyCreatedNoteCount();
+				await this.increaseWeeklyCreatedNoteCount();
 			}
 	}
 
 
 	async resetDailyGoals(){
+		let reset : Boolean = false;
 		if(!isSameDay(window.moment(this.settings.dailyNoteCreationDate, 'DD.MM.YYYY'))){
 			this.settings.dailyNoteCreationTask = 0;
 			this.settings.dailyNoteCreationDate = window.moment().format('DD.MM.YYYY')
 			this.saveSettings();
 			console.log(`daily Challenge reseted`)
-			// update Avatar-Page daily Goals
-			this.dailyChallengeUpdateProfile(this.settings.avatarPageName, 0)
+			reset = true;
 		}
+		if(!isOneDayBefore(window.moment(this.settings.weeklyNoteCreationDate, 'DD.MM.YYYY')) && !isSameDay(window.moment(this.settings.dailyNoteCreationDate, 'DD.MM.YYYY'))){
+			this.settings.weeklyNoteCreationTask = 0;
+			this.settings.weeklyNoteCreationDate = window.moment().subtract(1, 'day').format('DD.MM.YYYY')
+			this.saveSettings();
+			console.log(`weekly Challenge reseted`)
+			reset = true;
+		}
+		if(!isOneDayBefore(window.moment(this.settings.weeklyNoteCreationDate, 'DD.MM.YYYY')) && this.settings.weeklyNoteCreationTask == 7){
+			reset = true;
+		}
+		if (reset){
+			//this.dailyChallengeUpdateProfile(this.settings.avatarPageName, 0)
+			this.updateAvatarPage(this.settings.avatarPageName);
+		}
+		
 	}
 
 	async increaseDailyCreatedNoteCount(){
@@ -713,6 +731,33 @@ export default class gamification extends Plugin {
 		}
 	}
 
+	async increaseWeeklyCreatedNoteCount(){
+		if(isOneDayBefore(window.moment(this.settings.weeklyNoteCreationDate, 'DD.MM.YYYY'))){
+			let newWeeklyNoteCreationTask = this.settings.weeklyNoteCreationTask;
+			if (newWeeklyNoteCreationTask < 7){
+				newWeeklyNoteCreationTask ++;
+				this.settings.weeklyNoteCreationDate = window.moment().format('DD.MM.YYYY')
+				this.settings.weeklyNoteCreationTask = newWeeklyNoteCreationTask;
+				this.saveSettings();
+				
+				if(newWeeklyNoteCreationTask <= 6){
+					// update Avatar Page
+					this.updateAvatarPage(this.settings.avatarPageName);
+					console.log(`${newWeeklyNoteCreationTask}/7 Notes created in a chain.`)
+				} else if (newWeeklyNoteCreationTask == 7) {
+					this.giveStatusPoints(this.settings.avatarPageName, 2000)
+					console.log(`Weekly Challenge reached! ${newWeeklyNoteCreationTask}/7 created in a chain.`)
+				} else {
+					// nothing else to do here 
+					console.log(`${newWeeklyNoteCreationTask}/7 Notes created in a chain.`)
+				}
+			}
+		} else {
+			this.settings.weeklyNoteCreationDate = window.moment().format('DD.MM.YYYY')
+			this.settings.weeklyNoteCreationTask = 1;
+			this.saveSettings();
+		}
+	}
 
 	async updateStatusBar(statusbar: HTMLSpanElement){
 		/*
@@ -744,9 +789,11 @@ export default class gamification extends Plugin {
 		console.log('loadSettings()')
 	}
 
+
 	async saveSettings() {
 		await this.saveData(this.settings);
 	}	
+
 
 	async getCreationTime(file: TFile): Promise<Date> {
 		const filePath = path.join(this.app.vault.getResourcePath(file)); // path.join(this.obsidian.vault.path, file);
@@ -754,6 +801,7 @@ export default class gamification extends Plugin {
 		return new Date(creationTime);
 	  }  
 	  
+
 	async giveStatusPoints(avatarPageName: string, pointsToAdd: number): Promise<boolean>{
 		/*
 		const existingFile = app.vault.getAbstractFileByPath(`${avatarPageName}.md`);
@@ -844,10 +892,13 @@ export default class gamification extends Plugin {
 		const content = await app.vault.read(file);
 		let reference: number | null = null;
 		let reference2: number | null = null;
+		let reference3: number | null = null;
 		let end: number | null = null;
 		let start: number | null = null;
 		let end2: number | null = null;
 		let start2: number | null = null;
+		let end3: number | null = null;
+		let start3: number | null = null;
 	
 		const lines = content.split("\n");
 		for (let i = 0; i < lines.length; i++) {
@@ -860,6 +911,11 @@ export default class gamification extends Plugin {
 			if (line === "^dailyNotesChallenge") {
 				if (reference2 === null) {
 					reference2 = i;
+				}
+			}
+			if (line === "^weeklyNotesChallenge") {
+				if (reference3 === null) {
+					reference3 = i;
 				}
 			}
 		}
@@ -885,15 +941,23 @@ export default class gamification extends Plugin {
 		const progressBarEnd = nextLevelAt - newPoints;
 		//console.log(`newPoints: ${newPoints}\nnextLevel@: ${nextLevelAt}\nproglessBarEnd: ${progressBarEnd}`)
 		const newPointsString = '| Level  | ' + level.level + ' |\n| Points | ' + newPoints + '    |\n^levelAndPoints\n\`\`\`chart\ntype: bar\nlabels: [Expririence]\nseries:\n  - title: points reached\n    data: [' + newPoints + ']\n  - title: points to earn to level up\n    data: [' + progressBarEnd + ']\nxMin: ' + level.points + '\nxMax: ' + level.pointsNext + '\ntension: 0.2\nwidth: 40%\nlabelColors: false\nfill: false\nbeginAtZero: false\nbestFit: false\nbestFitTitle: undefined\nbestFitNumber: 0\nstacked: true\nindexAxis: y\nxTitle: "progress"\nlegend: false\n\`\`\`'
-		const newString = '| daily Notes     |  ' + this.settings.dailyNoteCreationTask + '/2   |';
-		if (reference != null && reference2 != null){
-			end = reference + 24;
+		const dailyChallenge = '| daily Notes     |  ' + this.settings.dailyNoteCreationTask + '/2   |';
+		const daysLeftInWeeklyChain : number = 7 - this.settings.weeklyNoteCreationTask;
+		const weeklyChallenge = '| weekly Notes     |  ' + this.settings.weeklyNoteCreationTask + '/7   |\n^weeklyNotesChallenge\n\`\`\`chart\ntype: bar\nlabels: [days done in a row]\nseries:\n  - title: days to do in a row\n    data: [' + this.settings.weeklyNoteCreationTask + ']\n  - title: points to earn to level up\n    data: [' + daysLeftInWeeklyChain + ']\nxMin: 0\nxMax: 7\ntension: 0.2\nwidth: 40%\nlabelColors: false\nfill: false\nbeginAtZero: false\nbestFit: false\nbestFitTitle: undefined\nbestFitNumber: 0\nstacked: true\nindexAxis: y\nxTitle: "progress"\nlegend: false\n\`\`\`';
+		
+		if (reference != null && reference2 != null && reference3 != null){
 			start = reference - 2;
+			end = reference + 24;
 			start2 = reference2 - 1 - 25; // no idea wby offset 25 is needed
 			end2 = reference2 - 25; // no idea wby offset 25 is needed
+			start3 = reference3 - 1 -25; // no idea wby offset 25 is needed
+			end3 = reference3 + 24 -25; // no idea wby offset 25 is needed
+			
+			
 			const newLines = [...lines.slice(0, start), newPointsString, ...lines.slice(end)];
-			const newLines2 = [...newLines.slice(0, start2), newString, ...newLines.slice(end2)];
-			await app.vault.modify(file, newLines2.join("\n"));
+			const newLines2 = [...newLines.slice(0, start2), dailyChallenge, ...newLines.slice(end2)];
+			const newLines3 = [...newLines2.slice(0, start3), weeklyChallenge, ...newLines2.slice(end3)];
+			await app.vault.modify(file, newLines3.join("\n"));
 		}
 		return receiveBadge
 	}  
@@ -1263,10 +1327,15 @@ export default class gamification extends Plugin {
 
 function isSameDay(inputDate: Moment): boolean {
     const currentDate = window.moment(); // Get the current date
-	console.log(`isSameDay: currentDate=${currentDate}`)
-	console.log(`isSameDay: inputDate: ${inputDate}`)
 	return currentDate.isSame(inputDate, 'day'); // Check if they are the same day
 }
+
+function isOneDayBefore(inputDate: Moment): boolean {
+    const currentDate = window.moment(); // Get the current date
+    const oneDayBeforeCurrent = window.moment().subtract(1, 'day'); // Calculate one day before current date
+    return inputDate.isSame(oneDayBeforeCurrent, 'day'); 
+}
+
 
 async function createAvatarFile(app: App, fileName: string): Promise<void> {
 	//settings: GamificationPluginSettings;
@@ -1308,6 +1377,33 @@ legend: false
 | ---- | --- |
 | daily Notes     |  0/2   |
 ^dailyNotesChallenge
+|  |     |
+| ---- | --- |
+| weekly Notes     |  0/7   |
+^weeklyNotesChallenge
+\`\`\`chart
+type: bar
+labels: [Notes]
+series:
+  - title: days done in a row
+    data: [0]
+  - title: days to do in a row
+    data: [7]
+xMin: 0
+xMax: 7
+tension: 0.2
+width: 40%
+labelColors: false
+fill: false
+beginAtZero: false
+bestFit: false
+bestFitTitle: undefined
+bestFitNumber: 0
+stacked: true
+indexAxis: y
+xTitle: "days"
+legend: false
+\`\`\`
 
 | Level | Count |
 | :---: | :---: |
