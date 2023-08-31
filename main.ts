@@ -78,7 +78,10 @@ export default class gamification extends Plugin {
 				//this.loadSettings()
         		//this.resetDailyGoals()
 
+				await this.loadSettings();
 				this.updateAvatarPage(this.settings.avatarPageName);
+
+				
 
 			});
 		}
@@ -664,14 +667,14 @@ export default class gamification extends Plugin {
 					}
 				}
 				
-
+				/*
 				console.log(`title-class: ${fileNameRate}`);
 				console.log(`note-length-class: ${rateFileLength}`);
 				console.log(`inlink-class: ${inlinkClass}`);
 				console.log(`outlink-class: ${rateOut}`);
 				console.log(`rateProgressiveSum: ${rateProgressiveSum}`);
 				console.log(`note-maturity: ${noteMajurity}`);
-
+				*/ 
 				new Notice('note majurity updated!');
 				await this.updateStatusBar(statusbarGamification)
 			} else {
@@ -732,6 +735,7 @@ export default class gamification extends Plugin {
 	}
 
 	async increaseWeeklyCreatedNoteCount(){
+		console.log(`increaseWeeklyCreatedNoteCount called …`)
 		if(isOneDayBefore(window.moment(this.settings.weeklyNoteCreationDate, 'DD.MM.YYYY'))){
 			let newWeeklyNoteCreationTask = this.settings.weeklyNoteCreationTask;
 			if (newWeeklyNoteCreationTask < 7){
@@ -752,6 +756,9 @@ export default class gamification extends Plugin {
 					console.log(`${newWeeklyNoteCreationTask}/7 Notes created in a chain.`)
 				}
 			}
+		} else if (isSameDay(window.moment(this.settings.dailyNoteCreationDate, 'DD.MM.YYYY'))){
+			// do nothing
+			console.log(`daily note creation was rated already today.`)
 		} else {
 			this.settings.weeklyNoteCreationDate = window.moment().format('DD.MM.YYYY')
 			this.settings.weeklyNoteCreationTask = 1;

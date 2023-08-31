@@ -468,7 +468,7 @@ export const getFileMap = async (app: App, excludeTag: string, excludeFolder: st
 	} else {
 		excludedSubstrings = excludeTag.split(', ');
 	}
-	console.log(`excludedSubstrings: ${excludedSubstrings}`)
+	//console.log(`excludedSubstrings: ${excludedSubstrings}`)
 	// folders to ignore .md-files in
 	let excludedFolders : string[] = []
 	if (excludeFolder == undefined) {
@@ -477,7 +477,7 @@ export const getFileMap = async (app: App, excludeTag: string, excludeFolder: st
 		excludedFolders = excludeFolder.split(', ');
 	}
 	excludedFolders.push('.obsidian', '.trash'); // hardcode the basic folders
-	console.log(`excludedFolders: ${excludedFolders}`)	
+	//console.log(`excludedFolders: ${excludedFolders}`)	
     let fileArray: TFile[] = [];
     const files = await vault.getMarkdownFiles();
     for (const file of files) {
@@ -486,7 +486,7 @@ export const getFileMap = async (app: App, excludeTag: string, excludeFolder: st
 		//console.log(`file.path: ${file.path}`)
 		if ((!excludedSubstrings.some(substring => fileContents.includes(substring)) || excludeTag.length === 0) && 
             !excludedFolders.some(folder => file.path.includes(folder))) {
-			console.log(`file ${file} get's added.`)
+			//console.log(`file ${file} get's added.`)
 			fileArray.push(file)
         }
     }
