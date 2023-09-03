@@ -1,4 +1,4 @@
-import {checkIfReceiveABadge, getBadgeForLevel, getBadgeForInitLevel, Badge} from '../badges'
+import {checkIfReceiveABadge, getBadgeForLevel, getBadgeForInitLevel, Badge} from '../src/badges'
 import { describe, test } from 'node:test';
 
 

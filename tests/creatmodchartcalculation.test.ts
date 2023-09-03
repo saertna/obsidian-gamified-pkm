@@ -1,4 +1,4 @@
-import {findEarliestCreatedFile, findEarliestModifiedFile, findEarliestDateFile, monthsBetween, getCreationDates, getModificationDates, createChartFormat, replaceChartContent} from '../creatmodchartcalculation'
+import {findEarliestCreatedFile, findEarliestModifiedFile, findEarliestDateFile, monthsBetween, getCreationDates, getModificationDates, createChartFormat, replaceChartContent} from '../src/creatmodchartcalculation'
 import { describe, test } from 'node:test';
 import { MockProxy, mock, mockDeep, DeepMockProxy } from 'jest-mock-extended';
 //import { App, TFile } from 'obsidian';
