@@ -527,13 +527,12 @@ export default class gamification extends Plugin {
 	}
 
 	onunload() {
-		console.log('obsidian-pkm-gamification unloaded!');
-		
 		// Clear the timer when the plugin is unloaded
 		if (this.timerId !== null) {
 			clearInterval(this.timerId);
 			this.timerId = null;
 		  }
+		console.log('obsidian-pkm-gamification unloaded!');
 	}
 
 	async calculateNoteMajurity(statusbarGamification: HTMLSpanElement){
