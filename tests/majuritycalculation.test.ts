@@ -295,3 +295,4 @@ describe('countCharactersInActiveFile', () => {
 
 });
 
+
