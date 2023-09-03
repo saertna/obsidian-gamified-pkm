@@ -158,10 +158,27 @@ describe('rateInlinks', () => {
 
 
 describe('rateDirection', () => {
-	it('return the number chars for each layer.', () => {
+	it('new is lower', () => {
 		const actual = rateDirection("4⬇️",3);
-		const expected = '"3⬇️"';
+		const expected = '3⬇️';
 		expect(actual).toBe(expected);
 	});
 
+	it('new is equal', () => {
+		const actual = rateDirection("3⬇️",3);
+		const expected = '3➡️';
+		expect(actual).toBe(expected);
+	});
+
+	it('new is higher', () => {
+		const actual = rateDirection("2⬇️",3);
+		const expected = '3⬆️';
+		expect(actual).toBe(expected);
+	});
+
+	it('new is something else', () => {
+		const actual = rateDirection("",3);
+		const expected = '3';
+		expect(actual).toBe(expected);
+	});
 });
