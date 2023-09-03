@@ -27,6 +27,77 @@ import {getLevelForPoints, statusPointsForLevel} from './levels'
 import type {Moment} from 'moment';
 
 
+function updateFrontmatterInitialisation(frontmatter: any, noteMajurity: number, pointsReceived: number, pointsNoteMajurity: number, newLevel: Promise<boolean>, fileNameRate: number, pointsMajurity: number, rateFileLength: number, inlinkClass: number, rateOut: number, rateProgressiveSum: number) {
+	if (rateDirectionForStatusPoints(frontmatter['note-maturity'], noteMajurity) >= 1) {
+		pointsReceived += pointsNoteMajurity * rateDirectionForStatusPoints(frontmatter['note-maturity'], noteMajurity)
+		newLevel = this.giveStatusPoints(this.settings.avatarPageName, pointsNoteMajurity * rateDirectionForStatusPoints("frontmatter['note-maturity']", noteMajurity))
+
+	} else if (!('note-maturity' in frontmatter)) {
+		pointsReceived += pointsNoteMajurity * rateDirectionForStatusPoints("0", noteMajurity)
+		newLevel = this.giveStatusPoints(this.settings.avatarPageName, pointsNoteMajurity * rateDirectionForStatusPoints("0", noteMajurity))
+	}
+
+	if (rateDirectionForStatusPoints(frontmatter['title-class'], fileNameRate) >= 1 && 'title-class' in frontmatter) {
+		pointsReceived += pointsMajurity * rateDirectionForStatusPoints(frontmatter['title-class'], fileNameRate)
+		newLevel = this.giveStatusPoints(this.settings.avatarPageName, pointsMajurity * rateDirectionForStatusPoints(frontmatter['title-class'], fileNameRate))
+
+	} else if (!('title-class' in frontmatter)) {
+		pointsReceived += pointsMajurity * rateDirectionForStatusPoints("0", fileNameRate)
+		newLevel = this.giveStatusPoints(this.settings.avatarPageName, pointsMajurity * rateDirectionForStatusPoints("0", fileNameRate))
+
+	}
+
+	if (rateDirectionForStatusPoints(frontmatter['note-length-class'], rateFileLength) >= 1) {
+		pointsReceived += pointsMajurity * rateDirectionForStatusPoints(frontmatter['note-length-class'], rateFileLength)
+		newLevel = this.giveStatusPoints(this.settings.avatarPageName, pointsMajurity * rateDirectionForStatusPoints(frontmatter['note-length-class'], rateFileLength))
+
+	} else if (!('note-length-class' in frontmatter)) {
+		pointsReceived += pointsMajurity * rateDirectionForStatusPoints("0", rateFileLength)
+		newLevel = this.giveStatusPoints(this.settings.avatarPageName, pointsMajurity * rateDirectionForStatusPoints("0", rateFileLength))
+
+	}
+
+	if (rateDirectionForStatusPoints(frontmatter['inlink-class'], inlinkClass) >= 1) {
+		pointsReceived += pointsMajurity * rateDirectionForStatusPoints(frontmatter['inlink-class'], inlinkClass)
+		newLevel = this.giveStatusPoints(this.settings.avatarPageName, pointsMajurity * rateDirectionForStatusPoints(frontmatter['inlink-class'], inlinkClass))
+
+	} else if (!('inlink-class' in frontmatter)) {
+		pointsReceived += pointsMajurity * rateDirectionForStatusPoints("0", inlinkClass)
+		newLevel = this.giveStatusPoints(this.settings.avatarPageName, pointsMajurity * rateDirectionForStatusPoints("0", inlinkClass))
+
+	}
+
+	if (rateDirectionForStatusPoints(frontmatter['outlink-class'], rateOut) >= 1) {
+		pointsReceived += pointsMajurity * rateDirectionForStatusPoints(frontmatter['outlink-class'], rateOut)
+		newLevel = this.giveStatusPoints(this.settings.avatarPageName, pointsMajurity * rateDirectionForStatusPoints(frontmatter['outlink-class'], rateOut))
+
+	} else if (!('outlink-class' in frontmatter)) {
+		pointsReceived += pointsMajurity * rateDirectionForStatusPoints("0", rateOut)
+		newLevel = this.giveStatusPoints(this.settings.avatarPageName, pointsMajurity * rateDirectionForStatusPoints("0", rateOut))
+
+	}
+
+	if (rateDirectionForStatusPoints(frontmatter['progressive-sumarization-maturity'], rateProgressiveSum) >= 1) {
+		pointsReceived += pointsMajurity * rateDirectionForStatusPoints(frontmatter['progressive-sumarization-maturity'], rateProgressiveSum)
+		newLevel = this.giveStatusPoints(this.settings.avatarPageName, pointsMajurity * rateDirectionForStatusPoints(frontmatter['progressive-sumarization-maturity'], rateProgressiveSum))
+
+	} else if (!('progressive-sumarization-maturity' in frontmatter)) {
+		pointsReceived += pointsMajurity * rateDirectionForStatusPoints(frontmatter['progressive-sumarization-maturity'], rateProgressiveSum)
+		newLevel = this.giveStatusPoints(this.settings.avatarPageName, pointsMajurity * rateDirectionForStatusPoints("0", rateProgressiveSum))
+
+	}
+	//console.log(`pointsReceived: ${pointsReceived}\tnext are frontmatters …`)
+
+
+	frontmatter['title-class'] = rateDirection(frontmatter['title-class'], fileNameRate)
+	frontmatter['note-length-class'] = rateDirection(frontmatter['note-length-class'], rateFileLength)
+	frontmatter['inlink-class'] = rateDirection(frontmatter['inlink-class'], inlinkClass)
+	frontmatter['outlink-class'] = rateDirection(frontmatter['outlink-class'], rateOut)
+	frontmatter['progressive-sumarization-maturity'] = rateDirection(frontmatter['progressive-sumarization-maturity'], rateProgressiveSum)
+	frontmatter['note-maturity'] = rateDirection(frontmatter['note-maturity'], noteMajurity)
+	return pointsReceived;
+}
+
 export default class gamification extends Plugin {
 	//settings: gamificationSettings // überbleibsel aus dem Bsp.
 	public settings: GamificationPluginSettings;
@@ -422,73 +493,7 @@ export default class gamification extends Plugin {
 					//console.log('current metadata: ', frontmatter);
 
 					// Status Points
-					if (rateDirectionForStatusPoints(frontmatter['note-maturity'], noteMajurity) >= 1) {
-						pointsReceived += pointsNoteMajurity * rateDirectionForStatusPoints(frontmatter['note-maturity'], noteMajurity)
-						newLevel = this.giveStatusPoints(this.settings.avatarPageName, pointsNoteMajurity * rateDirectionForStatusPoints("frontmatter['note-maturity']", noteMajurity))
-
-					} else if (!('note-maturity' in frontmatter)) {
-						pointsReceived += pointsNoteMajurity * rateDirectionForStatusPoints("0", noteMajurity)
-						newLevel = this.giveStatusPoints(this.settings.avatarPageName, pointsNoteMajurity * rateDirectionForStatusPoints("0", noteMajurity))
-					}
-
-					if (rateDirectionForStatusPoints(frontmatter['title-class'], fileNameRate) >= 1 && 'title-class' in frontmatter) {
-						pointsReceived += pointsMajurity * rateDirectionForStatusPoints(frontmatter['title-class'], fileNameRate)
-						newLevel = this.giveStatusPoints(this.settings.avatarPageName, pointsMajurity * rateDirectionForStatusPoints(frontmatter['title-class'], fileNameRate))
-
-					} else if (!('title-class' in frontmatter)) {
-						pointsReceived += pointsMajurity * rateDirectionForStatusPoints("0", fileNameRate)
-						newLevel = this.giveStatusPoints(this.settings.avatarPageName, pointsMajurity * rateDirectionForStatusPoints("0", fileNameRate))
-
-					}
-
-					if (rateDirectionForStatusPoints(frontmatter['note-length-class'], rateFileLength) >= 1) {
-						pointsReceived += pointsMajurity * rateDirectionForStatusPoints(frontmatter['note-length-class'], rateFileLength)
-						newLevel = this.giveStatusPoints(this.settings.avatarPageName, pointsMajurity * rateDirectionForStatusPoints(frontmatter['note-length-class'], rateFileLength))
-
-					} else if (!('note-length-class' in frontmatter)) {
-						pointsReceived += pointsMajurity * rateDirectionForStatusPoints("0", rateFileLength)
-						newLevel = this.giveStatusPoints(this.settings.avatarPageName, pointsMajurity * rateDirectionForStatusPoints("0", rateFileLength))
-
-					}
-
-					if (rateDirectionForStatusPoints(frontmatter['inlink-class'], inlinkClass) >= 1) {
-						pointsReceived += pointsMajurity * rateDirectionForStatusPoints(frontmatter['inlink-class'], inlinkClass)
-						newLevel = this.giveStatusPoints(this.settings.avatarPageName, pointsMajurity * rateDirectionForStatusPoints(frontmatter['inlink-class'], inlinkClass))
-
-					} else if (!('inlink-class' in frontmatter)) {
-						pointsReceived += pointsMajurity * rateDirectionForStatusPoints("0", inlinkClass)
-						newLevel = this.giveStatusPoints(this.settings.avatarPageName, pointsMajurity * rateDirectionForStatusPoints("0", inlinkClass))
-
-					}
-
-					if (rateDirectionForStatusPoints(frontmatter['outlink-class'], rateOut) >= 1) {
-						pointsReceived += pointsMajurity * rateDirectionForStatusPoints(frontmatter['outlink-class'], rateOut)
-						newLevel = this.giveStatusPoints(this.settings.avatarPageName, pointsMajurity * rateDirectionForStatusPoints(frontmatter['outlink-class'], rateOut))
-
-					} else if (!('outlink-class' in frontmatter)) {
-						pointsReceived += pointsMajurity * rateDirectionForStatusPoints("0", rateOut)
-						newLevel = this.giveStatusPoints(this.settings.avatarPageName, pointsMajurity * rateDirectionForStatusPoints("0", rateOut))
-
-					}
-
-					if (rateDirectionForStatusPoints(frontmatter['progressive-sumarization-maturity'], rateProgressiveSum) >= 1) {
-						pointsReceived += pointsMajurity * rateDirectionForStatusPoints(frontmatter['progressive-sumarization-maturity'], rateProgressiveSum)
-						newLevel = this.giveStatusPoints(this.settings.avatarPageName, pointsMajurity * rateDirectionForStatusPoints(frontmatter['progressive-sumarization-maturity'], rateProgressiveSum))
-
-					} else if (!('progressive-sumarization-maturity' in frontmatter)) {
-						pointsReceived += pointsMajurity * rateDirectionForStatusPoints(frontmatter['progressive-sumarization-maturity'], rateProgressiveSum)
-						newLevel = this.giveStatusPoints(this.settings.avatarPageName, pointsMajurity * rateDirectionForStatusPoints("0", rateProgressiveSum))
-
-					}
-					//console.log(`pointsReceived: ${pointsReceived}\tnext are frontmatters …`)
-
-
-					frontmatter['title-class'] = rateDirection(frontmatter['title-class'], fileNameRate)
-					frontmatter['note-length-class'] = rateDirection(frontmatter['note-length-class'], rateFileLength)
-					frontmatter['inlink-class'] = rateDirection(frontmatter['inlink-class'], inlinkClass)
-					frontmatter['outlink-class'] = rateDirection(frontmatter['outlink-class'], rateOut)
-					frontmatter['progressive-sumarization-maturity'] = rateDirection(frontmatter['progressive-sumarization-maturity'], rateProgressiveSum)
-					frontmatter['note-maturity'] = rateDirection(frontmatter['note-maturity'], noteMajurity)
+					pointsReceived = updateFrontmatterInitialisation.call(this, frontmatter, noteMajurity, pointsReceived, pointsNoteMajurity, newLevel, fileNameRate, pointsMajurity, rateFileLength, inlinkClass, rateOut, rateProgressiveSum);
 				});
 			} catch (e) {
 				if (e?.name === 'YAMLParseError') {
