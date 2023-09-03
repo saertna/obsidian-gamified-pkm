@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1693767465079" clover="3.2.0">
-  <project timestamp="1693767465079" name="All files">
-    <metrics statements="1042" coveredstatements="110" conditionals="364" coveredconditionals="38" methods="123" coveredmethods="11" elements="1529" coveredelements="159" complexity="0" loc="1042" ncloc="1042" packages="1" files="7" classes="7"/>
+<coverage generated="1693767998848" clover="3.2.0">
+  <project timestamp="1693767998848" name="All files">
+    <metrics statements="1042" coveredstatements="126" conditionals="364" coveredconditionals="46" methods="123" coveredmethods="12" elements="1529" coveredelements="184" complexity="0" loc="1042" ncloc="1042" packages="1" files="7" classes="7"/>
     <file name="badges.ts" path="C:\Users\AndyT\WebstormProjects\obsidian-gamified-pkm\src\badges.ts">
       <metrics statements="25" coveredstatements="25" conditionals="7" coveredconditionals="7" methods="3" coveredmethods="3"/>
       <line num="8" count="1" type="stmt"/>
@@ -794,7 +794,7 @@
       <line num="1700" count="0" type="stmt"/>
     </file>
     <file name="majuritycalculation.ts" path="C:\Users\AndyT\WebstormProjects\obsidian-gamified-pkm\src\majuritycalculation.ts">
-      <metrics statements="210" coveredstatements="59" conditionals="134" coveredconditionals="25" methods="19" coveredmethods="5"/>
+      <metrics statements="210" coveredstatements="75" conditionals="134" coveredconditionals="33" methods="19" coveredmethods="6"/>
       <line num="1" count="1" type="stmt"/>
       <line num="2" count="1" type="stmt"/>
       <line num="4" count="1" type="stmt"/>
@@ -869,33 +869,33 @@
       <line num="129" count="0" type="stmt"/>
       <line num="133" count="1" type="stmt"/>
       <line num="134" count="1" type="stmt"/>
-      <line num="137" count="0" type="stmt"/>
-      <line num="138" count="0" type="cond" truecount="0" falsecount="1"/>
+      <line num="137" count="1" type="stmt"/>
+      <line num="138" count="1" type="cond" truecount="0" falsecount="1"/>
       <line num="139" count="0" type="stmt"/>
       <line num="142" count="0" type="stmt"/>
       <line num="143" count="0" type="stmt"/>
       <line num="144" count="0" type="cond" truecount="0" falsecount="1"/>
       <line num="145" count="0" type="stmt"/>
-      <line num="152" count="0" type="stmt"/>
+      <line num="152" count="1" type="stmt"/>
       <line num="157" count="1" type="stmt"/>
-      <line num="161" count="0" type="stmt"/>
-      <line num="162" count="0" type="cond" truecount="0" falsecount="2"/>
-      <line num="163" count="0" type="stmt"/>
+      <line num="161" count="3" type="stmt"/>
+      <line num="162" count="3" type="cond" truecount="1" falsecount="1"/>
+      <line num="163" count="3" type="stmt"/>
       <line num="165" count="0" type="stmt"/>
-      <line num="168" count="0" type="stmt"/>
-      <line num="169" count="0" type="stmt"/>
-      <line num="171" count="0" type="cond" truecount="0" falsecount="2"/>
+      <line num="168" count="3" type="stmt"/>
+      <line num="169" count="3" type="stmt"/>
+      <line num="171" count="3" type="cond" truecount="1" falsecount="1"/>
       <line num="172" count="0" type="stmt"/>
-      <line num="173" count="0" type="cond" truecount="0" falsecount="2"/>
+      <line num="173" count="3" type="cond" truecount="1" falsecount="1"/>
       <line num="174" count="0" type="stmt"/>
-      <line num="175" count="0" type="cond" truecount="0" falsecount="2"/>
+      <line num="175" count="3" type="cond" truecount="1" falsecount="1"/>
       <line num="176" count="0" type="stmt"/>
-      <line num="177" count="0" type="cond" truecount="0" falsecount="2"/>
-      <line num="178" count="0" type="stmt"/>
-      <line num="179" count="0" type="cond" truecount="0" falsecount="2"/>
+      <line num="177" count="3" type="cond" truecount="2" falsecount="0"/>
+      <line num="178" count="1" type="stmt"/>
+      <line num="179" count="2" type="cond" truecount="1" falsecount="1"/>
       <line num="180" count="0" type="stmt"/>
-      <line num="181" count="0" type="cond" truecount="0" falsecount="2"/>
-      <line num="182" count="0" type="stmt"/>
+      <line num="181" count="2" type="cond" truecount="1" falsecount="1"/>
+      <line num="182" count="2" type="stmt"/>
       <line num="184" count="0" type="stmt"/>
       <line num="189" count="1" type="stmt"/>
       <line num="191" count="0" type="cond" truecount="0" falsecount="2"/>

@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">28.09% </span>
+                <span class="strong">35.71% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>59/210</span>
+                <span class='fraction'>75/210</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">18.65% </span>
+                <span class="strong">24.62% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>25/134</span>
+                <span class='fraction'>33/134</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">26.31% </span>
+                <span class="strong">31.57% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>5/19</span>
+                <span class='fraction'>6/19</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">28.09% </span>
+                <span class="strong">35.71% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>59/210</span>
+                <span class='fraction'>75/210</span>
             </div>
         
             
@@ -582,22 +582,17 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -606,28 +601,33 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -965,8 +965,8 @@ export function countLayer2AndLayer3Characters(content: string, filename: string
     const boldRegex = new RegExp(`${layer3}[^${layer3exclude}]+${layer3}`, "g");
   
 	// Count highlighted characters
-	const highlightedMatches = <span class="cstat-no" title="statement not covered" >content.match(highlightRegex);</span>
-<span class="cstat-no" title="statement not covered" >	<span class="missing-if-branch" title="if path not taken" >I</span>if (highlightedMatches) {</span>
+	const highlightedMatches = content.match(highlightRegex);
+	<span class="missing-if-branch" title="if path not taken" >I</span>if (highlightedMatches) {
 <span class="cstat-no" title="statement not covered" >	  highlightedCount = highlightedMatches.join("").length - (highlightedMatches.length * 4); </span>// Subtract the length of '=='
 	  // first take the layer2 (highlightedCount) and run on this the 'boldRegex'
 	  // Count bold characters
@@ -980,38 +980,38 @@ export function countLayer2AndLayer3Characters(content: string, filename: string
 	
 	
   
-<span class="cstat-no" title="statement not covered" >	return { charCount, highlightedCount, boldCount };</span>
+	return { charCount, highlightedCount, boldCount };
 &nbsp;
 }
 &nbsp;
 &nbsp;
-export function <span class="fstat-no" title="function not covered" >rateLevelOfMaturity(</span>noteLength: number, lengthOfTitle: number, Inlinks: number, outgoingLinks: number, progressiveSumMajurity: number): number {
+export function rateLevelOfMaturity(noteLength: number, lengthOfTitle: number, Inlinks: number, outgoingLinks: number, progressiveSumMajurity: number): number {
 	// console.log(`noteLength: ${noteLength}\tlengthOfTitle: ${lengthOfTitle}\tInlinks: ${Inlinks}\toutgoingLinks: ${outgoingLinks}`)
 	
 	// decide if noteLength-majurity or progressiveSum-majurity shall be used
-	var lengthMajurity = <span class="cstat-no" title="statement not covered" >0;</span>
-<span class="cstat-no" title="statement not covered" >	if(noteLength &gt;= progressiveSumMajurity) {</span>
-<span class="cstat-no" title="statement not covered" >		lengthMajurity = noteLength;</span>
-	} else {
+	var lengthMajurity = 0;
+	if(noteLength &gt;= progressiveSumMajurity) {
+		lengthMajurity = noteLength;
+	} else <span class="missing-if-branch" title="else path not taken" >E</span>{
 <span class="cstat-no" title="statement not covered" >		lengthMajurity = progressiveSumMajurity;</span>
 	}
 	
-	const totalWeight : number = <span class="cstat-no" title="statement not covered" >lengthMajurity + lengthOfTitle + Inlinks + outgoingLinks;</span>
-	const averageWeight = <span class="cstat-no" title="statement not covered" >totalWeight / 5;</span>
+	const totalWeight : number = lengthMajurity + lengthOfTitle + Inlinks + outgoingLinks;
+	const averageWeight = totalWeight / 5;
 	// console.log(`totalWeight: ${totalWeight}\taverageWeight: ${averageWeight}`)
-<span class="cstat-no" title="statement not covered" >	if (averageWeight &lt; 0.5) {</span>
+	<span class="missing-if-branch" title="if path not taken" >I</span>if (averageWeight &lt; 0.5) {
 <span class="cstat-no" title="statement not covered" >		return 0;</span>
-	} else <span class="cstat-no" title="statement not covered" >if (averageWeight &lt;= 1) {</span>
+	} else <span class="missing-if-branch" title="if path not taken" >I</span>if (averageWeight &lt;= 1) {
 <span class="cstat-no" title="statement not covered" >		return 1;</span>
-	} else <span class="cstat-no" title="statement not covered" >if (averageWeight &lt;= 2) {</span>
+	} else <span class="missing-if-branch" title="if path not taken" >I</span>if (averageWeight &lt;= 2) {
 <span class="cstat-no" title="statement not covered" >		return 2;</span>
-	} else <span class="cstat-no" title="statement not covered" >if (averageWeight &lt;= 3) {</span>
-<span class="cstat-no" title="statement not covered" >		return 3;</span>
-	} else <span class="cstat-no" title="statement not covered" >if (averageWeight &lt;= 3.5) {</span>
+	} else if (averageWeight &lt;= 3) {
+		return 3;
+	} else <span class="missing-if-branch" title="if path not taken" >I</span>if (averageWeight &lt;= 3.5) {
 <span class="cstat-no" title="statement not covered" >		return 4;</span>
-	} else <span class="cstat-no" title="statement not covered" >if (averageWeight &lt;= 4) {</span>
-<span class="cstat-no" title="statement not covered" >		return 5;</span>
-	} else {
+	} else if (averageWeight &lt;= 4) {
+		return 5;
+	} else <span class="missing-if-branch" title="else path not taken" >E</span>{
 <span class="cstat-no" title="statement not covered" >		return 0;</span>
 	}
 }
@@ -1219,7 +1219,7 @@ export function <span class="fstat-no" title="function not covered" >count_inlin
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2023-09-03T18:57:45.047Z
+                at 2023-09-03T19:06:38.807Z
             </div>
         <script src="prettify.js"></script>
         <script>
