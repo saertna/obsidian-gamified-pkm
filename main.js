@@ -2216,78 +2216,6 @@ function statusPointsForLevel(targetLevel) {
 }
 
 // src/main.ts
-function getNumberOfOutlinks(activeFile) {
-  var _a;
-  if (!activeFile) {
-    return 0;
-  }
-  const inlinks = (_a = app.metadataCache.getFileCache(activeFile)) == null ? void 0 : _a.links;
-  return inlinks ? Object.keys(inlinks).length : 0;
-}
-function count_inlinks(file) {
-  const { app: { metadataCache: { resolvedLinks } } } = this;
-  const { path: path2 } = file;
-  const sumInlinks = Object.values(resolvedLinks).map((val) => {
-    var _a;
-    return (_a = val[path2]) != null ? _a : 0;
-  }).reduce((left, right) => left + right, 0);
-  return sumInlinks;
-}
-var getFileCountMap = async (app2, excludeTag, excludeFolder) => {
-  const { vault } = app2;
-  let excludedSubstrings = [];
-  if (excludeTag == void 0) {
-    excludedSubstrings = [];
-  } else {
-    excludedSubstrings = excludeTag.split(", ");
-  }
-  let excludedFolders = [];
-  if (excludeFolder == void 0) {
-    excludedFolders = [];
-  } else {
-    excludedFolders = excludeFolder.split(", ");
-  }
-  excludedFolders.push(".obsidian", ".trash");
-  const fileCountMap = /* @__PURE__ */ new Map();
-  const files = await vault.getMarkdownFiles();
-  for (const file of files) {
-    const fileName = file.basename;
-    const currentCount = fileCountMap.get(fileName) || 0;
-    fileCountMap.set(fileName, currentCount + 1);
-    const fileContents = await app2.vault.read(file);
-    if (!excludedSubstrings.some((substring) => fileContents.includes(substring)) && !excludedFolders.some((folder) => file.path.includes(folder))) {
-      const fileName2 = file.basename;
-      const currentCount2 = fileCountMap.get(fileName2) || 0;
-      fileCountMap.set(fileName2, currentCount2 + 1);
-    }
-  }
-  return fileCountMap;
-};
-var getFileMap = async (app2, excludeTag, excludeFolder) => {
-  const { vault } = app2;
-  let excludedSubstrings = [];
-  if (excludeTag == void 0) {
-    excludedSubstrings = [];
-  } else {
-    excludedSubstrings = excludeTag.split(", ");
-  }
-  let excludedFolders = [];
-  if (excludeFolder == void 0) {
-    excludedFolders = [];
-  } else {
-    excludedFolders = excludeFolder.split(", ");
-  }
-  excludedFolders.push(".obsidian", ".trash");
-  let fileArray = [];
-  const files = await vault.getMarkdownFiles();
-  for (const file of files) {
-    const fileContents = await app2.vault.read(file);
-    if ((!excludedSubstrings.some((substring) => fileContents.includes(substring)) || excludeTag.length === 0) && !excludedFolders.some((folder) => file.path.includes(folder))) {
-      fileArray.push(file);
-    }
-  }
-  return fileArray;
-};
 var gamification = class extends import_obsidian2.Plugin {
   async onload() {
     console.log("obsidian-pkm-gamification loaded!");
@@ -2315,7 +2243,7 @@ var gamification = class extends import_obsidian2.Plugin {
         id: "init-rate-gamification",
         name: "Initialize gamification ratings",
         callback: async () => {
-          this.settings.gamificationStartDate = format(new Date(), "yyyy-MM-dd");
+          this.settings.gamificationStartDate = window.moment().format("DD.MM.YYYY");
           this.saveSettings();
           const { vault } = this.app;
           await createAvatarFile(this.app, this.settings.avatarPageName);
@@ -3279,3 +3207,75 @@ function rateDirectionForStatusPoints(ratingCurrent, ratingNew) {
   }
   return ratingFaktor;
 }
+function getNumberOfOutlinks(activeFile) {
+  var _a;
+  if (!activeFile) {
+    return 0;
+  }
+  const inlinks = (_a = app.metadataCache.getFileCache(activeFile)) == null ? void 0 : _a.links;
+  return inlinks ? Object.keys(inlinks).length : 0;
+}
+function count_inlinks(file) {
+  const { app: { metadataCache: { resolvedLinks } } } = this;
+  const { path: path2 } = file;
+  const sumInlinks = Object.values(resolvedLinks).map((val) => {
+    var _a;
+    return (_a = val[path2]) != null ? _a : 0;
+  }).reduce((left, right) => left + right, 0);
+  return sumInlinks;
+}
+var getFileCountMap = async (app2, excludeTag, excludeFolder) => {
+  const { vault } = app2;
+  let excludedSubstrings = [];
+  if (excludeTag == void 0) {
+    excludedSubstrings = [];
+  } else {
+    excludedSubstrings = excludeTag.split(", ");
+  }
+  let excludedFolders = [];
+  if (excludeFolder == void 0) {
+    excludedFolders = [];
+  } else {
+    excludedFolders = excludeFolder.split(", ");
+  }
+  excludedFolders.push(".obsidian", ".trash");
+  const fileCountMap = /* @__PURE__ */ new Map();
+  const files = await vault.getMarkdownFiles();
+  for (const file of files) {
+    const fileName = file.basename;
+    const currentCount = fileCountMap.get(fileName) || 0;
+    fileCountMap.set(fileName, currentCount + 1);
+    const fileContents = await app2.vault.read(file);
+    if (!excludedSubstrings.some((substring) => fileContents.includes(substring)) && !excludedFolders.some((folder) => file.path.includes(folder))) {
+      const fileName2 = file.basename;
+      const currentCount2 = fileCountMap.get(fileName2) || 0;
+      fileCountMap.set(fileName2, currentCount2 + 1);
+    }
+  }
+  return fileCountMap;
+};
+var getFileMap = async (app2, excludeTag, excludeFolder) => {
+  const { vault } = app2;
+  let excludedSubstrings = [];
+  if (excludeTag == void 0) {
+    excludedSubstrings = [];
+  } else {
+    excludedSubstrings = excludeTag.split(", ");
+  }
+  let excludedFolders = [];
+  if (excludeFolder == void 0) {
+    excludedFolders = [];
+  } else {
+    excludedFolders = excludeFolder.split(", ");
+  }
+  excludedFolders.push(".obsidian", ".trash");
+  let fileArray = [];
+  const files = await vault.getMarkdownFiles();
+  for (const file of files) {
+    const fileContents = await app2.vault.read(file);
+    if ((!excludedSubstrings.some((substring) => fileContents.includes(substring)) || excludeTag.length === 0) && !excludedFolders.some((folder) => file.path.includes(folder))) {
+      fileArray.push(file);
+    }
+  }
+  return fileArray;
+};

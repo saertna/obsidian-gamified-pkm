@@ -118,7 +118,7 @@ export default class gamification extends Plugin {
 				id: 'init-rate-gamification',
 				name: 'Initialize gamification ratings',
 				callback: async () => {
-					this.settings.gamificationStartDate = format(new Date(), 'yyyy-MM-dd');
+					this.settings.gamificationStartDate = window.moment().format('DD.MM.YYYY');
 					this.saveSettings();
 
 					const { vault } = this.app;
