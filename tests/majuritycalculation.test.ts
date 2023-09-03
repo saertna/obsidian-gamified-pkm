@@ -1,6 +1,6 @@
 import { describe } from 'node:test';
 import {statusPointsForLevel} from "../src/levels";
-import {rateProgressiveSummarization} from "../src/majuritycalculation";
+import {countLayer2AndLayer3Characters, rateProgressiveSummarization} from "../src/majuritycalculation";
 
 describe('rateProgressiveSummarization', () => {
 	it('if nothing higlighted shall return 0', () => {
@@ -26,4 +26,14 @@ describe('rateProgressiveSummarization', () => {
 		const expected = 4;
 		expect(actual).toBe(expected);
 	});
+});
+
+
+describe('countLayer2AndLayer3Characters', () => {
+	it('return the chars for each input.', () => {
+		const actual = countLayer2AndLayer3Characters('# This is an example Text for Test\nThis is Line 1\nThis is Line 2\nThis is Line 3\n#thisIsATag','This is an example Text for Test', '==This is Line 1==', '*is*');
+		const expected = {charCount:44, highlightedCount:14, boldCount:2};
+		expect(actual).toBe(expected);
+	});
+
 });
