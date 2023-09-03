@@ -1,6 +1,5 @@
-import { Vault, Plugin, TFile, App, Modal, MarkdownView, Notice } from 'obsidian';
 import {getLevelForPoints, LevelData, statusPointsForLevel} from '../src/levels'
-import { describe, test } from 'node:test';
+import { describe } from 'node:test';
 
 
 describe('statusPointsForLevel', () => {

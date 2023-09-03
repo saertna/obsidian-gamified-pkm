@@ -1,4 +1,3 @@
-import { TFile, App, } from 'obsidian';
 import * as fs from 'fs';
 import * as path from 'path';
 
@@ -44,7 +43,7 @@ export function rateProgressiveSummarization(charCountTotal: number, layer2count
 			majurity = 2;
 		} else if (layer2majurity >= 3 && layer3majurity == 0) {
 			majurity = 3;
-		} else if ((layer2majurity == 3 || layer2majurity == 4) && (layer3majurity == 4 || layer3majurity == 5)) {
+		} else if ((layer2majurity == 3 || layer2majurity == 4 ) && (layer3majurity == 4 || layer3majurity == 5)  || (layer2majurity == 5 && layer3majurity == 4) ) {
 			majurity = 4;
 		} else if (layer2majurity == 5 && layer3majurity == 5) {
 			majurity = 5;
@@ -288,16 +287,6 @@ export function rateNoteLength(contenlength: number): number {
 }
 
 
-export function getNumberOfOutlinks(activeFile: TFile): number {
-	// const activeFile: TFile | null = app.workspace.getActiveFile();
-	if (!activeFile) {
-		return 0;
-	}
-	const inlinks = app.metadataCache.getFileCache(activeFile)?.links;
-	return inlinks ? Object.keys(inlinks).length : 0;
-}
-
-
 export function countCharactersInActiveFile(content: string, filename: string): number {
   
 	const filenameWithoutExtension = filename; //.slice(0, -filename.length);
@@ -392,103 +381,3 @@ export function count_inlinks_single(file_path: string, vault_path: string): num
 }
 
 
-export function count_inlinks(file: TFile): number {
-    const { app: { metadataCache: { resolvedLinks } } } = this;
-    const { path } = file;
-
-    const sumInlinks = Object.values(resolvedLinks)
-        .map((val: { [key: string]: number }) => val[path] ?? 0)
-        .reduce((left, right) => left + right, 0);
-
-    return sumInlinks;
-}
-
-
-export const getFileCountMap = async (app: App, excludeTag: string, excludeFolder: string): Promise<Map<string, number>> => {
-
-    const { vault } = app;
-
-	
-	// files with this #tags in to ignore
-	let excludedSubstrings : string[] = []
-	if (excludeTag == undefined) {
-		excludedSubstrings = []
-	} else {
-		excludedSubstrings = excludeTag.split(', ');
-	}
-	
-
-	// folders to ignore .md-files in
-	let excludedFolders : string[] = []
-	if (excludeFolder == undefined) {
-		excludedFolders = []
-	} else {
-		excludedFolders = excludeFolder.split(', ');
-	}
-	excludedFolders.push('.obsidian', '.trash'); // hardcode the basic folders
-	
-    const fileCountMap = new Map<string, number>();
-
-    const files = await vault.getMarkdownFiles();
-
-    for (const file of files) {
-
-		const fileName = file.basename;
-
-        const currentCount = fileCountMap.get(fileName) || 0;
-
-        fileCountMap.set(fileName, currentCount + 1);
-
-		const fileContents = await app.vault.read(file);
-
-        if (!excludedSubstrings.some(substring => fileContents.includes(substring)) && 
-            !excludedFolders.some(folder => file.path.includes(folder))) {
-
-            const fileName = file.basename;
-
-            const currentCount = fileCountMap.get(fileName) || 0;
-
-            fileCountMap.set(fileName, currentCount + 1);
-        }
-		
-    }
-
-    return fileCountMap;
-};
-
-
-export const getFileMap = async (app: App, excludeTag: string, excludeFolder: string): Promise<TFile[]> => {
-
-    const { vault } = app;
-
-	// files with this #tags in to ignore
-	let excludedSubstrings : string[] = []
-	if (excludeTag == undefined) {
-		excludedSubstrings = []
-	} else {
-		excludedSubstrings = excludeTag.split(', ');
-	}
-	//console.log(`excludedSubstrings: ${excludedSubstrings}`)
-	// folders to ignore .md-files in
-	let excludedFolders : string[] = []
-	if (excludeFolder == undefined) {
-		excludedFolders = []
-	} else {
-		excludedFolders = excludeFolder.split(', ');
-	}
-	excludedFolders.push('.obsidian', '.trash'); // hardcode the basic folders
-	//console.log(`excludedFolders: ${excludedFolders}`)	
-    let fileArray: TFile[] = [];
-    const files = await vault.getMarkdownFiles();
-    for (const file of files) {
-
-        const fileContents = await app.vault.read(file);
-		//console.log(`file.path: ${file.path}`)
-		if ((!excludedSubstrings.some(substring => fileContents.includes(substring)) || excludeTag.length === 0) && 
-            !excludedFolders.some(folder => file.path.includes(folder))) {
-			//console.log(`file ${file} get's added.`)
-			fileArray.push(file)
-        }
-    }
-    return fileArray;
-};
