@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1693770414341" clover="3.2.0">
-  <project timestamp="1693770414341" name="All files">
-    <metrics statements="1021" coveredstatements="204" conditionals="354" coveredconditionals="106" methods="119" coveredmethods="21" elements="1494" coveredelements="331" complexity="0" loc="1021" ncloc="1021" packages="1" files="7" classes="7"/>
+<coverage generated="1693770538936" clover="3.2.0">
+  <project timestamp="1693770538936" name="All files">
+    <metrics statements="1017" coveredstatements="204" conditionals="354" coveredconditionals="106" methods="117" coveredmethods="21" elements="1488" coveredelements="331" complexity="0" loc="1017" ncloc="1017" packages="1" files="6" classes="6"/>
     <file name="badges.ts" path="C:\Users\AndyT\WebstormProjects\obsidian-gamified-pkm\src\badges.ts">
       <metrics statements="25" coveredstatements="25" conditionals="7" coveredconditionals="7" methods="3" coveredmethods="3"/>
       <line num="8" count="1" type="stmt"/>
@@ -1036,13 +1036,6 @@
       <line num="185" count="0" type="stmt"/>
       <line num="187" count="0" type="stmt"/>
       <line num="188" count="0" type="stmt"/>
-    </file>
-    <file name="utils.ts" path="C:\Users\AndyT\WebstormProjects\obsidian-gamified-pkm\src\utils.ts">
-      <metrics statements="4" coveredstatements="0" conditionals="0" coveredconditionals="0" methods="2" coveredmethods="0"/>
-      <line num="6" count="0" type="stmt"/>
-      <line num="7" count="0" type="stmt"/>
-      <line num="10" count="0" type="stmt"/>
-      <line num="11" count="0" type="stmt"/>
     </file>
   </project>
 </coverage>
