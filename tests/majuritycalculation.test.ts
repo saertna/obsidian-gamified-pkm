@@ -3,7 +3,7 @@ import {
 	countLayer2AndLayer3Characters,
 	rateLevelOfMaturity, rateOutlinks,
 	rateInlinks, rateDirection,
-	rateProgressiveSummarization
+	rateProgressiveSummarization, rateLengthFilename, rateNoteLength, countCharactersInActiveFile
 } from "../src/majuritycalculation";
 
 describe('rateProgressiveSummarization', () => {
@@ -182,3 +182,116 @@ describe('rateDirection', () => {
 		expect(actual).toBe(expected);
 	});
 });
+
+describe('rateLengthFilename', () => {
+	it('rateLengthFilename ⇒ 0 ', () => {
+		const actual = rateLengthFilename('This is a filename below 30');
+		const expected = 0;
+		expect(actual).toBe(expected);
+	});
+
+	it('rateLengthFilename ⇒ 1 ', () => {
+		const actual = rateLengthFilename('This is a filename below 80 .............');
+		const expected = 1;
+		expect(actual).toBe(expected);
+	});
+
+	it('rateLengthFilename ⇒ 3 ', () => {
+		const actual = rateLengthFilename('This is a filename below 100 but above 80 ................................................');
+		const expected = 3;
+		expect(actual).toBe(expected);
+	});
+
+	it('rateLengthFilename ⇒ 5 ', () => {
+		const actual = rateLengthFilename('This is a filename below 150 but above 100 ...............................................................');
+		const expected = 5;
+		expect(actual).toBe(expected);
+	});
+
+	it('rateLengthFilename ⇒ 4 ', () => {
+		const actual = rateLengthFilename('This is a filename below 190 but above 150 .......................................................................................................................................');
+		const expected = 4;
+		expect(actual).toBe(expected);
+	});
+
+	it('rateLengthFilename ⇒ 2 ', () => {
+		const actual = rateLengthFilename('This is a filename below 210 but above 190 .......................................................................................................................................................');
+		const expected = 2;
+		expect(actual).toBe(expected);
+	});
+
+	it('rateLengthFilename ⇒ 1 ', () => {
+		const actual = rateLengthFilename('This is a filename below 250 but above 210 ....................................................................................................................................................................................');
+		const expected = 1;
+		expect(actual).toBe(expected);
+	});
+
+	it('rateLengthFilename ⇒ 0 ', () => {
+		const actual = rateLengthFilename('This is a filename above 250 ........................................................................................................................................................................................................................................................................');
+		const expected = 0;
+		expect(actual).toBe(expected);
+	});
+
+});
+
+
+describe('rateNoteLength', () => {
+	it('rateNoteLength ⇒ 0', () => {
+		const actual = rateNoteLength(199);
+		const expected = 0;
+		expect(actual).toBe(expected);
+	});
+
+	it('rateNoteLength ⇒ 4', () => {
+		const actual = rateNoteLength(549);
+		const expected = 4;
+		expect(actual).toBe(expected);
+	});
+
+	it('rateNoteLength ⇒ 5', () => {
+		const actual = rateNoteLength(999);
+		const expected = 5;
+		expect(actual).toBe(expected);
+	});
+
+	it('rateNoteLength ⇒ 4', () => {
+		const actual = rateNoteLength(1199);
+		const expected = 4;
+		expect(actual).toBe(expected);
+	});
+
+	it('rateNoteLength ⇒ 3', () => {
+		const actual = rateNoteLength(1999);
+		const expected = 3;
+		expect(actual).toBe(expected);
+	});
+
+	it('rateNoteLength ⇒ 2', () => {
+		const actual = rateNoteLength(2499);
+		const expected = 2;
+		expect(actual).toBe(expected);
+	});
+
+	it('rateNoteLength ⇒ 1', () => {
+		const actual = rateNoteLength(2999);
+		const expected = 1;
+		expect(actual).toBe(expected);
+	});
+
+	it('rateNoteLength ⇒ 0', () => {
+		const actual = rateNoteLength(3000);
+		const expected = 0;
+		expect(actual).toBe(expected);
+	});
+
+});
+
+describe('countCharactersInActiveFile', () => {
+	it('countCharactersInActiveFile', () => {
+		const actual = countCharactersInActiveFile('# This is an example Text for Test\nThis is Line 1\nThis is Line 2\nThis is Line 3\n#thisIsATag','This is an example Text for Test');
+		const expected = 42;
+		expect(actual).toBe(expected);
+	});
+
+});
+
