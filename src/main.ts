@@ -24,7 +24,6 @@ import {
 } from './creatmodchartcalculation'
 import {Badge, checkIfReceiveABadge, getBadgeForInitLevel, getBadgeForLevel} from './badges'
 import {getLevelForPoints, statusPointsForLevel} from './levels'
-// import { Moment } from 'moment';
 import type {Moment} from 'moment';
 
 
@@ -427,7 +426,7 @@ export default class gamification extends Plugin {
 						pointsReceived += pointsNoteMajurity * rateDirectionForStatusPoints(frontmatter['note-maturity'], noteMajurity)
 						newLevel = this.giveStatusPoints(this.settings.avatarPageName, pointsNoteMajurity * rateDirectionForStatusPoints("frontmatter['note-maturity']", noteMajurity))
 
-					} else if ('note-maturity' in frontmatter == false) {
+					} else if (!('note-maturity' in frontmatter)) {
 						pointsReceived += pointsNoteMajurity * rateDirectionForStatusPoints("0", noteMajurity)
 						newLevel = this.giveStatusPoints(this.settings.avatarPageName, pointsNoteMajurity * rateDirectionForStatusPoints("0", noteMajurity))
 					}
@@ -436,7 +435,7 @@ export default class gamification extends Plugin {
 						pointsReceived += pointsMajurity * rateDirectionForStatusPoints(frontmatter['title-class'], fileNameRate)
 						newLevel = this.giveStatusPoints(this.settings.avatarPageName, pointsMajurity * rateDirectionForStatusPoints(frontmatter['title-class'], fileNameRate))
 
-					} else if ('title-class' in frontmatter == false) {
+					} else if (!('title-class' in frontmatter)) {
 						pointsReceived += pointsMajurity * rateDirectionForStatusPoints("0", fileNameRate)
 						newLevel = this.giveStatusPoints(this.settings.avatarPageName, pointsMajurity * rateDirectionForStatusPoints("0", fileNameRate))
 
@@ -446,7 +445,7 @@ export default class gamification extends Plugin {
 						pointsReceived += pointsMajurity * rateDirectionForStatusPoints(frontmatter['note-length-class'], rateFileLength)
 						newLevel = this.giveStatusPoints(this.settings.avatarPageName, pointsMajurity * rateDirectionForStatusPoints(frontmatter['note-length-class'], rateFileLength))
 
-					} else if ('note-length-class' in frontmatter == false) {
+					} else if (!('note-length-class' in frontmatter)) {
 						pointsReceived += pointsMajurity * rateDirectionForStatusPoints("0", rateFileLength)
 						newLevel = this.giveStatusPoints(this.settings.avatarPageName, pointsMajurity * rateDirectionForStatusPoints("0", rateFileLength))
 
@@ -456,7 +455,7 @@ export default class gamification extends Plugin {
 						pointsReceived += pointsMajurity * rateDirectionForStatusPoints(frontmatter['inlink-class'], inlinkClass)
 						newLevel = this.giveStatusPoints(this.settings.avatarPageName, pointsMajurity * rateDirectionForStatusPoints(frontmatter['inlink-class'], inlinkClass))
 
-					} else if ('inlink-class' in frontmatter == false) {
+					} else if (!('inlink-class' in frontmatter)) {
 						pointsReceived += pointsMajurity * rateDirectionForStatusPoints("0", inlinkClass)
 						newLevel = this.giveStatusPoints(this.settings.avatarPageName, pointsMajurity * rateDirectionForStatusPoints("0", inlinkClass))
 
@@ -466,7 +465,7 @@ export default class gamification extends Plugin {
 						pointsReceived += pointsMajurity * rateDirectionForStatusPoints(frontmatter['outlink-class'], rateOut)
 						newLevel = this.giveStatusPoints(this.settings.avatarPageName, pointsMajurity * rateDirectionForStatusPoints(frontmatter['outlink-class'], rateOut))
 
-					} else if ('outlink-class' in frontmatter == false) {
+					} else if (!('outlink-class' in frontmatter)) {
 						pointsReceived += pointsMajurity * rateDirectionForStatusPoints("0", rateOut)
 						newLevel = this.giveStatusPoints(this.settings.avatarPageName, pointsMajurity * rateDirectionForStatusPoints("0", rateOut))
 
@@ -476,7 +475,7 @@ export default class gamification extends Plugin {
 						pointsReceived += pointsMajurity * rateDirectionForStatusPoints(frontmatter['progressive-sumarization-maturity'], rateProgressiveSum)
 						newLevel = this.giveStatusPoints(this.settings.avatarPageName, pointsMajurity * rateDirectionForStatusPoints(frontmatter['progressive-sumarization-maturity'], rateProgressiveSum))
 
-					} else if ('progressive-sumarization-maturity' in frontmatter == false) {
+					} else if (!('progressive-sumarization-maturity' in frontmatter)) {
 						pointsReceived += pointsMajurity * rateDirectionForStatusPoints(frontmatter['progressive-sumarization-maturity'], rateProgressiveSum)
 						newLevel = this.giveStatusPoints(this.settings.avatarPageName, pointsMajurity * rateDirectionForStatusPoints("0", rateProgressiveSum))
 
@@ -666,12 +665,12 @@ export default class gamification extends Plugin {
 							console.log(`${pointsReceived} Points received`)
 						}
 						
-						frontmatter['title-class'] = rateDirection(frontmatter['title-class'], fileNameRate)
-						frontmatter['note-length-class'] = rateDirection(frontmatter['note-length-class'], rateFileLength)
-						frontmatter['inlink-class'] = rateDirection(frontmatter['inlink-class'], inlinkClass)
-						frontmatter['outlink-class'] = rateDirection(frontmatter['outlink-class'], rateOut)
-						frontmatter['progressive-sumarization-maturity'] = rateDirection(frontmatter['progressive-sumarization-maturity'], rateProgressiveSum)
-						frontmatter['note-maturity'] = rateDirection(frontmatter['note-maturity'], noteMajurity)
+						frontmatter['title-class'] = rateDirection(frontmatter['title-class'], fileNameRate);
+						frontmatter['note-length-class'] = rateDirection(frontmatter['note-length-class'], rateFileLength);
+						frontmatter['inlink-class'] = rateDirection(frontmatter['inlink-class'], inlinkClass);
+						frontmatter['outlink-class'] = rateDirection(frontmatter['outlink-class'], rateOut);
+						frontmatter['progressive-sumarization-maturity'] = rateDirection(frontmatter['progressive-sumarization-maturity'], rateProgressiveSum);
+						frontmatter['note-maturity'] = rateDirection(frontmatter['note-maturity'], noteMajurity);
 
 					
 					}

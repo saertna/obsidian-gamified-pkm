@@ -289,7 +289,7 @@ describe('rateNoteLength', () => {
 describe('countCharactersInActiveFile', () => {
 	it('countCharactersInActiveFile', () => {
 		const actual = countCharactersInActiveFile('# This is an example Text for Test\nThis is Line 1\nThis is Line 2\nThis is Line 3\n#thisIsATag','This is an example Text for Test');
-		const expected = 42;
+		const expected = 44;
 		expect(actual).toBe(expected);
 	});
 

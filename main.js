@@ -2339,42 +2339,42 @@ var gamification = class extends import_obsidian2.Plugin {
           if (rateDirectionForStatusPoints(frontmatter["note-maturity"], noteMajurity) >= 1) {
             pointsReceived += pointsNoteMajurity * rateDirectionForStatusPoints(frontmatter["note-maturity"], noteMajurity);
             newLevel = this.giveStatusPoints(this.settings.avatarPageName, pointsNoteMajurity * rateDirectionForStatusPoints("frontmatter['note-maturity']", noteMajurity));
-          } else if ("note-maturity" in frontmatter == false) {
+          } else if (!("note-maturity" in frontmatter)) {
             pointsReceived += pointsNoteMajurity * rateDirectionForStatusPoints("0", noteMajurity);
             newLevel = this.giveStatusPoints(this.settings.avatarPageName, pointsNoteMajurity * rateDirectionForStatusPoints("0", noteMajurity));
           }
           if (rateDirectionForStatusPoints(frontmatter["title-class"], fileNameRate) >= 1 && "title-class" in frontmatter) {
             pointsReceived += pointsMajurity * rateDirectionForStatusPoints(frontmatter["title-class"], fileNameRate);
             newLevel = this.giveStatusPoints(this.settings.avatarPageName, pointsMajurity * rateDirectionForStatusPoints(frontmatter["title-class"], fileNameRate));
-          } else if ("title-class" in frontmatter == false) {
+          } else if (!("title-class" in frontmatter)) {
             pointsReceived += pointsMajurity * rateDirectionForStatusPoints("0", fileNameRate);
             newLevel = this.giveStatusPoints(this.settings.avatarPageName, pointsMajurity * rateDirectionForStatusPoints("0", fileNameRate));
           }
           if (rateDirectionForStatusPoints(frontmatter["note-length-class"], rateFileLength) >= 1) {
             pointsReceived += pointsMajurity * rateDirectionForStatusPoints(frontmatter["note-length-class"], rateFileLength);
             newLevel = this.giveStatusPoints(this.settings.avatarPageName, pointsMajurity * rateDirectionForStatusPoints(frontmatter["note-length-class"], rateFileLength));
-          } else if ("note-length-class" in frontmatter == false) {
+          } else if (!("note-length-class" in frontmatter)) {
             pointsReceived += pointsMajurity * rateDirectionForStatusPoints("0", rateFileLength);
             newLevel = this.giveStatusPoints(this.settings.avatarPageName, pointsMajurity * rateDirectionForStatusPoints("0", rateFileLength));
           }
           if (rateDirectionForStatusPoints(frontmatter["inlink-class"], inlinkClass) >= 1) {
             pointsReceived += pointsMajurity * rateDirectionForStatusPoints(frontmatter["inlink-class"], inlinkClass);
             newLevel = this.giveStatusPoints(this.settings.avatarPageName, pointsMajurity * rateDirectionForStatusPoints(frontmatter["inlink-class"], inlinkClass));
-          } else if ("inlink-class" in frontmatter == false) {
+          } else if (!("inlink-class" in frontmatter)) {
             pointsReceived += pointsMajurity * rateDirectionForStatusPoints("0", inlinkClass);
             newLevel = this.giveStatusPoints(this.settings.avatarPageName, pointsMajurity * rateDirectionForStatusPoints("0", inlinkClass));
           }
           if (rateDirectionForStatusPoints(frontmatter["outlink-class"], rateOut) >= 1) {
             pointsReceived += pointsMajurity * rateDirectionForStatusPoints(frontmatter["outlink-class"], rateOut);
             newLevel = this.giveStatusPoints(this.settings.avatarPageName, pointsMajurity * rateDirectionForStatusPoints(frontmatter["outlink-class"], rateOut));
-          } else if ("outlink-class" in frontmatter == false) {
+          } else if (!("outlink-class" in frontmatter)) {
             pointsReceived += pointsMajurity * rateDirectionForStatusPoints("0", rateOut);
             newLevel = this.giveStatusPoints(this.settings.avatarPageName, pointsMajurity * rateDirectionForStatusPoints("0", rateOut));
           }
           if (rateDirectionForStatusPoints(frontmatter["progressive-sumarization-maturity"], rateProgressiveSum) >= 1) {
             pointsReceived += pointsMajurity * rateDirectionForStatusPoints(frontmatter["progressive-sumarization-maturity"], rateProgressiveSum);
             newLevel = this.giveStatusPoints(this.settings.avatarPageName, pointsMajurity * rateDirectionForStatusPoints(frontmatter["progressive-sumarization-maturity"], rateProgressiveSum));
-          } else if ("progressive-sumarization-maturity" in frontmatter == false) {
+          } else if (!("progressive-sumarization-maturity" in frontmatter)) {
             pointsReceived += pointsMajurity * rateDirectionForStatusPoints(frontmatter["progressive-sumarization-maturity"], rateProgressiveSum);
             newLevel = this.giveStatusPoints(this.settings.avatarPageName, pointsMajurity * rateDirectionForStatusPoints("0", rateProgressiveSum));
           }
