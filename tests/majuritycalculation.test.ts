@@ -1,7 +1,8 @@
 import { describe } from 'node:test';
 import {
 	countLayer2AndLayer3Characters,
-	rateLevelOfMaturity,
+	rateLevelOfMaturity, rateOutlinks,
+	rateInlinks, rateDirection,
 	rateProgressiveSummarization
 } from "../src/majuritycalculation";
 
@@ -58,6 +59,108 @@ describe('rateLevelOfMaturity', () => {
 	it('if all classes but note length are at 5, result shall be 5', () => {
 		const actual = rateLevelOfMaturity(5,0,5,5,5);
 		const expected = 5;
+		expect(actual).toBe(expected);
+	});
+
+});
+
+
+describe('rateOutlinks', () => {
+	it('if < 2 ⇒ 0', () => {
+		const actual = rateOutlinks(1);
+		const expected = 0;
+		expect(actual).toBe(expected);
+	});
+
+	it('if >= 2 < 3 ⇒ 1', () => {
+		const actual = rateOutlinks(2);
+		const expected = 1;
+		expect(actual).toBe(expected);
+	});
+
+	it('if >= 3 < 5 ⇒ 4', () => {
+		const actual = rateOutlinks(4);
+		const expected = 4;
+		expect(actual).toBe(expected);
+	});
+
+	it('if >= 5 < 9 ⇒ 5', () => {
+		const actual = rateOutlinks(8);
+		const expected = 5;
+		expect(actual).toBe(expected);
+	});
+
+	it('if >= 9 < 10 ⇒ 3', () => {
+		const actual = rateOutlinks(10);
+		const expected = 3;
+		expect(actual).toBe(expected);
+	});
+
+	it('if >= 11 < 12 ⇒ 1', () => {
+		const actual = rateOutlinks(11);
+		const expected = 1;
+		expect(actual).toBe(expected);
+	});
+
+	it('if >= 12 ⇒ 0', () => {
+		const actual = rateOutlinks(12);
+		const expected = 0;
+		expect(actual).toBe(expected);
+	});
+
+});
+
+
+describe('rateInlinks', () => {
+	it('rateInlinks ⇒ 0', () => {
+		const actual = rateInlinks(0);
+		const expected = 0;
+		expect(actual).toBe(expected);
+	});
+
+	it('rateInlinks ⇒ 1', () => {
+		const actual = rateInlinks(3);
+		const expected = 1;
+		expect(actual).toBe(expected);
+	});
+
+	it('rateInlinks ⇒ 2', () => {
+		const actual = rateInlinks(7);
+		const expected = 2;
+		expect(actual).toBe(expected);
+	});
+
+	it('rateInlinks ⇒ 3', () => {
+		const actual = rateInlinks(10);
+		const expected = 3;
+		expect(actual).toBe(expected);
+	});
+
+	it('rateInlinks ⇒ 4', () => {
+		const actual = rateInlinks(15);
+		const expected = 4;
+		expect(actual).toBe(expected);
+	});
+
+	it('rateInlinks ⇒ 5', () => {
+		const actual = rateInlinks(16);
+		const expected = 5;
+		expect(actual).toBe(expected);
+	});
+
+	it('rateInlinks ⇒ 5', () => {
+		const actual = rateInlinks(499);
+		const expected = 5;
+		expect(actual).toBe(expected);
+	});
+
+});
+
+
+describe('rateDirection', () => {
+	it('return the number chars for each layer.', () => {
+		const actual = rateDirection("4⬇️",3);
+		const expected = '"3⬇️"';
 		expect(actual).toBe(expected);
 	});
 
