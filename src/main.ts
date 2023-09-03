@@ -143,19 +143,7 @@ export default class gamification extends Plugin {
 			id: 'reset-game',
 			name: 'reset the game',
 			callback: async () => {
-				//const app = window.app;
-				// wenn es keine einschränkung gibt ist es wesentlich schneller
-				//const files = await getFileMap(app, this.settings.tagsExclude, this.settings.folderExclude);
-				await this.removeKeysFromFrontmatter();
-				this.settings.statusLevel = 1;
-				this.settings.statusPoints = 0;
-				this.settings.xpForNextLevel = 1000
-				this.settings.badgeBoosterState = false
-				this.settings.badgeBoosterFactor = 1
-				await this.saveData(this.settings);
-				this.giveStatusPoints(this.settings.avatarPageName,0)
-				await this.updateStatusBar(statusbarGamification)
-				new ModalInformationbox(this.app, `Game is now reseted. Please delete the Profile Page: \"${this.settings.avatarPageName}.md\" manually.`).open();
+				await this.resetGame(statusbarGamification);
 			},
 			
 		});
@@ -373,6 +361,22 @@ export default class gamification extends Plugin {
 
 	}
 
+
+	private async resetGame(statusbarGamification: HTMLSpanElement) {
+		//const app = window.app;
+		// wenn es keine einschränkung gibt ist es wesentlich schneller
+		//const files = await getFileMap(app, this.settings.tagsExclude, this.settings.folderExclude);
+		await this.removeKeysFromFrontmatter();
+		this.settings.statusLevel = 1;
+		this.settings.statusPoints = 0;
+		this.settings.xpForNextLevel = 1000
+		this.settings.badgeBoosterState = false
+		this.settings.badgeBoosterFactor = 1
+		await this.saveData(this.settings);
+		this.giveStatusPoints(this.settings.avatarPageName, 0)
+		await this.updateStatusBar(statusbarGamification)
+		new ModalInformationbox(this.app, `Game is now reseted. Please delete the Profile Page: \"${this.settings.avatarPageName}.md\" manually.`).open();
+	}
 
 	private async initializeGame(statusbarGamification: HTMLSpanElement) {
 		this.settings.gamificationStartDate = window.moment().format('DD.MM.YYYY');
