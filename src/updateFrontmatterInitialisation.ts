@@ -1,5 +1,17 @@
 import {rateDirection} from "./majuritycalculation";
-import {rateDirectionForStatusPoints} from "./main";
+
+export function rateDirectionForStatusPoints(ratingCurrent: string, ratingNew: number): number {
+	let ratingFaktor = 0
+	//console.log(`ratingCurrent: ${parseInt(ratingCurrent, 10)}`)
+	if (parseInt(ratingCurrent, 10) < ratingNew) {
+		ratingFaktor = ratingNew - parseInt(ratingCurrent, 10)
+		//console.log(`ratingFaktor: ${ratingFaktor}\t ratingNew: ${ratingNew}\tratingcurrent: ${ratingCurrent}`)
+	} else {
+		ratingFaktor = 0
+	}
+
+	return ratingFaktor
+}
 
 export function updateFrontmatterInitialisation(frontmatter: any, noteMajurity: number, pointsReceived: number, pointsNoteMajurity: number, fileNameRate: number, pointsMajurity: number, rateFileLength: number, inlinkClass: number, rateOut: number, rateProgressiveSum: number) {
     if (rateDirectionForStatusPoints(frontmatter['note-maturity'], noteMajurity) >= 1) {

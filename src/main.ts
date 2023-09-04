@@ -25,7 +25,7 @@ import {
 import {Badge, checkIfReceiveABadge, getBadgeForInitLevel, getBadgeForLevel} from './badges'
 import {getLevelForPoints, statusPointsForLevel} from './levels'
 import type {Moment} from 'moment';
-import {updateFrontmatterInitialisation} from "./updateFrontmatterInitialisation";
+import {rateDirectionForStatusPoints, updateFrontmatterInitialisation} from "./updateFrontmatterInitialisation";
 
 
 export default class gamification extends Plugin {
@@ -357,7 +357,7 @@ export default class gamification extends Plugin {
 		});
 
 		
-		
+
 
 	}
 
@@ -1518,19 +1518,6 @@ async function replaceFormatStrings(layer2: string, layer3: string) {
 	editor.replaceSelection(replacedText);
 }
   
-export function rateDirectionForStatusPoints(ratingCurrent: string, ratingNew: number): number {
-	let ratingFaktor = 0
-	//console.log(`ratingCurrent: ${parseInt(ratingCurrent, 10)}`)
-	if (parseInt(ratingCurrent, 10) < ratingNew){
-		ratingFaktor = ratingNew - parseInt(ratingCurrent, 10)
-		//console.log(`ratingFaktor: ${ratingFaktor}\t ratingNew: ${ratingNew}\tratingcurrent: ${ratingCurrent}`)
-	} else {
-		ratingFaktor = 0
-	}
-
-	return ratingFaktor
-}
-
 export function getNumberOfOutlinks(activeFile: TFile): number {
 	// const activeFile: TFile | null = app.workspace.getActiveFile();
 	if (!activeFile) {
