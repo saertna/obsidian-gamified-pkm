@@ -25,28 +25,28 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>0/661</span>
+                <span class='fraction'>0/655</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>0/187</span>
+                <span class='fraction'>0/185</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>0/69</span>
+                <span class='fraction'>0/68</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>0/641</span>
+                <span class='fraction'>0/635</span>
             </div>
         
             
@@ -1698,20 +1698,7 @@
 <a name='L1633'></a><a href='#L1633'>1633</a>
 <a name='L1634'></a><a href='#L1634'>1634</a>
 <a name='L1635'></a><a href='#L1635'>1635</a>
-<a name='L1636'></a><a href='#L1636'>1636</a>
-<a name='L1637'></a><a href='#L1637'>1637</a>
-<a name='L1638'></a><a href='#L1638'>1638</a>
-<a name='L1639'></a><a href='#L1639'>1639</a>
-<a name='L1640'></a><a href='#L1640'>1640</a>
-<a name='L1641'></a><a href='#L1641'>1641</a>
-<a name='L1642'></a><a href='#L1642'>1642</a>
-<a name='L1643'></a><a href='#L1643'>1643</a>
-<a name='L1644'></a><a href='#L1644'>1644</a>
-<a name='L1645'></a><a href='#L1645'>1645</a>
-<a name='L1646'></a><a href='#L1646'>1646</a>
-<a name='L1647'></a><a href='#L1647'>1647</a>
-<a name='L1648'></a><a href='#L1648'>1648</a>
-<a name='L1649'></a><a href='#L1649'>1649</a></td><td class="line-coverage quiet"><span class="cline-any cline-no">&nbsp;</span>
+<a name='L1636'></a><a href='#L1636'>1636</a></td><td class="line-coverage quiet"><span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -3227,19 +3214,6 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -3386,7 +3360,7 @@
 <span class="cstat-no" title="statement not covered" >import {Badge, checkIfReceiveABadge, getBadgeForInitLevel, getBadgeForLevel} from './badges'</span>
 <span class="cstat-no" title="statement not covered" >import {getLevelForPoints, statusPointsForLevel} from './levels'</span>
 import type {Moment} from 'moment';
-<span class="cstat-no" title="statement not covered" >import {updateFrontmatterInitialisation} from "./updateFrontmatterInitialisation";</span>
+<span class="cstat-no" title="statement not covered" >import {rateDirectionForStatusPoints, updateFrontmatterInitialisation} from "./updateFrontmatterInitialisation";</span>
 &nbsp;
 &nbsp;
 <span class="cstat-no" title="statement not covered" >export default class g</span>amification extends Plugin {
@@ -3718,7 +3692,7 @@ import type {Moment} from 'moment';
 		});
 &nbsp;
 		
-		
+&nbsp;
 &nbsp;
 	}
 &nbsp;
@@ -4879,19 +4853,6 @@ async function <span class="fstat-no" title="function not covered" >replaceForma
 <span class="cstat-no" title="statement not covered" >	editor.replaceSelection(replacedText);</span>
 }
   
-<span class="cstat-no" title="statement not covered" >export function <span class="fstat-no" title="function not covered" >r</span>ateDirectionForStatusPoints(</span>ratingCurrent: string, ratingNew: number): number {
-	let ratingFaktor = <span class="cstat-no" title="statement not covered" >0</span>
-	//console.log(`ratingCurrent: ${parseInt(ratingCurrent, 10)}`)
-<span class="cstat-no" title="statement not covered" >	if (parseInt(ratingCurrent, 10) &lt; ratingNew){</span>
-<span class="cstat-no" title="statement not covered" >		ratingFaktor = ratingNew - parseInt(ratingCurrent, 10)</span>
-		//console.log(`ratingFaktor: ${ratingFaktor}\t ratingNew: ${ratingNew}\tratingcurrent: ${ratingCurrent}`)
-	} else {
-<span class="cstat-no" title="statement not covered" >		ratingFaktor = 0</span>
-	}
-&nbsp;
-<span class="cstat-no" title="statement not covered" >	return ratingFaktor</span>
-}
-&nbsp;
 <span class="cstat-no" title="statement not covered" >export function <span class="fstat-no" title="function not covered" >g</span>etNumberOfOutlinks(</span>activeFile: TFile): number {
 	// const activeFile: TFile | null = app.workspace.getActiveFile();
 <span class="cstat-no" title="statement not covered" >	<span class="missing-if-branch" title="if path not taken" >I</span>if (!activeFile) {</span>
@@ -5014,7 +4975,7 @@ export const <span class="cstat-no" title="statement not covered" >getFileMap = 
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2023-09-03T21:00:18.481Z
+                at 2023-09-04T19:24:47.470Z
             </div>
         <script src="prettify.js"></script>
         <script>
