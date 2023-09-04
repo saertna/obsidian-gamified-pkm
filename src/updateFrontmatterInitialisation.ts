@@ -13,8 +13,7 @@ export function rateDirectionForStatusPoints(ratingCurrent: string, ratingNew: n
 	return ratingFaktor
 }
 
-export function updateFrontmatterInitialisation(frontmatter: any, noteMajurity: number, pointsReceived: number, pointsNoteMajurity: number, fileNameRate: number, pointsMajurity: number, rateFileLength: number, inlinkClass: number, rateOut: number, rateProgressiveSum: number) {
-	const avatarPageName = this.settings.avatarPageName;
+export function updateFrontmatterInitialisation(frontmatter: any, noteMajurity: number, pointsReceived: number, pointsNoteMajurity: number, fileNameRate: number, pointsMajurity: number, rateFileLength: number, inlinkClass: number, rateOut: number, rateProgressiveSum: number, avatarPageName: string) {
 	if (rateDirectionForStatusPoints(frontmatter['note-maturity'], noteMajurity) >= 1) {
         pointsReceived += pointsNoteMajurity * rateDirectionForStatusPoints(frontmatter['note-maturity'], noteMajurity)
         this.giveStatusPoints(avatarPageName, pointsNoteMajurity * rateDirectionForStatusPoints("frontmatter['note-maturity']", noteMajurity))
