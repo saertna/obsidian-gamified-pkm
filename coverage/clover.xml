@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1693723174998" clover="3.2.0">
-  <project timestamp="1693723174998" name="All files">
+<coverage generated="1693839032181" clover="3.2.0">
+  <project timestamp="1693839032182" name="All files">
     <metrics statements="1042" coveredstatements="51" conditionals="362" coveredconditionals="13" methods="123" coveredmethods="6" elements="1527" coveredelements="70" complexity="0" loc="1042" ncloc="1042" packages="1" files="7" classes="7"/>
-    <file name="badges.ts" path="C:\zk-gamification\.obsidian\plugins\obsidian-gamified-pkm\src\badges.ts">
+    <file name="badges.ts" path="C:\Users\andreas.trebing\OneDrive - GKN plc\Dokumente\GitHub\obsidian-gamified-pkm\src\badges.ts">
       <metrics statements="25" coveredstatements="25" conditionals="7" coveredconditionals="7" methods="3" coveredmethods="3"/>
       <line num="8" count="1" type="stmt"/>
       <line num="9" count="9" type="stmt"/>
@@ -30,7 +30,7 @@
       <line num="82" count="5" type="stmt"/>
       <line num="93" count="5" type="stmt"/>
     </file>
-    <file name="creatmodchartcalculation.ts" path="C:\zk-gamification\.obsidian\plugins\obsidian-gamified-pkm\src\creatmodchartcalculation.ts">
+    <file name="creatmodchartcalculation.ts" path="C:\Users\andreas.trebing\OneDrive - GKN plc\Dokumente\GitHub\obsidian-gamified-pkm\src\creatmodchartcalculation.ts">
       <metrics statements="63" coveredstatements="18" conditionals="11" coveredconditionals="3" methods="8" coveredmethods="2"/>
       <line num="3" count="1" type="stmt"/>
       <line num="4" count="0" type="stmt"/>
@@ -96,7 +96,7 @@
       <line num="110" count="0" type="stmt"/>
       <line num="111" count="0" type="stmt"/>
     </file>
-    <file name="levels.ts" path="C:\zk-gamification\.obsidian\plugins\obsidian-gamified-pkm\src\levels.ts">
+    <file name="levels.ts" path="C:\Users\andreas.trebing\OneDrive - GKN plc\Dokumente\GitHub\obsidian-gamified-pkm\src\levels.ts">
       <metrics statements="14" coveredstatements="8" conditionals="5" coveredconditionals="3" methods="2" coveredmethods="1"/>
       <line num="7" count="1" type="stmt"/>
       <line num="121" count="1" type="stmt"/>
@@ -113,7 +113,7 @@
       <line num="137" count="3" type="stmt"/>
       <line num="142" count="3" type="stmt"/>
     </file>
-    <file name="main.ts" path="C:\zk-gamification\.obsidian\plugins\obsidian-gamified-pkm\src\main.ts">
+    <file name="main.ts" path="C:\Users\andreas.trebing\OneDrive - GKN plc\Dokumente\GitHub\obsidian-gamified-pkm\src\main.ts">
       <metrics statements="622" coveredstatements="0" conditionals="177" coveredconditionals="0" methods="55" coveredmethods="0"/>
       <line num="1" count="0" type="stmt"/>
       <line num="2" count="0" type="stmt"/>
@@ -738,7 +738,7 @@
       <line num="1575" count="0" type="stmt"/>
       <line num="1578" count="0" type="stmt"/>
     </file>
-    <file name="majuritycalculation.ts" path="C:\zk-gamification\.obsidian\plugins\obsidian-gamified-pkm\src\majuritycalculation.ts">
+    <file name="majuritycalculation.ts" path="C:\Users\andreas.trebing\OneDrive - GKN plc\Dokumente\GitHub\obsidian-gamified-pkm\src\majuritycalculation.ts">
       <metrics statements="265" coveredstatements="0" conditionals="162" coveredconditionals="0" methods="31" coveredmethods="0"/>
       <line num="2" count="0" type="stmt"/>
       <line num="3" count="0" type="stmt"/>
@@ -1006,7 +1006,7 @@
       <line num="490" count="0" type="stmt"/>
       <line num="493" count="0" type="stmt"/>
     </file>
-    <file name="settings.ts" path="C:\zk-gamification\.obsidian\plugins\obsidian-gamified-pkm\src\settings.ts">
+    <file name="settings.ts" path="C:\Users\andreas.trebing\OneDrive - GKN plc\Dokumente\GitHub\obsidian-gamified-pkm\src\settings.ts">
       <metrics statements="49" coveredstatements="0" conditionals="0" coveredconditionals="0" methods="22" coveredmethods="0"/>
       <line num="1" count="0" type="stmt"/>
       <line num="4" count="0" type="stmt"/>
@@ -1058,7 +1058,7 @@
       <line num="187" count="0" type="stmt"/>
       <line num="188" count="0" type="stmt"/>
     </file>
-    <file name="utils.ts" path="C:\zk-gamification\.obsidian\plugins\obsidian-gamified-pkm\src\utils.ts">
+    <file name="utils.ts" path="C:\Users\andreas.trebing\OneDrive - GKN plc\Dokumente\GitHub\obsidian-gamified-pkm\src\utils.ts">
       <metrics statements="4" coveredstatements="0" conditionals="0" coveredconditionals="0" methods="2" coveredmethods="0"/>
       <line num="6" count="0" type="stmt"/>
       <line num="7" count="0" type="stmt"/>

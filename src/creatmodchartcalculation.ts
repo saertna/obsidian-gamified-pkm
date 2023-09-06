@@ -16,6 +16,7 @@ export function findEarliestModifiedFile(files: TFile[]): TFile {
 	for (const file of files) {
 	  if (file.stat.mtime < earliestModifiedFile.stat.mtime) {
 		earliestModifiedFile = file;
+		console.log(`earliestModifiedFile: ${earliestModifiedFile}`)
 	  }
 	}
 	return earliestModifiedFile;
