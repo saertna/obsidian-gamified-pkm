@@ -9,7 +9,7 @@ describe('statusPointsForLevel', () => {
         expect(actual).toBe(expected);
     });
 
-	it('should return points', () => {
+	it('should return points as result', () => {
 		const actual = updateFrontmatterInitialisation(testFrontmatter, 5, 5, 5, 5, 5, 5, 5, 5, 0, "Avatar - Gamification");
 		const expected = 0;
 		expect(actual).toBe(expected);
