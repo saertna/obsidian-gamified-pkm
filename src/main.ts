@@ -544,7 +544,9 @@ export default class gamification extends Plugin {
 			let inlinkNumber = 0;
 			let inlinkClass = 0;
 			let rateOut = 0;
-			
+			let newBadge = false;
+			const firstTimeNewBadge = false;
+
 			if (file !== null) {
 				fileNameRate = rateLengthFilename(file.name ?? '');
 				inlinkNumber = count_inlinks(file);
@@ -554,73 +556,73 @@ export default class gamification extends Plugin {
 				const noteMajurity = rateLevelOfMaturity(rateFileLength, fileNameRate, inlinkClass, rateOut, rateProgressiveSum);
 				
 				try {
-					await this.app.fileManager.processFrontMatter(file, (frontmatter) => {
+					await this.app.fileManager.processFrontMatter(file, async (frontmatter) => {
 						if (frontmatter) {
 							const pointsNoteMajurity = 100;
 							const pointsMajurity = 10;
 							let pointsReceived = 0; // to have one message at the end how many points received
-							if (rateDirectionForStatusPoints(frontmatter['note-maturity'], noteMajurity) >= 1){
-								pointsReceived += pointsNoteMajurity*rateDirectionForStatusPoints(frontmatter['note-maturity'], noteMajurity)
-								const newLevel = this.giveStatusPoints(this.settings.avatarPageName,pointsNoteMajurity*rateDirectionForStatusPoints("frontmatter['note-maturity']", noteMajurity))
-								this.decisionIfBadge(newLevel)
-							} else if (!('note-maturity' in frontmatter)){
-								pointsReceived += pointsNoteMajurity*rateDirectionForStatusPoints("0", noteMajurity)
-								const newLevel = this.giveStatusPoints(this.settings.avatarPageName,pointsNoteMajurity*rateDirectionForStatusPoints("0", noteMajurity))
-								this.decisionIfBadge(newLevel);
+							if (rateDirectionForStatusPoints(frontmatter['note-maturity'], noteMajurity) >= 1) {
+								pointsReceived += pointsNoteMajurity * rateDirectionForStatusPoints(frontmatter['note-maturity'], noteMajurity)
+								newBadge = await this.giveStatusPoints(this.settings.avatarPageName, pointsNoteMajurity * rateDirectionForStatusPoints("frontmatter['note-maturity']", noteMajurity))
+								this.decisionIfBadge(newBadge)
+							} else if (!('note-maturity' in frontmatter)) {
+								pointsReceived += pointsNoteMajurity * rateDirectionForStatusPoints("0", noteMajurity)
+								newBadge = await this.giveStatusPoints(this.settings.avatarPageName, pointsNoteMajurity * rateDirectionForStatusPoints("0", noteMajurity))
+								this.decisionIfBadge(newBadge);
 								firstTimeNoteRating = true;
 							}
 
-							if (rateDirectionForStatusPoints(frontmatter['title-class'], fileNameRate) >= 1 && 'title-class' in frontmatter){
-								pointsReceived += pointsMajurity*rateDirectionForStatusPoints(frontmatter['title-class'], fileNameRate)
-								const newLevel = this.giveStatusPoints(this.settings.avatarPageName,pointsMajurity * rateDirectionForStatusPoints(frontmatter['title-class'], fileNameRate))
-								this.decisionIfBadge(newLevel)
-							} else if (!('title-class' in frontmatter)){
-								pointsReceived += pointsMajurity*rateDirectionForStatusPoints("0", fileNameRate)
-								const newLevel = this.giveStatusPoints(this.settings.avatarPageName,pointsMajurity*rateDirectionForStatusPoints("0", fileNameRate))
-								this.decisionIfBadge(newLevel)
+							if (rateDirectionForStatusPoints(frontmatter['title-class'], fileNameRate) >= 1 && 'title-class' in frontmatter) {
+								pointsReceived += pointsMajurity * rateDirectionForStatusPoints(frontmatter['title-class'], fileNameRate)
+								newBadge = await this.giveStatusPoints(this.settings.avatarPageName, pointsMajurity * rateDirectionForStatusPoints(frontmatter['title-class'], fileNameRate))
+								this.decisionIfBadge(newBadge)
+							} else if (!('title-class' in frontmatter)) {
+								pointsReceived += pointsMajurity * rateDirectionForStatusPoints("0", fileNameRate)
+								newBadge = await this.giveStatusPoints(this.settings.avatarPageName, pointsMajurity * rateDirectionForStatusPoints("0", fileNameRate))
+								this.decisionIfBadge(newBadge)
 							}
 
-							if (rateDirectionForStatusPoints(frontmatter['note-length-class'], rateFileLength) >= 1){
-								pointsReceived += pointsMajurity*rateDirectionForStatusPoints(frontmatter['note-length-class'], rateFileLength)
-								const newLevel = this.giveStatusPoints(this.settings.avatarPageName,pointsMajurity * rateDirectionForStatusPoints(frontmatter['note-length-class'], rateFileLength))
-								this.decisionIfBadge(newLevel)
-							}else if (!('note-length-class' in frontmatter)){
-								pointsReceived += pointsMajurity*rateDirectionForStatusPoints("0", rateFileLength)
-								const newLevel = this.giveStatusPoints(this.settings.avatarPageName,pointsMajurity*rateDirectionForStatusPoints("0", rateFileLength))
-								this.decisionIfBadge(newLevel)
+							if (rateDirectionForStatusPoints(frontmatter['note-length-class'], rateFileLength) >= 1) {
+								pointsReceived += pointsMajurity * rateDirectionForStatusPoints(frontmatter['note-length-class'], rateFileLength)
+								newBadge = await this.giveStatusPoints(this.settings.avatarPageName, pointsMajurity * rateDirectionForStatusPoints(frontmatter['note-length-class'], rateFileLength))
+								this.decisionIfBadge(newBadge)
+							} else if (!('note-length-class' in frontmatter)) {
+								pointsReceived += pointsMajurity * rateDirectionForStatusPoints("0", rateFileLength)
+								newBadge = await this.giveStatusPoints(this.settings.avatarPageName, pointsMajurity * rateDirectionForStatusPoints("0", rateFileLength))
+								this.decisionIfBadge(newBadge)
 							}
 
-							if (rateDirectionForStatusPoints(frontmatter['inlink-class'], inlinkClass) >= 1){
-								pointsReceived += pointsMajurity*rateDirectionForStatusPoints(frontmatter['inlink-class'], inlinkClass)
-								const newLevel = this.giveStatusPoints(this.settings.avatarPageName,pointsMajurity * rateDirectionForStatusPoints(frontmatter['inlink-class'], inlinkClass))
-								this.decisionIfBadge(newLevel)
-							}else if (!('inlink-class' in frontmatter)){
-								pointsReceived += pointsMajurity*rateDirectionForStatusPoints("0", inlinkClass)
-								const newLevel = this.giveStatusPoints(this.settings.avatarPageName,pointsMajurity*rateDirectionForStatusPoints("0", inlinkClass))
-								this.decisionIfBadge(newLevel)
+							if (rateDirectionForStatusPoints(frontmatter['inlink-class'], inlinkClass) >= 1) {
+								pointsReceived += pointsMajurity * rateDirectionForStatusPoints(frontmatter['inlink-class'], inlinkClass)
+								newBadge = await this.giveStatusPoints(this.settings.avatarPageName, pointsMajurity * rateDirectionForStatusPoints(frontmatter['inlink-class'], inlinkClass))
+								this.decisionIfBadge(newBadge)
+							} else if (!('inlink-class' in frontmatter)) {
+								pointsReceived += pointsMajurity * rateDirectionForStatusPoints("0", inlinkClass)
+								newBadge = await this.giveStatusPoints(this.settings.avatarPageName, pointsMajurity * rateDirectionForStatusPoints("0", inlinkClass))
+								this.decisionIfBadge(newBadge)
 							}
 
-							if (rateDirectionForStatusPoints(frontmatter['outlink-class'], rateOut) >= 1){
-								pointsReceived += pointsMajurity*rateDirectionForStatusPoints(frontmatter['outlink-class'], rateOut)
-								const newLevel = this.giveStatusPoints(this.settings.avatarPageName,pointsMajurity * rateDirectionForStatusPoints(frontmatter['outlink-class'], rateOut))
-								this.decisionIfBadge(newLevel)
-							}else if (!('outlink-class' in frontmatter)){
-								pointsReceived += pointsMajurity*rateDirectionForStatusPoints("0", rateOut)
-								const newLevel = this.giveStatusPoints(this.settings.avatarPageName,pointsMajurity*rateDirectionForStatusPoints("0", rateOut))
-								this.decisionIfBadge(newLevel)
+							if (rateDirectionForStatusPoints(frontmatter['outlink-class'], rateOut) >= 1) {
+								pointsReceived += pointsMajurity * rateDirectionForStatusPoints(frontmatter['outlink-class'], rateOut)
+								newBadge = await this.giveStatusPoints(this.settings.avatarPageName, pointsMajurity * rateDirectionForStatusPoints(frontmatter['outlink-class'], rateOut))
+								this.decisionIfBadge(newBadge)
+							} else if (!('outlink-class' in frontmatter)) {
+								pointsReceived += pointsMajurity * rateDirectionForStatusPoints("0", rateOut)
+								newBadge = await this.giveStatusPoints(this.settings.avatarPageName, pointsMajurity * rateDirectionForStatusPoints("0", rateOut))
+								this.decisionIfBadge(newBadge)
 							}
 
-							if (rateDirectionForStatusPoints(frontmatter['progressive-sumarization-maturity'], rateProgressiveSum) >= 1){
-								pointsReceived += pointsMajurity*rateDirectionForStatusPoints(frontmatter['progressive-sumarization-maturity'], rateProgressiveSum)
-								const newLevel = this.giveStatusPoints(this.settings.avatarPageName,pointsMajurity * rateDirectionForStatusPoints(frontmatter['progressive-sumarization-maturity'], rateProgressiveSum))
-								this.decisionIfBadge(newLevel)
-							}else if (!('progressive-sumarization-maturity' in frontmatter)){
-								pointsReceived += pointsMajurity*rateDirectionForStatusPoints(frontmatter['progressive-sumarization-maturity'], rateProgressiveSum)
-								const newLevel = this.giveStatusPoints(this.settings.avatarPageName,pointsMajurity*rateDirectionForStatusPoints("0", rateProgressiveSum))
-								this.decisionIfBadge(newLevel)
+							if (rateDirectionForStatusPoints(frontmatter['progressive-sumarization-maturity'], rateProgressiveSum) >= 1) {
+								pointsReceived += pointsMajurity * rateDirectionForStatusPoints(frontmatter['progressive-sumarization-maturity'], rateProgressiveSum)
+								newBadge = await this.giveStatusPoints(this.settings.avatarPageName, pointsMajurity * rateDirectionForStatusPoints(frontmatter['progressive-sumarization-maturity'], rateProgressiveSum))
+								this.decisionIfBadge(newBadge)
+							} else if (!('progressive-sumarization-maturity' in frontmatter)) {
+								pointsReceived += pointsMajurity * rateDirectionForStatusPoints(frontmatter['progressive-sumarization-maturity'], rateProgressiveSum)
+								newBadge = await this.giveStatusPoints(this.settings.avatarPageName, pointsMajurity * rateDirectionForStatusPoints("0", rateProgressiveSum))
+								this.decisionIfBadge(newBadge)
 							}
 
-							if (pointsReceived > 0){
+							if (pointsReceived > 0) {
 								new Notice(`${pointsReceived * this.settings.badgeBoosterFactor} Points received`)
 								console.log(`${pointsReceived} Points received`)
 							}
@@ -1168,19 +1170,18 @@ export default class gamification extends Plugin {
 		return chartString
 	}
 
-	async decisionIfBadge(newLevel: Promise<boolean>){
-		newLevel.then((result: boolean)=> {
-			if(result){
+	async decisionIfBadge(newLevel: boolean){
+		//newLevel.then((result: boolean)=> {
+			//if(newLevel){
 				const badge : Badge = getBadgeForLevel(this.settings.statusLevel, false)
 				new Notice(`You've earned the "${badge.name}" badge. ${badge.description}`)
 				console.log(`You've earned the "${badge.name}" badge. ${badge.description}`)
-				//console.log(`badge for level ${this.settings.statusLevel} is ${badge.name} - ${badge.level}`)
 				this.giveBadgeInProfile(this.settings.avatarPageName, badge)
 				this.settings.badgeBoosterState = false;
 				this.settings.badgeBoosterFactor = 1;
 				this.saveData(this.settings)
-			}
-		});
+			//}
+		//});
 	}
 
 	
