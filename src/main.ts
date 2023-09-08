@@ -1,13 +1,32 @@
-import { Vault, Plugin, TFile, App, Modal, MarkdownView, Notice } from 'obsidian';
-import * as fs from 'fs';
-import * as path from 'path';
-import { defaultSettings, GamificationPluginSettings } from './settings';
+import {App, MarkdownView, Modal, Notice, Plugin, TFile, Vault} from 'obsidian';
+import {defaultSettings, GamificationPluginSettings} from './settings';
 import format from 'date-fns/format';
-import {countLayer2AndLayer3Characters, rateProgressiveSummarization, rateLevelOfMaturity, rateOutlinks, rateInlinks, rateDirection, rateLengthFilename, rateNoteLength, getNumberOfOutlinks, countCharactersInActiveFile, count_inlinks, getFileCountMap, getFileMap } from './majuritycalculation'
-import {findEarliestDateFile, monthsBetween, getCreationDates, getModificationDates, createChartFormat, replaceChartContent} from './creatmodchartcalculation'
-import {getBadgeForLevel, getBadgeForInitLevel, checkIfReceiveABadge, Badge} from './badges'
+import {
+	count_inlinks,
+	countCharactersInActiveFile,
+	countLayer2AndLayer3Characters,
+	getFileCountMap,
+	getFileMap,
+	getNumberOfOutlinks,
+	rateDirection,
+	rateInlinks,
+	rateLengthFilename,
+	rateLevelOfMaturity,
+	rateNoteLength,
+	rateOutlinks,
+	rateProgressiveSummarization
+} from './majuritycalculation'
+import {
+	createChartFormat,
+	findEarliestDateFile,
+	getCreationDates,
+	getModificationDates,
+	monthsBetween,
+	replaceChartContent
+} from './creatmodchartcalculation'
+import {Badge, checkIfReceiveABadge, getBadgeForInitLevel, getBadgeForLevel} from './badges'
 import {getLevelForPoints, statusPointsForLevel} from './levels'
-import type { Moment } from 'moment';
+import type {Moment} from 'moment';
 
 export default class gamification extends Plugin {
 	//settings: gamificationSettings // überbleibsel aus dem Bsp.
@@ -113,7 +132,6 @@ export default class gamification extends Plugin {
 					let pointsReceived = 0; // to have one message at the end how many points received
 					const pointsNoteMajurity = 100;
 					const pointsMajurity = 10;
-					let newLevel : Promise<boolean>;
 
 
 					for (const fileName of fileCountMap) {
@@ -142,50 +160,50 @@ export default class gamification extends Plugin {
 							await this.app.fileManager.processFrontMatter(file, (frontmatter) => {
 								if (rateDirectionForStatusPoints(frontmatter['note-maturity'], noteMajurity) >= 1){
 									pointsReceived += pointsNoteMajurity*rateDirectionForStatusPoints(frontmatter['note-maturity'], noteMajurity)
-									newLevel = this.giveStatusPoints(this.settings.avatarPageName,pointsNoteMajurity*rateDirectionForStatusPoints("frontmatter['note-maturity']", noteMajurity))
+									this.giveStatusPoints(this.settings.avatarPageName,pointsNoteMajurity*rateDirectionForStatusPoints("frontmatter['note-maturity']", noteMajurity))
 								} else if (!('note-maturity' in frontmatter)){
 									pointsReceived += pointsNoteMajurity*rateDirectionForStatusPoints("0", noteMajurity)
-									newLevel = this.giveStatusPoints(this.settings.avatarPageName,pointsNoteMajurity*rateDirectionForStatusPoints("0", noteMajurity))
+									this.giveStatusPoints(this.settings.avatarPageName,pointsNoteMajurity*rateDirectionForStatusPoints("0", noteMajurity))
 								}
 
 								if (rateDirectionForStatusPoints(frontmatter['title-class'], fileNameRate) >= 1 && 'title-class' in frontmatter){
 									pointsReceived += pointsMajurity*rateDirectionForStatusPoints(frontmatter['title-class'], fileNameRate)
-									newLevel = this.giveStatusPoints(this.settings.avatarPageName,pointsMajurity * rateDirectionForStatusPoints(frontmatter['title-class'], fileNameRate))
+									this.giveStatusPoints(this.settings.avatarPageName,pointsMajurity * rateDirectionForStatusPoints(frontmatter['title-class'], fileNameRate))
 								} else if (!('title-class' in frontmatter)){
 									pointsReceived += pointsMajurity*rateDirectionForStatusPoints("0", fileNameRate)
-									newLevel = this.giveStatusPoints(this.settings.avatarPageName,pointsMajurity*rateDirectionForStatusPoints("0", fileNameRate))
+									this.giveStatusPoints(this.settings.avatarPageName,pointsMajurity*rateDirectionForStatusPoints("0", fileNameRate))
 								}
 
 								if (rateDirectionForStatusPoints(frontmatter['note-length-class'], rateFileLength) >= 1){
 									pointsReceived += pointsMajurity*rateDirectionForStatusPoints(frontmatter['note-length-class'], rateFileLength)
-									newLevel = this.giveStatusPoints(this.settings.avatarPageName,pointsMajurity * rateDirectionForStatusPoints(frontmatter['note-length-class'], rateFileLength))
+									this.giveStatusPoints(this.settings.avatarPageName,pointsMajurity * rateDirectionForStatusPoints(frontmatter['note-length-class'], rateFileLength))
 								}else if (!('note-length-class' in frontmatter)){
 									pointsReceived += pointsMajurity*rateDirectionForStatusPoints("0", rateFileLength)
-									newLevel = this.giveStatusPoints(this.settings.avatarPageName,pointsMajurity*rateDirectionForStatusPoints("0", rateFileLength))
+									this.giveStatusPoints(this.settings.avatarPageName,pointsMajurity*rateDirectionForStatusPoints("0", rateFileLength))
 								}
 
 								if (rateDirectionForStatusPoints(frontmatter['inlink-class'], inlinkClass) >= 1){
 									pointsReceived += pointsMajurity*rateDirectionForStatusPoints(frontmatter['inlink-class'], inlinkClass)
-									newLevel = this.giveStatusPoints(this.settings.avatarPageName,pointsMajurity * rateDirectionForStatusPoints(frontmatter['inlink-class'], inlinkClass))
+									this.giveStatusPoints(this.settings.avatarPageName,pointsMajurity * rateDirectionForStatusPoints(frontmatter['inlink-class'], inlinkClass))
 								}else if (!('inlink-class' in frontmatter)){
 									pointsReceived += pointsMajurity*rateDirectionForStatusPoints("0", inlinkClass)
-									newLevel = this.giveStatusPoints(this.settings.avatarPageName,pointsMajurity*rateDirectionForStatusPoints("0", inlinkClass))
+									this.giveStatusPoints(this.settings.avatarPageName,pointsMajurity*rateDirectionForStatusPoints("0", inlinkClass))
 								}
 
 								if (rateDirectionForStatusPoints(frontmatter['outlink-class'], rateOut) >= 1){
 									pointsReceived += pointsMajurity*rateDirectionForStatusPoints(frontmatter['outlink-class'], rateOut)
-									newLevel = this.giveStatusPoints(this.settings.avatarPageName,pointsMajurity * rateDirectionForStatusPoints(frontmatter['outlink-class'], rateOut))
+									this.giveStatusPoints(this.settings.avatarPageName,pointsMajurity * rateDirectionForStatusPoints(frontmatter['outlink-class'], rateOut))
 								}else if (!('outlink-class' in frontmatter)){
 									pointsReceived += pointsMajurity*rateDirectionForStatusPoints("0", rateOut)
-									newLevel = this.giveStatusPoints(this.settings.avatarPageName,pointsMajurity*rateDirectionForStatusPoints("0", rateOut))
+									this.giveStatusPoints(this.settings.avatarPageName,pointsMajurity*rateDirectionForStatusPoints("0", rateOut))
 								}
 
 								if (rateDirectionForStatusPoints(frontmatter['progressive-sumarization-maturity'], rateProgressiveSum) >= 1){
 									pointsReceived += pointsMajurity*rateDirectionForStatusPoints(frontmatter['progressive-sumarization-maturity'], rateProgressiveSum)
-									newLevel = this.giveStatusPoints(this.settings.avatarPageName,pointsMajurity * rateDirectionForStatusPoints(frontmatter['progressive-sumarization-maturity'], rateProgressiveSum))
+									this.giveStatusPoints(this.settings.avatarPageName,pointsMajurity * rateDirectionForStatusPoints(frontmatter['progressive-sumarization-maturity'], rateProgressiveSum))
 								}else if (!('progressive-sumarization-maturity' in frontmatter)){
 									pointsReceived += pointsMajurity*rateDirectionForStatusPoints(frontmatter['progressive-sumarization-maturity'], rateProgressiveSum)
-									newLevel = this.giveStatusPoints(this.settings.avatarPageName,pointsMajurity*rateDirectionForStatusPoints("0", rateProgressiveSum))
+									this.giveStatusPoints(this.settings.avatarPageName,pointsMajurity*rateDirectionForStatusPoints("0", rateProgressiveSum))
 
 								}
 
@@ -212,7 +230,7 @@ export default class gamification extends Plugin {
 					// Inside your function where you want to introduce a delay
 					setTimeout(async () => {
 						// Code that you want to execute after the delay
-						const initBadge : Badge = await getBadgeForInitLevel(this.settings.statusLevel);
+						const initBadge : Badge = getBadgeForInitLevel(this.settings.statusLevel);
 						new Notice(`You've earned the "${initBadge.name}" badge. ${initBadge.description}`)
 						console.log(`You earned ${initBadge.name} - ${initBadge.description}`)
 						await this.giveInitBadgeInProfile(this.settings.avatarPageName, initBadge);
@@ -228,7 +246,7 @@ export default class gamification extends Plugin {
 					// await this.boosterForInit()
 
 
-					new ModalInformationbox(this.app, `Finallized gamification initialistation!\nCongratulation, you earned ${pointsReceived} Points!\n\nCheck the Profile Page: \"${this.settings.avatarPageName}.md\"\n\nYou received an initialisation Booster aktiv for your first level ups. Game on!`).open();
+					new ModalInformationbox(this.app, `Finallized gamification initialistation!\nCongratulation, you earned ${pointsReceived} Points!\n\nCheck the Profile Page: "${this.settings.avatarPageName}.md"\n\nYou received an initialisation Booster aktiv for your first level ups. Game on!`).open();
 
 				},
 			});
@@ -576,26 +594,16 @@ export default class gamification extends Plugin {
 		await this.saveData(this.settings);
 	}
 
-
-	async getCreationTime(file: TFile): Promise<Date> {
-		const filePath = path.join(this.app.vault.getResourcePath(file)); // path.join(this.obsidian.vault.path, file);
-		const creationTime = fs.statSync(filePath).ctime;
-		return new Date(creationTime);
-	}
-
 	async giveStatusPoints(avatarPageName: string, pointsToAdd: number): Promise<boolean>{
 		let boosterFactor = 1;
-		if (this.settings.badgeBoosterState == true){
+		if (this.settings.badgeBoosterState){
 			boosterFactor = this.settings.badgeBoosterFactor;
 		}
 
-		const newPoints = pointsToAdd * boosterFactor + this.settings.statusPoints
-
-		this.settings.statusPoints = newPoints
+		this.settings.statusPoints = pointsToAdd * boosterFactor + this.settings.statusPoints
 		await this.saveData(this.settings)
 
-		const receiveBadge = this.updateAvatarPage(this.settings.avatarPageName);
-		return receiveBadge
+		return this.updateAvatarPage(this.settings.avatarPageName)
 	}
 
 
@@ -870,45 +878,22 @@ export default class gamification extends Plugin {
 			}
 		}
 
-
-		/*
-            // count each file only ones, if it got modified in same month shall not counted as created too
-            const creationDates = getCreationDates(files)
-            const modificationDates = getModificationDates(files)
-            console.log(`modificationDates.length: ${modificationDates.length}\tcreationDates.length: ${creationDates.length}`)
-            for (let i = 0; i < creationDates.length; i++){
-                if(fileDateMonthMapMod.get(format(modificationDates[i], 'M.yyyy')) == fileDateMonthMap.get(format(creationDates[i], 'M.yyyy'))){
-                    fileDateMonthMap.set(format(creationDates[i], 'M.yyyy'),fileDateMonthMap.get(format(creationDates[i], 'M.yyyy'))+1)
-                } //else {
-                    //fileDateMonthMapMod.set(format(modificationDates[i], 'M.yyyy'),fileDateMonthMapMod.get(format(modificationDates[i], 'M.yyyy'))+1)
-                //}
-            }
-        */
-
 		// build Chart String created
 		let charStringCreated = ""
-		for (const [key, value] of fileDateMonthMap) {
-			//console.log(`key: ${key}, value: ${value}`);
+		for (const [value] of fileDateMonthMap) {
 			charStringCreated = charStringCreated + value + ", "
 		}
 		charStringCreated = charStringCreated.slice(0,charStringCreated.length-2)
-		//console.log(`charStringCreated: ${charStringCreated}`);
-
 
 		// build Chart String modified
 		let charStringModified = ""
-		for (const [key, value] of fileDateMonthMapMod) {
+		for (const [value] of fileDateMonthMapMod) {
 			//console.log(`key: ${key}, value: ${value}`);
 			charStringModified = charStringModified + value + ", "
 		}
 		charStringModified = charStringModified.slice(0,charStringModified.length-2)
-		//console.log(`charStringModified: ${charStringModified}`);
 
-
-		// create chart
-		const chartString = createChartFormat(yLabel, charStringCreated, charStringModified, this.settings.chartReduzierungMonate)
-		//console.log(`chartString: ${chartString}`);
-		return chartString
+		return createChartFormat(yLabel, charStringCreated, charStringModified, this.settings.chartReduzierungMonate)
 	}
 
 	async decisionIfBadge(newLevel: Promise<boolean>){
@@ -965,7 +950,7 @@ export default class gamification extends Plugin {
 	}
 
 	async whichLevelNextBadge(currentLevel: number): Promise<number>{
-		let nextBadgeLevel: number = 0
+		let nextBadgeLevel = 0
 		for (let i = currentLevel; i < 110; i++){
 			const badge : Badge = getBadgeForLevel(i, true)
 			// Regular expression to match the level number
@@ -1006,37 +991,6 @@ export default class gamification extends Plugin {
 		}
 	}
 
-	async dailyChallengeUpdateProfile(avatarPageName: string, createdNotes: number){
-		const existingFile = app.vault.getAbstractFileByPath(`${avatarPageName}.md`);
-		if (existingFile == null) {
-			console.log(`File ${avatarPageName}.md does not exist`);
-			return;
-		}
-		const file = existingFile as TFile;
-
-		const content = await app.vault.read(file);
-		let reference: number | null = null;
-		let end: number | null = null;
-		let start: number | null = null;
-
-		const newString = '| daily Notes     |  ' + createdNotes + '/2   |'
-
-		const lines = content.split("\n");
-		for (let i = 0; i < lines.length; i++) {
-			const line = lines[i].trim();
-			if (line === "^dailyNotesChallenge") {
-				if (reference === null) {
-					reference = i;
-				}
-			}
-		}
-		if (reference != null ){
-			start = reference - 1;
-			end = reference;
-			const newLines = [...lines.slice(0, start), newString, ...lines.slice(end)];
-			await app.vault.modify(file, newLines.join("\n"));
-		}
-	}
 }
 
 
@@ -1046,7 +1000,6 @@ function isSameDay(inputDate: Moment): boolean {
 }
 
 function isOneDayBefore(inputDate: Moment): boolean {
-	const currentDate = window.moment(); // Get the current date
 	const oneDayBeforeCurrent = window.moment().subtract(1, 'day'); // Calculate one day before current date
 	return inputDate.isSame(oneDayBeforeCurrent, 'day');
 }
@@ -1223,7 +1176,7 @@ Where note-maturity = 0 or note-maturity = "0" or note-maturity = "0➡️" or n
 		return;
 	}
 	// Create the file in the root of the vault
-	const file: TFile = await app.vault.create(`${fileName}.md`, fileContent);
+	await app.vault.create(`${fileName}.md`, fileContent);
 
 
 }
@@ -1265,7 +1218,7 @@ async function replaceFormatStrings(layer2: string, layer3: string) {
 		return;
 	}
 
-	var replacedText = selectedText.replaceAll(layer2, "§§§§");
+	let replacedText = selectedText.replaceAll(layer2, "§§§§");
 	replacedText = replacedText.replaceAll(layer3, "€€€€")
 	replacedText = replacedText.replaceAll("€€€€", layer2)
 	replacedText = replacedText.replaceAll("§§§§", layer3)
@@ -1274,11 +1227,9 @@ async function replaceFormatStrings(layer2: string, layer3: string) {
 }
 
 function rateDirectionForStatusPoints(ratingCurrent: string, ratingNew: number): number {
-	let ratingFaktor = 0
-	//console.log(`ratingCurrent: ${parseInt(ratingCurrent, 10)}`)
+	let ratingFaktor: number
 	if (parseInt(ratingCurrent, 10) < ratingNew){
 		ratingFaktor = ratingNew - parseInt(ratingCurrent, 10)
-		//console.log(`ratingFaktor: ${ratingFaktor}\t ratingNew: ${ratingNew}\tratingcurrent: ${ratingCurrent}`)
 	} else {
 		ratingFaktor = 0
 	}
