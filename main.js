@@ -2301,6 +2301,7 @@ var gamification = class extends import_obsidian2.Plugin {
       this.addRibbonIcon("accessibility", "change text formatting", async () => {
         await this.loadSettings();
         await this.updateAvatarPage(this.settings.avatarPageName);
+        await this.resetDailyGoals();
       });
     }
     this.addRibbonIcon("sprout", "Calculate Note Maturity", async () => {
@@ -2611,14 +2612,17 @@ You received an initialisation Booster aktiv for your first level ups. Game on!`
       console.log(`daily Challenge reseted`);
       reset = true;
     }
-    if (!isOneDayBefore(window.moment(this.settings.weeklyNoteCreationDate, "DD.MM.YYYY")) && !isSameDay(window.moment(this.settings.dailyNoteCreationDate, "DD.MM.YYYY"))) {
+    if (!isOneDayBefore(window.moment(this.settings.weeklyNoteCreationDate, "DD.MM.YYYY")) && !isSameDay(window.moment(this.settings.weeklyNoteCreationDate, "DD.MM.YYYY"))) {
       this.settings.weeklyNoteCreationTask = 0;
       this.settings.weeklyNoteCreationDate = window.moment().subtract(1, "day").format("DD.MM.YYYY");
       this.saveSettings();
       console.log(`weekly Challenge reseted`);
       reset = true;
     }
-    if (!isOneDayBefore(window.moment(this.settings.weeklyNoteCreationDate, "DD.MM.YYYY")) && this.settings.weeklyNoteCreationTask == 7) {
+    if (isOneDayBefore(window.moment(this.settings.weeklyNoteCreationDate, "DD.MM.YYYY")) && this.settings.weeklyNoteCreationTask == 7) {
+      this.settings.weeklyNoteCreationTask = 0;
+      this.settings.weeklyNoteCreationDate = window.moment().subtract(1, "day").format("DD.MM.YYYY");
+      this.saveSettings();
       reset = true;
     }
     if (reset) {
@@ -2661,7 +2665,7 @@ You received an initialisation Booster aktiv for your first level ups. Game on!`
           console.log(`${newWeeklyNoteCreationTask}/7 Notes created in a chain.`);
         }
       }
-    } else if (isSameDay(window.moment(this.settings.dailyNoteCreationDate, "DD.MM.YYYY"))) {
+    } else if (isSameDay(window.moment(this.settings.weeklyNoteCreationDate, "DD.MM.YYYY"))) {
       console.log(`daily note creation was rated already today.`);
     } else {
       this.settings.weeklyNoteCreationDate = window.moment().format("DD.MM.YYYY");
