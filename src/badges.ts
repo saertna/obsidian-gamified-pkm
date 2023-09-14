@@ -1,4 +1,3 @@
-import { Notice } from 'obsidian';
 export interface Badge {
     name: string;
     description: string;
@@ -7,7 +6,7 @@ export interface Badge {
 
 export function checkIfReceiveABadge(levelOld: number, levelNew: number): boolean {
   const badgeLevels: number[] = [5, 10, 20, 27, 35, 42, 50, 60, 75, 82, 90, 100];
-  let receiveBadge: boolean = false
+  let receiveBadge = false
   for (let i=0; i < badgeLevels.length; i++){
     if (levelOld < badgeLevels[i] && levelNew >= badgeLevels[i]){
       receiveBadge = true
@@ -41,15 +40,6 @@ export function getBadgeForLevel(level: number, inform: boolean): Badge {
         break;
       }
     }
-/*
-    if(!inform){
-      if (index != 0){
-        new Notice(`You've earned the "${badgeNames[index].name}" badge. ${badgeNames[index].description}`)
-        console.log(`You've earned the "${badgeNames[index].name}" badge. ${badgeNames[index].description}`)
-      }
-    }
-*/    
-    //return { name: badgeNames[index], description: `Congratulations! You've reached Level ${level}. You've earned the "${badgeNames[index]}" badge.` };
     return badgeNames[index]
   }
   
@@ -82,14 +72,6 @@ export function getBadgeForLevel(level: number, inform: boolean): Badge {
         break;
       }
     }
-/*
-    if (index != 0){
-      new Notice(`You've earned the "${badgeNamesInit[index].name}" badge. ${badgeNamesInit[index].description}`)
-      console.log(`You earned ${badgeNamesInit[index].name} - ${badgeNamesInit[index].description}`)
-    }
-*/   
-  
-    //return { name: badgeNames[index], description: `Congratulations! You've reached Level ${level}. You've earned the "${badgeNames[index]}" badge.` };
     return badgeNamesInit[index]
   }
 
