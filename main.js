@@ -1710,6 +1710,167 @@ function cleanEscapedString(input) {
   return matched[1].replace(doubleQuoteRegExp, "'");
 }
 
+// src/avatarFileContent.ts
+var avatarInitContent = `# Avatar
+
+|        |     |
+| ------ | --- |
+| Level  | 0    |
+| Points | 0    |
+^levelAndPoints	
+\`\`\`chart
+type: bar
+labels: [Expririence]
+series:
+  - title: points reached
+    data: [0]
+  - title: points to earn to level up
+    data: [1000]
+xMin: 0
+xMax: 1000
+tension: 0.2
+width: 40%
+labelColors: false
+fill: false
+beginAtZero: false
+bestFit: false
+bestFitTitle: undefined
+bestFitNumber: 0
+stacked: true
+indexAxis: y
+xTitle: "progress"
+legend: false
+\`\`\`
+
+|             |     |       |
+| ----------- | --- | ----- |
+| **daily Notes** | *500EP* | **0/2** |
+^dailyNotesChallenge
+|  |     ||
+| ---- | --- | --- |
+| **weekly Notes** | *2000EP*     |  **0/7**   |
+^weeklyNotesChallenge
+\`\`\`chart
+type: bar
+labels: [Notes]
+series:
+  - title: days done in a row
+    data: [0]
+  - title: days to do in a row
+    data: [7]
+xMin: 0
+xMax: 7
+tension: 0.2
+width: 40%
+labelColors: false
+fill: false
+beginAtZero: false
+bestFit: false
+bestFitTitle: undefined
+bestFitNumber: 0
+stacked: true
+indexAxis: y
+xTitle: "days"
+legend: false
+\`\`\`
+
+| Level | Count |
+| :---: | :---: |
+| Majurity 5 |\`$=dv.pages().where(p => [5, '5', '5\u27A1\uFE0F', '5\u2B07\uFE0F', '5\u2B06\uFE0F'].includes(p.file.frontmatter['note-maturity'])).length\`|
+| Majurity 4 |\`$=dv.pages().where(p => [4, '4', '4\u27A1\uFE0F', '4\u2B07\uFE0F', '4\u2B06\uFE0F'].includes(p.file.frontmatter['note-maturity'])).length\`|
+| Majurity 3 |\`$=dv.pages().where(p => [3, '3', '3\u27A1\uFE0F', '3\u2B07\uFE0F', '3\u2B06\uFE0F'].includes(p.file.frontmatter['note-maturity'])).length\`|
+| Majurity 2 |\`$=dv.pages().where(p => [2, '2', '2\u27A1\uFE0F', '2\u2B07\uFE0F', '2\u2B06\uFE0F'].includes(p.file.frontmatter['note-maturity'])).length\`|
+| Majurity 1 |\`$=dv.pages().where(p => [1, '1', '1\u27A1\uFE0F', '1\u2B07\uFE0F', '1\u2B06\uFE0F'].includes(p.file.frontmatter['note-maturity'])).length\`|
+| Majurity 0 |\`$=dv.pages().where(p => [0, '0', '0\u27A1\uFE0F', '0\u2B07\uFE0F', '0\u2B06\uFE0F'].includes(p.file.frontmatter['note-maturity'])).length\`|
+
+
+\`\`\`chart
+type: bar
+labels: [0, 0, 0]
+series:
+  - title: created
+    data: [0, 0, 0]
+  - title: modified
+    data: [0, 0, 0]
+tension: 0.2
+width: 80 %
+labelColors: false
+fill: false
+beginAtZero: false
+bestFit: false
+bestFitTitle: undefined
+bestFitNumber: 0
+stacked: true
+yTitle: "Number of Notes"
+xTitle: "Months"
+xMin: 0
+\`\`\`
+^ChartMonth
+
+
+### Badges
+#### achieved
+
+
+#### outstanding
+level 5: *Enlightened Novice*
+level 10: *Curious Connoisseur*
+level 20: *Brainiac Trailblazer*
+level 27: *Scholarly Trailblazer*
+level 35: *Info Ninja Master*
+level 42: *Wise Owl Guru*
+level 50: *Einstein Incarnate*
+level 60: *Mastermind Sage*
+level 75: *Cerebral Maestro*
+level 82: *Zen Knowledge Keeper*
+level 90: *Grand Archivist Overlord*
+level 100: *Omniscient Sage of Everything*
+
+
+
+### **note-maturity = 5**
+\`\`\`dataview
+List NoteMaturityCount
+from ""
+Where note-maturity = 5 or note-maturity = "5" or note-maturity = "5\u27A1\uFE0F" or note-maturity = "5\u2B06\uFE0F" or note-maturity = "5\u2B07\uFE0F"
+\`\`\`
+
+### **note-maturity = 4**
+\`\`\`dataview
+List NoteMaturityCount
+from ""
+Where note-maturity = 4 or note-maturity = "4" or note-maturity = "4\u27A1\uFE0F" or note-maturity = "4\u2B06\uFE0F" or note-maturity = "4\u2B07\uFE0F"
+\`\`\`
+
+### note-maturity = 3
+\`\`\`dataview
+List NoteMaturityCount
+from ""
+Where note-maturity = 3 or note-maturity = "3" or note-maturity = "3\u27A1\uFE0F" or note-maturity = "3\u2B06\uFE0F" or note-maturity = "3\u2B07\uFE0F"
+\`\`\`
+
+### note-maturity = 2
+\`\`\`dataview
+List NoteMaturityCount
+from ""
+Where note-maturity = 2 or note-maturity = "2" or note-maturity = "2\u27A1\uFE0F" or note-maturity = "2\u2B06\uFE0F" or note-maturity = "2\u2B07\uFE0F"
+\`\`\`
+
+### note-maturity = 1
+\`\`\`dataview
+List NoteMaturityCount
+from ""
+Where note-maturity = 1 or note-maturity = "1" or note-maturity = "1\u27A1\uFE0F" or note-maturity = "1\u2B06\uFE0F" or note-maturity = "1\u2B07\uFE0F"
+\`\`\`
+
+### note-maturity = 0
+\`\`\`dataview
+List NoteMaturityCount
+from ""
+Where note-maturity = 0 or note-maturity = "0" or note-maturity = "0\u27A1\uFE0F" or note-maturity = "0\u2B06\uFE0F" or note-maturity = "0\u2B07\uFE0F"
+\`\`\`
+`;
+
 // src/majuritycalculation.ts
 var fs = __toESM(require("fs"));
 var path = __toESM(require("path"));
@@ -2434,22 +2595,24 @@ You received an initialisation Booster aktiv for your first level ups. Game on!`
         }
       });
     }
-    this.addCommand({
-      id: "reset-game",
-      name: "reset the game",
-      callback: async () => {
-        await this.removeKeysFromFrontmatter();
-        this.settings.statusLevel = 1;
-        this.settings.statusPoints = 0;
-        this.settings.xpForNextLevel = 1e3;
-        this.settings.badgeBoosterState = false;
-        this.settings.badgeBoosterFactor = 1;
-        await this.saveData(this.settings);
-        this.giveStatusPoints(this.settings.avatarPageName, 0);
-        await this.updateStatusBar(statusbarGamification);
-        new ModalInformationbox(this.app, `Game is now reseted. Please delete the Profile Page: "${this.settings.avatarPageName}.md" manually.`).open();
-      }
-    });
+    if (this.settings.enableInitCommand) {
+      this.addCommand({
+        id: "reset-game",
+        name: "reset the game",
+        callback: async () => {
+          await this.removeKeysFromFrontmatter();
+          this.settings.statusLevel = 1;
+          this.settings.statusPoints = 0;
+          this.settings.xpForNextLevel = 1e3;
+          this.settings.badgeBoosterState = false;
+          this.settings.badgeBoosterFactor = 1;
+          await this.saveData(this.settings);
+          this.giveStatusPoints(this.settings.avatarPageName, 0);
+          await this.updateStatusBar(statusbarGamification);
+          new ModalInformationbox(this.app, `Game is now reseted. Please delete the Profile Page: "${this.settings.avatarPageName}.md" manually.`).open();
+        }
+      });
+    }
     this.addCommand({
       id: "update-chart-avatarpage",
       name: "update chart on profile page",
@@ -2800,7 +2963,7 @@ You received an initialisation Booster aktiv for your first level ups. Game on!`
       start = reference + 1;
       end2 = reference2 + 2;
       start2 = reference2 + 1;
-      const badgeString = "**" + badge.name + "** " + badge.level + "\n> " + badge.description + "\n";
+      const badgeString = "**" + badge.name + "** " + badge.level + "\n> " + badge.description + " - " + window.moment().format("D.M.YY") + "\n";
       const newLines = [...lines.slice(0, start), badgeString, ...lines.slice(end)];
       const newLines2 = [...newLines.slice(0, start2), ...newLines.slice(end2)];
       await app.vault.modify(file, newLines2.join("\n"));
@@ -2830,7 +2993,7 @@ You received an initialisation Booster aktiv for your first level ups. Game on!`
     if (reference != null) {
       end = reference + 2;
       start = reference + 1;
-      const badgeString = "**" + badge.name + "**\n> " + badge.description + "\n";
+      const badgeString = "**" + badge.name + "**\n> " + badge.description + " - " + window.moment().format("D.M.YY") + "\n";
       const newLines = [...lines.slice(0, start), badgeString, ...lines.slice(end)];
       await app.vault.modify(file, newLines.join("\n"));
       console.log(`badgeString: ${badgeString}`);
@@ -3023,171 +3186,12 @@ function isOneDayBefore(inputDate) {
   return inputDate.isSame(oneDayBeforeCurrent, "day");
 }
 async function createAvatarFile(app2, fileName) {
-  const fileContent = `# Avatar
-
-|        |     |
-| ------ | --- |
-| Level  | 0    |
-| Points | 0    |
-^levelAndPoints	
-\`\`\`chart
-type: bar
-labels: [Expririence]
-series:
-  - title: points reached
-    data: [0]
-  - title: points to earn to level up
-    data: [1000]
-xMin: 0
-xMax: 1000
-tension: 0.2
-width: 40%
-labelColors: false
-fill: false
-beginAtZero: false
-bestFit: false
-bestFitTitle: undefined
-bestFitNumber: 0
-stacked: true
-indexAxis: y
-xTitle: "progress"
-legend: false
-\`\`\`
-
-|             |     |       |
-| ----------- | --- | ----- |
-| **daily Notes** | *500EP* | **0/2** |
-^dailyNotesChallenge
-|  |     ||
-| ---- | --- | --- |
-| **weekly Notes** | *2000EP*     |  **0/7**   |
-^weeklyNotesChallenge
-\`\`\`chart
-type: bar
-labels: [Notes]
-series:
-  - title: days done in a row
-    data: [0]
-  - title: days to do in a row
-    data: [7]
-xMin: 0
-xMax: 7
-tension: 0.2
-width: 40%
-labelColors: false
-fill: false
-beginAtZero: false
-bestFit: false
-bestFitTitle: undefined
-bestFitNumber: 0
-stacked: true
-indexAxis: y
-xTitle: "days"
-legend: false
-\`\`\`
-
-| Level | Count |
-| :---: | :---: |
-| Majurity 5 |\`$=dv.pages().where(p => [5, '5', '5\u27A1\uFE0F', '5\u2B07\uFE0F', '5\u2B06\uFE0F'].includes(p.file.frontmatter['note-maturity'])).length\`|
-| Majurity 4 |\`$=dv.pages().where(p => [4, '4', '4\u27A1\uFE0F', '4\u2B07\uFE0F', '4\u2B06\uFE0F'].includes(p.file.frontmatter['note-maturity'])).length\`|
-| Majurity 3 |\`$=dv.pages().where(p => [3, '3', '3\u27A1\uFE0F', '3\u2B07\uFE0F', '3\u2B06\uFE0F'].includes(p.file.frontmatter['note-maturity'])).length\`|
-| Majurity 2 |\`$=dv.pages().where(p => [2, '2', '2\u27A1\uFE0F', '2\u2B07\uFE0F', '2\u2B06\uFE0F'].includes(p.file.frontmatter['note-maturity'])).length\`|
-| Majurity 1 |\`$=dv.pages().where(p => [1, '1', '1\u27A1\uFE0F', '1\u2B07\uFE0F', '1\u2B06\uFE0F'].includes(p.file.frontmatter['note-maturity'])).length\`|
-| Majurity 0 |\`$=dv.pages().where(p => [0, '0', '0\u27A1\uFE0F', '0\u2B07\uFE0F', '0\u2B06\uFE0F'].includes(p.file.frontmatter['note-maturity'])).length\`|
-
-
-\`\`\`chart
-type: bar
-labels: [0, 0, 0]
-series:
-  - title: created
-    data: [0, 0, 0]
-  - title: modified
-    data: [0, 0, 0]
-tension: 0.2
-width: 80 %
-labelColors: false
-fill: false
-beginAtZero: false
-bestFit: false
-bestFitTitle: undefined
-bestFitNumber: 0
-stacked: true
-yTitle: "Number of Notes"
-xTitle: "Months"
-xMin: 0
-\`\`\`
-^ChartMonth
-
-
-### Badges
-#### achieved
-
-
-#### outstanding
-level 5: *Enlightened Novice*
-level 10: *Curious Connoisseur*
-level 20: *Brainiac Trailblazer*
-level 27: *Scholarly Trailblazer*
-level 35: *Info Ninja Master*
-level 42: *Wise Owl Guru*
-level 50: *Einstein Incarnate*
-level 60: *Mastermind Sage*
-level 75: *Cerebral Maestro*
-level 82: *Zen Knowledge Keeper*
-level 90: *Grand Archivist Overlord*
-level 100: *Omniscient Sage of Everything*
-
-
-
-### **note-maturity = 5**
-\`\`\`dataview
-List NoteMaturityCount
-from ""
-Where note-maturity = 5 or note-maturity = "5" or note-maturity = "5\u27A1\uFE0F" or note-maturity = "5\u2B06\uFE0F" or note-maturity = "5\u2B07\uFE0F"
-\`\`\`
-
-### **note-maturity = 4**
-\`\`\`dataview
-List NoteMaturityCount
-from ""
-Where note-maturity = 4 or note-maturity = "4" or note-maturity = "4\u27A1\uFE0F" or note-maturity = "4\u2B06\uFE0F" or note-maturity = "4\u2B07\uFE0F"
-\`\`\`
-
-### note-maturity = 3
-\`\`\`dataview
-List NoteMaturityCount
-from ""
-Where note-maturity = 3 or note-maturity = "3" or note-maturity = "3\u27A1\uFE0F" or note-maturity = "3\u2B06\uFE0F" or note-maturity = "3\u2B07\uFE0F"
-\`\`\`
-
-### note-maturity = 2
-\`\`\`dataview
-List NoteMaturityCount
-from ""
-Where note-maturity = 2 or note-maturity = "2" or note-maturity = "2\u27A1\uFE0F" or note-maturity = "2\u2B06\uFE0F" or note-maturity = "2\u2B07\uFE0F"
-\`\`\`
-
-### note-maturity = 1
-\`\`\`dataview
-List NoteMaturityCount
-from ""
-Where note-maturity = 1 or note-maturity = "1" or note-maturity = "1\u27A1\uFE0F" or note-maturity = "1\u2B06\uFE0F" or note-maturity = "1\u2B07\uFE0F"
-\`\`\`
-
-### note-maturity = 0
-\`\`\`dataview
-List NoteMaturityCount
-from ""
-Where note-maturity = 0 or note-maturity = "0" or note-maturity = "0\u27A1\uFE0F" or note-maturity = "0\u2B06\uFE0F" or note-maturity = "0\u2B07\uFE0F"
-\`\`\`
-`;
   const existingFile = app2.vault.getAbstractFileByPath(`${fileName}.md`);
   if (existingFile instanceof import_obsidian2.TFile) {
     console.log(`File ${fileName}.md already exists`);
     return;
   }
-  await app2.vault.create(`${fileName}.md`, fileContent);
+  await app2.vault.create(`${fileName}.md`, avatarInitContent);
 }
 var ModalInformationbox = class extends import_obsidian2.Modal {
   // Store the text to be displayed
