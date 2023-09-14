@@ -31,3 +31,5 @@ jobs:
             main.js
             manifest.json
 
+      - name: Copy new build to download dir
+        run: ./scripts/copy-main-to-download-dir.sh
