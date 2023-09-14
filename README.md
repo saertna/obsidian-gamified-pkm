@@ -8,10 +8,10 @@ Hello, fellow learners and knowledge seekers! 📚 If you're as passionate about
 
 🔗 **Plugin Download & install:** [Obsidian Gamification Plugin](https://github.com/saertna/obsidian-gamified-pkm/tree/main/obsidian-gamified-pkm)
 
-just copy content into `<YOURVAULT>\.obsidian\plugins\obsidian-gamified-pkm`
-You have to create the folder *obsidian-gamified-pkm* there. 
-Go in Obsidian into Settings (COM/CTRL + ,), enable Community Plugins if not already done, find *obsidian-gamified-pkm* and enable it. 
-Run command `Gamificatio your PKM: Initialize gamification ratings`
+- just copy content into `<YOURVAULT>\.obsidian\plugins\obsidian-gamified-pkm`
+- You have to create the folder *obsidian-gamified-pkm* there. 
+- Go in Obsidian into Settings (COM/CTRL + ,), enable Community Plugins if not already done, find *obsidian-gamified-pkm* and enable it. 
+- Run command `Gamificatio your PKM: Initialize gamification ratings` in your Vault (COM/CTRL + P).
 
 **Embark on a Motivational Journey!**
 
