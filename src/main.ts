@@ -1,7 +1,7 @@
 import {App, MarkdownView, Modal, Notice, Plugin, TFile, Vault} from 'obsidian';
 import {defaultSettings, GamificationPluginSettings} from './settings';
 import format from 'date-fns/format';
-import { avatarInitContent } from './avatarFileContent'
+import { avatarInitContent, pointsMajurity, pointsNoteMajurity } from './constants'
 import {
 	count_inlinks,
 	countCharactersInActiveFile,
@@ -203,9 +203,6 @@ export default class gamification extends Plugin {
 		console.log(`fileCountMap loaded. Number of files: ${fileCountMap.length}`);
 
 		let pointsReceived = 0; // to have one message at the end how many points received
-		const pointsNoteMajurity = 100;
-		const pointsMajurity = 10;
-
 
 		for (const fileName of fileCountMap) {
 			const file = fileName
@@ -382,8 +379,6 @@ export default class gamification extends Plugin {
 			try {
 				await this.app.fileManager.processFrontMatter(file, (frontmatter) => {
 					if (frontmatter) {
-						const pointsNoteMajurity = 100;
-						const pointsMajurity = 10;
 						let pointsReceived = 0; // to have one message at the end how many points received
 						if (rateDirectionForStatusPoints(frontmatter['note-maturity'], noteMajurity) >= 1){
 							pointsReceived += pointsNoteMajurity*rateDirectionForStatusPoints(frontmatter['note-maturity'], noteMajurity)

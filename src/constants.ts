@@ -1,3 +1,5 @@
+export const pointsNoteMajurity = 100;
+export const pointsMajurity = 10;
 export const avatarInitContent =  `# Avatar
 
 |        |     |
