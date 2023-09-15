@@ -2453,7 +2453,7 @@ var gamification = class extends import_obsidian2.Plugin {
     await this.loadSettings();
     this.addSettingTab(new GamificationPluginSettings(this.app, this));
     setTimeout(async () => {
-      this.resetDailyGoals();
+      await this.resetDailyGoals();
     }, 2e3);
     this.timerInterval = 30 * 60 * 1e3;
     this.timerId = window.setInterval(this.resetDailyGoals.bind(this), this.timerInterval);
@@ -2485,9 +2485,9 @@ var gamification = class extends import_obsidian2.Plugin {
         name: "create profile page",
         callback: async () => {
           const { vault } = this.app;
-          createAvatarFile(this.app, this.settings.avatarPageName);
+          await createAvatarFile(this.app, this.settings.avatarPageName);
           const chartString = await this.createChart(vault);
-          replaceChartContent(this.settings.avatarPageName, chartString);
+          await replaceChartContent(this.settings.avatarPageName, chartString);
         }
       });
     }
@@ -2503,7 +2503,7 @@ var gamification = class extends import_obsidian2.Plugin {
           this.settings.badgeBoosterState = false;
           this.settings.badgeBoosterFactor = 1;
           await this.saveData(this.settings);
-          this.giveStatusPoints(0);
+          await this.giveStatusPoints(0);
           await this.updateStatusBar(statusbarGamification);
           new ModalInformationbox(this.app, `Game is now reseted. Please delete the Profile Page: "${this.settings.avatarPageName}.md" manually.`).open();
         }
@@ -2515,27 +2515,27 @@ var gamification = class extends import_obsidian2.Plugin {
       callback: async () => {
         const { vault } = app;
         const chartString = await this.createChart(vault);
-        replaceChartContent(this.settings.avatarPageName, chartString);
+        await replaceChartContent(this.settings.avatarPageName, chartString);
       }
     });
     this.addCommand({
       id: "rate-note-maturity",
       name: "Rate note majurity",
       callback: async () => {
-        this.calculateNoteMajurity(statusbarGamification);
+        await this.calculateNoteMajurity(statusbarGamification);
       }
     });
     this.addCommand({
       id: "change-progressive-formatting",
       name: "toggle progressive summarization formatting",
       callback: async () => {
-        replaceFormatStrings(this.settings.progressiveSumLayer2, this.settings.progressiveSumLayer3);
+        await replaceFormatStrings(this.settings.progressiveSumLayer2, this.settings.progressiveSumLayer3);
       }
     });
   }
   async initializeGame(statusbarGamification) {
     this.settings.gamificationStartDate = format(new Date(), "yyyy-MM-dd");
-    this.saveSettings();
+    await this.saveSettings();
     const { vault } = this.app;
     await createAvatarFile(this.app, this.settings.avatarPageName);
     const chartString = await this.createChart(vault);
@@ -2776,25 +2776,25 @@ You received an initialisation Booster aktiv for your first level ups. Game on!`
     if (!isSameDay(window.moment(this.settings.dailyNoteCreationDate, "DD.MM.YYYY"))) {
       this.settings.dailyNoteCreationTask = 0;
       this.settings.dailyNoteCreationDate = window.moment().format("DD.MM.YYYY");
-      this.saveSettings();
+      await this.saveSettings();
       console.log(`daily Challenge reseted`);
       reset = true;
     }
     if (!isOneDayBefore(window.moment(this.settings.weeklyNoteCreationDate, "DD.MM.YYYY")) && !isSameDay(window.moment(this.settings.weeklyNoteCreationDate, "DD.MM.YYYY"))) {
       this.settings.weeklyNoteCreationTask = 0;
       this.settings.weeklyNoteCreationDate = window.moment().subtract(1, "day").format("DD.MM.YYYY");
-      this.saveSettings();
+      await this.saveSettings();
       console.log(`weekly Challenge reseted`);
       reset = true;
     }
     if (isOneDayBefore(window.moment(this.settings.weeklyNoteCreationDate, "DD.MM.YYYY")) && this.settings.weeklyNoteCreationTask == 7) {
       this.settings.weeklyNoteCreationTask = 0;
       this.settings.weeklyNoteCreationDate = window.moment().subtract(1, "day").format("DD.MM.YYYY");
-      this.saveSettings();
+      await this.saveSettings();
       reset = true;
     }
     if (reset) {
-      this.updateAvatarPage(this.settings.avatarPageName);
+      await this.updateAvatarPage(this.settings.avatarPageName);
     }
   }
   async increaseDailyCreatedNoteCount() {
@@ -2802,12 +2802,12 @@ You received an initialisation Booster aktiv for your first level ups. Game on!`
     if (newDailyNoteCreationTask < 2) {
       newDailyNoteCreationTask++;
       this.settings.dailyNoteCreationTask = newDailyNoteCreationTask;
-      this.saveSettings();
+      await this.saveSettings();
       if (newDailyNoteCreationTask == 1) {
-        this.updateAvatarPage(this.settings.avatarPageName);
+        await this.updateAvatarPage(this.settings.avatarPageName);
         console.log(`${newDailyNoteCreationTask}/2 Notes created today.`);
       } else if (newDailyNoteCreationTask == 2) {
-        this.giveStatusPoints(500);
+        await this.giveStatusPoints(500);
         console.log(`daily Challenge reached! ${newDailyNoteCreationTask}/2 created.`);
       } else {
         console.log(`${newDailyNoteCreationTask}/2 Notes created today.`);
@@ -2822,12 +2822,12 @@ You received an initialisation Booster aktiv for your first level ups. Game on!`
         newWeeklyNoteCreationTask++;
         this.settings.weeklyNoteCreationDate = window.moment().format("DD.MM.YYYY");
         this.settings.weeklyNoteCreationTask = newWeeklyNoteCreationTask;
-        this.saveSettings();
+        await this.saveSettings();
         if (newWeeklyNoteCreationTask <= 6) {
-          this.updateAvatarPage(this.settings.avatarPageName);
+          await this.updateAvatarPage(this.settings.avatarPageName);
           console.log(`${newWeeklyNoteCreationTask}/7 Notes created in a chain.`);
         } else if (newWeeklyNoteCreationTask == 7) {
-          this.giveStatusPoints(2e3);
+          await this.giveStatusPoints(2e3);
           console.log(`Weekly Challenge reached! ${newWeeklyNoteCreationTask}/7 created in a chain.`);
         } else {
           console.log(`${newWeeklyNoteCreationTask}/7 Notes created in a chain.`);
@@ -2838,7 +2838,7 @@ You received an initialisation Booster aktiv for your first level ups. Game on!`
     } else {
       this.settings.weeklyNoteCreationDate = window.moment().format("DD.MM.YYYY");
       this.settings.weeklyNoteCreationTask = 1;
-      this.saveSettings();
+      await this.saveSettings();
     }
   }
   async updateStatusBar(statusbar) {
@@ -2863,7 +2863,7 @@ You received an initialisation Booster aktiv for your first level ups. Game on!`
   async saveSettings() {
     await this.saveData(this.settings);
   }
-  async giveStatusPoints(avatarPageName, pointsToAdd) {
+  async giveStatusPoints(pointsToAdd) {
     let boosterFactor = 1;
     if (this.settings.badgeBoosterState) {
       boosterFactor = this.settings.badgeBoosterFactor;
