@@ -727,7 +727,7 @@ export default class gamification extends Plugin {
 			end2 = reference2 + 2;
 			start2 = reference2 + 1;
 
-			const badgeString = "**" + badge.name + "** " + badge.level + "\n> " + badge.description + " - " + window.moment().format("D.M.YY") + "\n"
+			const badgeString = "**" + badge.name + "** " + badge.level + "\n> " + badge.description + " - *" + window.moment().format('D.M.YY') + "*\n"
 			const newLines = [...lines.slice(0, start), badgeString, ...lines.slice(end)];
 			const newLines2 = [...newLines.slice(0, start2), ...newLines.slice(end2)]
 			await app.vault.modify(file, newLines2.join("\n"));
@@ -761,7 +761,7 @@ export default class gamification extends Plugin {
 			end = reference + 2;
 			start = reference + 1;
 
-			const badgeString = "**" + badge.name + "**\n> " + badge.description + " - " + window.moment().format('D.M.YY') + "\n"
+			const badgeString = "**" + badge.name + "**\n> " + badge.description + " - *" + window.moment().format('D.M.YY') + "*\n"
 			const newLines = [...lines.slice(0, start), badgeString, ...lines.slice(end)];
 			await app.vault.modify(file, newLines.join("\n"));
 			console.log(`badgeString: ${badgeString}`)
