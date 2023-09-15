@@ -2503,7 +2503,7 @@ var gamification = class extends import_obsidian2.Plugin {
           this.settings.badgeBoosterState = false;
           this.settings.badgeBoosterFactor = 1;
           await this.saveData(this.settings);
-          this.giveStatusPoints(this.settings.avatarPageName, 0);
+          this.giveStatusPoints(0);
           await this.updateStatusBar(statusbarGamification);
           new ModalInformationbox(this.app, `Game is now reseted. Please delete the Profile Page: "${this.settings.avatarPageName}.md" manually.`).open();
         }
@@ -2570,45 +2570,45 @@ var gamification = class extends import_obsidian2.Plugin {
         await this.app.fileManager.processFrontMatter(file, (frontmatter) => {
           if (rateDirectionForStatusPoints(frontmatter["note-maturity"], noteMajurity) >= 1) {
             pointsReceived += pointsNoteMajurity * rateDirectionForStatusPoints(frontmatter["note-maturity"], noteMajurity);
-            this.giveStatusPoints(this.settings.avatarPageName, pointsNoteMajurity * rateDirectionForStatusPoints("frontmatter['note-maturity']", noteMajurity));
+            this.giveStatusPoints(pointsNoteMajurity * rateDirectionForStatusPoints("frontmatter['note-maturity']", noteMajurity));
           } else if (!("note-maturity" in frontmatter)) {
             pointsReceived += pointsNoteMajurity * rateDirectionForStatusPoints("0", noteMajurity);
-            this.giveStatusPoints(this.settings.avatarPageName, pointsNoteMajurity * rateDirectionForStatusPoints("0", noteMajurity));
+            this.giveStatusPoints(pointsNoteMajurity * rateDirectionForStatusPoints("0", noteMajurity));
           }
           if (rateDirectionForStatusPoints(frontmatter["title-class"], fileNameRate) >= 1 && "title-class" in frontmatter) {
             pointsReceived += pointsMajurity * rateDirectionForStatusPoints(frontmatter["title-class"], fileNameRate);
-            this.giveStatusPoints(this.settings.avatarPageName, pointsMajurity * rateDirectionForStatusPoints(frontmatter["title-class"], fileNameRate));
+            this.giveStatusPoints(pointsMajurity * rateDirectionForStatusPoints(frontmatter["title-class"], fileNameRate));
           } else if (!("title-class" in frontmatter)) {
             pointsReceived += pointsMajurity * rateDirectionForStatusPoints("0", fileNameRate);
-            this.giveStatusPoints(this.settings.avatarPageName, pointsMajurity * rateDirectionForStatusPoints("0", fileNameRate));
+            this.giveStatusPoints(pointsMajurity * rateDirectionForStatusPoints("0", fileNameRate));
           }
           if (rateDirectionForStatusPoints(frontmatter["note-length-class"], rateFileLength) >= 1) {
             pointsReceived += pointsMajurity * rateDirectionForStatusPoints(frontmatter["note-length-class"], rateFileLength);
-            this.giveStatusPoints(this.settings.avatarPageName, pointsMajurity * rateDirectionForStatusPoints(frontmatter["note-length-class"], rateFileLength));
+            this.giveStatusPoints(pointsMajurity * rateDirectionForStatusPoints(frontmatter["note-length-class"], rateFileLength));
           } else if (!("note-length-class" in frontmatter)) {
             pointsReceived += pointsMajurity * rateDirectionForStatusPoints("0", rateFileLength);
-            this.giveStatusPoints(this.settings.avatarPageName, pointsMajurity * rateDirectionForStatusPoints("0", rateFileLength));
+            this.giveStatusPoints(pointsMajurity * rateDirectionForStatusPoints("0", rateFileLength));
           }
           if (rateDirectionForStatusPoints(frontmatter["inlink-class"], inlinkClass) >= 1) {
             pointsReceived += pointsMajurity * rateDirectionForStatusPoints(frontmatter["inlink-class"], inlinkClass);
-            this.giveStatusPoints(this.settings.avatarPageName, pointsMajurity * rateDirectionForStatusPoints(frontmatter["inlink-class"], inlinkClass));
+            this.giveStatusPoints(pointsMajurity * rateDirectionForStatusPoints(frontmatter["inlink-class"], inlinkClass));
           } else if (!("inlink-class" in frontmatter)) {
             pointsReceived += pointsMajurity * rateDirectionForStatusPoints("0", inlinkClass);
-            this.giveStatusPoints(this.settings.avatarPageName, pointsMajurity * rateDirectionForStatusPoints("0", inlinkClass));
+            this.giveStatusPoints(pointsMajurity * rateDirectionForStatusPoints("0", inlinkClass));
           }
           if (rateDirectionForStatusPoints(frontmatter["outlink-class"], rateOut) >= 1) {
             pointsReceived += pointsMajurity * rateDirectionForStatusPoints(frontmatter["outlink-class"], rateOut);
-            this.giveStatusPoints(this.settings.avatarPageName, pointsMajurity * rateDirectionForStatusPoints(frontmatter["outlink-class"], rateOut));
+            this.giveStatusPoints(pointsMajurity * rateDirectionForStatusPoints(frontmatter["outlink-class"], rateOut));
           } else if (!("outlink-class" in frontmatter)) {
             pointsReceived += pointsMajurity * rateDirectionForStatusPoints("0", rateOut);
-            this.giveStatusPoints(this.settings.avatarPageName, pointsMajurity * rateDirectionForStatusPoints("0", rateOut));
+            this.giveStatusPoints(pointsMajurity * rateDirectionForStatusPoints("0", rateOut));
           }
           if (rateDirectionForStatusPoints(frontmatter["progressive-sumarization-maturity"], rateProgressiveSum) >= 1) {
             pointsReceived += pointsMajurity * rateDirectionForStatusPoints(frontmatter["progressive-sumarization-maturity"], rateProgressiveSum);
-            this.giveStatusPoints(this.settings.avatarPageName, pointsMajurity * rateDirectionForStatusPoints(frontmatter["progressive-sumarization-maturity"], rateProgressiveSum));
+            this.giveStatusPoints(pointsMajurity * rateDirectionForStatusPoints(frontmatter["progressive-sumarization-maturity"], rateProgressiveSum));
           } else if (!("progressive-sumarization-maturity" in frontmatter)) {
             pointsReceived += pointsMajurity * rateDirectionForStatusPoints(frontmatter["progressive-sumarization-maturity"], rateProgressiveSum);
-            this.giveStatusPoints(this.settings.avatarPageName, pointsMajurity * rateDirectionForStatusPoints("0", rateProgressiveSum));
+            this.giveStatusPoints(pointsMajurity * rateDirectionForStatusPoints("0", rateProgressiveSum));
           }
           frontmatter["title-class"] = rateDirection(frontmatter["title-class"], fileNameRate);
           frontmatter["note-length-class"] = rateDirection(frontmatter["note-length-class"], rateFileLength);
@@ -2689,57 +2689,57 @@ You received an initialisation Booster aktiv for your first level ups. Game on!`
             let pointsReceived = 0;
             if (rateDirectionForStatusPoints(frontmatter["note-maturity"], noteMajurity) >= 1) {
               pointsReceived += pointsNoteMajurity * rateDirectionForStatusPoints(frontmatter["note-maturity"], noteMajurity);
-              const newLevel = this.giveStatusPoints(this.settings.avatarPageName, pointsNoteMajurity * rateDirectionForStatusPoints("frontmatter['note-maturity']", noteMajurity));
+              const newLevel = this.giveStatusPoints(pointsNoteMajurity * rateDirectionForStatusPoints("frontmatter['note-maturity']", noteMajurity));
               this.decisionIfBadge(newLevel);
             } else if (!("note-maturity" in frontmatter)) {
               pointsReceived += pointsNoteMajurity * rateDirectionForStatusPoints("0", noteMajurity);
-              const newLevel = this.giveStatusPoints(this.settings.avatarPageName, pointsNoteMajurity * rateDirectionForStatusPoints("0", noteMajurity));
+              const newLevel = this.giveStatusPoints(pointsNoteMajurity * rateDirectionForStatusPoints("0", noteMajurity));
               this.decisionIfBadge(newLevel);
               firstTimeNoteRating = true;
             }
             if (rateDirectionForStatusPoints(frontmatter["title-class"], fileNameRate) >= 1 && "title-class" in frontmatter) {
               pointsReceived += pointsMajurity * rateDirectionForStatusPoints(frontmatter["title-class"], fileNameRate);
-              const newLevel = this.giveStatusPoints(this.settings.avatarPageName, pointsMajurity * rateDirectionForStatusPoints(frontmatter["title-class"], fileNameRate));
+              const newLevel = this.giveStatusPoints(pointsMajurity * rateDirectionForStatusPoints(frontmatter["title-class"], fileNameRate));
               this.decisionIfBadge(newLevel);
             } else if (!("title-class" in frontmatter)) {
               pointsReceived += pointsMajurity * rateDirectionForStatusPoints("0", fileNameRate);
-              const newLevel = this.giveStatusPoints(this.settings.avatarPageName, pointsMajurity * rateDirectionForStatusPoints("0", fileNameRate));
+              const newLevel = this.giveStatusPoints(pointsMajurity * rateDirectionForStatusPoints("0", fileNameRate));
               this.decisionIfBadge(newLevel);
             }
             if (rateDirectionForStatusPoints(frontmatter["note-length-class"], rateFileLength) >= 1) {
               pointsReceived += pointsMajurity * rateDirectionForStatusPoints(frontmatter["note-length-class"], rateFileLength);
-              const newLevel = this.giveStatusPoints(this.settings.avatarPageName, pointsMajurity * rateDirectionForStatusPoints(frontmatter["note-length-class"], rateFileLength));
+              const newLevel = this.giveStatusPoints(pointsMajurity * rateDirectionForStatusPoints(frontmatter["note-length-class"], rateFileLength));
               this.decisionIfBadge(newLevel);
             } else if (!("note-length-class" in frontmatter)) {
               pointsReceived += pointsMajurity * rateDirectionForStatusPoints("0", rateFileLength);
-              const newLevel = this.giveStatusPoints(this.settings.avatarPageName, pointsMajurity * rateDirectionForStatusPoints("0", rateFileLength));
+              const newLevel = this.giveStatusPoints(pointsMajurity * rateDirectionForStatusPoints("0", rateFileLength));
               this.decisionIfBadge(newLevel);
             }
             if (rateDirectionForStatusPoints(frontmatter["inlink-class"], inlinkClass) >= 1) {
               pointsReceived += pointsMajurity * rateDirectionForStatusPoints(frontmatter["inlink-class"], inlinkClass);
-              const newLevel = this.giveStatusPoints(this.settings.avatarPageName, pointsMajurity * rateDirectionForStatusPoints(frontmatter["inlink-class"], inlinkClass));
+              const newLevel = this.giveStatusPoints(pointsMajurity * rateDirectionForStatusPoints(frontmatter["inlink-class"], inlinkClass));
               this.decisionIfBadge(newLevel);
             } else if (!("inlink-class" in frontmatter)) {
               pointsReceived += pointsMajurity * rateDirectionForStatusPoints("0", inlinkClass);
-              const newLevel = this.giveStatusPoints(this.settings.avatarPageName, pointsMajurity * rateDirectionForStatusPoints("0", inlinkClass));
+              const newLevel = this.giveStatusPoints(pointsMajurity * rateDirectionForStatusPoints("0", inlinkClass));
               this.decisionIfBadge(newLevel);
             }
             if (rateDirectionForStatusPoints(frontmatter["outlink-class"], rateOut) >= 1) {
               pointsReceived += pointsMajurity * rateDirectionForStatusPoints(frontmatter["outlink-class"], rateOut);
-              const newLevel = this.giveStatusPoints(this.settings.avatarPageName, pointsMajurity * rateDirectionForStatusPoints(frontmatter["outlink-class"], rateOut));
+              const newLevel = this.giveStatusPoints(pointsMajurity * rateDirectionForStatusPoints(frontmatter["outlink-class"], rateOut));
               this.decisionIfBadge(newLevel);
             } else if (!("outlink-class" in frontmatter)) {
               pointsReceived += pointsMajurity * rateDirectionForStatusPoints("0", rateOut);
-              const newLevel = this.giveStatusPoints(this.settings.avatarPageName, pointsMajurity * rateDirectionForStatusPoints("0", rateOut));
+              const newLevel = this.giveStatusPoints(pointsMajurity * rateDirectionForStatusPoints("0", rateOut));
               this.decisionIfBadge(newLevel);
             }
             if (rateDirectionForStatusPoints(frontmatter["progressive-sumarization-maturity"], rateProgressiveSum) >= 1) {
               pointsReceived += pointsMajurity * rateDirectionForStatusPoints(frontmatter["progressive-sumarization-maturity"], rateProgressiveSum);
-              const newLevel = this.giveStatusPoints(this.settings.avatarPageName, pointsMajurity * rateDirectionForStatusPoints(frontmatter["progressive-sumarization-maturity"], rateProgressiveSum));
+              const newLevel = this.giveStatusPoints(pointsMajurity * rateDirectionForStatusPoints(frontmatter["progressive-sumarization-maturity"], rateProgressiveSum));
               this.decisionIfBadge(newLevel);
             } else if (!("progressive-sumarization-maturity" in frontmatter)) {
               pointsReceived += pointsMajurity * rateDirectionForStatusPoints(frontmatter["progressive-sumarization-maturity"], rateProgressiveSum);
-              const newLevel = this.giveStatusPoints(this.settings.avatarPageName, pointsMajurity * rateDirectionForStatusPoints("0", rateProgressiveSum));
+              const newLevel = this.giveStatusPoints(pointsMajurity * rateDirectionForStatusPoints("0", rateProgressiveSum));
               this.decisionIfBadge(newLevel);
             }
             if (pointsReceived > 0) {
@@ -2807,7 +2807,7 @@ You received an initialisation Booster aktiv for your first level ups. Game on!`
         this.updateAvatarPage(this.settings.avatarPageName);
         console.log(`${newDailyNoteCreationTask}/2 Notes created today.`);
       } else if (newDailyNoteCreationTask == 2) {
-        this.giveStatusPoints(this.settings.avatarPageName, 500);
+        this.giveStatusPoints(500);
         console.log(`daily Challenge reached! ${newDailyNoteCreationTask}/2 created.`);
       } else {
         console.log(`${newDailyNoteCreationTask}/2 Notes created today.`);
@@ -2827,7 +2827,7 @@ You received an initialisation Booster aktiv for your first level ups. Game on!`
           this.updateAvatarPage(this.settings.avatarPageName);
           console.log(`${newWeeklyNoteCreationTask}/7 Notes created in a chain.`);
         } else if (newWeeklyNoteCreationTask == 7) {
-          this.giveStatusPoints(this.settings.avatarPageName, 2e3);
+          this.giveStatusPoints(2e3);
           console.log(`Weekly Challenge reached! ${newWeeklyNoteCreationTask}/7 created in a chain.`);
         } else {
           console.log(`${newWeeklyNoteCreationTask}/7 Notes created in a chain.`);
