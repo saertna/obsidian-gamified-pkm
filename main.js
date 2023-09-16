@@ -2610,12 +2610,7 @@ var gamification = class extends import_obsidian2.Plugin {
             pointsReceived += pointsMajurity * rateDirectionForStatusPoints(frontmatter["progressive-summarization-maturity"], rateProgressiveSum);
             this.giveStatusPoints(pointsMajurity * rateDirectionForStatusPoints("0", rateProgressiveSum));
           }
-          frontmatter["title-class"] = rateDirection(frontmatter["title-class"], fileNameRate);
-          frontmatter["note-length-class"] = rateDirection(frontmatter["note-length-class"], rateFileLength);
-          frontmatter["inlink-class"] = rateDirection(frontmatter["inlink-class"], inlinkClass);
-          frontmatter["outlink-class"] = rateDirection(frontmatter["outlink-class"], rateOut);
-          frontmatter["progressive-summarization-maturity"] = rateDirection(frontmatter["progressive-summarization-maturity"], rateProgressiveSum);
-          frontmatter["note-maturity"] = rateDirection(frontmatter["note-maturity"], noteMajurity);
+          this.writeFrontmatter(frontmatter, fileNameRate, rateFileLength, inlinkClass, rateOut, rateProgressiveSum, noteMajurity);
         });
       } catch (e2) {
         if ((e2 == null ? void 0 : e2.name) === "YAMLParseError") {
@@ -2644,6 +2639,14 @@ Congratulation, you earned ${pointsReceived} Points!
 Check the Profile Page: "${this.settings.avatarPageName}.md"
 
 You received an initialisation Booster aktiv for your first level ups. Game on!`).open();
+  }
+  writeFrontmatter(frontmatter, fileNameRate, rateFileLength, inlinkClass, rateOut, rateProgressiveSum, noteMajurity) {
+    frontmatter["title-class"] = rateDirection(frontmatter["title-class"], fileNameRate);
+    frontmatter["note-length-class"] = rateDirection(frontmatter["note-length-class"], rateFileLength);
+    frontmatter["inlink-class"] = rateDirection(frontmatter["inlink-class"], inlinkClass);
+    frontmatter["outlink-class"] = rateDirection(frontmatter["outlink-class"], rateOut);
+    frontmatter["progressive-summarization-maturity"] = rateDirection(frontmatter["progressive-summarization-maturity"], rateProgressiveSum);
+    frontmatter["note-maturity"] = rateDirection(frontmatter["note-maturity"], noteMajurity);
   }
   onunload() {
     console.log("obsidian-pkm-gamification unloaded!");
@@ -2746,12 +2749,7 @@ You received an initialisation Booster aktiv for your first level ups. Game on!`
               new import_obsidian2.Notice(`${pointsReceived * this.settings.badgeBoosterFactor} Points received`);
               console.log(`${pointsReceived} Points received`);
             }
-            frontmatter["title-class"] = rateDirection(frontmatter["title-class"], fileNameRate);
-            frontmatter["note-length-class"] = rateDirection(frontmatter["note-length-class"], rateFileLength);
-            frontmatter["inlink-class"] = rateDirection(frontmatter["inlink-class"], inlinkClass);
-            frontmatter["outlink-class"] = rateDirection(frontmatter["outlink-class"], rateOut);
-            frontmatter["progressive-summarization-maturity"] = rateDirection(frontmatter["progressive-summarization-maturity"], rateProgressiveSum);
-            frontmatter["note-maturity"] = rateDirection(frontmatter["note-maturity"], noteMajurity);
+            this.writeFrontmatter(frontmatter, fileNameRate, rateFileLength, inlinkClass, rateOut, rateProgressiveSum, noteMajurity);
           }
         });
       } catch (e2) {
@@ -3018,8 +3016,6 @@ You received an initialisation Booster aktiv for your first level ups. Game on!`
     const content = await app.vault.read(file);
     let reference = null;
     let reference2 = null;
-    let end = null;
-    let start = null;
     const lines = content.split("\n");
     for (let i2 = 0; i2 < lines.length; i2++) {
       const line = lines[i2].trim();
@@ -3040,9 +3036,7 @@ You received an initialisation Booster aktiv for your first level ups. Game on!`
       }
     }
     if (reference != null && reference2 != null) {
-      start = reference + 1;
-      end = reference2;
-      const newLines = [...lines.slice(0, start), ...lines.slice(end)];
+      const newLines = [...lines.slice(0, reference + 1), ...lines.slice(reference2)];
       await app.vault.modify(file, newLines.join("\n"));
     }
   }

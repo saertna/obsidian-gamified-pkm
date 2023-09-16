@@ -280,12 +280,7 @@ export default class gamification extends Plugin {
 					}
 
 
-					frontmatter['title-class'] = rateDirection(frontmatter['title-class'], fileNameRate)
-					frontmatter['note-length-class'] = rateDirection(frontmatter['note-length-class'], rateFileLength)
-					frontmatter['inlink-class'] = rateDirection(frontmatter['inlink-class'], inlinkClass)
-					frontmatter['outlink-class'] = rateDirection(frontmatter['outlink-class'], rateOut)
-					frontmatter['progressive-summarization-maturity'] = rateDirection(frontmatter['progressive-summarization-maturity'], rateProgressiveSum)
-					frontmatter['note-maturity'] = rateDirection(frontmatter['note-maturity'], noteMajurity)
+					this.writeFrontmatter(frontmatter, fileNameRate, rateFileLength, inlinkClass, rateOut, rateProgressiveSum, noteMajurity);
 				});
 			} catch (e) {
 				if (e?.name === 'YAMLParseError') {
@@ -320,6 +315,15 @@ export default class gamification extends Plugin {
 
 
 		new ModalInformationbox(this.app, `Finallized gamification initialistation!\nCongratulation, you earned ${pointsReceived} Points!\n\nCheck the Profile Page: "${this.settings.avatarPageName}.md"\n\nYou received an initialisation Booster aktiv for your first level ups. Game on!`).open();
+	}
+
+	private writeFrontmatter(frontmatter: any, fileNameRate: number, rateFileLength: number, inlinkClass: number, rateOut: number, rateProgressiveSum: number, noteMajurity: number) {
+		frontmatter['title-class'] = rateDirection(frontmatter['title-class'], fileNameRate)
+		frontmatter['note-length-class'] = rateDirection(frontmatter['note-length-class'], rateFileLength)
+		frontmatter['inlink-class'] = rateDirection(frontmatter['inlink-class'], inlinkClass)
+		frontmatter['outlink-class'] = rateDirection(frontmatter['outlink-class'], rateOut)
+		frontmatter['progressive-summarization-maturity'] = rateDirection(frontmatter['progressive-summarization-maturity'], rateProgressiveSum)
+		frontmatter['note-maturity'] = rateDirection(frontmatter['note-maturity'], noteMajurity)
 	}
 
 	onunload() {
@@ -444,12 +448,7 @@ export default class gamification extends Plugin {
 							console.log(`${pointsReceived} Points received`)
 						}
 
-						frontmatter['title-class'] = rateDirection(frontmatter['title-class'], fileNameRate)
-						frontmatter['note-length-class'] = rateDirection(frontmatter['note-length-class'], rateFileLength)
-						frontmatter['inlink-class'] = rateDirection(frontmatter['inlink-class'], inlinkClass)
-						frontmatter['outlink-class'] = rateDirection(frontmatter['outlink-class'], rateOut)
-						frontmatter['progressive-summarization-maturity'] = rateDirection(frontmatter['progressive-summarization-maturity'], rateProgressiveSum)
-						frontmatter['note-maturity'] = rateDirection(frontmatter['note-maturity'], noteMajurity)
+						this.writeFrontmatter(frontmatter, fileNameRate, rateFileLength, inlinkClass, rateOut, rateProgressiveSum, noteMajurity);
 					}
 				});
 			} catch (e) {
@@ -770,8 +769,6 @@ export default class gamification extends Plugin {
 		const content = await app.vault.read(file);
 		let reference: number | null = null;
 		let reference2: number | null = null;
-		let end: number | null = null;
-		let start: number | null = null;
 
 		const lines = content.split("\n");
 		for (let i = 0; i < lines.length; i++) {
@@ -796,9 +793,7 @@ export default class gamification extends Plugin {
 			}
 		}
 		if (reference != null && reference2 != null){
-			start = reference + 1;
-			end = reference2;
-			const newLines = [...lines.slice(0, start), ...lines.slice(end)];
+			const newLines = [...lines.slice(0, reference + 1), ...lines.slice(reference2)];
 			await app.vault.modify(file, newLines.join("\n"));
 		}
 	}
