@@ -133,20 +133,8 @@ export default class gamification extends Plugin {
 				id: 'reset-game',
 				name: 'reset the game',
 				callback: async () => {
-					// const app = window.app;
-					// without limitation, function runs faster
-					// const files = await getFileMap(app, this.settings.tagsExclude, this.settings.folderExclude);
-					await this.removeKeysFromFrontmatter();
-					this.settings.statusLevel = 1;
-					this.settings.statusPoints = 0;
-					this.settings.xpForNextLevel = 1000
-					this.settings.badgeBoosterState = false
-					this.settings.badgeBoosterFactor = 1
-					await this.saveData(this.settings);
-					await this.giveStatusPoints(0)
-					await this.updateStatusBar(statusbarGamification)
-					new ModalInformationbox(this.app, `Game is now reseted. Please delete the Profile Page: "${this.settings.avatarPageName}.md" manually.`).open();
-				},
+                    await this.resetGame(statusbarGamification);
+                },
 
 			});
 		}
@@ -188,7 +176,20 @@ export default class gamification extends Plugin {
 	}
 
 
-	private async initializeGame(statusbarGamification: HTMLSpanElement) {
+    private async resetGame(statusbarGamification: HTMLSpanElement) {
+        await this.removeKeysFromFrontmatter();
+        this.settings.statusLevel = 1;
+        this.settings.statusPoints = 0;
+        this.settings.xpForNextLevel = 1000
+        this.settings.badgeBoosterState = false
+        this.settings.badgeBoosterFactor = 1
+        await this.saveData(this.settings);
+        await this.giveStatusPoints(0)
+        await this.updateStatusBar(statusbarGamification)
+        new ModalInformationbox(this.app, `Game is now reseted. Please delete the Profile Page: "${this.settings.avatarPageName}.md" manually.`).open();
+    }
+
+    private async initializeGame(statusbarGamification: HTMLSpanElement) {
 		this.settings.gamificationStartDate = format(new Date(), 'yyyy-MM-dd');
 		await this.saveSettings();
 
@@ -307,13 +308,6 @@ export default class gamification extends Plugin {
 			await this.updateStatusBar(statusbarGamification)
 		}, 2000); // 2000 milliseconds = 2 seconds
 
-
-		// const initBadge : Badge = await getBadgeForInitLevel(this.settings.statusLevel)
-		// await this.giveInitBadgeInProfile(this.settings.avatarPageName ,initBadge)
-		// await this.removeBadgesWhenInitLevelHigher(this.settings.avatarPageName ,this.settings.statusLevel)
-		// await this.boosterForInit()
-
-
 		new ModalInformationbox(this.app, `Finallized gamification initialistation!\nCongratulation, you earned ${pointsReceived} Points!\n\nCheck the Profile Page: "${this.settings.avatarPageName}.md"\n\nYou received an initialisation Booster aktiv for your first level ups. Game on!`).open();
 	}
 
@@ -342,8 +336,7 @@ export default class gamification extends Plugin {
 			console.error('got no file, propably none is active')
 		}
 
-		// to detect if NoteIsFirstlyRated
-		let firstTimeNoteRating = false;
+		let detectIfNoteIsFirstTimeRated = false;
 
 		// get file content length
 		const activeView = this.app.workspace.getActiveViewOfType(MarkdownView);
@@ -390,7 +383,7 @@ export default class gamification extends Plugin {
 							pointsReceived += pointsNoteMajurity*rateDirectionForStatusPoints("0", noteMajurity)
 							const newLevel = this.giveStatusPoints(pointsNoteMajurity * rateDirectionForStatusPoints("0", noteMajurity))
 							this.decisionIfBadge(newLevel);
-							firstTimeNoteRating = true;
+							detectIfNoteIsFirstTimeRated = true;
 						}
 
 						if (rateDirectionForStatusPoints(frontmatter['title-class'], fileNameRate) >= 1 && 'title-class' in frontmatter){
@@ -463,7 +456,7 @@ export default class gamification extends Plugin {
 		} else {
 			console.error('file was not found to calculate majurities. Make sure one is active.')
 		}
-		if (firstTimeNoteRating){
+		if (detectIfNoteIsFirstTimeRated){
 			await this.increaseDailyCreatedNoteCount();
 			await this.increaseWeeklyCreatedNoteCount();
 		}
