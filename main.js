@@ -2603,18 +2603,18 @@ var gamification = class extends import_obsidian2.Plugin {
             pointsReceived += pointsMajurity * rateDirectionForStatusPoints("0", rateOut);
             this.giveStatusPoints(pointsMajurity * rateDirectionForStatusPoints("0", rateOut));
           }
-          if (rateDirectionForStatusPoints(frontmatter["progressive-sumarization-maturity"], rateProgressiveSum) >= 1) {
-            pointsReceived += pointsMajurity * rateDirectionForStatusPoints(frontmatter["progressive-sumarization-maturity"], rateProgressiveSum);
-            this.giveStatusPoints(pointsMajurity * rateDirectionForStatusPoints(frontmatter["progressive-sumarization-maturity"], rateProgressiveSum));
-          } else if (!("progressive-sumarization-maturity" in frontmatter)) {
-            pointsReceived += pointsMajurity * rateDirectionForStatusPoints(frontmatter["progressive-sumarization-maturity"], rateProgressiveSum);
+          if (rateDirectionForStatusPoints(frontmatter["progressive-summarization-maturity"], rateProgressiveSum) >= 1) {
+            pointsReceived += pointsMajurity * rateDirectionForStatusPoints(frontmatter["progressive-summarization-maturity"], rateProgressiveSum);
+            this.giveStatusPoints(pointsMajurity * rateDirectionForStatusPoints(frontmatter["progressive-summarization-maturity"], rateProgressiveSum));
+          } else if (!("progressive-summarization-maturity" in frontmatter)) {
+            pointsReceived += pointsMajurity * rateDirectionForStatusPoints(frontmatter["progressive-summarization-maturity"], rateProgressiveSum);
             this.giveStatusPoints(pointsMajurity * rateDirectionForStatusPoints("0", rateProgressiveSum));
           }
           frontmatter["title-class"] = rateDirection(frontmatter["title-class"], fileNameRate);
           frontmatter["note-length-class"] = rateDirection(frontmatter["note-length-class"], rateFileLength);
           frontmatter["inlink-class"] = rateDirection(frontmatter["inlink-class"], inlinkClass);
           frontmatter["outlink-class"] = rateDirection(frontmatter["outlink-class"], rateOut);
-          frontmatter["progressive-sumarization-maturity"] = rateDirection(frontmatter["progressive-sumarization-maturity"], rateProgressiveSum);
+          frontmatter["progressive-summarization-maturity"] = rateDirection(frontmatter["progressive-summarization-maturity"], rateProgressiveSum);
           frontmatter["note-maturity"] = rateDirection(frontmatter["note-maturity"], noteMajurity);
         });
       } catch (e2) {
@@ -2733,12 +2733,12 @@ You received an initialisation Booster aktiv for your first level ups. Game on!`
               const newLevel = this.giveStatusPoints(pointsMajurity * rateDirectionForStatusPoints("0", rateOut));
               this.decisionIfBadge(newLevel);
             }
-            if (rateDirectionForStatusPoints(frontmatter["progressive-sumarization-maturity"], rateProgressiveSum) >= 1) {
-              pointsReceived += pointsMajurity * rateDirectionForStatusPoints(frontmatter["progressive-sumarization-maturity"], rateProgressiveSum);
-              const newLevel = this.giveStatusPoints(pointsMajurity * rateDirectionForStatusPoints(frontmatter["progressive-sumarization-maturity"], rateProgressiveSum));
+            if (rateDirectionForStatusPoints(frontmatter["progressive-summarization-maturity"], rateProgressiveSum) >= 1) {
+              pointsReceived += pointsMajurity * rateDirectionForStatusPoints(frontmatter["progressive-summarization-maturity"], rateProgressiveSum);
+              const newLevel = this.giveStatusPoints(pointsMajurity * rateDirectionForStatusPoints(frontmatter["progressive-summarization-maturity"], rateProgressiveSum));
               this.decisionIfBadge(newLevel);
-            } else if (!("progressive-sumarization-maturity" in frontmatter)) {
-              pointsReceived += pointsMajurity * rateDirectionForStatusPoints(frontmatter["progressive-sumarization-maturity"], rateProgressiveSum);
+            } else if (!("progressive-summarization-maturity" in frontmatter)) {
+              pointsReceived += pointsMajurity * rateDirectionForStatusPoints(frontmatter["progressive-summarization-maturity"], rateProgressiveSum);
               const newLevel = this.giveStatusPoints(pointsMajurity * rateDirectionForStatusPoints("0", rateProgressiveSum));
               this.decisionIfBadge(newLevel);
             }
@@ -2750,7 +2750,7 @@ You received an initialisation Booster aktiv for your first level ups. Game on!`
             frontmatter["note-length-class"] = rateDirection(frontmatter["note-length-class"], rateFileLength);
             frontmatter["inlink-class"] = rateDirection(frontmatter["inlink-class"], inlinkClass);
             frontmatter["outlink-class"] = rateDirection(frontmatter["outlink-class"], rateOut);
-            frontmatter["progressive-sumarization-maturity"] = rateDirection(frontmatter["progressive-sumarization-maturity"], rateProgressiveSum);
+            frontmatter["progressive-summarization-maturity"] = rateDirection(frontmatter["progressive-summarization-maturity"], rateProgressiveSum);
             frontmatter["note-maturity"] = rateDirection(frontmatter["note-maturity"], noteMajurity);
           }
         });
@@ -3139,7 +3139,7 @@ You received an initialisation Booster aktiv for your first level ups. Game on!`
           delete frontmatter["note-length-class"];
           delete frontmatter["inlink-class"];
           delete frontmatter["outlink-class"];
-          delete frontmatter["progressive-sumarization-maturity"];
+          delete frontmatter["progressive-summarization-maturity"];
           delete frontmatter["note-maturity"];
         });
       } catch (e2) {

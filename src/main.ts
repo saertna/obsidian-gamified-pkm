@@ -30,7 +30,6 @@ import {getLevelForPoints, statusPointsForLevel} from './levels'
 import type {Moment} from 'moment';
 
 export default class gamification extends Plugin {
-	//settings: gamificationSettings // überbleibsel aus dem Bsp.
 	public settings: GamificationPluginSettings;
 	private timerInterval: number;
 	private timerId: number | null;
@@ -40,7 +39,6 @@ export default class gamification extends Plugin {
 
 		await this.loadSettings();
 
-		// load settings tab für die Einstellungen
 		this.addSettingTab(new GamificationPluginSettings(this.app, this));
 
 		// take care to reset when opened on a new day, don't wait for trigger
@@ -50,8 +48,8 @@ export default class gamification extends Plugin {
 		}, 2000); // 2000 milliseconds = 2 seconds
 
 
-		// to set timer for reseting daily and weekly goals
-		this.timerInterval = 30 * 60 * 1000; // Minuten x Sekunden x Millisekunden
+		// to set timer for reset daily and weekly goals
+		this.timerInterval = 30 * 60 * 1000; // minutes x seconds x milliseconds
 		this.timerId = window.setInterval(this.resetDailyGoals.bind(this), this.timerInterval);
 
 		const statusBarItem = this.addStatusBarItem();
@@ -63,7 +61,7 @@ export default class gamification extends Plugin {
 			this.addRibbonIcon("accessibility", "change text formatting", async () => {
 
 				// const pointsReceived = 500;
-				// new ModalInformationbox(this.app, `Finallized gamification initialistation!\nCongratulation, you earned ${pointsReceived} Points!\n\nCheck the Profile Page: \"${this.settings.avatarPageName}.md\".`).open();
+				// new ModalInformationbox(this.app, `Finalized gamification initialization!\nCongratulation, you earned ${pointsReceived} Points!\n\nCheck the Profile Page: \"${this.settings.avatarPageName}.md\".`).open();
 
 				// const newLevel = this.giveStatusPoints(this.settings.avatarPageName, 300)
 				// this.decisionIfBadge(newLevel)
@@ -135,9 +133,9 @@ export default class gamification extends Plugin {
 				id: 'reset-game',
 				name: 'reset the game',
 				callback: async () => {
-					//const app = window.app;
-					// wenn es keine einschränkung gibt ist es wesentlich schneller
-					//const files = await getFileMap(app, this.settings.tagsExclude, this.settings.folderExclude);
+					// const app = window.app;
+					// without limitation, function runs faster
+					// const files = await getFileMap(app, this.settings.tagsExclude, this.settings.folderExclude);
 					await this.removeKeysFromFrontmatter();
 					this.settings.statusLevel = 1;
 					this.settings.statusPoints = 0;
@@ -159,7 +157,7 @@ export default class gamification extends Plugin {
 			name: 'update chart on profile page',
 			callback: async () => {
 				//const app = window.app;
-				// wenn es keine einschränkung gibt ist es wesentlich schneller
+				// without limitation, function runs faster
 				//const files = await getFileMap(app, this.settings.tagsExclude, this.settings.folderExclude);
 				const { vault } = app;
 				const chartString = await this.createChart(vault)
@@ -178,7 +176,7 @@ export default class gamification extends Plugin {
 		});
 
 
-		// command: change progressive summarzation symbols
+		// command: change progressive summarization symbols
 		this.addCommand({
 			id: 'change-progressive-formatting',
 			name: 'toggle progressive summarization formatting',
@@ -272,11 +270,11 @@ export default class gamification extends Plugin {
 						this.giveStatusPoints(pointsMajurity * rateDirectionForStatusPoints("0", rateOut))
 					}
 
-					if (rateDirectionForStatusPoints(frontmatter['progressive-sumarization-maturity'], rateProgressiveSum) >= 1) {
-						pointsReceived += pointsMajurity * rateDirectionForStatusPoints(frontmatter['progressive-sumarization-maturity'], rateProgressiveSum)
-						this.giveStatusPoints(pointsMajurity * rateDirectionForStatusPoints(frontmatter['progressive-sumarization-maturity'], rateProgressiveSum))
-					} else if (!('progressive-sumarization-maturity' in frontmatter)) {
-						pointsReceived += pointsMajurity * rateDirectionForStatusPoints(frontmatter['progressive-sumarization-maturity'], rateProgressiveSum)
+					if (rateDirectionForStatusPoints(frontmatter['progressive-summarization-maturity'], rateProgressiveSum) >= 1) {
+						pointsReceived += pointsMajurity * rateDirectionForStatusPoints(frontmatter['progressive-summarization-maturity'], rateProgressiveSum)
+						this.giveStatusPoints(pointsMajurity * rateDirectionForStatusPoints(frontmatter['progressive-summarization-maturity'], rateProgressiveSum))
+					} else if (!('progressive-summarization-maturity' in frontmatter)) {
+						pointsReceived += pointsMajurity * rateDirectionForStatusPoints(frontmatter['progressive-summarization-maturity'], rateProgressiveSum)
 						this.giveStatusPoints(pointsMajurity * rateDirectionForStatusPoints("0", rateProgressiveSum))
 
 					}
@@ -286,7 +284,7 @@ export default class gamification extends Plugin {
 					frontmatter['note-length-class'] = rateDirection(frontmatter['note-length-class'], rateFileLength)
 					frontmatter['inlink-class'] = rateDirection(frontmatter['inlink-class'], inlinkClass)
 					frontmatter['outlink-class'] = rateDirection(frontmatter['outlink-class'], rateOut)
-					frontmatter['progressive-sumarization-maturity'] = rateDirection(frontmatter['progressive-sumarization-maturity'], rateProgressiveSum)
+					frontmatter['progressive-summarization-maturity'] = rateDirection(frontmatter['progressive-summarization-maturity'], rateProgressiveSum)
 					frontmatter['note-maturity'] = rateDirection(frontmatter['note-maturity'], noteMajurity)
 				});
 			} catch (e) {
@@ -431,12 +429,12 @@ export default class gamification extends Plugin {
 							this.decisionIfBadge(newLevel)
 						}
 
-						if (rateDirectionForStatusPoints(frontmatter['progressive-sumarization-maturity'], rateProgressiveSum) >= 1){
-							pointsReceived += pointsMajurity*rateDirectionForStatusPoints(frontmatter['progressive-sumarization-maturity'], rateProgressiveSum)
-							const newLevel = this.giveStatusPoints(pointsMajurity * rateDirectionForStatusPoints(frontmatter['progressive-sumarization-maturity'], rateProgressiveSum))
+						if (rateDirectionForStatusPoints(frontmatter['progressive-summarization-maturity'], rateProgressiveSum) >= 1){
+							pointsReceived += pointsMajurity*rateDirectionForStatusPoints(frontmatter['progressive-summarization-maturity'], rateProgressiveSum)
+							const newLevel = this.giveStatusPoints(pointsMajurity * rateDirectionForStatusPoints(frontmatter['progressive-summarization-maturity'], rateProgressiveSum))
 							this.decisionIfBadge(newLevel)
-						}else if (!('progressive-sumarization-maturity' in frontmatter)){
-							pointsReceived += pointsMajurity*rateDirectionForStatusPoints(frontmatter['progressive-sumarization-maturity'], rateProgressiveSum)
+						}else if (!('progressive-summarization-maturity' in frontmatter)){
+							pointsReceived += pointsMajurity*rateDirectionForStatusPoints(frontmatter['progressive-summarization-maturity'], rateProgressiveSum)
 							const newLevel = this.giveStatusPoints(pointsMajurity * rateDirectionForStatusPoints("0", rateProgressiveSum))
 							this.decisionIfBadge(newLevel)
 						}
@@ -450,7 +448,7 @@ export default class gamification extends Plugin {
 						frontmatter['note-length-class'] = rateDirection(frontmatter['note-length-class'], rateFileLength)
 						frontmatter['inlink-class'] = rateDirection(frontmatter['inlink-class'], inlinkClass)
 						frontmatter['outlink-class'] = rateDirection(frontmatter['outlink-class'], rateOut)
-						frontmatter['progressive-sumarization-maturity'] = rateDirection(frontmatter['progressive-sumarization-maturity'], rateProgressiveSum)
+						frontmatter['progressive-summarization-maturity'] = rateDirection(frontmatter['progressive-summarization-maturity'], rateProgressiveSum)
 						frontmatter['note-maturity'] = rateDirection(frontmatter['note-maturity'], noteMajurity)
 					}
 				});
@@ -931,7 +929,7 @@ export default class gamification extends Plugin {
 					delete frontmatter['note-length-class']
 					delete frontmatter['inlink-class']
 					delete frontmatter['outlink-class']
-					delete frontmatter['progressive-sumarization-maturity']
+					delete frontmatter['progressive-summarization-maturity']
 					delete frontmatter['note-maturity']
 				});
 			} catch (e) {
@@ -979,7 +977,7 @@ export default class gamification extends Plugin {
 
 	async openAvatarFile() {
 		const existingFile = app.vault.getAbstractFileByPath(`${this.settings.avatarPageName}.md`);
-		if (existingFile){ // && "open" in existingFile) {
+		if (existingFile){
 			const sourcePath = this.app.workspace.getActiveFile()?.path || '';
 			await app.workspace.openLinkText(existingFile.path, sourcePath);
 		} else {
