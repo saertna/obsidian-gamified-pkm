@@ -1,5 +1,7 @@
 export const pointsNoteMajurity = 100;
 export const pointsMajurity = 10;
+export const pointsForDailyChallenge = 500;
+export const pointsForWeeklyChallenge = 2000;
 export const avatarInitContent =  `# Avatar
 
 |        |     |

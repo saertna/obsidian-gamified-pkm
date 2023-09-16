@@ -1,7 +1,7 @@
 import {App, MarkdownView, Modal, Notice, Plugin, TFile, Vault} from 'obsidian';
 import {defaultSettings, GamificationPluginSettings} from './settings';
 import format from 'date-fns/format';
-import { avatarInitContent, pointsMajurity, pointsNoteMajurity } from './constants'
+import { avatarInitContent, pointsMajurity, pointsNoteMajurity, pointsForDailyChallenge, pointsForWeeklyChallenge } from './constants'
 import {
 	count_inlinks,
 	countCharactersInActiveFile,
@@ -144,9 +144,6 @@ export default class gamification extends Plugin {
 			id: 'update-chart-avatarpage',
 			name: 'update chart on profile page',
 			callback: async () => {
-				//const app = window.app;
-				// without limitation, function runs faster
-				//const files = await getFileMap(app, this.settings.tagsExclude, this.settings.folderExclude);
 				const { vault } = app;
 				const chartString = await this.createChart(vault)
 				await replaceChartContent(this.settings.avatarPageName, chartString)
@@ -494,7 +491,7 @@ export default class gamification extends Plugin {
 
 	async increaseDailyCreatedNoteCount(){
 		let newDailyNoteCreationTask = this.settings.dailyNoteCreationTask;
-		if (newDailyNoteCreationTask < 2){
+        if (newDailyNoteCreationTask < 2){
 			newDailyNoteCreationTask ++;
 			this.settings.dailyNoteCreationTask = newDailyNoteCreationTask;
 			await this.saveSettings();
@@ -504,7 +501,7 @@ export default class gamification extends Plugin {
 				await this.updateAvatarPage(this.settings.avatarPageName);
 				console.log(`${newDailyNoteCreationTask}/2 Notes created today.`)
 			} else if (newDailyNoteCreationTask == 2) {
-				await this.giveStatusPoints(500)
+				await this.giveStatusPoints(pointsForDailyChallenge)
 				console.log(`daily Challenge reached! ${newDailyNoteCreationTask}/2 created.`)
 			} else {
 				// nothing else to do here
@@ -515,7 +512,7 @@ export default class gamification extends Plugin {
 
 	async increaseWeeklyCreatedNoteCount(){
 		console.log(`increaseWeeklyCreatedNoteCount called …`)
-		if(isOneDayBefore(window.moment(this.settings.weeklyNoteCreationDate, 'DD.MM.YYYY'))){
+        if(isOneDayBefore(window.moment(this.settings.weeklyNoteCreationDate, 'DD.MM.YYYY'))){
 			let newWeeklyNoteCreationTask = this.settings.weeklyNoteCreationTask;
 			if (newWeeklyNoteCreationTask < 7){
 				newWeeklyNoteCreationTask ++;
@@ -528,7 +525,7 @@ export default class gamification extends Plugin {
 					await this.updateAvatarPage(this.settings.avatarPageName);
 					console.log(`${newWeeklyNoteCreationTask}/7 Notes created in a chain.`)
 				} else if (newWeeklyNoteCreationTask == 7) {
-					await this.giveStatusPoints(2000)
+					await this.giveStatusPoints(pointsForWeeklyChallenge)
 					console.log(`Weekly Challenge reached! ${newWeeklyNoteCreationTask}/7 created in a chain.`)
 				} else {
 					// nothing else to do here
