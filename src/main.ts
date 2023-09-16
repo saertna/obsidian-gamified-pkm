@@ -972,7 +972,7 @@ export default class gamification extends Plugin {
 		const boosterFactor = Math.round((statusPointsToReach - this.settings.statusPoints)/50/300);
 		this.settings.badgeBoosterFactor = boosterFactor
 		this.settings.badgeBoosterState = true
-		this.saveData(this.settings)
+		await this.saveData(this.settings)
 		//console.log(`boosterFaktor: ${boosterFactor}`) 
 		return boosterFactor
 	}
@@ -981,7 +981,7 @@ export default class gamification extends Plugin {
 		const existingFile = app.vault.getAbstractFileByPath(`${this.settings.avatarPageName}.md`);
 		if (existingFile){ // && "open" in existingFile) {
 			const sourcePath = this.app.workspace.getActiveFile()?.path || '';
-			app.workspace.openLinkText(existingFile.path, sourcePath);
+			await app.workspace.openLinkText(existingFile.path, sourcePath);
 		} else {
 			console.log("File not found or unable to open.");
 		}
@@ -1021,7 +1021,7 @@ async function createAvatarFile(app: App, fileName: string): Promise<void> {
 
 
 class ModalInformationbox extends Modal {
-	private displayText: string; // Store the text to be displayed
+	private readonly displayText: string; // Store the text to be displayed
 
 	constructor(app: App, displayText: string) {
 		super(app);
