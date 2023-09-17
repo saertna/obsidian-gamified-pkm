@@ -1713,6 +1713,8 @@ function cleanEscapedString(input) {
 // src/constants.ts
 var pointsNoteMajurity = 100;
 var pointsMajurity = 10;
+var pointsForDailyChallenge = 500;
+var pointsForWeeklyChallenge = 2e3;
 var avatarInitContent = `# Avatar
 
 |        |     |
@@ -2496,16 +2498,7 @@ var gamification = class extends import_obsidian2.Plugin {
         id: "reset-game",
         name: "reset the game",
         callback: async () => {
-          await this.removeKeysFromFrontmatter();
-          this.settings.statusLevel = 1;
-          this.settings.statusPoints = 0;
-          this.settings.xpForNextLevel = 1e3;
-          this.settings.badgeBoosterState = false;
-          this.settings.badgeBoosterFactor = 1;
-          await this.saveData(this.settings);
-          await this.giveStatusPoints(0);
-          await this.updateStatusBar(statusbarGamification);
-          new ModalInformationbox(this.app, `Game is now reseted. Please delete the Profile Page: "${this.settings.avatarPageName}.md" manually.`).open();
+          await this.resetGame(statusbarGamification);
         }
       });
     }
@@ -2532,6 +2525,18 @@ var gamification = class extends import_obsidian2.Plugin {
         await replaceFormatStrings(this.settings.progressiveSumLayer2, this.settings.progressiveSumLayer3);
       }
     });
+  }
+  async resetGame(statusbarGamification) {
+    await this.removeKeysFromFrontmatter();
+    this.settings.statusLevel = 1;
+    this.settings.statusPoints = 0;
+    this.settings.xpForNextLevel = 1e3;
+    this.settings.badgeBoosterState = false;
+    this.settings.badgeBoosterFactor = 1;
+    await this.saveData(this.settings);
+    await this.giveStatusPoints(0);
+    await this.updateStatusBar(statusbarGamification);
+    new ModalInformationbox(this.app, `Game is now reseted. Please delete the Profile Page: "${this.settings.avatarPageName}.md" manually.`).open();
   }
   async initializeGame(statusbarGamification) {
     this.settings.gamificationStartDate = format(new Date(), "yyyy-MM-dd");
@@ -2621,8 +2626,12 @@ var gamification = class extends import_obsidian2.Plugin {
       }
     }
     if (pointsReceived > 0) {
-      new import_obsidian2.Notice(`${pointsReceived} Points received`);
-      console.log(`${pointsReceived} Points received`);
+      let boosterFactor = 1;
+      if (this.settings.badgeBoosterState) {
+        boosterFactor = this.settings.badgeBoosterFactor;
+      }
+      new import_obsidian2.Notice(`${pointsReceived * boosterFactor} Points received`);
+      console.log(`${pointsReceived * boosterFactor} Points received`);
     }
     setTimeout(async () => {
       const initBadge = getBadgeForInitLevel(this.settings.statusLevel);
@@ -2661,7 +2670,7 @@ You received an initialisation Booster aktiv for your first level ups. Game on!`
     if (file == null) {
       console.error("got no file, propably none is active");
     }
-    let firstTimeNoteRating = false;
+    let detectIfNoteIsFirstTimeRated = false;
     const activeView = this.app.workspace.getActiveViewOfType(import_obsidian2.MarkdownView);
     const fileContents = activeView == null ? void 0 : activeView.editor.getValue();
     const fileName = activeView == null ? void 0 : activeView.file.basename;
@@ -2698,7 +2707,7 @@ You received an initialisation Booster aktiv for your first level ups. Game on!`
               pointsReceived += pointsNoteMajurity * rateDirectionForStatusPoints("0", noteMajurity);
               const newLevel = this.giveStatusPoints(pointsNoteMajurity * rateDirectionForStatusPoints("0", noteMajurity));
               this.decisionIfBadge(newLevel);
-              firstTimeNoteRating = true;
+              detectIfNoteIsFirstTimeRated = true;
             }
             if (rateDirectionForStatusPoints(frontmatter["title-class"], fileNameRate) >= 1 && "title-class" in frontmatter) {
               pointsReceived += pointsMajurity * rateDirectionForStatusPoints(frontmatter["title-class"], fileNameRate);
@@ -2764,7 +2773,7 @@ You received an initialisation Booster aktiv for your first level ups. Game on!`
     } else {
       console.error("file was not found to calculate majurities. Make sure one is active.");
     }
-    if (firstTimeNoteRating) {
+    if (detectIfNoteIsFirstTimeRated) {
       await this.increaseDailyCreatedNoteCount();
       await this.increaseWeeklyCreatedNoteCount();
     }
@@ -2805,7 +2814,7 @@ You received an initialisation Booster aktiv for your first level ups. Game on!`
         await this.updateAvatarPage(this.settings.avatarPageName);
         console.log(`${newDailyNoteCreationTask}/2 Notes created today.`);
       } else if (newDailyNoteCreationTask == 2) {
-        await this.giveStatusPoints(500);
+        await this.giveStatusPoints(pointsForDailyChallenge);
         console.log(`daily Challenge reached! ${newDailyNoteCreationTask}/2 created.`);
       } else {
         console.log(`${newDailyNoteCreationTask}/2 Notes created today.`);
@@ -2825,7 +2834,7 @@ You received an initialisation Booster aktiv for your first level ups. Game on!`
           await this.updateAvatarPage(this.settings.avatarPageName);
           console.log(`${newWeeklyNoteCreationTask}/7 Notes created in a chain.`);
         } else if (newWeeklyNoteCreationTask == 7) {
-          await this.giveStatusPoints(2e3);
+          await this.giveStatusPoints(pointsForWeeklyChallenge);
           console.log(`Weekly Challenge reached! ${newWeeklyNoteCreationTask}/7 created in a chain.`);
         } else {
           console.log(`${newWeeklyNoteCreationTask}/7 Notes created in a chain.`);

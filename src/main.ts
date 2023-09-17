@@ -289,8 +289,12 @@ export default class gamification extends Plugin {
 			}
 		}
 		if (pointsReceived > 0) {
-			new Notice(`${pointsReceived} Points received`)
-			console.log(`${pointsReceived} Points received`)
+			let boosterFactor = 1;
+			if (this.settings.badgeBoosterState){
+				boosterFactor = this.settings.badgeBoosterFactor;
+			}
+			new Notice(`${pointsReceived * boosterFactor} Points received`)
+			console.log(`${pointsReceived * boosterFactor} Points received`)
 		}
 
 		// Inside your function where you want to introduce a delay
