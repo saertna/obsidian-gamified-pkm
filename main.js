@@ -1710,7 +1710,11 @@ function cleanEscapedString(input) {
   return matched[1].replace(doubleQuoteRegExp, "'");
 }
 
-// src/avatarFileContent.ts
+// src/constants.ts
+var pointsNoteMajurity = 100;
+var pointsMajurity = 10;
+var pointsForDailyChallenge = 500;
+var pointsForWeeklyChallenge = 2e3;
 var avatarInitContent = `# Avatar
 
 |        |     |
@@ -2451,12 +2455,12 @@ var gamification = class extends import_obsidian2.Plugin {
     await this.loadSettings();
     this.addSettingTab(new GamificationPluginSettings(this.app, this));
     setTimeout(async () => {
-      this.resetDailyGoals();
+      await this.resetDailyGoals();
     }, 2e3);
     this.timerInterval = 30 * 60 * 1e3;
     this.timerId = window.setInterval(this.resetDailyGoals.bind(this), this.timerInterval);
-    const item = this.addStatusBarItem();
-    const statusbarGamification = item.createEl("span", { text: "" });
+    const statusBarItem = this.addStatusBarItem();
+    const statusbarGamification = statusBarItem.createEl("span", { text: "" });
     await this.updateStatusBar(statusbarGamification);
     if (this.settings.debug) {
       this.addRibbonIcon("accessibility", "change text formatting", async () => {
@@ -2466,121 +2470,14 @@ var gamification = class extends import_obsidian2.Plugin {
       });
     }
     this.addRibbonIcon("sprout", "Calculate Note Maturity", async () => {
-      this.calculateNoteMajurity(statusbarGamification);
+      await this.calculateNoteMajurity(statusbarGamification);
     });
     if (this.settings.enableInitCommand) {
       this.addCommand({
         id: "init-rate-gamification",
         name: "Initialize gamification ratings",
         callback: async () => {
-          this.settings.gamificationStartDate = format(new Date(), "yyyy-MM-dd");
-          this.saveSettings();
-          const { vault } = this.app;
-          await createAvatarFile(this.app, this.settings.avatarPageName);
-          const chartString = await this.createChart(vault);
-          await replaceChartContent(this.settings.avatarPageName, chartString);
-          this.openAvatarFile();
-          const fileCountMap = await getFileMap(this.app, this.settings.tagsExclude, this.settings.folderExclude);
-          console.log(`fileCountMap loaded. Number of files: ${fileCountMap.length}`);
-          let pointsReceived = 0;
-          const pointsNoteMajurity = 100;
-          const pointsMajurity = 10;
-          for (const fileName of fileCountMap) {
-            const file = fileName;
-            const fileContents = await app.vault.read(file);
-            const activeView = this.app.workspace.getActiveViewOfType(import_obsidian2.MarkdownView);
-            if (activeView && activeView.file && activeView.file.path === file.path) {
-              console.warn(`File ${file.path} is currently open. Skipping.`);
-              continue;
-            }
-            const fileLength = countCharactersInActiveFile(fileContents, fileName.basename);
-            const rateFileLength = rateNoteLength(fileLength);
-            const { charCount, highlightedCount, boldCount } = countLayer2AndLayer3Characters(fileContents, fileName.basename, this.settings.progressiveSumLayer2, this.settings.progressiveSumLayer3);
-            const rateProgressiveSum = rateProgressiveSummarization(charCount, highlightedCount, boldCount);
-            const fileNameRate = rateLengthFilename(file.name);
-            const inlinkNumber = count_inlinks(file);
-            const inlinkClass = rateInlinks(inlinkNumber);
-            const rateOut = rateOutlinks(getNumberOfOutlinks(file));
-            const noteMajurity = rateLevelOfMaturity(rateFileLength, fileNameRate, inlinkClass, rateOut, rateProgressiveSum);
-            console.log(`Processing file ${fileName.basename} in path ${fileName.path}`);
-            try {
-              await this.app.fileManager.processFrontMatter(file, (frontmatter) => {
-                if (rateDirectionForStatusPoints(frontmatter["note-maturity"], noteMajurity) >= 1) {
-                  pointsReceived += pointsNoteMajurity * rateDirectionForStatusPoints(frontmatter["note-maturity"], noteMajurity);
-                  this.giveStatusPoints(this.settings.avatarPageName, pointsNoteMajurity * rateDirectionForStatusPoints("frontmatter['note-maturity']", noteMajurity));
-                } else if (!("note-maturity" in frontmatter)) {
-                  pointsReceived += pointsNoteMajurity * rateDirectionForStatusPoints("0", noteMajurity);
-                  this.giveStatusPoints(this.settings.avatarPageName, pointsNoteMajurity * rateDirectionForStatusPoints("0", noteMajurity));
-                }
-                if (rateDirectionForStatusPoints(frontmatter["title-class"], fileNameRate) >= 1 && "title-class" in frontmatter) {
-                  pointsReceived += pointsMajurity * rateDirectionForStatusPoints(frontmatter["title-class"], fileNameRate);
-                  this.giveStatusPoints(this.settings.avatarPageName, pointsMajurity * rateDirectionForStatusPoints(frontmatter["title-class"], fileNameRate));
-                } else if (!("title-class" in frontmatter)) {
-                  pointsReceived += pointsMajurity * rateDirectionForStatusPoints("0", fileNameRate);
-                  this.giveStatusPoints(this.settings.avatarPageName, pointsMajurity * rateDirectionForStatusPoints("0", fileNameRate));
-                }
-                if (rateDirectionForStatusPoints(frontmatter["note-length-class"], rateFileLength) >= 1) {
-                  pointsReceived += pointsMajurity * rateDirectionForStatusPoints(frontmatter["note-length-class"], rateFileLength);
-                  this.giveStatusPoints(this.settings.avatarPageName, pointsMajurity * rateDirectionForStatusPoints(frontmatter["note-length-class"], rateFileLength));
-                } else if (!("note-length-class" in frontmatter)) {
-                  pointsReceived += pointsMajurity * rateDirectionForStatusPoints("0", rateFileLength);
-                  this.giveStatusPoints(this.settings.avatarPageName, pointsMajurity * rateDirectionForStatusPoints("0", rateFileLength));
-                }
-                if (rateDirectionForStatusPoints(frontmatter["inlink-class"], inlinkClass) >= 1) {
-                  pointsReceived += pointsMajurity * rateDirectionForStatusPoints(frontmatter["inlink-class"], inlinkClass);
-                  this.giveStatusPoints(this.settings.avatarPageName, pointsMajurity * rateDirectionForStatusPoints(frontmatter["inlink-class"], inlinkClass));
-                } else if (!("inlink-class" in frontmatter)) {
-                  pointsReceived += pointsMajurity * rateDirectionForStatusPoints("0", inlinkClass);
-                  this.giveStatusPoints(this.settings.avatarPageName, pointsMajurity * rateDirectionForStatusPoints("0", inlinkClass));
-                }
-                if (rateDirectionForStatusPoints(frontmatter["outlink-class"], rateOut) >= 1) {
-                  pointsReceived += pointsMajurity * rateDirectionForStatusPoints(frontmatter["outlink-class"], rateOut);
-                  this.giveStatusPoints(this.settings.avatarPageName, pointsMajurity * rateDirectionForStatusPoints(frontmatter["outlink-class"], rateOut));
-                } else if (!("outlink-class" in frontmatter)) {
-                  pointsReceived += pointsMajurity * rateDirectionForStatusPoints("0", rateOut);
-                  this.giveStatusPoints(this.settings.avatarPageName, pointsMajurity * rateDirectionForStatusPoints("0", rateOut));
-                }
-                if (rateDirectionForStatusPoints(frontmatter["progressive-sumarization-maturity"], rateProgressiveSum) >= 1) {
-                  pointsReceived += pointsMajurity * rateDirectionForStatusPoints(frontmatter["progressive-sumarization-maturity"], rateProgressiveSum);
-                  this.giveStatusPoints(this.settings.avatarPageName, pointsMajurity * rateDirectionForStatusPoints(frontmatter["progressive-sumarization-maturity"], rateProgressiveSum));
-                } else if (!("progressive-sumarization-maturity" in frontmatter)) {
-                  pointsReceived += pointsMajurity * rateDirectionForStatusPoints(frontmatter["progressive-sumarization-maturity"], rateProgressiveSum);
-                  this.giveStatusPoints(this.settings.avatarPageName, pointsMajurity * rateDirectionForStatusPoints("0", rateProgressiveSum));
-                }
-                frontmatter["title-class"] = rateDirection(frontmatter["title-class"], fileNameRate);
-                frontmatter["note-length-class"] = rateDirection(frontmatter["note-length-class"], rateFileLength);
-                frontmatter["inlink-class"] = rateDirection(frontmatter["inlink-class"], inlinkClass);
-                frontmatter["outlink-class"] = rateDirection(frontmatter["outlink-class"], rateOut);
-                frontmatter["progressive-sumarization-maturity"] = rateDirection(frontmatter["progressive-sumarization-maturity"], rateProgressiveSum);
-                frontmatter["note-maturity"] = rateDirection(frontmatter["note-maturity"], noteMajurity);
-              });
-            } catch (e2) {
-              if ((e2 == null ? void 0 : e2.name) === "YAMLParseError") {
-                const errorMessage = `Update majuritys failed Malformed frontamtter on this file : ${file.path} ${e2.message}`;
-                new import_obsidian2.Notice(errorMessage, 4e3);
-                console.error(errorMessage);
-              }
-            }
-          }
-          if (pointsReceived > 0) {
-            new import_obsidian2.Notice(`${pointsReceived} Points received`);
-            console.log(`${pointsReceived} Points received`);
-          }
-          setTimeout(async () => {
-            const initBadge = getBadgeForInitLevel(this.settings.statusLevel);
-            new import_obsidian2.Notice(`You've earned the "${initBadge.name}" badge. ${initBadge.description}`);
-            console.log(`You earned ${initBadge.name} - ${initBadge.description}`);
-            await this.giveInitBadgeInProfile(this.settings.avatarPageName, initBadge);
-            await this.removeBadgesWhenInitLevelHigher(this.settings.avatarPageName, this.settings.statusLevel);
-            await this.boosterForInit();
-            await this.updateStatusBar(statusbarGamification);
-          }, 2e3);
-          new ModalInformationbox(this.app, `Finallized gamification initialistation!
-Congratulation, you earned ${pointsReceived} Points!
-
-Check the Profile Page: "${this.settings.avatarPageName}.md"
-
-You received an initialisation Booster aktiv for your first level ups. Game on!`).open();
+          await this.initializeGame(statusbarGamification);
         }
       });
     }
@@ -2590,9 +2487,9 @@ You received an initialisation Booster aktiv for your first level ups. Game on!`
         name: "create profile page",
         callback: async () => {
           const { vault } = this.app;
-          createAvatarFile(this.app, this.settings.avatarPageName);
+          await createAvatarFile(this.app, this.settings.avatarPageName);
           const chartString = await this.createChart(vault);
-          replaceChartContent(this.settings.avatarPageName, chartString);
+          await replaceChartContent(this.settings.avatarPageName, chartString);
         }
       });
     }
@@ -2601,16 +2498,7 @@ You received an initialisation Booster aktiv for your first level ups. Game on!`
         id: "reset-game",
         name: "reset the game",
         callback: async () => {
-          await this.removeKeysFromFrontmatter();
-          this.settings.statusLevel = 1;
-          this.settings.statusPoints = 0;
-          this.settings.xpForNextLevel = 1e3;
-          this.settings.badgeBoosterState = false;
-          this.settings.badgeBoosterFactor = 1;
-          await this.saveData(this.settings);
-          this.giveStatusPoints(this.settings.avatarPageName, 0);
-          await this.updateStatusBar(statusbarGamification);
-          new ModalInformationbox(this.app, `Game is now reseted. Please delete the Profile Page: "${this.settings.avatarPageName}.md" manually.`).open();
+          await this.resetGame(statusbarGamification);
         }
       });
     }
@@ -2620,23 +2508,154 @@ You received an initialisation Booster aktiv for your first level ups. Game on!`
       callback: async () => {
         const { vault } = app;
         const chartString = await this.createChart(vault);
-        replaceChartContent(this.settings.avatarPageName, chartString);
+        await replaceChartContent(this.settings.avatarPageName, chartString);
       }
     });
     this.addCommand({
       id: "rate-note-maturity",
       name: "Rate note majurity",
       callback: async () => {
-        this.calculateNoteMajurity(statusbarGamification);
+        await this.calculateNoteMajurity(statusbarGamification);
       }
     });
     this.addCommand({
       id: "change-progressive-formatting",
       name: "toggle progressive summarization formatting",
       callback: async () => {
-        replaceFormatStrings(this.settings.progressiveSumLayer2, this.settings.progressiveSumLayer3);
+        await replaceFormatStrings(this.settings.progressiveSumLayer2, this.settings.progressiveSumLayer3);
       }
     });
+  }
+  async resetGame(statusbarGamification) {
+    await this.removeKeysFromFrontmatter();
+    this.settings.statusLevel = 1;
+    this.settings.statusPoints = 0;
+    this.settings.xpForNextLevel = 1e3;
+    this.settings.badgeBoosterState = false;
+    this.settings.badgeBoosterFactor = 1;
+    await this.saveData(this.settings);
+    await this.giveStatusPoints(0);
+    await this.updateStatusBar(statusbarGamification);
+    new ModalInformationbox(this.app, `Game is now reseted. Please delete the Profile Page: "${this.settings.avatarPageName}.md" manually.`).open();
+  }
+  async initializeGame(statusbarGamification) {
+    this.settings.gamificationStartDate = format(new Date(), "yyyy-MM-dd");
+    await this.saveSettings();
+    const { vault } = this.app;
+    await createAvatarFile(this.app, this.settings.avatarPageName);
+    const chartString = await this.createChart(vault);
+    await replaceChartContent(this.settings.avatarPageName, chartString);
+    await this.openAvatarFile();
+    const fileCountMap = await getFileMap(this.app, this.settings.tagsExclude, this.settings.folderExclude);
+    console.log(`fileCountMap loaded. Number of files: ${fileCountMap.length}`);
+    let pointsReceived = 0;
+    for (const fileName of fileCountMap) {
+      const file = fileName;
+      const fileContents = await app.vault.read(file);
+      const activeView = this.app.workspace.getActiveViewOfType(import_obsidian2.MarkdownView);
+      if (activeView && activeView.file && activeView.file.path === file.path) {
+        console.warn(`File ${file.path} is currently open. Skipping.`);
+        continue;
+      }
+      const fileLength = countCharactersInActiveFile(fileContents, fileName.basename);
+      const rateFileLength = rateNoteLength(fileLength);
+      const {
+        charCount,
+        highlightedCount,
+        boldCount
+      } = countLayer2AndLayer3Characters(fileContents, fileName.basename, this.settings.progressiveSumLayer2, this.settings.progressiveSumLayer3);
+      const rateProgressiveSum = rateProgressiveSummarization(charCount, highlightedCount, boldCount);
+      const fileNameRate = rateLengthFilename(file.name);
+      const inlinkNumber = count_inlinks(file);
+      const inlinkClass = rateInlinks(inlinkNumber);
+      const rateOut = rateOutlinks(getNumberOfOutlinks(file));
+      const noteMajurity = rateLevelOfMaturity(rateFileLength, fileNameRate, inlinkClass, rateOut, rateProgressiveSum);
+      console.log(`Processing file ${fileName.basename} in path ${fileName.path}`);
+      try {
+        await this.app.fileManager.processFrontMatter(file, (frontmatter) => {
+          if (rateDirectionForStatusPoints(frontmatter["note-maturity"], noteMajurity) >= 1) {
+            pointsReceived += pointsNoteMajurity * rateDirectionForStatusPoints(frontmatter["note-maturity"], noteMajurity);
+            this.giveStatusPoints(pointsNoteMajurity * rateDirectionForStatusPoints("frontmatter['note-maturity']", noteMajurity));
+          } else if (!("note-maturity" in frontmatter)) {
+            pointsReceived += pointsNoteMajurity * rateDirectionForStatusPoints("0", noteMajurity);
+            this.giveStatusPoints(pointsNoteMajurity * rateDirectionForStatusPoints("0", noteMajurity));
+          }
+          if (rateDirectionForStatusPoints(frontmatter["title-class"], fileNameRate) >= 1 && "title-class" in frontmatter) {
+            pointsReceived += pointsMajurity * rateDirectionForStatusPoints(frontmatter["title-class"], fileNameRate);
+            this.giveStatusPoints(pointsMajurity * rateDirectionForStatusPoints(frontmatter["title-class"], fileNameRate));
+          } else if (!("title-class" in frontmatter)) {
+            pointsReceived += pointsMajurity * rateDirectionForStatusPoints("0", fileNameRate);
+            this.giveStatusPoints(pointsMajurity * rateDirectionForStatusPoints("0", fileNameRate));
+          }
+          if (rateDirectionForStatusPoints(frontmatter["note-length-class"], rateFileLength) >= 1) {
+            pointsReceived += pointsMajurity * rateDirectionForStatusPoints(frontmatter["note-length-class"], rateFileLength);
+            this.giveStatusPoints(pointsMajurity * rateDirectionForStatusPoints(frontmatter["note-length-class"], rateFileLength));
+          } else if (!("note-length-class" in frontmatter)) {
+            pointsReceived += pointsMajurity * rateDirectionForStatusPoints("0", rateFileLength);
+            this.giveStatusPoints(pointsMajurity * rateDirectionForStatusPoints("0", rateFileLength));
+          }
+          if (rateDirectionForStatusPoints(frontmatter["inlink-class"], inlinkClass) >= 1) {
+            pointsReceived += pointsMajurity * rateDirectionForStatusPoints(frontmatter["inlink-class"], inlinkClass);
+            this.giveStatusPoints(pointsMajurity * rateDirectionForStatusPoints(frontmatter["inlink-class"], inlinkClass));
+          } else if (!("inlink-class" in frontmatter)) {
+            pointsReceived += pointsMajurity * rateDirectionForStatusPoints("0", inlinkClass);
+            this.giveStatusPoints(pointsMajurity * rateDirectionForStatusPoints("0", inlinkClass));
+          }
+          if (rateDirectionForStatusPoints(frontmatter["outlink-class"], rateOut) >= 1) {
+            pointsReceived += pointsMajurity * rateDirectionForStatusPoints(frontmatter["outlink-class"], rateOut);
+            this.giveStatusPoints(pointsMajurity * rateDirectionForStatusPoints(frontmatter["outlink-class"], rateOut));
+          } else if (!("outlink-class" in frontmatter)) {
+            pointsReceived += pointsMajurity * rateDirectionForStatusPoints("0", rateOut);
+            this.giveStatusPoints(pointsMajurity * rateDirectionForStatusPoints("0", rateOut));
+          }
+          if (rateDirectionForStatusPoints(frontmatter["progressive-summarization-maturity"], rateProgressiveSum) >= 1) {
+            pointsReceived += pointsMajurity * rateDirectionForStatusPoints(frontmatter["progressive-summarization-maturity"], rateProgressiveSum);
+            this.giveStatusPoints(pointsMajurity * rateDirectionForStatusPoints(frontmatter["progressive-summarization-maturity"], rateProgressiveSum));
+          } else if (!("progressive-summarization-maturity" in frontmatter)) {
+            pointsReceived += pointsMajurity * rateDirectionForStatusPoints(frontmatter["progressive-summarization-maturity"], rateProgressiveSum);
+            this.giveStatusPoints(pointsMajurity * rateDirectionForStatusPoints("0", rateProgressiveSum));
+          }
+          this.writeFrontmatter(frontmatter, fileNameRate, rateFileLength, inlinkClass, rateOut, rateProgressiveSum, noteMajurity);
+        });
+      } catch (e2) {
+        if ((e2 == null ? void 0 : e2.name) === "YAMLParseError") {
+          const errorMessage = `Update majuritys failed Malformed frontamtter on this file : ${file.path} ${e2.message}`;
+          new import_obsidian2.Notice(errorMessage, 4e3);
+          console.error(errorMessage);
+        }
+      }
+    }
+    if (pointsReceived > 0) {
+      let boosterFactor = 1;
+      if (this.settings.badgeBoosterState) {
+        boosterFactor = this.settings.badgeBoosterFactor;
+      }
+      new import_obsidian2.Notice(`${pointsReceived * boosterFactor} Points received`);
+      console.log(`${pointsReceived * boosterFactor} Points received`);
+    }
+    setTimeout(async () => {
+      const initBadge = getBadgeForInitLevel(this.settings.statusLevel);
+      new import_obsidian2.Notice(`You've earned the "${initBadge.name}" badge. ${initBadge.description}`);
+      console.log(`You earned ${initBadge.name} - ${initBadge.description}`);
+      await this.giveInitBadgeInProfile(this.settings.avatarPageName, initBadge);
+      await this.removeBadgesWhenInitLevelHigher(this.settings.avatarPageName, this.settings.statusLevel);
+      await this.boosterForInit();
+      await this.updateStatusBar(statusbarGamification);
+    }, 2e3);
+    new ModalInformationbox(this.app, `Finallized gamification initialistation!
+Congratulation, you earned ${pointsReceived} Points!
+
+Check the Profile Page: "${this.settings.avatarPageName}.md"
+
+You received an initialisation Booster aktiv for your first level ups. Game on!`).open();
+  }
+  writeFrontmatter(frontmatter, fileNameRate, rateFileLength, inlinkClass, rateOut, rateProgressiveSum, noteMajurity) {
+    frontmatter["title-class"] = rateDirection(frontmatter["title-class"], fileNameRate);
+    frontmatter["note-length-class"] = rateDirection(frontmatter["note-length-class"], rateFileLength);
+    frontmatter["inlink-class"] = rateDirection(frontmatter["inlink-class"], inlinkClass);
+    frontmatter["outlink-class"] = rateDirection(frontmatter["outlink-class"], rateOut);
+    frontmatter["progressive-summarization-maturity"] = rateDirection(frontmatter["progressive-summarization-maturity"], rateProgressiveSum);
+    frontmatter["note-maturity"] = rateDirection(frontmatter["note-maturity"], noteMajurity);
   }
   onunload() {
     console.log("obsidian-pkm-gamification unloaded!");
@@ -2651,7 +2670,7 @@ You received an initialisation Booster aktiv for your first level ups. Game on!`
     if (file == null) {
       console.error("got no file, propably none is active");
     }
-    let firstTimeNoteRating = false;
+    let detectIfNoteIsFirstTimeRated = false;
     const activeView = this.app.workspace.getActiveViewOfType(import_obsidian2.MarkdownView);
     const fileContents = activeView == null ? void 0 : activeView.editor.getValue();
     const fileName = activeView == null ? void 0 : activeView.file.basename;
@@ -2679,74 +2698,67 @@ You received an initialisation Booster aktiv for your first level ups. Game on!`
       try {
         await this.app.fileManager.processFrontMatter(file, (frontmatter) => {
           if (frontmatter) {
-            const pointsNoteMajurity = 100;
-            const pointsMajurity = 10;
             let pointsReceived = 0;
             if (rateDirectionForStatusPoints(frontmatter["note-maturity"], noteMajurity) >= 1) {
               pointsReceived += pointsNoteMajurity * rateDirectionForStatusPoints(frontmatter["note-maturity"], noteMajurity);
-              const newLevel = this.giveStatusPoints(this.settings.avatarPageName, pointsNoteMajurity * rateDirectionForStatusPoints("frontmatter['note-maturity']", noteMajurity));
+              const newLevel = this.giveStatusPoints(pointsNoteMajurity * rateDirectionForStatusPoints("frontmatter['note-maturity']", noteMajurity));
               this.decisionIfBadge(newLevel);
             } else if (!("note-maturity" in frontmatter)) {
               pointsReceived += pointsNoteMajurity * rateDirectionForStatusPoints("0", noteMajurity);
-              const newLevel = this.giveStatusPoints(this.settings.avatarPageName, pointsNoteMajurity * rateDirectionForStatusPoints("0", noteMajurity));
+              const newLevel = this.giveStatusPoints(pointsNoteMajurity * rateDirectionForStatusPoints("0", noteMajurity));
               this.decisionIfBadge(newLevel);
-              firstTimeNoteRating = true;
+              detectIfNoteIsFirstTimeRated = true;
             }
             if (rateDirectionForStatusPoints(frontmatter["title-class"], fileNameRate) >= 1 && "title-class" in frontmatter) {
               pointsReceived += pointsMajurity * rateDirectionForStatusPoints(frontmatter["title-class"], fileNameRate);
-              const newLevel = this.giveStatusPoints(this.settings.avatarPageName, pointsMajurity * rateDirectionForStatusPoints(frontmatter["title-class"], fileNameRate));
+              const newLevel = this.giveStatusPoints(pointsMajurity * rateDirectionForStatusPoints(frontmatter["title-class"], fileNameRate));
               this.decisionIfBadge(newLevel);
             } else if (!("title-class" in frontmatter)) {
               pointsReceived += pointsMajurity * rateDirectionForStatusPoints("0", fileNameRate);
-              const newLevel = this.giveStatusPoints(this.settings.avatarPageName, pointsMajurity * rateDirectionForStatusPoints("0", fileNameRate));
+              const newLevel = this.giveStatusPoints(pointsMajurity * rateDirectionForStatusPoints("0", fileNameRate));
               this.decisionIfBadge(newLevel);
             }
             if (rateDirectionForStatusPoints(frontmatter["note-length-class"], rateFileLength) >= 1) {
               pointsReceived += pointsMajurity * rateDirectionForStatusPoints(frontmatter["note-length-class"], rateFileLength);
-              const newLevel = this.giveStatusPoints(this.settings.avatarPageName, pointsMajurity * rateDirectionForStatusPoints(frontmatter["note-length-class"], rateFileLength));
+              const newLevel = this.giveStatusPoints(pointsMajurity * rateDirectionForStatusPoints(frontmatter["note-length-class"], rateFileLength));
               this.decisionIfBadge(newLevel);
             } else if (!("note-length-class" in frontmatter)) {
               pointsReceived += pointsMajurity * rateDirectionForStatusPoints("0", rateFileLength);
-              const newLevel = this.giveStatusPoints(this.settings.avatarPageName, pointsMajurity * rateDirectionForStatusPoints("0", rateFileLength));
+              const newLevel = this.giveStatusPoints(pointsMajurity * rateDirectionForStatusPoints("0", rateFileLength));
               this.decisionIfBadge(newLevel);
             }
             if (rateDirectionForStatusPoints(frontmatter["inlink-class"], inlinkClass) >= 1) {
               pointsReceived += pointsMajurity * rateDirectionForStatusPoints(frontmatter["inlink-class"], inlinkClass);
-              const newLevel = this.giveStatusPoints(this.settings.avatarPageName, pointsMajurity * rateDirectionForStatusPoints(frontmatter["inlink-class"], inlinkClass));
+              const newLevel = this.giveStatusPoints(pointsMajurity * rateDirectionForStatusPoints(frontmatter["inlink-class"], inlinkClass));
               this.decisionIfBadge(newLevel);
             } else if (!("inlink-class" in frontmatter)) {
               pointsReceived += pointsMajurity * rateDirectionForStatusPoints("0", inlinkClass);
-              const newLevel = this.giveStatusPoints(this.settings.avatarPageName, pointsMajurity * rateDirectionForStatusPoints("0", inlinkClass));
+              const newLevel = this.giveStatusPoints(pointsMajurity * rateDirectionForStatusPoints("0", inlinkClass));
               this.decisionIfBadge(newLevel);
             }
             if (rateDirectionForStatusPoints(frontmatter["outlink-class"], rateOut) >= 1) {
               pointsReceived += pointsMajurity * rateDirectionForStatusPoints(frontmatter["outlink-class"], rateOut);
-              const newLevel = this.giveStatusPoints(this.settings.avatarPageName, pointsMajurity * rateDirectionForStatusPoints(frontmatter["outlink-class"], rateOut));
+              const newLevel = this.giveStatusPoints(pointsMajurity * rateDirectionForStatusPoints(frontmatter["outlink-class"], rateOut));
               this.decisionIfBadge(newLevel);
             } else if (!("outlink-class" in frontmatter)) {
               pointsReceived += pointsMajurity * rateDirectionForStatusPoints("0", rateOut);
-              const newLevel = this.giveStatusPoints(this.settings.avatarPageName, pointsMajurity * rateDirectionForStatusPoints("0", rateOut));
+              const newLevel = this.giveStatusPoints(pointsMajurity * rateDirectionForStatusPoints("0", rateOut));
               this.decisionIfBadge(newLevel);
             }
-            if (rateDirectionForStatusPoints(frontmatter["progressive-sumarization-maturity"], rateProgressiveSum) >= 1) {
-              pointsReceived += pointsMajurity * rateDirectionForStatusPoints(frontmatter["progressive-sumarization-maturity"], rateProgressiveSum);
-              const newLevel = this.giveStatusPoints(this.settings.avatarPageName, pointsMajurity * rateDirectionForStatusPoints(frontmatter["progressive-sumarization-maturity"], rateProgressiveSum));
+            if (rateDirectionForStatusPoints(frontmatter["progressive-summarization-maturity"], rateProgressiveSum) >= 1) {
+              pointsReceived += pointsMajurity * rateDirectionForStatusPoints(frontmatter["progressive-summarization-maturity"], rateProgressiveSum);
+              const newLevel = this.giveStatusPoints(pointsMajurity * rateDirectionForStatusPoints(frontmatter["progressive-summarization-maturity"], rateProgressiveSum));
               this.decisionIfBadge(newLevel);
-            } else if (!("progressive-sumarization-maturity" in frontmatter)) {
-              pointsReceived += pointsMajurity * rateDirectionForStatusPoints(frontmatter["progressive-sumarization-maturity"], rateProgressiveSum);
-              const newLevel = this.giveStatusPoints(this.settings.avatarPageName, pointsMajurity * rateDirectionForStatusPoints("0", rateProgressiveSum));
+            } else if (!("progressive-summarization-maturity" in frontmatter)) {
+              pointsReceived += pointsMajurity * rateDirectionForStatusPoints(frontmatter["progressive-summarization-maturity"], rateProgressiveSum);
+              const newLevel = this.giveStatusPoints(pointsMajurity * rateDirectionForStatusPoints("0", rateProgressiveSum));
               this.decisionIfBadge(newLevel);
             }
             if (pointsReceived > 0) {
               new import_obsidian2.Notice(`${pointsReceived * this.settings.badgeBoosterFactor} Points received`);
               console.log(`${pointsReceived} Points received`);
             }
-            frontmatter["title-class"] = rateDirection(frontmatter["title-class"], fileNameRate);
-            frontmatter["note-length-class"] = rateDirection(frontmatter["note-length-class"], rateFileLength);
-            frontmatter["inlink-class"] = rateDirection(frontmatter["inlink-class"], inlinkClass);
-            frontmatter["outlink-class"] = rateDirection(frontmatter["outlink-class"], rateOut);
-            frontmatter["progressive-sumarization-maturity"] = rateDirection(frontmatter["progressive-sumarization-maturity"], rateProgressiveSum);
-            frontmatter["note-maturity"] = rateDirection(frontmatter["note-maturity"], noteMajurity);
+            this.writeFrontmatter(frontmatter, fileNameRate, rateFileLength, inlinkClass, rateOut, rateProgressiveSum, noteMajurity);
           }
         });
       } catch (e2) {
@@ -2761,7 +2773,7 @@ You received an initialisation Booster aktiv for your first level ups. Game on!`
     } else {
       console.error("file was not found to calculate majurities. Make sure one is active.");
     }
-    if (firstTimeNoteRating) {
+    if (detectIfNoteIsFirstTimeRated) {
       await this.increaseDailyCreatedNoteCount();
       await this.increaseWeeklyCreatedNoteCount();
     }
@@ -2771,25 +2783,25 @@ You received an initialisation Booster aktiv for your first level ups. Game on!`
     if (!isSameDay(window.moment(this.settings.dailyNoteCreationDate, "DD.MM.YYYY"))) {
       this.settings.dailyNoteCreationTask = 0;
       this.settings.dailyNoteCreationDate = window.moment().format("DD.MM.YYYY");
-      this.saveSettings();
+      await this.saveSettings();
       console.log(`daily Challenge reseted`);
       reset = true;
     }
     if (!isOneDayBefore(window.moment(this.settings.weeklyNoteCreationDate, "DD.MM.YYYY")) && !isSameDay(window.moment(this.settings.weeklyNoteCreationDate, "DD.MM.YYYY"))) {
       this.settings.weeklyNoteCreationTask = 0;
       this.settings.weeklyNoteCreationDate = window.moment().subtract(1, "day").format("DD.MM.YYYY");
-      this.saveSettings();
+      await this.saveSettings();
       console.log(`weekly Challenge reseted`);
       reset = true;
     }
     if (isOneDayBefore(window.moment(this.settings.weeklyNoteCreationDate, "DD.MM.YYYY")) && this.settings.weeklyNoteCreationTask == 7) {
       this.settings.weeklyNoteCreationTask = 0;
       this.settings.weeklyNoteCreationDate = window.moment().subtract(1, "day").format("DD.MM.YYYY");
-      this.saveSettings();
+      await this.saveSettings();
       reset = true;
     }
     if (reset) {
-      this.updateAvatarPage(this.settings.avatarPageName);
+      await this.updateAvatarPage(this.settings.avatarPageName);
     }
   }
   async increaseDailyCreatedNoteCount() {
@@ -2797,12 +2809,12 @@ You received an initialisation Booster aktiv for your first level ups. Game on!`
     if (newDailyNoteCreationTask < 2) {
       newDailyNoteCreationTask++;
       this.settings.dailyNoteCreationTask = newDailyNoteCreationTask;
-      this.saveSettings();
+      await this.saveSettings();
       if (newDailyNoteCreationTask == 1) {
-        this.updateAvatarPage(this.settings.avatarPageName);
+        await this.updateAvatarPage(this.settings.avatarPageName);
         console.log(`${newDailyNoteCreationTask}/2 Notes created today.`);
       } else if (newDailyNoteCreationTask == 2) {
-        this.giveStatusPoints(this.settings.avatarPageName, 500);
+        await this.giveStatusPoints(pointsForDailyChallenge);
         console.log(`daily Challenge reached! ${newDailyNoteCreationTask}/2 created.`);
       } else {
         console.log(`${newDailyNoteCreationTask}/2 Notes created today.`);
@@ -2817,12 +2829,12 @@ You received an initialisation Booster aktiv for your first level ups. Game on!`
         newWeeklyNoteCreationTask++;
         this.settings.weeklyNoteCreationDate = window.moment().format("DD.MM.YYYY");
         this.settings.weeklyNoteCreationTask = newWeeklyNoteCreationTask;
-        this.saveSettings();
+        await this.saveSettings();
         if (newWeeklyNoteCreationTask <= 6) {
-          this.updateAvatarPage(this.settings.avatarPageName);
+          await this.updateAvatarPage(this.settings.avatarPageName);
           console.log(`${newWeeklyNoteCreationTask}/7 Notes created in a chain.`);
         } else if (newWeeklyNoteCreationTask == 7) {
-          this.giveStatusPoints(this.settings.avatarPageName, 2e3);
+          await this.giveStatusPoints(pointsForWeeklyChallenge);
           console.log(`Weekly Challenge reached! ${newWeeklyNoteCreationTask}/7 created in a chain.`);
         } else {
           console.log(`${newWeeklyNoteCreationTask}/7 Notes created in a chain.`);
@@ -2833,7 +2845,7 @@ You received an initialisation Booster aktiv for your first level ups. Game on!`
     } else {
       this.settings.weeklyNoteCreationDate = window.moment().format("DD.MM.YYYY");
       this.settings.weeklyNoteCreationTask = 1;
-      this.saveSettings();
+      await this.saveSettings();
     }
   }
   async updateStatusBar(statusbar) {
@@ -2858,7 +2870,7 @@ You received an initialisation Booster aktiv for your first level ups. Game on!`
   async saveSettings() {
     await this.saveData(this.settings);
   }
-  async giveStatusPoints(avatarPageName, pointsToAdd) {
+  async giveStatusPoints(pointsToAdd) {
     let boosterFactor = 1;
     if (this.settings.badgeBoosterState) {
       boosterFactor = this.settings.badgeBoosterFactor;
@@ -3013,8 +3025,6 @@ You received an initialisation Booster aktiv for your first level ups. Game on!`
     const content = await app.vault.read(file);
     let reference = null;
     let reference2 = null;
-    let end = null;
-    let start = null;
     const lines = content.split("\n");
     for (let i2 = 0; i2 < lines.length; i2++) {
       const line = lines[i2].trim();
@@ -3035,9 +3045,7 @@ You received an initialisation Booster aktiv for your first level ups. Game on!`
       }
     }
     if (reference != null && reference2 != null) {
-      start = reference + 1;
-      end = reference2;
-      const newLines = [...lines.slice(0, start), ...lines.slice(end)];
+      const newLines = [...lines.slice(0, reference + 1), ...lines.slice(reference2)];
       await app.vault.modify(file, newLines.join("\n"));
     }
   }
@@ -3134,7 +3142,7 @@ You received an initialisation Booster aktiv for your first level ups. Game on!`
           delete frontmatter["note-length-class"];
           delete frontmatter["inlink-class"];
           delete frontmatter["outlink-class"];
-          delete frontmatter["progressive-sumarization-maturity"];
+          delete frontmatter["progressive-summarization-maturity"];
           delete frontmatter["note-maturity"];
         });
       } catch (e2) {
@@ -3167,7 +3175,7 @@ You received an initialisation Booster aktiv for your first level ups. Game on!`
     const boosterFactor = Math.round((statusPointsToReach - this.settings.statusPoints) / 50 / 300);
     this.settings.badgeBoosterFactor = boosterFactor;
     this.settings.badgeBoosterState = true;
-    this.saveData(this.settings);
+    await this.saveData(this.settings);
     return boosterFactor;
   }
   async openAvatarFile() {
@@ -3175,7 +3183,7 @@ You received an initialisation Booster aktiv for your first level ups. Game on!`
     const existingFile = app.vault.getAbstractFileByPath(`${this.settings.avatarPageName}.md`);
     if (existingFile) {
       const sourcePath = ((_a = this.app.workspace.getActiveFile()) == null ? void 0 : _a.path) || "";
-      app.workspace.openLinkText(existingFile.path, sourcePath);
+      await app.workspace.openLinkText(existingFile.path, sourcePath);
     } else {
       console.log("File not found or unable to open.");
     }
