@@ -2944,25 +2944,7 @@ You received an initialisation Booster aktiv for your first level ups. Game on!`
   }
   async increaseWeeklyCreatedNoteCount() {
     if (isOneDayBefore(window.moment(this.settings.weeklyNoteCreationDate, "DD.MM.YYYY"))) {
-      let newWeeklyNoteCreationTask = this.settings.weeklyNoteCreationTask;
-      if (newWeeklyNoteCreationTask < 7) {
-        newWeeklyNoteCreationTask++;
-        this.settings.weeklyNoteCreationDate = window.moment().format("DD.MM.YYYY");
-        this.settings.weeklyNoteCreationTask = newWeeklyNoteCreationTask;
-        await this.saveSettings();
-        if (newWeeklyNoteCreationTask <= 6) {
-          await this.updateAvatarPage(this.settings.avatarPageName);
-          console.log(`${newWeeklyNoteCreationTask}/7 Notes created in a chain.`);
-        } else if (newWeeklyNoteCreationTask == 7) {
-          await this.giveStatusPoints(pointsForWeeklyChallenge);
-          console.log(`Weekly Challenge reached! ${newWeeklyNoteCreationTask}/7 created in a chain.`);
-          const message = getRandomMessageWeeklyChallenge(pointsForWeeklyChallenge);
-          new import_obsidian2.Notice(message);
-          console.log(message);
-        } else {
-          console.log(`${newWeeklyNoteCreationTask}/7 Notes created in a chain.`);
-        }
-      }
+      await this.checkForWeeklyNoteChallengeBelow7();
     } else if (isSameDay(window.moment(this.settings.weeklyNoteCreationDate, "DD.MM.YYYY"))) {
       console.log(`daily note creation was rated already today.`);
     } else {
@@ -2971,20 +2953,47 @@ You received an initialisation Booster aktiv for your first level ups. Game on!`
       await this.saveSettings();
     }
   }
+  async checkForWeeklyNoteChallengeBelow7() {
+    let currentWeeklyCreatedNotes = this.settings.weeklyNoteCreationTask;
+    if (currentWeeklyCreatedNotes < 7) {
+      currentWeeklyCreatedNotes++;
+      this.settings.weeklyNoteCreationDate = window.moment().format("DD.MM.YYYY");
+      this.settings.weeklyNoteCreationTask = currentWeeklyCreatedNotes;
+      await this.saveSettings();
+      await this.checkForWeeklyNoteChallengeEvaluation(currentWeeklyCreatedNotes);
+    }
+  }
+  async checkForWeeklyNoteChallengeEvaluation(newWeeklyNoteCreationTask) {
+    if (newWeeklyNoteCreationTask <= 6) {
+      await this.updateAvatarPage(this.settings.avatarPageName);
+      console.log(`${newWeeklyNoteCreationTask}/7 Notes created in a chain.`);
+    } else if (newWeeklyNoteCreationTask == 7) {
+      await this.giveStatusPoints(pointsForWeeklyChallenge);
+      console.log(`Weekly Challenge reached! ${newWeeklyNoteCreationTask}/7 created in a chain.`);
+      const message = getRandomMessageWeeklyChallenge(pointsForWeeklyChallenge);
+      new import_obsidian2.Notice(message);
+      console.log(message);
+    } else {
+      console.log(`${newWeeklyNoteCreationTask}/7 Notes created in a chain.`);
+    }
+  }
   async updateStatusBar(statusbar) {
-    const level = getLevelForPoints(this.settings.statusPoints);
-    const progressbarPercent = (this.settings.statusPoints - level.points) / (level.pointsNext - level.points) * 100;
+    const currentLevel = getLevelForPoints(this.settings.statusPoints);
+    const progressbarPercent = (this.settings.statusPoints - currentLevel.points) / (currentLevel.pointsNext - currentLevel.points) * 100;
     const charNumProgressbar = 10;
-    const balken = Math.round(progressbarPercent / charNumProgressbar);
+    const barLength = Math.round(progressbarPercent / charNumProgressbar);
+    statusbar.setText(`\u{1F3B2}|lvl: ${this.settings.statusLevel} | ${this.createProgressbar(charNumProgressbar, barLength)}`);
+  }
+  createProgressbar(charNumProgressbar, barLength) {
     let progressbar = "";
     for (let i2 = 1; i2 <= charNumProgressbar; i2++) {
-      if (i2 <= balken) {
+      if (i2 <= barLength) {
         progressbar += "=";
       } else {
         progressbar += "-";
       }
     }
-    statusbar.setText(`\u{1F3B2}|lvl: ${this.settings.statusLevel} | ${progressbar}`);
+    return progressbar;
   }
   async loadSettings() {
     this.settings = Object.assign({}, defaultSettings, await this.loadData());

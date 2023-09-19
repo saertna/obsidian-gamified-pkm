@@ -520,28 +520,7 @@ export default class gamification extends Plugin {
 
 	async increaseWeeklyCreatedNoteCount(){
 		if(isOneDayBefore(window.moment(this.settings.weeklyNoteCreationDate, 'DD.MM.YYYY'))){
-			let newWeeklyNoteCreationTask = this.settings.weeklyNoteCreationTask;
-			if (newWeeklyNoteCreationTask < 7){
-				newWeeklyNoteCreationTask ++;
-				this.settings.weeklyNoteCreationDate = window.moment().format('DD.MM.YYYY')
-				this.settings.weeklyNoteCreationTask = newWeeklyNoteCreationTask;
-				await this.saveSettings();
-
-				if(newWeeklyNoteCreationTask <= 6){
-					// update Avatar Page
-					await this.updateAvatarPage(this.settings.avatarPageName);
-					console.log(`${newWeeklyNoteCreationTask}/7 Notes created in a chain.`)
-				} else if (newWeeklyNoteCreationTask == 7) {
-					await this.giveStatusPoints(pointsForWeeklyChallenge)
-					console.log(`Weekly Challenge reached! ${newWeeklyNoteCreationTask}/7 created in a chain.`)
-					const message = getRandomMessageWeeklyChallenge(pointsForWeeklyChallenge);
-					new Notice(message)
-					console.log(message)
-				} else {
-					// nothing else to do here
-					console.log(`${newWeeklyNoteCreationTask}/7 Notes created in a chain.`)
-				}
-			}
+			await this.checkForWeeklyNoteChallengeBelow7();
 		} else if (isSameDay(window.moment(this.settings.weeklyNoteCreationDate, 'DD.MM.YYYY'))){
 			// do nothing
 			console.log(`daily note creation was rated already today.`)
@@ -552,29 +531,53 @@ export default class gamification extends Plugin {
 		}
 	}
 
-	async updateStatusBar(statusbar: HTMLSpanElement){
-		/*
-		writes current level und calculates with 10 ticks precision a progressbar.
-		---
-		alpha: status points to reach CURRENT level | level.points
-		beta: status points to reach NEXT level | level.pointsNext
-		gamma: current status points | settings.statusPoints
-		prozent = (gamma - alpha) / (beta - alpha) * 100%
-		*/
+	private async checkForWeeklyNoteChallengeBelow7() {
+		let currentWeeklyCreatedNotes = this.settings.weeklyNoteCreationTask;
+		if (currentWeeklyCreatedNotes < 7) {
+			currentWeeklyCreatedNotes++;
+			this.settings.weeklyNoteCreationDate = window.moment().format('DD.MM.YYYY')
+			this.settings.weeklyNoteCreationTask = currentWeeklyCreatedNotes;
+			await this.saveSettings();
 
-		const level = getLevelForPoints(this.settings.statusPoints)
-		const progressbarPercent = (this.settings.statusPoints - level.points)/(level.pointsNext - level.points)*100;
+			await this.checkForWeeklyNoteChallengeEvaluation(currentWeeklyCreatedNotes);
+		}
+	}
+
+	private async checkForWeeklyNoteChallengeEvaluation(newWeeklyNoteCreationTask: number) {
+		if (newWeeklyNoteCreationTask <= 6) {
+			// update Avatar Page
+			await this.updateAvatarPage(this.settings.avatarPageName);
+			console.log(`${newWeeklyNoteCreationTask}/7 Notes created in a chain.`)
+		} else if (newWeeklyNoteCreationTask == 7) {
+			await this.giveStatusPoints(pointsForWeeklyChallenge)
+			console.log(`Weekly Challenge reached! ${newWeeklyNoteCreationTask}/7 created in a chain.`)
+			const message = getRandomMessageWeeklyChallenge(pointsForWeeklyChallenge);
+			new Notice(message)
+			console.log(message)
+		} else {
+			// nothing else to do here
+			console.log(`${newWeeklyNoteCreationTask}/7 Notes created in a chain.`)
+		}
+	}
+
+	async updateStatusBar(statusbar: HTMLSpanElement){
+		const currentLevel = getLevelForPoints(this.settings.statusPoints)
+		const progressbarPercent = (this.settings.statusPoints - currentLevel.points)/(currentLevel.pointsNext - currentLevel.points)*100;
 		const charNumProgressbar = 10
-		const balken = Math.round(progressbarPercent / charNumProgressbar)
+		const barLength = Math.round(progressbarPercent / charNumProgressbar)
+		statusbar.setText(`🎲|lvl: ${this.settings.statusLevel} | ${this.createProgressbar(charNumProgressbar, barLength)}`)
+	}
+
+	private createProgressbar(charNumProgressbar: number, barLength: number) {
 		let progressbar = ''
-		for (let i=1; i <= charNumProgressbar; i++){
-			if (i <= balken){
+		for (let i = 1; i <= charNumProgressbar; i++) {
+			if (i <= barLength) {
 				progressbar += '='
 			} else {
 				progressbar += '-'
 			}
 		}
-		statusbar.setText(`🎲|lvl: ${this.settings.statusLevel} | ${progressbar}`)
+		return progressbar;
 	}
 
 	async loadSettings() {
@@ -966,7 +969,7 @@ export default class gamification extends Plugin {
 		this.settings.badgeBoosterFactor = boosterFactor
 		this.settings.badgeBoosterState = true
 		await this.saveData(this.settings)
-		//console.log(`boosterFaktor: ${boosterFactor}`) 
+		//console.log(`boosterFaktor: ${boosterFactor}`)
 		return boosterFactor
 	}
 
