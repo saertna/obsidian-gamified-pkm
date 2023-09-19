@@ -28,6 +28,7 @@ import {
 import {Badge, checkIfReceiveABadge, getBadgeForInitLevel, getBadgeForLevel} from './badges'
 import {getLevelForPoints, statusPointsForLevel} from './levels'
 import type {Moment} from 'moment';
+import { getRandomMessageWeeklyChallenge, getRandomMessageTwoNoteChallenge } from './challengeNotificationText'
 
 export default class gamification extends Plugin {
 	public settings: GamificationPluginSettings;
@@ -506,7 +507,10 @@ export default class gamification extends Plugin {
 				console.log(`${newDailyNoteCreationTask}/2 Notes created today.`)
 			} else if (newDailyNoteCreationTask == 2) {
 				await this.giveStatusPoints(pointsForDailyChallenge)
+				const message = getRandomMessageTwoNoteChallenge(pointsForDailyChallenge);
 				console.log(`daily Challenge reached! ${newDailyNoteCreationTask}/2 created.`)
+				new Notice(message)
+				console.log(message)
 			} else {
 				// nothing else to do here
 				console.log(`${newDailyNoteCreationTask}/2 Notes created today.`)
@@ -515,8 +519,7 @@ export default class gamification extends Plugin {
 	}
 
 	async increaseWeeklyCreatedNoteCount(){
-		console.log(`increaseWeeklyCreatedNoteCount called …`)
-        if(isOneDayBefore(window.moment(this.settings.weeklyNoteCreationDate, 'DD.MM.YYYY'))){
+		if(isOneDayBefore(window.moment(this.settings.weeklyNoteCreationDate, 'DD.MM.YYYY'))){
 			let newWeeklyNoteCreationTask = this.settings.weeklyNoteCreationTask;
 			if (newWeeklyNoteCreationTask < 7){
 				newWeeklyNoteCreationTask ++;
@@ -531,6 +534,9 @@ export default class gamification extends Plugin {
 				} else if (newWeeklyNoteCreationTask == 7) {
 					await this.giveStatusPoints(pointsForWeeklyChallenge)
 					console.log(`Weekly Challenge reached! ${newWeeklyNoteCreationTask}/7 created in a chain.`)
+					const message = getRandomMessageWeeklyChallenge(pointsForWeeklyChallenge);
+					new Notice(message)
+					console.log(message)
 				} else {
 					// nothing else to do here
 					console.log(`${newWeeklyNoteCreationTask}/7 Notes created in a chain.`)
