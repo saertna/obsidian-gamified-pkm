@@ -2448,6 +2448,124 @@ function statusPointsForLevel(targetLevel) {
   return statusPoints;
 }
 
+// src/challengeNotificationText.ts
+var messagesWeeklyChallenge = [
+  "Seven days of note-taking? You're practically a note ninja turtle now! \u{1F422}\u{1F4DD} [X] points, cowabunga!",
+  "You've just completed a week-long note-taking marathon! \u{1F3C3}\u200D\u2642\uFE0F\u{1F4DD} [X] points earned. Ready for the next lap?",
+  "A whole week of notes? You're on fire! \u{1F525}\u{1F4DD} [X] points, keep the spark alive!",
+  "Seven notes in seven days - that's like a note symphony! \u{1F3B6}\u{1F4DD} [X] points, maestro!",
+  "You're on a seven-day note-taking fiesta! \u{1F389}\u{1F4DD} [X] points, keep the party going!",
+  "Seven days, seven notes - You're like the James Bond of note-taking! \u{1F576}\uFE0F\u{1F4DD} [X] points, secret agent!",
+  "You're officially a 'Note-A-Day' superhero! \u{1F9B8}\u200D\u2642\uFE0F\u{1F4DD} [X] points, capes optional!",
+  "A whole week of notes? You've practically written a mini novel by now! \u{1F4DA}\u{1F4DD} [X] points, author status achieved!",
+  "Seven days straight? You're the Usain Bolt of note-taking! \u{1F3C3}\u200D\u2642\uFE0F\u{1F4DD} [X] points, sprinting towards knowledge!",
+  "You're on a seven-day note-taking spree! It's like a notes-plosion! \u{1F4A5}\u{1F4DD} [X] points, keep the fireworks coming!",
+  "Seven days, seven notes - you're basically the Michael Jordan of note-taking! \u{1F3C0}\u{1F4DD} [X] points, slam dunk!",
+  "A whole week of notes? You're the note-taking MVP! \u{1F3C6}\u{1F4DD} [X] points, keep scoring!",
+  "You've just unlocked the 'Seven Day Note Fever' achievement! \u{1F31F}\u{1F4DD} [X] points, catch the fever!",
+  "Seven days, seven notes - you're a note-taking rockstar! \u{1F3B8}\u{1F4DD} [X] points, keep jammin'!",
+  "You're on a seven-day note-taking magic show! Now you see the notes, now you don't! \u{1F3A9}\u2728 [X] points, keep the magic alive!",
+  "A whole week of notes? You're like a note-taking Jedi Master! \u{1F30C}\u2694\uFE0F [X] points, may the notes be with you!",
+  "Seven days straight? You're the Tony Hawk of note-taking! \u{1F6F9}\u{1F4DD} [X] points, keep shredding!",
+  "You're on a seven-day note-taking rollercoaster! Up and down, but always moving forward! \u{1F3A2}\u{1F4DD} [X] points, enjoy the ride!",
+  "Seven days, seven notes - you're a note-taking DJ spinning knowledge beats! \u{1F3A7}\u{1F4DD} [X] points, drop the knowledge!",
+  "You've just conquered the seven-day note-taking challenge! You're the note-taking Indiana Jones! \u{1F3F9}\u{1F4DD} [X] points, keep exploring!",
+  "A whole week of notes? You're the note-taking Sherlock Holmes, solving knowledge mysteries! \u{1F50D}\u{1F4DD} [X] points, keep sleuthing!",
+  "Seven days, seven notes - you're a note-taking Picasso, creating a masterpiece of knowledge! \u{1F3A8}\u{1F4DD} [X] points, keep painting!",
+  "You're on a seven-day note-taking rocket ship! Destination: Infinite Knowledge! \u{1F680}\u{1F4DD} [X] points, enjoy the journey!",
+  "Seven days straight? You're the note-taking MacGyver, turning information into solutions! \u{1F527}\u{1F4DD} [X] points, keep crafting!",
+  "You're on a seven-day note-taking safari, exploring the wilds of knowledge! \u{1F418}\u{1F4DD} [X] points, keep exploring!",
+  "Seven days, seven notes - you're a note-taking chef, cooking up a knowledge feast! \u{1F373}\u{1F4DD} [X] points, keep cooking!",
+  "You've just unlocked the seven-day note-taking badge! You're the note-taking superhero we need! \u{1F9B8}\u200D\u2640\uFE0F\u{1F4DD} [X] points, keep saving the day!",
+  "A whole week of notes? You're the note-taking Lewis and Clark, charting new territories of knowledge! \u{1F5FA}\uFE0F\u{1F4DD} [X] points, keep exploring!",
+  "Seven days, seven notes - you're a note-taking DJ, dropping beats of wisdom! \u{1F3A7}\u{1F4DD} [X] points, keep spinning!",
+  "You're on a seven-day note-taking treasure hunt, discovering gems of wisdom! \u{1F48E}\u{1F4DD} [X] points, keep hunting!",
+  "Seven days straight? You're the note-taking ninja warrior, conquering the knowledge obstacle course! \u{1F94B}\u{1F4DD} [X] points, keep slaying!",
+  "You're on a seven-day note-taking rocket ship! Destination: Infinite Knowledge! \u{1F680}\u{1F4DD} [X] points, enjoy the journey!",
+  "Seven days, seven notes - you're a note-taking detective, solving cases of curiosity! \u{1F575}\uFE0F\u200D\u2642\uFE0F\u{1F4DD} [X] points, keep detecting!",
+  "You've just unlocked the seven-day note-taking badge! You're the note-taking superhero we need! \u{1F9B8}\u200D\u2642\uFE0F\u{1F4DD} [X] points, keep saving the day!",
+  "A whole week of notes? You're the note-taking pioneer, blazing trails through the forests of information! \u{1F332}\u{1F4DD} [X] points, keep pioneering!",
+  "Seven days, seven notes - you're a note-taking DJ, dropping beats of wisdom! \u{1F3A7}\u{1F4DD} [X] points, keep spinning!",
+  "You're on a seven-day note-taking treasure hunt, discovering gems of wisdom! \u{1F48E}\u{1F4DD} [X] points, keep hunting!",
+  "Seven days straight? You're the note-taking ninja warrior, conquering the knowledge obstacle course! \u{1F94B}\u{1F4DD} [X] points, keep slaying!",
+  "You're on a seven-day note-taking rollercoaster! Up and down, but always moving forward! \u{1F3A2}\u{1F4DD} [X] points, enjoy the ride!",
+  "Seven days, seven notes - you're a note-taking DJ spinning knowledge beats! \u{1F3A7}\u{1F4DD} [X] points, drop the knowledge!",
+  "You've just conquered the seven-day note-taking challenge! You're the note-taking Indiana Jones! \u{1F3F9}\u{1F4DD} [X] points, keep exploring!",
+  "A whole week of notes? You're the note-taking Sherlock Holmes, solving knowledge mysteries! \u{1F50D}\u{1F4DD} [X] points, keep sleuthing!",
+  "Seven days, seven notes - you're a note-taking Picasso, creating a masterpiece of knowledge! \u{1F3A8}\u{1F4DD} [X] points, keep painting!",
+  "You're on a seven-day note-taking safari, exploring the wilds of knowledge! \u{1F418}\u{1F4DD} [X] points, keep exploring!",
+  "Seven days straight? You're the Tony Hawk of note-taking! \u{1F6F9}\u{1F4DD} [X] points, keep shredding!",
+  "You're on a seven-day note-taking rocket ship! Destination: Infinite Knowledge! \u{1F680}\u{1F4DD} [X] points, enjoy the journey!",
+  "Seven days, seven notes - you're a note-taking ninja turtle now! \u{1F422}\u{1F4DD} [X] points, cowabunga!",
+  "You've just completed a week-long note-taking marathon! \u{1F3C3}\u200D\u2642\uFE0F\u{1F4DD} [X] points earned. Ready for the next lap?",
+  "A whole week of notes? You're on fire! \u{1F525}\u{1F4DD} [X] points, keep the spark alive!",
+  "Seven notes in seven days - that's like a note symphony! \u{1F3B6}\u{1F4DD} [X] points, maestro!"
+];
+var twoNoteMessages = [
+  "Boom! You just aced the 2-note tango! \u{1F389} [X] points in the pocket. Keep groovin'!",
+  "Two notes in a day? You're officially a Note Ninja! \u{1F94B} [X] points earned. Rock on!",
+  "High-five! You've conquered the 2-note rodeo! \u{1F920} [X] points earned. Yeehaw!",
+  "Double trouble! Two notes in one day, you legend! \u{1F31F} [X] points, rockstar!",
+  "You're on fire! Two notes in a day - what's your secret weapon? \u{1F525} [X] points!",
+  "Bingo! Two notes in a day! You're on a roll! \u{1F680} [X] points earned. Keep it up!",
+  "Kaboom! You just blew the 2-note challenge out of the water! \u{1F4A5} [X] points!",
+  "You're officially a 2-note superstar! \u{1F31F} [X] points in the bag. Keep shining!",
+  "Double up, double down! Two notes in one day - you're a rockstar! \u{1F3B8} [X] points!",
+  "You've just joined the 2-note party! \u{1F973} [X] points earned. Let's keep dancing!",
+  "Ka-ching! Two notes in a day! You're racking up those points! \u{1F4B0} [X] earned!",
+  "You're a 2-note magician! \u{1F3A9}\u2728 [X] points earned. What's your next trick?",
+  "Two notes? Nailed it! You're on a roll! \u{1F31F} [X] points earned. Keep it going!",
+  "Abra-cadabra! Two notes appear! \u{1F3A9}\u2728 [X] points earned. Keep the magic alive!",
+  "Double trouble, double the fun! Two notes in one day! \u{1F389} [X] points, superstar!",
+  "You've just unlocked the 2-note achievement! \u{1F31F} [X] points earned. Keep soaring!",
+  "Woo-hoo! Two notes in a day! You're on fire! \u{1F525} [X] points, keep it up!",
+  "You're a 2-note wizard! \u2728\u{1F52E} [X] points earned. What's your next spell?",
+  "Double the notes, double the awesomeness! \u{1F31F} [X] points, rockstar!",
+  "You've just kicked the 2-note challenge out of the park! \u26BE [X] points!",
+  "Boom! You just conquered the 2-note challenge! \u{1F389} [X] points, superstar!",
+  "Double the notes, double the celebration! \u{1F973} [X] points earned. Party on!",
+  "You're a 2-note maestro! \u{1F3B5} [X] points in the pocket. Keep the music playing!",
+  "Kaboom! Two notes in a day! You're on a roll! \u{1F680} [X] points earned. Keep it up!",
+  "You've just joined the 2-note fiesta! \u{1F973} [X] points earned. Let's keep dancing!",
+  "Zap! You've just electrified the 2-note challenge! \u26A1 [X] points, rockstar!",
+  "Double notes, double the sparkle! \u{1F31F} [X] points earned. Keep shining bright!",
+  "You're a 2-note dynamo! \u{1F4A5} [X] points earned. What's your next explosion?",
+  "Kaboom! Two notes in a day! You're on fire! \u{1F525} [X] points, keep it up!",
+  "You've just unlocked the 2-note achievement! \u{1F31F} [X] points earned. Keep soaring!",
+  "Woo-hoo! Two notes in a day! You're on a roll! \u{1F389} [X] points, keep it up!",
+  "You're a 2-note wizard! \u2728\u{1F52E} [X] points earned. What's your next spell?",
+  "Double the notes, double the awesomeness! \u{1F31F} [X] points, rockstar!",
+  "You've just kicked the 2-note challenge out of the park! \u26BE [X] points!",
+  "Boom! You just conquered the 2-note challenge! \u{1F389} [X] points, superstar!",
+  "Double the notes, double the celebration! \u{1F973} [X] points earned. Party on!",
+  "You're a 2-note maestro! \u{1F3B5} [X] points in the pocket. Keep the music playing!",
+  "Zap! You've just electrified the 2-note challenge! \u26A1 [X] points, rockstar!",
+  "Double notes, double the sparkle! \u{1F31F} [X] points earned. Keep shining bright!",
+  "You're a 2-note dynamo! \u{1F4A5} [X] points earned. What's your next explosion?",
+  "Kapow! Two notes in a day - you're a superhero! \u{1F9B8}\u200D\u2642\uFE0F [X] points!",
+  "You're a 2-note legend! \u{1F31F} [X] points earned. What's your next adventure?",
+  "Bingo! Two notes in a day! You're on a roll! \u{1F680} [X] points, keep it up!",
+  "You're a 2-note wizard! \u2728\u{1F52E} [X] points earned. What's your next spell?",
+  "Double the notes, double the awesomeness! \u{1F31F} [X] points, rockstar!",
+  "You've just kicked the 2-note challenge out of the park! \u26BE [X] points!",
+  "Boom! You just conquered the 2-note challenge! \u{1F389} [X] points, superstar!",
+  "Double the notes, double the celebration! \u{1F973} [X] points earned. Party on!",
+  "You're a 2-note maestro! \u{1F3B5} [X] points in the pocket. Keep the music playing!",
+  "Zap! You've just electrified the 2-note challenge! \u26A1 [X] points, rockstar!",
+  "Double notes, double the sparkle! \u{1F31F} [X] points earned. Keep shining bright!",
+  "You're a 2-note dynamo! \u{1F4A5} [X] points earned. What's your next explosion?"
+];
+function getRandomMessageWeeklyChallenge(points) {
+  const randomIndex = Math.floor(Math.random() * messagesWeeklyChallenge.length);
+  const message = messagesWeeklyChallenge[randomIndex];
+  return message.replace("[X]", points.toString());
+}
+function getRandomMessageTwoNoteChallenge(points) {
+  const randomIndex = Math.floor(Math.random() * twoNoteMessages.length);
+  const message = twoNoteMessages[randomIndex];
+  return message.replace("[X]", points.toString());
+}
+
 // src/main.ts
 var gamification = class extends import_obsidian2.Plugin {
   async onload() {
@@ -2815,14 +2933,16 @@ You received an initialisation Booster aktiv for your first level ups. Game on!`
         console.log(`${newDailyNoteCreationTask}/2 Notes created today.`);
       } else if (newDailyNoteCreationTask == 2) {
         await this.giveStatusPoints(pointsForDailyChallenge);
+        const message = getRandomMessageTwoNoteChallenge(pointsForDailyChallenge);
         console.log(`daily Challenge reached! ${newDailyNoteCreationTask}/2 created.`);
+        new import_obsidian2.Notice(message);
+        console.log(message);
       } else {
         console.log(`${newDailyNoteCreationTask}/2 Notes created today.`);
       }
     }
   }
   async increaseWeeklyCreatedNoteCount() {
-    console.log(`increaseWeeklyCreatedNoteCount called \u2026`);
     if (isOneDayBefore(window.moment(this.settings.weeklyNoteCreationDate, "DD.MM.YYYY"))) {
       let newWeeklyNoteCreationTask = this.settings.weeklyNoteCreationTask;
       if (newWeeklyNoteCreationTask < 7) {
@@ -2836,6 +2956,9 @@ You received an initialisation Booster aktiv for your first level ups. Game on!`
         } else if (newWeeklyNoteCreationTask == 7) {
           await this.giveStatusPoints(pointsForWeeklyChallenge);
           console.log(`Weekly Challenge reached! ${newWeeklyNoteCreationTask}/7 created in a chain.`);
+          const message = getRandomMessageWeeklyChallenge(pointsForWeeklyChallenge);
+          new import_obsidian2.Notice(message);
+          console.log(message);
         } else {
           console.log(`${newWeeklyNoteCreationTask}/7 Notes created in a chain.`);
         }
