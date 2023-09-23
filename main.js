@@ -1792,8 +1792,6 @@ legend: false
 type: bar
 labels: [0, 0, 0]
 series:
-  - title: created
-    data: [0, 0, 0]
   - title: modified
     data: [0, 0, 0]
 tension: 0.2
@@ -2195,13 +2193,6 @@ function monthsBetween(startMonth, endMonth) {
   }
   return months;
 }
-function getCreationDates(files) {
-  const creationDates = [];
-  for (const file of files) {
-    creationDates.push(new Date(file.stat.ctime));
-  }
-  return creationDates;
-}
 function getModificationDates(files) {
   const creationDates = [];
   for (const file of files) {
@@ -2209,15 +2200,14 @@ function getModificationDates(files) {
   }
   return creationDates;
 }
-function createChartFormat(y_axis, countsStringCreate, countsStringMod, chartReduzierungMonate) {
+function createChartFormat(y_axis, countsStringMod, chartReduzierungMonate) {
   let monatsbegrenzung = null;
   if (chartReduzierungMonate == 0) {
     monatsbegrenzung = 0;
   } else {
-    monatsbegrenzung = countsStringCreate.split(",").length - chartReduzierungMonate;
+    monatsbegrenzung = countsStringMod.split(",").length - chartReduzierungMonate;
   }
-  let chart_string = "```chart\ntype: bar\nlabels: [" + y_axis + "]\nseries:\n  - title: created\n    data: [" + countsStringCreate + "]\n  - title: modified\n    data: [" + countsStringMod + ']\ntension: 0.2\nwidth: 80 %\nlabelColors: false\nfill: false\nbeginAtZero: false\nbestFit: false\nbestFitTitle: undefined\nbestFitNumber: 0\nstacked: true\nyTitle: "Number of Notes"\nxTitle: "Months"\nxMin: ' + monatsbegrenzung + "\n```";
-  return chart_string;
+  return "```chart\ntype: bar\nlabels: [" + y_axis + "]\nseries:\n  - title: modified\n    data: [" + countsStringMod + ']\ntension: 0.2\nwidth: 80 %\nlabelColors: false\nfill: false\nbeginAtZero: false\nbestFit: false\nbestFitTitle: undefined\nbestFitNumber: 0\nstacked: true\nyTitle: "Number of Notes"\nxTitle: "Months"\nxMin: ' + monatsbegrenzung + "\n```";
 }
 async function replaceChartContent(avatarPageName, newContent) {
   const existingFile = app.vault.getAbstractFileByPath(`${avatarPageName}.md`);
@@ -2241,7 +2231,7 @@ async function replaceChartContent(avatarPageName, newContent) {
   }
   if (reference != null) {
     end = reference;
-    start = reference - 21;
+    start = reference - 19;
     const newLines = [...lines.slice(0, start), newContent, ...lines.slice(end)];
     await app.vault.modify(file, newLines.join("\n"));
   }
@@ -3184,47 +3174,27 @@ You received an initialisation Booster aktiv for your first level ups. Game on!`
   async createChart(vault) {
     const files = vault.getMarkdownFiles();
     const earliestFile = findEarliestDateFile(files);
-    let earliestDate = earliestFile.stat.ctime;
-    if (earliestFile.stat.mtime < earliestFile.stat.ctime) {
-      earliestDate = earliestFile.stat.mtime;
-    }
+    const earliestDate = earliestFile.stat.mtime;
     let monthCounter = 0;
     let dateCount = new Date(earliestDate);
-    const fileDateMonthMap = /* @__PURE__ */ new Map();
     const fileDateMonthMapMod = /* @__PURE__ */ new Map();
     const monthcount = monthsBetween(new Date(earliestDate), new Date());
     let dateString = dateCount.getMonth() + 1 + "." + dateCount.getFullYear();
     let yLabel = "";
-    while (monthCounter < monthcount) {
-      dateString = dateCount.getMonth() + 1 + "." + dateCount.getFullYear();
-      yLabel = yLabel + dateString + ", ";
-      dateCount.setMonth(dateCount.getMonth() + 1);
-      monthCounter += 1;
-      fileDateMonthMap.set(dateString, 0);
-    }
-    yLabel = yLabel.slice(0, yLabel.length - 2);
     monthCounter = 0;
     dateCount = new Date(earliestDate);
     dateString = dateCount.getMonth() + 1 + "." + dateCount.getFullYear();
     while (monthCounter < monthcount) {
       dateString = dateCount.getMonth() + 1 + "." + dateCount.getFullYear();
+      yLabel = yLabel + dateString + ", ";
       dateCount.setMonth(dateCount.getMonth() + 1);
       monthCounter += 1;
       fileDateMonthMapMod.set(dateString, 0);
     }
-    const creationDates = getCreationDates(files);
-    for (let i2 = 0; i2 < creationDates.length; i2++) {
-      const formattedDate = format(creationDates[i2], "M.yyyy");
-      const currentCount = fileDateMonthMap.get(formattedDate);
-      if (currentCount !== void 0) {
-        fileDateMonthMap.set(formattedDate, currentCount + 1);
-      } else {
-        fileDateMonthMap.set(formattedDate, 1);
-      }
-    }
+    yLabel = yLabel.slice(0, yLabel.length - 2);
     const modificationDates = getModificationDates(files);
     for (let i2 = 0; i2 < modificationDates.length; i2++) {
-      const formattedDate = format(creationDates[i2], "M.yyyy");
+      const formattedDate = format(modificationDates[i2], "M.yyyy");
       const currentCount = fileDateMonthMapMod.get(formattedDate);
       if (currentCount !== void 0) {
         fileDateMonthMapMod.set(formattedDate, currentCount + 1);
@@ -3232,17 +3202,12 @@ You received an initialisation Booster aktiv for your first level ups. Game on!`
         fileDateMonthMapMod.set(formattedDate, 1);
       }
     }
-    let charStringCreated = "";
-    for (const [value] of fileDateMonthMap) {
-      charStringCreated = charStringCreated + value + ", ";
-    }
-    charStringCreated = charStringCreated.slice(0, charStringCreated.length - 2);
     let charStringModified = "";
     for (const [value] of fileDateMonthMapMod) {
       charStringModified = charStringModified + value + ", ";
     }
     charStringModified = charStringModified.slice(0, charStringModified.length - 2);
-    return createChartFormat(yLabel, charStringCreated, charStringModified, this.settings.chartReduzierungMonate);
+    return createChartFormat(yLabel, charStringModified, this.settings.chartReduzierungMonate);
   }
   async decisionIfBadge(newLevel) {
     newLevel.then((result) => {

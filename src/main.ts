@@ -19,8 +19,7 @@ import {
 } from './majuritycalculation'
 import {
 	createChartFormat,
-	findEarliestDateFile,
-	getCreationDates,
+	findEarliestDateFile, findEarliestModifiedFile,
 	getModificationDates,
 	monthsBetween,
 	replaceChartContent
@@ -804,29 +803,27 @@ export default class gamification extends Plugin {
 
 	async createChart(vault: Vault): Promise<string>{
 		const files = vault.getMarkdownFiles();
-		const earliestFile = findEarliestDateFile(files)
-		let earliestDate = earliestFile.stat.ctime
-		if (earliestFile.stat.mtime < earliestFile.stat.ctime ){
-			earliestDate = earliestFile.stat.mtime
-		}
+		const earliestFile = findEarliestModifiedFile(files)
+		//let earliestDate = earliestFile.stat.ctime
+		//if (earliestFile.stat.mtime < earliestFile.stat.ctime ){
+		const earliestDate = earliestFile.stat.mtime
+		//}
 
 		let monthCounter = 0 //format(new Date(earliestDate), 'MM');
 		let dateCount = new Date(earliestDate); // um es hochzählen zu können
-		const fileDateMonthMap = new Map<string, number>();
+		//const fileDateMonthMap = new Map<string, number>();
 		const fileDateMonthMapMod = new Map<string, number>();
 		const monthcount = monthsBetween(new Date(earliestDate), new Date())
 		let dateString = dateCount.getMonth()+1 + "." + dateCount.getFullYear()
 		let yLabel = ""
 		// create Base for counting created
-		while (monthCounter < monthcount){
+		/*while (monthCounter < monthcount){
 			dateString = dateCount.getMonth()+1 + "." + dateCount.getFullYear()
 			//console.log(`dateString: ${dateString}`)
-			yLabel = yLabel + dateString + ", "
 			dateCount.setMonth(dateCount.getMonth() + 1)
 			monthCounter += 1;
 			fileDateMonthMap.set(dateString, 0)
-		}
-		yLabel = yLabel.slice(0,yLabel.length-2)
+		}*/
 
 		monthCounter = 0
 		dateCount = new Date(earliestDate); // um es hochzählen zu können
@@ -835,13 +832,15 @@ export default class gamification extends Plugin {
 		while (monthCounter < monthcount){
 			dateString = dateCount.getMonth()+1 + "." + dateCount.getFullYear()
 			//console.log(`dateString: ${dateString}`)
+			yLabel = yLabel + dateString + ", "
 			dateCount.setMonth(dateCount.getMonth() + 1)
 			monthCounter += 1;
 			fileDateMonthMapMod.set(dateString, 0)
 		}
+		yLabel = yLabel.slice(0,yLabel.length-2)
 
 		// count how many files in each month
-		const creationDates = getCreationDates(files)
+		/*const creationDates = getCreationDates(files)
 		for (let i = 0; i < creationDates.length; i++){
 			//fileDateMonthMap.set(format(creationDates[i], 'M.yyyy'),fileDateMonthMap.get(format(creationDates[i], 'M.yyyy'))+1)
 			const formattedDate = format(creationDates[i], 'M.yyyy');
@@ -853,13 +852,13 @@ export default class gamification extends Plugin {
 				// If the key doesn't exist in the map, initialize it with a count of 1
 				fileDateMonthMap.set(formattedDate, 1);
 			}
-		}
+		}*/
 
 		// count how many mod files in each month
 		const modificationDates = getModificationDates(files)
 		for (let i = 0; i < modificationDates.length; i++){
 			//fileDateMonthMapMod.set(format(modificationDates[i], 'M.yyyy'),fileDateMonthMapMod.get(format(modificationDates[i], 'M.yyyy'))+1)
-			const formattedDate = format(creationDates[i], 'M.yyyy');
+			const formattedDate = format(modificationDates[i], 'M.yyyy');
 			const currentCount = fileDateMonthMapMod.get(formattedDate);
 
 			if (currentCount !== undefined) {
@@ -871,11 +870,11 @@ export default class gamification extends Plugin {
 		}
 
 		// build Chart String created
-		let charStringCreated = ""
+		/*let charStringCreated = ""
 		for (const [value] of fileDateMonthMap) {
 			charStringCreated = charStringCreated + value + ", "
 		}
-		charStringCreated = charStringCreated.slice(0,charStringCreated.length-2)
+		charStringCreated = charStringCreated.slice(0,charStringCreated.length-2)*/
 
 		// build Chart String modified
 		let charStringModified = ""
@@ -885,7 +884,7 @@ export default class gamification extends Plugin {
 		}
 		charStringModified = charStringModified.slice(0,charStringModified.length-2)
 
-		return createChartFormat(yLabel, charStringCreated, charStringModified, this.settings.chartReduzierungMonate)
+		return createChartFormat(yLabel, charStringModified, this.settings.chartReduzierungMonate)
 	}
 
 	async decisionIfBadge(newLevel: Promise<boolean>){

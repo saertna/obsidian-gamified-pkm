@@ -79,8 +79,6 @@ legend: false
 type: bar
 labels: [0, 0, 0]
 series:
-  - title: created
-    data: [0, 0, 0]
   - title: modified
     data: [0, 0, 0]
 tension: 0.2

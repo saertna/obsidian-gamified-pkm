@@ -269,13 +269,13 @@ describe('monthsBetween', () => {
 
 describe('createChartFormat', () => {
   it('should return how many month are between March 22 and July 23', () => {
-  const actual = createChartFormat("Jan 22, Feb 22, Mar 22, April 22","0, 1, 2, 3","0, 1, 2, 3",0);
+  const actual = createChartFormat("Jan 22, Feb 22, Mar 22, April 22", "0, 1, 2, 3", 0);
   const expected = '```chart\ntype: bar\nlabels: [Jan 22, Feb 22, Mar 22, April 22]\nseries:\n  - title: created\n    data: [0, 1, 2, 3]\n  - title: modified\n    data: [0, 1, 2, 3]\ntension: 0.2\nwidth: 80 %\nlabelColors: false\nfill: false\nbeginAtZero: false\nbestFit: false\nbestFitTitle: undefined\nbestFitNumber: 0\nstacked: true\nyTitle: \"Number of Notes\"\nxTitle: \"Months\"\nxMin: 0\n```'
   expect(actual).toStrictEqual(expected);
   });
   
   it('should return how many month are between March 22 and June 22', () => {
-    const actual = createChartFormat("Jan 22, Feb 22, Mar 22, April 22","0, 1, 2, 3","0, 1, 2, 3",2);
+    const actual = createChartFormat("Jan 22, Feb 22, Mar 22, April 22", "0, 1, 2, 3", 2);
     const expected = '```chart\ntype: bar\nlabels: [Jan 22, Feb 22, Mar 22, April 22]\nseries:\n  - title: created\n    data: [0, 1, 2, 3]\n  - title: modified\n    data: [0, 1, 2, 3]\ntension: 0.2\nwidth: 80 %\nlabelColors: false\nfill: false\nbeginAtZero: false\nbestFit: false\nbestFitTitle: undefined\nbestFitNumber: 0\nstacked: true\nyTitle: \"Number of Notes\"\nxTitle: \"Months\"\nxMin: 2\n```'
     expect(actual).toBe(expected);
   });
