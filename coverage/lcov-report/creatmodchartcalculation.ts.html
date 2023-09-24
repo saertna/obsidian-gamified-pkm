@@ -23,9 +23,9 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">28.12% </span>
+                <span class="strong">26.98% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>18/64</span>
+                <span class='fraction'>17/63</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">28.57% </span>
+                <span class="strong">27.41% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>18/63</span>
+                <span class='fraction'>17/62</span>
             </div>
         
             
@@ -176,9 +176,7 @@
 <a name='L111'></a><a href='#L111'>111</a>
 <a name='L112'></a><a href='#L112'>112</a>
 <a name='L113'></a><a href='#L113'>113</a>
-<a name='L114'></a><a href='#L114'>114</a>
-<a name='L115'></a><a href='#L115'>115</a>
-<a name='L116'></a><a href='#L116'>116</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L114'></a><a href='#L114'>114</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -258,8 +256,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
@@ -293,14 +289,14 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { TFile } from 'obsidian';
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import {TFile} from 'obsidian';
 &nbsp;
 export function <span class="fstat-no" title="function not covered" >findEarliestCreatedFile(</span>files: TFile[]): TFile {
 	let earliestCreatedFile: TFile = <span class="cstat-no" title="statement not covered" >files[0];</span>
 <span class="cstat-no" title="statement not covered" >	for (const file of files) {</span>
-<span class="cstat-no" title="statement not covered" >	  <span class="missing-if-branch" title="if path not taken" >I</span>if (file.stat.ctime &lt; earliestCreatedFile.stat.ctime) {</span>
-<span class="cstat-no" title="statement not covered" >		earliestCreatedFile = file;</span>
-	  }
+<span class="cstat-no" title="statement not covered" >		<span class="missing-if-branch" title="if path not taken" >I</span>if (file.stat.ctime &lt; earliestCreatedFile.stat.ctime) {</span>
+<span class="cstat-no" title="statement not covered" >			earliestCreatedFile = file;</span>
+		}
 	}
 <span class="cstat-no" title="statement not covered" >	return earliestCreatedFile;</span>
 }
@@ -309,9 +305,9 @@ export function <span class="fstat-no" title="function not covered" >findEarlies
 export function <span class="fstat-no" title="function not covered" >findEarliestModifiedFile(</span>files: TFile[]): TFile {
 	let earliestModifiedFile: TFile = <span class="cstat-no" title="statement not covered" >files[0];</span>
 <span class="cstat-no" title="statement not covered" >	for (const file of files) {</span>
-<span class="cstat-no" title="statement not covered" >	  <span class="missing-if-branch" title="if path not taken" >I</span>if (file.stat.mtime &lt; earliestModifiedFile.stat.mtime) {</span>
-<span class="cstat-no" title="statement not covered" >		earliestModifiedFile = file;</span>
-	  }
+<span class="cstat-no" title="statement not covered" >		<span class="missing-if-branch" title="if path not taken" >I</span>if (file.stat.mtime &lt; earliestModifiedFile.stat.mtime) {</span>
+<span class="cstat-no" title="statement not covered" >			earliestModifiedFile = file;</span>
+		}
 	}
 <span class="cstat-no" title="statement not covered" >	return earliestModifiedFile;</span>
 }  
@@ -320,12 +316,12 @@ export function <span class="fstat-no" title="function not covered" >findEarlies
 export function <span class="fstat-no" title="function not covered" >findEarliestDateFile(</span>files: TFile[]): TFile {
 	let earliestCreatedFile: TFile = <span class="cstat-no" title="statement not covered" >files[0];</span>
 <span class="cstat-no" title="statement not covered" >	for (const file of files) {</span>
-<span class="cstat-no" title="statement not covered" >	  <span class="missing-if-branch" title="if path not taken" >I</span>if (file.stat.ctime &lt; earliestCreatedFile.stat.ctime) {</span>
-<span class="cstat-no" title="statement not covered" >		earliestCreatedFile = file;</span>
-	  }
-<span class="cstat-no" title="statement not covered" >	  <span class="missing-if-branch" title="if path not taken" >I</span>if (file.stat.mtime &lt; earliestCreatedFile.stat.ctime) {</span>
-<span class="cstat-no" title="statement not covered" >		earliestCreatedFile = file;</span>
-	  }
+<span class="cstat-no" title="statement not covered" >		<span class="missing-if-branch" title="if path not taken" >I</span>if (file.stat.ctime &lt; earliestCreatedFile.stat.ctime) {</span>
+<span class="cstat-no" title="statement not covered" >			earliestCreatedFile = file;</span>
+		}
+<span class="cstat-no" title="statement not covered" >		<span class="missing-if-branch" title="if path not taken" >I</span>if (file.stat.mtime &lt; earliestCreatedFile.stat.ctime) {</span>
+<span class="cstat-no" title="statement not covered" >			earliestCreatedFile = file;</span>
+		}
 	}
 <span class="cstat-no" title="statement not covered" >	return earliestCreatedFile;</span>
 }
@@ -334,7 +330,7 @@ export function <span class="fstat-no" title="function not covered" >findEarlies
 export function monthsBetween(startMonth: Date, endMonth: Date): number {
 	let months = (endMonth.getMonth() - startMonth.getMonth()) + 1;
 	if (endMonth.getFullYear() &gt; startMonth.getFullYear()) {
-	  months += (endMonth.getFullYear() - startMonth.getFullYear())*12;
+		months += (endMonth.getFullYear() - startMonth.getFullYear())*12;
 	}
 	return months;
 }
@@ -344,7 +340,7 @@ export function <span class="fstat-no" title="function not covered" >getCreation
 	const creationDates: Array&lt;Date&gt; = <span class="cstat-no" title="statement not covered" >[];</span>
   
 <span class="cstat-no" title="statement not covered" >	for (const file of files) {</span>
-<span class="cstat-no" title="statement not covered" >	  creationDates.push(new Date(file.stat.ctime));</span>
+<span class="cstat-no" title="statement not covered" >		creationDates.push(new Date(file.stat.ctime));</span>
 	}
   
 <span class="cstat-no" title="statement not covered" >	return creationDates;</span>
@@ -355,25 +351,23 @@ export function <span class="fstat-no" title="function not covered" >getModifica
 	const creationDates: Array&lt;Date&gt; = <span class="cstat-no" title="statement not covered" >[];</span>
   
 <span class="cstat-no" title="statement not covered" >	for (const file of files) {</span>
-<span class="cstat-no" title="statement not covered" >	  creationDates.push(new Date(file.stat.mtime));</span>
+<span class="cstat-no" title="statement not covered" >		creationDates.push(new Date(file.stat.mtime));</span>
 	}
   
 <span class="cstat-no" title="statement not covered" >	return creationDates;</span>
 }
 &nbsp;
 &nbsp;
-export function createChartFormat(y_axis: string,countsStringCreate: string, countsStringMod: string, chartReduzierungMonate: number): string {
+export function createChartFormat(y_axis: string, countsStringMod: string, chartReduzierungMonate: number): string {
 	let monatsbegrenzung = null
 	if (chartReduzierungMonate == 0){
 		monatsbegrenzung = 0
 	} else {
-		monatsbegrenzung = countsStringCreate.split(',').length - chartReduzierungMonate
+		monatsbegrenzung = countsStringMod.split(',').length - chartReduzierungMonate
 	}
 	
 	//const monatsbegrenzung = lengthcountsStringCreate - this.settings.chartReduzierungMonate
-	let chart_string = "```chart\ntype: bar\nlabels: [" + y_axis + "]\nseries:\n  - title: created\n    data: [" + countsStringCreate + "]\n  - title: modified\n    data: [" + countsStringMod + "]\ntension: 0.2\nwidth: 80 %\nlabelColors: false\nfill: false\nbeginAtZero: false\nbestFit: false\nbestFitTitle: undefined\nbestFitNumber: 0\nstacked: true\nyTitle: \"Number of Notes\"\nxTitle: \"Months\"\nxMin: "+ monatsbegrenzung + "\n```"
-&nbsp;
-	return chart_string;
+	return "```chart\ntype: bar\nlabels: [" + y_axis + "]\nseries:\n  - title: modified\n    data: [" + countsStringMod + "]\ntension: 0.2\nwidth: 80 %\nlabelColors: false\nfill: false\nbeginAtZero: false\nbestFit: false\nbestFitTitle: undefined\nbestFitNumber: 0\nstacked: true\nyTitle: \"Number of Notes\"\nxTitle: \"Months\"\nxMin: " + monatsbegrenzung + "\n```";
 }
 &nbsp;
   
@@ -401,11 +395,11 @@ export async function <span class="fstat-no" title="function not covered" >repla
 	}
 <span class="cstat-no" title="statement not covered" >	<span class="missing-if-branch" title="if path not taken" >I</span>if (reference != null){</span>
 <span class="cstat-no" title="statement not covered" >		end = reference;</span>
-<span class="cstat-no" title="statement not covered" >		start = reference - 21;</span>
+<span class="cstat-no" title="statement not covered" >		start = reference - 19;</span>
 		const newLines = <span class="cstat-no" title="statement not covered" >[...lines.slice(0, start), newContent, ...lines.slice(end)];</span>
 <span class="cstat-no" title="statement not covered" >		await app.vault.modify(file, newLines.join("\n"));</span>
 	}
-};
+}
 &nbsp;
 &nbsp;
 &nbsp;</pre></td></tr></table></pre>
@@ -415,7 +409,7 @@ export async function <span class="fstat-no" title="function not covered" >repla
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2023-09-03T06:39:34.970Z
+                at 2023-09-24T19:39:08.141Z
             </div>
         <script src="prettify.js"></script>
         <script>

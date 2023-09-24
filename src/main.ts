@@ -19,8 +19,7 @@ import {
 } from './majuritycalculation'
 import {
 	createChartFormat,
-	findEarliestDateFile,
-	getCreationDates,
+	findEarliestDateFile, findEarliestModifiedFile,
 	getModificationDates,
 	monthsBetween,
 	replaceChartContent
@@ -520,28 +519,7 @@ export default class gamification extends Plugin {
 
 	async increaseWeeklyCreatedNoteCount(){
 		if(isOneDayBefore(window.moment(this.settings.weeklyNoteCreationDate, 'DD.MM.YYYY'))){
-			let newWeeklyNoteCreationTask = this.settings.weeklyNoteCreationTask;
-			if (newWeeklyNoteCreationTask < 7){
-				newWeeklyNoteCreationTask ++;
-				this.settings.weeklyNoteCreationDate = window.moment().format('DD.MM.YYYY')
-				this.settings.weeklyNoteCreationTask = newWeeklyNoteCreationTask;
-				await this.saveSettings();
-
-				if(newWeeklyNoteCreationTask <= 6){
-					// update Avatar Page
-					await this.updateAvatarPage(this.settings.avatarPageName);
-					console.log(`${newWeeklyNoteCreationTask}/7 Notes created in a chain.`)
-				} else if (newWeeklyNoteCreationTask == 7) {
-					await this.giveStatusPoints(pointsForWeeklyChallenge)
-					console.log(`Weekly Challenge reached! ${newWeeklyNoteCreationTask}/7 created in a chain.`)
-					const message = getRandomMessageWeeklyChallenge(pointsForWeeklyChallenge);
-					new Notice(message)
-					console.log(message)
-				} else {
-					// nothing else to do here
-					console.log(`${newWeeklyNoteCreationTask}/7 Notes created in a chain.`)
-				}
-			}
+			await this.checkForWeeklyNoteChallengeBelow7();
 		} else if (isSameDay(window.moment(this.settings.weeklyNoteCreationDate, 'DD.MM.YYYY'))){
 			// do nothing
 			console.log(`daily note creation was rated already today.`)
@@ -552,29 +530,53 @@ export default class gamification extends Plugin {
 		}
 	}
 
-	async updateStatusBar(statusbar: HTMLSpanElement){
-		/*
-		writes current level und calculates with 10 ticks precision a progressbar.
-		---
-		alpha: status points to reach CURRENT level | level.points
-		beta: status points to reach NEXT level | level.pointsNext
-		gamma: current status points | settings.statusPoints
-		prozent = (gamma - alpha) / (beta - alpha) * 100%
-		*/
+	private async checkForWeeklyNoteChallengeBelow7() {
+		let currentWeeklyCreatedNotes = this.settings.weeklyNoteCreationTask;
+		if (currentWeeklyCreatedNotes < 7) {
+			currentWeeklyCreatedNotes++;
+			this.settings.weeklyNoteCreationDate = window.moment().format('DD.MM.YYYY')
+			this.settings.weeklyNoteCreationTask = currentWeeklyCreatedNotes;
+			await this.saveSettings();
 
-		const level = getLevelForPoints(this.settings.statusPoints)
-		const progressbarPercent = (this.settings.statusPoints - level.points)/(level.pointsNext - level.points)*100;
+			await this.checkForWeeklyNoteChallengeEvaluation(currentWeeklyCreatedNotes);
+		}
+	}
+
+	private async checkForWeeklyNoteChallengeEvaluation(newWeeklyNoteCreationTask: number) {
+		if (newWeeklyNoteCreationTask <= 6) {
+			// update Avatar Page
+			await this.updateAvatarPage(this.settings.avatarPageName);
+			console.log(`${newWeeklyNoteCreationTask}/7 Notes created in a chain.`)
+		} else if (newWeeklyNoteCreationTask == 7) {
+			await this.giveStatusPoints(pointsForWeeklyChallenge)
+			console.log(`Weekly Challenge reached! ${newWeeklyNoteCreationTask}/7 created in a chain.`)
+			const message = getRandomMessageWeeklyChallenge(pointsForWeeklyChallenge);
+			new Notice(message)
+			console.log(message)
+		} else {
+			// nothing else to do here
+			console.log(`${newWeeklyNoteCreationTask}/7 Notes created in a chain.`)
+		}
+	}
+
+	async updateStatusBar(statusbar: HTMLSpanElement){
+		const currentLevel = getLevelForPoints(this.settings.statusPoints)
+		const progressbarPercent = (this.settings.statusPoints - currentLevel.points)/(currentLevel.pointsNext - currentLevel.points)*100;
 		const charNumProgressbar = 10
-		const balken = Math.round(progressbarPercent / charNumProgressbar)
+		const barLength = Math.round(progressbarPercent / charNumProgressbar)
+		statusbar.setText(`🎲|lvl: ${this.settings.statusLevel} | ${this.createProgressbar(charNumProgressbar, barLength)}`)
+	}
+
+	private createProgressbar(charNumProgressbar: number, barLength: number) {
 		let progressbar = ''
-		for (let i=1; i <= charNumProgressbar; i++){
-			if (i <= balken){
+		for (let i = 1; i <= charNumProgressbar; i++) {
+			if (i <= barLength) {
 				progressbar += '='
 			} else {
 				progressbar += '-'
 			}
 		}
-		statusbar.setText(`🎲|lvl: ${this.settings.statusLevel} | ${progressbar}`)
+		return progressbar;
 	}
 
 	async loadSettings() {
@@ -801,29 +803,27 @@ export default class gamification extends Plugin {
 
 	async createChart(vault: Vault): Promise<string>{
 		const files = vault.getMarkdownFiles();
-		const earliestFile = findEarliestDateFile(files)
-		let earliestDate = earliestFile.stat.ctime
-		if (earliestFile.stat.mtime < earliestFile.stat.ctime ){
-			earliestDate = earliestFile.stat.mtime
-		}
+		const earliestFile = findEarliestModifiedFile(files)
+		//let earliestDate = earliestFile.stat.ctime
+		//if (earliestFile.stat.mtime < earliestFile.stat.ctime ){
+		const earliestDate = earliestFile.stat.mtime
+		//}
 
 		let monthCounter = 0 //format(new Date(earliestDate), 'MM');
 		let dateCount = new Date(earliestDate); // um es hochzählen zu können
-		const fileDateMonthMap = new Map<string, number>();
+		//const fileDateMonthMap = new Map<string, number>();
 		const fileDateMonthMapMod = new Map<string, number>();
 		const monthcount = monthsBetween(new Date(earliestDate), new Date())
 		let dateString = dateCount.getMonth()+1 + "." + dateCount.getFullYear()
 		let yLabel = ""
 		// create Base for counting created
-		while (monthCounter < monthcount){
+		/*while (monthCounter < monthcount){
 			dateString = dateCount.getMonth()+1 + "." + dateCount.getFullYear()
 			//console.log(`dateString: ${dateString}`)
-			yLabel = yLabel + dateString + ", "
 			dateCount.setMonth(dateCount.getMonth() + 1)
 			monthCounter += 1;
 			fileDateMonthMap.set(dateString, 0)
-		}
-		yLabel = yLabel.slice(0,yLabel.length-2)
+		}*/
 
 		monthCounter = 0
 		dateCount = new Date(earliestDate); // um es hochzählen zu können
@@ -832,13 +832,15 @@ export default class gamification extends Plugin {
 		while (monthCounter < monthcount){
 			dateString = dateCount.getMonth()+1 + "." + dateCount.getFullYear()
 			//console.log(`dateString: ${dateString}`)
+			yLabel = yLabel + dateString + ", "
 			dateCount.setMonth(dateCount.getMonth() + 1)
 			monthCounter += 1;
 			fileDateMonthMapMod.set(dateString, 0)
 		}
+		yLabel = yLabel.slice(0,yLabel.length-2)
 
 		// count how many files in each month
-		const creationDates = getCreationDates(files)
+		/*const creationDates = getCreationDates(files)
 		for (let i = 0; i < creationDates.length; i++){
 			//fileDateMonthMap.set(format(creationDates[i], 'M.yyyy'),fileDateMonthMap.get(format(creationDates[i], 'M.yyyy'))+1)
 			const formattedDate = format(creationDates[i], 'M.yyyy');
@@ -850,13 +852,13 @@ export default class gamification extends Plugin {
 				// If the key doesn't exist in the map, initialize it with a count of 1
 				fileDateMonthMap.set(formattedDate, 1);
 			}
-		}
+		}*/
 
 		// count how many mod files in each month
 		const modificationDates = getModificationDates(files)
 		for (let i = 0; i < modificationDates.length; i++){
 			//fileDateMonthMapMod.set(format(modificationDates[i], 'M.yyyy'),fileDateMonthMapMod.get(format(modificationDates[i], 'M.yyyy'))+1)
-			const formattedDate = format(creationDates[i], 'M.yyyy');
+			const formattedDate = format(modificationDates[i], 'M.yyyy');
 			const currentCount = fileDateMonthMapMod.get(formattedDate);
 
 			if (currentCount !== undefined) {
@@ -868,11 +870,11 @@ export default class gamification extends Plugin {
 		}
 
 		// build Chart String created
-		let charStringCreated = ""
+		/*let charStringCreated = ""
 		for (const [value] of fileDateMonthMap) {
 			charStringCreated = charStringCreated + value + ", "
 		}
-		charStringCreated = charStringCreated.slice(0,charStringCreated.length-2)
+		charStringCreated = charStringCreated.slice(0,charStringCreated.length-2)*/
 
 		// build Chart String modified
 		let charStringModified = ""
@@ -882,7 +884,7 @@ export default class gamification extends Plugin {
 		}
 		charStringModified = charStringModified.slice(0,charStringModified.length-2)
 
-		return createChartFormat(yLabel, charStringCreated, charStringModified, this.settings.chartReduzierungMonate)
+		return createChartFormat(yLabel, charStringModified, this.settings.chartReduzierungMonate)
 	}
 
 	async decisionIfBadge(newLevel: Promise<boolean>){
@@ -966,7 +968,7 @@ export default class gamification extends Plugin {
 		this.settings.badgeBoosterFactor = boosterFactor
 		this.settings.badgeBoosterState = true
 		await this.saveData(this.settings)
-		//console.log(`boosterFaktor: ${boosterFactor}`) 
+		//console.log(`boosterFaktor: ${boosterFactor}`)
 		return boosterFactor
 	}
 
