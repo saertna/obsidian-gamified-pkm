@@ -2174,17 +2174,14 @@ var getFileMap = async (app2, excludeTag, excludeFolder) => {
 };
 
 // src/creatmodchartcalculation.ts
-function findEarliestDateFile(files) {
-  let earliestCreatedFile = files[0];
+function findEarliestModifiedFile(files) {
+  let earliestModifiedFile = files[0];
   for (const file of files) {
-    if (file.stat.ctime < earliestCreatedFile.stat.ctime) {
-      earliestCreatedFile = file;
-    }
-    if (file.stat.mtime < earliestCreatedFile.stat.ctime) {
-      earliestCreatedFile = file;
+    if (file.stat.mtime < earliestModifiedFile.stat.mtime) {
+      earliestModifiedFile = file;
     }
   }
-  return earliestCreatedFile;
+  return earliestModifiedFile;
 }
 function monthsBetween(startMonth, endMonth) {
   let months = endMonth.getMonth() - startMonth.getMonth() + 1;
@@ -2438,7 +2435,7 @@ function statusPointsForLevel(targetLevel) {
   return statusPoints;
 }
 
-// src/challengeNotificationText.ts
+// src/randomNotificationText.ts
 var messagesWeeklyChallenge = [
   "Seven days of note-taking? You're practically a note ninja turtle now! \u{1F422}\u{1F4DD} [X] points, cowabunga!",
   "You've just completed a week-long note-taking marathon! \u{1F3C3}\u200D\u2642\uFE0F\u{1F4DD} [X] points earned. Ready for the next lap?",
@@ -2545,6 +2542,61 @@ var twoNoteMessages = [
   "Double notes, double the sparkle! \u{1F31F} [X] points earned. Keep shining bright!",
   "You're a 2-note dynamo! \u{1F4A5} [X] points earned. What's your next explosion?"
 ];
+var randomPointNotices = [
+  "Bazinga! You just snagged [X] points!",
+  "Kaboom! [X] points are now in your pocket!",
+  "Woohoo! [X] points earned! Keep it up!",
+  "Points ahoy! [X] more in the bank!",
+  "Score! [X] points added to your total!",
+  "You're on fire! [X] points in the bag!",
+  "Zippity-zap! [X] points for you!",
+  "Champion move! [X] points are yours!",
+  "Bingo! [X] points just for you!",
+  "Shazam! [X] points to the rescue!",
+  "Ka-ching! [X] points earned!",
+  "Superb! [X] more points for you!",
+  "Bravo! [X] points added to your stash!",
+  "Well done! [X] more points in tow!",
+  "Zap! [X] points, just like that!",
+  "A round of applause for [X] points!",
+  "Whoosh! [X] points are yours!",
+  "Zing! [X] points for your efforts!",
+  "Woo! [X] points, way to go!",
+  "Zesty! [X] points in your tally!",
+  "Great job! [X] more points for you!",
+  "Fantastic! [X] points in the bag!",
+  "Zowie! [X] points just for you!",
+  "Hooray! [X] points in your account!",
+  "Nice one! [X] points in the pocket!",
+  "Woot woot! [X] points, nice work!",
+  "Zigzag! [X] points, keep it up!",
+  "Bam! [X] points, well done!",
+  "Cool beans! [X] points for you!",
+  "Zesty! [X] points, keep it up!",
+  "Splendid! [X] points for your efforts!",
+  "Marvelous! [X] points earned!",
+  "Zany! [X] points, well done!",
+  "Exquisite! [X] points in your stash!",
+  "Outstanding! [X] points for you!",
+  "Zesty! [X] points, nice job!",
+  "Magnificent! [X] points earned!",
+  "Zigzag! [X] points in your tally!",
+  "Terrific! [X] points for you!",
+  "Superb! [X] points, well done!",
+  "Zowie! [X] points for your efforts!",
+  "Excellent! [X] points earned!",
+  "Zap! [X] points in your account!",
+  "Awesome! [X] points, way to go!",
+  "Well played! [X] points for you!",
+  "Zesty! [X] points, nice work!",
+  "Impressive! [X] points, keep it up!",
+  "Brilliant! [X] points, well done!",
+  "Zing! [X] points for your efforts!",
+  "Nice move! [X] points earned!",
+  "Zesty! [X] points in the bag!",
+  "Stellar! [X] points just for you!",
+  "Well deserved! [X] points earned!"
+];
 function getRandomMessageWeeklyChallenge(points) {
   const randomIndex = Math.floor(Math.random() * messagesWeeklyChallenge.length);
   const message = messagesWeeklyChallenge[randomIndex];
@@ -2553,6 +2605,11 @@ function getRandomMessageWeeklyChallenge(points) {
 function getRandomMessageTwoNoteChallenge(points) {
   const randomIndex = Math.floor(Math.random() * twoNoteMessages.length);
   const message = twoNoteMessages[randomIndex];
+  return message.replace("[X]", points.toString());
+}
+function getRandomMessagePoints(points) {
+  const randomIndex = Math.floor(Math.random() * randomPointNotices.length);
+  const message = randomPointNotices[randomIndex];
   return message.replace("[X]", points.toString());
 }
 
@@ -2863,8 +2920,9 @@ You received an initialisation Booster aktiv for your first level ups. Game on!`
               this.decisionIfBadge(newLevel);
             }
             if (pointsReceived > 0) {
-              new import_obsidian2.Notice(`${pointsReceived * this.settings.badgeBoosterFactor} Points received`);
-              console.log(`${pointsReceived} Points received`);
+              const messagePoints = getRandomMessagePoints(pointsReceived * this.settings.badgeBoosterFactor);
+              new import_obsidian2.Notice(messagePoints);
+              console.log(messagePoints);
             }
             this.writeFrontmatter(frontmatter, fileNameRate, rateFileLength, inlinkClass, rateOut, rateProgressiveSum, noteMajurity);
           }
@@ -3173,7 +3231,7 @@ You received an initialisation Booster aktiv for your first level ups. Game on!`
   }
   async createChart(vault) {
     const files = vault.getMarkdownFiles();
-    const earliestFile = findEarliestDateFile(files);
+    const earliestFile = findEarliestModifiedFile(files);
     const earliestDate = earliestFile.stat.mtime;
     let monthCounter = 0;
     let dateCount = new Date(earliestDate);

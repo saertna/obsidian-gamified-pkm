@@ -27,7 +27,7 @@ import {
 import {Badge, checkIfReceiveABadge, getBadgeForInitLevel, getBadgeForLevel} from './badges'
 import {getLevelForPoints, statusPointsForLevel} from './levels'
 import type {Moment} from 'moment';
-import { getRandomMessageWeeklyChallenge, getRandomMessageTwoNoteChallenge } from './challengeNotificationText'
+import { getRandomMessageWeeklyChallenge, getRandomMessageTwoNoteChallenge , getRandomMessagePoints } from './randomNotificationText'
 
 export default class gamification extends Plugin {
 	public settings: GamificationPluginSettings;
@@ -438,8 +438,9 @@ export default class gamification extends Plugin {
 						}
 
 						if (pointsReceived > 0){
-							new Notice(`${pointsReceived * this.settings.badgeBoosterFactor} Points received`)
-							console.log(`${pointsReceived} Points received`)
+							const messagePoints = getRandomMessagePoints(pointsReceived * this.settings.badgeBoosterFactor)
+							new Notice(messagePoints)
+							console.log(messagePoints)
 						}
 
 						this.writeFrontmatter(frontmatter, fileNameRate, rateFileLength, inlinkClass, rateOut, rateProgressiveSum, noteMajurity);
