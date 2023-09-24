@@ -2435,7 +2435,7 @@ function statusPointsForLevel(targetLevel) {
   return statusPoints;
 }
 
-// src/challengeNotificationText.ts
+// src/randomNotificationText.ts
 var messagesWeeklyChallenge = [
   "Seven days of note-taking? You're practically a note ninja turtle now! \u{1F422}\u{1F4DD} [X] points, cowabunga!",
   "You've just completed a week-long note-taking marathon! \u{1F3C3}\u200D\u2642\uFE0F\u{1F4DD} [X] points earned. Ready for the next lap?",
