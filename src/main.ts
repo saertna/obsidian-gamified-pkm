@@ -1,7 +1,13 @@
 import {App, MarkdownView, Modal, Notice, Plugin, TFile, Vault} from 'obsidian';
 import {defaultSettings, GamificationPluginSettings} from './settings';
 import format from 'date-fns/format';
-import { avatarInitContent, pointsMajurity, pointsNoteMajurity, pointsForDailyChallenge, pointsForWeeklyChallenge } from './constants'
+import {
+	avatarInitContent,
+	pointsMajurity,
+	pointsNoteMajurity,
+	pointsForDailyChallenge,
+	pointsForWeeklyChallenge
+} from './constants'
 import {
 	count_inlinks,
 	countCharactersInActiveFile,
@@ -19,7 +25,7 @@ import {
 } from './majuritycalculation'
 import {
 	createChartFormat,
-	findEarliestDateFile, findEarliestModifiedFile,
+	findEarliestModifiedFile,
 	getModificationDates,
 	monthsBetween,
 	replaceChartContent
@@ -33,6 +39,8 @@ export default class gamification extends Plugin {
 	public settings: GamificationPluginSettings;
 	private timerInterval: number;
 	private timerId: number | null;
+	private statusBarItem = this.addStatusBarItem();
+	private statusbarGamification = this.statusBarItem.createEl("span", { text: "" });
 
 	async onload() {
 		console.log('obsidian-pkm-gamification loaded!');
@@ -52,9 +60,7 @@ export default class gamification extends Plugin {
 		this.timerInterval = 30 * 60 * 1000; // minutes x seconds x milliseconds
 		this.timerId = window.setInterval(this.resetDailyGoals.bind(this), this.timerInterval);
 
-		const statusBarItem = this.addStatusBarItem();
-		const statusbarGamification = statusBarItem.createEl("span", { text: "" });
-		await this.updateStatusBar(statusbarGamification)
+		await this.updateStatusBar(this.statusbarGamification)
 
 
 		if (this.settings.debug){
@@ -97,7 +103,7 @@ export default class gamification extends Plugin {
 
 		this.addRibbonIcon("sprout", "Calculate Note Maturity", async () => {
 			//const file: TFile | null = this.app.workspace.getActiveFile();
-			await this.calculateNoteMajurity(statusbarGamification);
+			await this.calculateNoteMajurity();
 		});
 
 
@@ -107,7 +113,7 @@ export default class gamification extends Plugin {
 				id: 'init-rate-gamification',
 				name: 'Initialize gamification ratings',
 				callback: async () => {
-					await this.initializeGame(statusbarGamification);
+					await this.initializeGame(this.statusbarGamification);
 				},
 			});
 		}
@@ -133,7 +139,7 @@ export default class gamification extends Plugin {
 				id: 'reset-game',
 				name: 'reset the game',
 				callback: async () => {
-                    await this.resetGame(statusbarGamification);
+                    await this.resetGame();
                 },
 
 			});
@@ -156,7 +162,7 @@ export default class gamification extends Plugin {
 			id: 'rate-note-maturity',
 			name: 'Rate note majurity',
 			callback: async () => {
-				await this.calculateNoteMajurity(statusbarGamification);
+				await this.calculateNoteMajurity();
 			},
 		});
 
@@ -173,7 +179,7 @@ export default class gamification extends Plugin {
 	}
 
 
-    private async resetGame(statusbarGamification: HTMLSpanElement) {
+    private async resetGame() {
         await this.removeKeysFromFrontmatter();
         this.settings.statusLevel = 1;
         this.settings.statusPoints = 0;
@@ -182,7 +188,7 @@ export default class gamification extends Plugin {
         this.settings.badgeBoosterFactor = 1
         await this.saveData(this.settings);
         await this.giveStatusPoints(0)
-        await this.updateStatusBar(statusbarGamification)
+        await this.updateStatusBar(this.statusbarGamification)
         new ModalInformationbox(this.app, `Game is now reseted. Please delete the Profile Page: "${this.settings.avatarPageName}.md" manually.`).open();
     }
 
@@ -331,7 +337,7 @@ export default class gamification extends Plugin {
 		}
 	}
 
-	async calculateNoteMajurity(statusbarGamification: HTMLSpanElement){
+	async calculateNoteMajurity(){
 		const file: TFile | null= this.app.workspace.getActiveFile();
 		if (file == null) {
 			console.error('got no file, propably none is active')
@@ -377,6 +383,7 @@ export default class gamification extends Plugin {
 					if (frontmatter) {
 						let pointsReceived = 0; // to have one message at the end how many points received
 						if (rateDirectionForStatusPoints(frontmatter['note-maturity'], noteMajurity) >= 1){
+							console.log(`note-maturity >=1`)
 							pointsReceived += pointsNoteMajurity*rateDirectionForStatusPoints(frontmatter['note-maturity'], noteMajurity)
 							const newLevel = this.giveStatusPoints(pointsNoteMajurity * rateDirectionForStatusPoints("frontmatter['note-maturity']", noteMajurity))
 							this.decisionIfBadge(newLevel)
@@ -436,7 +443,7 @@ export default class gamification extends Plugin {
 							const newLevel = this.giveStatusPoints(pointsMajurity * rateDirectionForStatusPoints("0", rateProgressiveSum))
 							this.decisionIfBadge(newLevel)
 						}
-
+						console.log(`pointsReceived: ${pointsReceived}`)
 						if (pointsReceived > 0){
 							const messagePoints = getRandomMessagePoints(pointsReceived * this.settings.badgeBoosterFactor)
 							new Notice(messagePoints)
@@ -454,7 +461,9 @@ export default class gamification extends Plugin {
 				}
 			}
 			new Notice('note majurity updated!');
-			await this.updateStatusBar(statusbarGamification)
+			console.log('note majurity updated!')
+			//await this.updateAvatarPage(this.settings.avatarPageName)
+			await this.updateStatusBar(this.statusbarGamification)
 		} else {
 			console.error('file was not found to calculate majurities. Make sure one is active.')
 		}
