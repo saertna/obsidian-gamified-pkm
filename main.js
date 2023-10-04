@@ -2615,6 +2615,11 @@ function getRandomMessagePoints(points) {
 
 // src/main.ts
 var gamification = class extends import_obsidian2.Plugin {
+  constructor() {
+    super(...arguments);
+    this.statusBarItem = this.addStatusBarItem();
+    this.statusbarGamification = this.statusBarItem.createEl("span", { text: "" });
+  }
   async onload() {
     console.log("obsidian-pkm-gamification loaded!");
     await this.loadSettings();
@@ -2624,9 +2629,7 @@ var gamification = class extends import_obsidian2.Plugin {
     }, 2e3);
     this.timerInterval = 30 * 60 * 1e3;
     this.timerId = window.setInterval(this.resetDailyGoals.bind(this), this.timerInterval);
-    const statusBarItem = this.addStatusBarItem();
-    const statusbarGamification = statusBarItem.createEl("span", { text: "" });
-    await this.updateStatusBar(statusbarGamification);
+    await this.updateStatusBar(this.statusbarGamification);
     if (this.settings.debug) {
       this.addRibbonIcon("accessibility", "change text formatting", async () => {
         await this.loadSettings();
@@ -2635,14 +2638,14 @@ var gamification = class extends import_obsidian2.Plugin {
       });
     }
     this.addRibbonIcon("sprout", "Calculate Note Maturity", async () => {
-      await this.calculateNoteMajurity(statusbarGamification);
+      await this.calculateNoteMajurity();
     });
     if (this.settings.enableInitCommand) {
       this.addCommand({
         id: "init-rate-gamification",
         name: "Initialize gamification ratings",
         callback: async () => {
-          await this.initializeGame(statusbarGamification);
+          await this.initializeGame(this.statusbarGamification);
         }
       });
     }
@@ -2663,7 +2666,7 @@ var gamification = class extends import_obsidian2.Plugin {
         id: "reset-game",
         name: "reset the game",
         callback: async () => {
-          await this.resetGame(statusbarGamification);
+          await this.resetGame();
         }
       });
     }
@@ -2680,7 +2683,7 @@ var gamification = class extends import_obsidian2.Plugin {
       id: "rate-note-maturity",
       name: "Rate note majurity",
       callback: async () => {
-        await this.calculateNoteMajurity(statusbarGamification);
+        await this.calculateNoteMajurity();
       }
     });
     this.addCommand({
@@ -2691,7 +2694,7 @@ var gamification = class extends import_obsidian2.Plugin {
       }
     });
   }
-  async resetGame(statusbarGamification) {
+  async resetGame() {
     await this.removeKeysFromFrontmatter();
     this.settings.statusLevel = 1;
     this.settings.statusPoints = 0;
@@ -2700,7 +2703,7 @@ var gamification = class extends import_obsidian2.Plugin {
     this.settings.badgeBoosterFactor = 1;
     await this.saveData(this.settings);
     await this.giveStatusPoints(0);
-    await this.updateStatusBar(statusbarGamification);
+    await this.updateStatusBar(this.statusbarGamification);
     new ModalInformationbox(this.app, `Game is now reseted. Please delete the Profile Page: "${this.settings.avatarPageName}.md" manually.`).open();
   }
   async initializeGame(statusbarGamification) {
@@ -2829,7 +2832,7 @@ You received an initialisation Booster aktiv for your first level ups. Game on!`
       this.timerId = null;
     }
   }
-  async calculateNoteMajurity(statusbarGamification) {
+  async calculateNoteMajurity() {
     var _a;
     const file = this.app.workspace.getActiveFile();
     if (file == null) {
@@ -2865,6 +2868,7 @@ You received an initialisation Booster aktiv for your first level ups. Game on!`
           if (frontmatter) {
             let pointsReceived = 0;
             if (rateDirectionForStatusPoints(frontmatter["note-maturity"], noteMajurity) >= 1) {
+              console.log(`note-maturity >=1`);
               pointsReceived += pointsNoteMajurity * rateDirectionForStatusPoints(frontmatter["note-maturity"], noteMajurity);
               const newLevel = this.giveStatusPoints(pointsNoteMajurity * rateDirectionForStatusPoints("frontmatter['note-maturity']", noteMajurity));
               this.decisionIfBadge(newLevel);
@@ -2919,6 +2923,7 @@ You received an initialisation Booster aktiv for your first level ups. Game on!`
               const newLevel = this.giveStatusPoints(pointsMajurity * rateDirectionForStatusPoints("0", rateProgressiveSum));
               this.decisionIfBadge(newLevel);
             }
+            console.log(`pointsReceived: ${pointsReceived}`);
             if (pointsReceived > 0) {
               const messagePoints = getRandomMessagePoints(pointsReceived * this.settings.badgeBoosterFactor);
               new import_obsidian2.Notice(messagePoints);
@@ -2935,7 +2940,9 @@ You received an initialisation Booster aktiv for your first level ups. Game on!`
         }
       }
       new import_obsidian2.Notice("note majurity updated!");
-      await this.updateStatusBar(statusbarGamification);
+      console.log("note majurity updated!");
+      await this.updateAvatarPage(this.settings.avatarPageName);
+      await this.updateStatusBar(this.statusbarGamification);
     } else {
       console.error("file was not found to calculate majurities. Make sure one is active.");
     }

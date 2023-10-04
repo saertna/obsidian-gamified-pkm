@@ -2,15 +2,22 @@
 
 [![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/J3J6DYYS5)
 
-**🌟 Elevate Your Knowledge Management with the Obsidian Gamification Plugin! 🚀**
+## **🌟 Elevate Your Knowledge Management with the Obsidian Gamification Plugin! 🚀**
 
 Hello, fellow learners and knowledge seekers! 📚 If you're as passionate about personal growth as I am, and you believe that motivation is the key to unlocking new horizons, then you're in for something special.
 
-🔗 **Plugin Download:** [Obsidian Gamification Plugin](https://github.com/saertna/obsidian-gamified-pkm/tree/main)
+
+## Manual installation
+1. Download the latest release 🔗 **Plugin Download:** [Obsidian Gamification Plugin](https://github.com/saertna/obsidian-gamified-pkm/tree/main)
+2. Extract the obsidian-day-planner folder from the zip to your vault's plugins folder: <vault>/.obsidian/plugins/
+Note: On some machines the .obsidian folder may be hidden. On MacOS you should be able to press Command+Shift+Dot to show the folder in Finder.
+3. Reload Obsidian
+4. If prompted about Safe Mode, you can disable safe mode and enable the plugin.
 
 **Embark on a Motivational Journey!**
 
-Hey there! 👋 Imagine transforming your knowledge management into an adventure where every step forward is a celebration. Introducing the Obsidian Gamification Plugin – a tool designed to harness the motivating power of game techniques and apply it to our pursuit of knowledge.
+## Hey there! 👋 
+Imagine transforming your knowledge management into an adventure where every step forward is a celebration. Introducing the Obsidian Gamification Plugin – a tool designed to harness the motivating power of game techniques and apply it to our pursuit of knowledge.
 
 This plugin reimagines the way we interact with our knowledge base. By integrating game-like elements, it offers rewards for your progress, nurtures consistency, and makes the journey of learning a truly motivating experience. From achieving milestones to conquering challenges that shape your learning path, this plugin adds a layer of excitement to your knowledge management process.
 
