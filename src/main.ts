@@ -640,7 +640,10 @@ export default class gamification extends Plugin {
 	}
 
 	async increaseStreakbooster(increaseValue:number){
-		const newValue = parseFloat((this.settings.streakbooster + increaseValue).toFixed(1));
+		let newValue = parseFloat((this.settings.streakbooster + increaseValue).toFixed(1));
+		if(newValue > 80){
+			newValue = 80;
+		}
 		this.settings.streakbooster = newValue;
 		this.settings.streakboosterDate = true;
 		await this.saveData(this.settings)
