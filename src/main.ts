@@ -487,8 +487,9 @@ export default class gamification extends Plugin {
 			this.settings.weeklyNoteCreationTask = 0;
 			this.settings.weeklyNoteCreationDate = window.moment().subtract(1, 'day').format('DD.MM.YYYY')
 			this.decreaseStreakbooster(1)
-			this.settings.streakboosterDate = window.moment().subtract(1, 'day').format('DD.MM.YYYY')
+			//this.settings.streakboosterDate = window.moment().subtract(1, 'day').format('DD.MM.YYYY')
 			await this.saveSettings();
+			await this.updateStatusBar(this.statusbarGamification)
 			console.log(`weekly Challenge reseted`)
 			reset = true;
 		}
@@ -518,8 +519,9 @@ export default class gamification extends Plugin {
 				console.log(`${newDailyNoteCreationTask}/2 Notes created today.`)
 			} else if (newDailyNoteCreationTask == 2) {
 				this.increaseStreakbooster(0.1)
-				this.settings.streakboosterDate = window.moment().format('DD.MM.YYYY');
+				//this.settings.streakboosterDate = window.moment().format('DD.MM.YYYY');
 				await this.saveSettings();
+				await this.updateStatusBar(this.statusbarGamification)
 				await this.giveStatusPoints(pointsForDailyChallenge)
 				const message = getRandomMessageTwoNoteChallenge(pointsForDailyChallenge * (this.settings.badgeBoosterFactor + this.settings.streakbooster));
 				console.log(`daily Challenge reached! ${newDailyNoteCreationTask}/2 created.`)
@@ -564,7 +566,7 @@ export default class gamification extends Plugin {
 			console.log(`${newWeeklyNoteCreationTask}/7 Notes created in a chain.`)
 		} else if (newWeeklyNoteCreationTask == 7) {
 			this.increaseStreakbooster(1);
-			this.settings.streakboosterDate = window.moment().format('DD.MM.YYYY');
+			//this.settings.streakboosterDate = window.moment().format('DD.MM.YYYY');
 			await this.saveSettings();
 			await this.giveStatusPoints(pointsForWeeklyChallenge)
 			console.log(`Weekly Challenge reached! ${newWeeklyNoteCreationTask}/7 created in a chain.`)
@@ -580,9 +582,26 @@ export default class gamification extends Plugin {
 	async updateStatusBar(statusbar: HTMLSpanElement){
 		const currentLevel = getLevelForPoints(this.settings.statusPoints)
 		const progressbarPercent = (this.settings.statusPoints - currentLevel.points)/(currentLevel.pointsNext - currentLevel.points)*100;
-		const charNumProgressbar = 10
+		const charNumProgressbar = 10;
 		const barLength = Math.round(progressbarPercent / charNumProgressbar)
-		statusbar.setText(`🎲|lvl: ${this.settings.statusLevel} | ${this.createProgressbar(charNumProgressbar, barLength)}`)
+		const boosterFactor = this.settings.streakbooster
+		statusbar.setText(`🎲|lvl: ${this.settings.statusLevel} | ${this.createProgressbar(charNumProgressbar, barLength)}|🚀${boosterFactor}${this.rateBoosterDirection()}`)
+	}
+
+	private rateBoosterDirection(){
+		let direction = '⬆️'
+		/*const oneDayBeforeCurrent = window.moment().subtract(1, 'day'); // Calculate one day before current date
+		if(window.moment(this.settings.weeklyNoteCreationDate, 'DD.MM.YYYY').isSame(oneDayBeforeCurrent, 'day')){
+			direction = '⬆️'
+		} else {
+			direction = '⬇️'
+		}*/
+		if(this.settings.streakboosterDate){
+			direction = '⬆️';
+		} else {
+			direction = '⬇️';
+		}
+		return direction
 	}
 
 	private createProgressbar(charNumProgressbar: number, barLength: number) {
@@ -623,6 +642,7 @@ export default class gamification extends Plugin {
 	async increaseStreakbooster(increaseValue:number){
 		const newValue = parseFloat((this.settings.streakbooster + increaseValue).toFixed(1));
 		this.settings.streakbooster = newValue;
+		this.settings.streakboosterDate = true;
 		await this.saveData(this.settings)
 		console.log(`streakbooster: ${this.settings.streakbooster}`)
 	}
@@ -635,6 +655,7 @@ export default class gamification extends Plugin {
 			newValue = 0
 		}
 		this.settings.streakbooster = newValue
+		this.settings.streakboosterDate = false;
 		await this.saveData(this.settings)
 	}
 
