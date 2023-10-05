@@ -612,6 +612,23 @@ export default class gamification extends Plugin {
 		return this.updateAvatarPage(this.settings.avatarPageName)
 	}
 
+	async increaseStreakbooster(increaseValue:number){
+		this.settings.streakbooster += increaseValue
+		await this.saveData(this.settings)
+	}
+
+
+	async decreaseStreakbooster(decreaseValue:number){
+		let newValue = this.settings.streakbooster -= decreaseValue
+		if (newValue < 0){
+			newValue = 0
+		}
+		this.settings.streakbooster = newValue
+		await this.saveData(this.settings)
+	}
+
+
+
 
 	async updateAvatarPage(avatarPageName: string): Promise<boolean>{
 		const existingFile = app.vault.getAbstractFileByPath(`${avatarPageName}.md`);
