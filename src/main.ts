@@ -515,6 +515,8 @@ export default class gamification extends Plugin {
 				await this.updateAvatarPage(this.settings.avatarPageName);
 				console.log(`${newDailyNoteCreationTask}/2 Notes created today.`)
 			} else if (newDailyNoteCreationTask == 2) {
+				this.increaseStreakbooster(0.1)
+				await this.saveSettings();
 				await this.giveStatusPoints(pointsForDailyChallenge)
 				const message = getRandomMessageTwoNoteChallenge(pointsForDailyChallenge);
 				console.log(`daily Challenge reached! ${newDailyNoteCreationTask}/2 created.`)
@@ -558,6 +560,8 @@ export default class gamification extends Plugin {
 			await this.updateAvatarPage(this.settings.avatarPageName);
 			console.log(`${newWeeklyNoteCreationTask}/7 Notes created in a chain.`)
 		} else if (newWeeklyNoteCreationTask == 7) {
+			this.increaseStreakbooster(1)
+				await this.saveSettings();
 			await this.giveStatusPoints(pointsForWeeklyChallenge)
 			console.log(`Weekly Challenge reached! ${newWeeklyNoteCreationTask}/7 created in a chain.`)
 			const message = getRandomMessageWeeklyChallenge(pointsForWeeklyChallenge);
