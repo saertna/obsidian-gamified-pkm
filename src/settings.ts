@@ -25,6 +25,7 @@ export const defaultSettings: Partial<ISettings> = {
   weeklyNoteCreationTask: 0,
   weeklyNoteCreationDate: '12.08.2023',
   streakbooster: 0,
+  streakboosterAlive: false,
 };
 
 export interface ISettings {
@@ -51,6 +52,7 @@ export interface ISettings {
   weeklyNoteCreationTask: number;
   weeklyNoteCreationDate: string;
   streakbooster: number;
+  streakboosterAlive: boolean;
 }
 
 
@@ -80,6 +82,7 @@ export class GamificationPluginSettings extends PluginSettingTab {
   public weeklyNoteCreationTask: number;
   public weeklyNoteCreationDate: string;
   public streakbooster: number;
+  public streakboosterAlive: boolean;
 
 	constructor(app: App, plugin: gamification) {
 	  super(app, plugin);
