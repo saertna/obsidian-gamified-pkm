@@ -33,6 +33,10 @@ xTitle: "progress"
 legend: false
 \`\`\`
 
+|                    |       |
+| ------------------ | ----- |
+| **booster factor** | **0** |
+^boosterFactor
 |             |     |       |
 | ----------- | --- | ----- |
 | **daily Notes** | *500EP* | **0/2** |

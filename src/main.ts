@@ -623,6 +623,7 @@ export default class gamification extends Plugin {
 	async increaseStreakbooster(increaseValue:number){
 		this.settings.streakbooster += increaseValue
 		await this.saveData(this.settings)
+		console.log(`streakbooster: ${this.settings.streakbooster}`)
 	}
 
 
@@ -651,12 +652,15 @@ export default class gamification extends Plugin {
 		let reference: number | null = null;
 		let reference2: number | null = null;
 		let reference3: number | null = null;
+		let reference4: number | null = null;
 		let end: number | null = null;
 		let start: number | null = null;
 		let end2: number | null = null;
 		let start2: number | null = null;
 		let end3: number | null = null;
 		let start3: number | null = null;
+		let end4: number | null = null;
+		let start4: number | null = null;
 
 		const lines = content.split("\n");
 		for (let i = 0; i < lines.length; i++) {
@@ -674,6 +678,11 @@ export default class gamification extends Plugin {
 			if (line === "^weeklyNotesChallenge") {
 				if (reference3 === null) {
 					reference3 = i;
+				}
+			}
+			if (line === "^boosterFactor") {
+				if (reference4 === null) {
+					reference4 = i;
 				}
 			}
 		}
@@ -699,20 +708,24 @@ export default class gamification extends Plugin {
 		const dailyChallenge = '| **daily Notes** | *500EP* | **' + this.settings.dailyNoteCreationTask + '/2**   |';
 		const daysLeftInWeeklyChain : number = 7 - this.settings.weeklyNoteCreationTask;
 		const weeklyChallenge = '| **weekly Notes** | *2000EP*     |  **' + this.settings.weeklyNoteCreationTask + '/7**   |\n^weeklyNotesChallenge\n```chart\ntype: bar\nlabels: [days done in a row]\nseries:\n  - title: days to do in a row\n    data: [' + this.settings.weeklyNoteCreationTask + ']\n  - title: points to earn to level up\n    data: [' + daysLeftInWeeklyChain + ']\nxMin: 0\nxMax: 7\ntension: 0.2\nwidth: 40%\nlabelColors: false\nfill: false\nbeginAtZero: false\nbestFit: false\nbestFitTitle: undefined\nbestFitNumber: 0\nstacked: true\nindexAxis: y\nxTitle: "progress"\nlegend: false\n```';
+		const boosterFactor = '| **booster factor** | **' + this.settings.streakbooster + '** |'
 
-		if (reference != null && reference2 != null && reference3 != null){
+		if (reference != null && reference2 != null && reference3 != null && reference4 != null){
 			start = reference - 2;
 			end = reference + 24;
 			start2 = reference2 - 1 - 25; // no idea wby offset 25 is needed
 			end2 = reference2 - 25; // no idea wby offset 25 is needed
 			start3 = reference3 - 1 -25; // no idea wby offset 25 is needed
 			end3 = reference3 + 24 -25; // no idea wby offset 25 is needed
-
+			start4 = reference4 - 1 - 25; // no idea wby offset 55 is needed
+			end4 = reference4 - 25 ; // no idea wby offset 55 is needed
+			
 
 			const newLines = [...lines.slice(0, start), newPointsString, ...lines.slice(end)];
 			const newLines2 = [...newLines.slice(0, start2), dailyChallenge, ...newLines.slice(end2)];
 			const newLines3 = [...newLines2.slice(0, start3), weeklyChallenge, ...newLines2.slice(end3)];
-			await app.vault.modify(file, newLines3.join("\n"));
+			const newLines4 = [...newLines3.slice(0, start4), boosterFactor, ...newLines3.slice(end4)];
+			await app.vault.modify(file, newLines4.join("\n"));
 		}
 		return receiveBadge
 	}
