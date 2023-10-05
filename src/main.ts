@@ -445,7 +445,7 @@ export default class gamification extends Plugin {
 						}
 						console.log(`pointsReceived: ${pointsReceived}`)
 						if (pointsReceived > 0){
-							const messagePoints = getRandomMessagePoints(pointsReceived * this.settings.badgeBoosterFactor)
+							const messagePoints = getRandomMessagePoints(pointsReceived * (this.settings.badgeBoosterFactor + this.settings.streakbooster))
 							new Notice(messagePoints)
 							console.log(messagePoints)
 						}
@@ -521,7 +521,7 @@ export default class gamification extends Plugin {
 				this.settings.streakboosterDate = window.moment().format('DD.MM.YYYY');
 				await this.saveSettings();
 				await this.giveStatusPoints(pointsForDailyChallenge)
-				const message = getRandomMessageTwoNoteChallenge(pointsForDailyChallenge);
+				const message = getRandomMessageTwoNoteChallenge(pointsForDailyChallenge * (this.settings.badgeBoosterFactor + this.settings.streakbooster));
 				console.log(`daily Challenge reached! ${newDailyNoteCreationTask}/2 created.`)
 				new Notice(message)
 				console.log(message)
@@ -568,7 +568,7 @@ export default class gamification extends Plugin {
 			await this.saveSettings();
 			await this.giveStatusPoints(pointsForWeeklyChallenge)
 			console.log(`Weekly Challenge reached! ${newWeeklyNoteCreationTask}/7 created in a chain.`)
-			const message = getRandomMessageWeeklyChallenge(pointsForWeeklyChallenge);
+			const message = getRandomMessageWeeklyChallenge(pointsForWeeklyChallenge * (this.settings.badgeBoosterFactor + this.settings.streakbooster));
 			new Notice(message)
 			console.log(message)
 		} else {
