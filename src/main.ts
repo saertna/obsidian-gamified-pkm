@@ -601,11 +601,12 @@ export default class gamification extends Plugin {
 
 	async giveStatusPoints(pointsToAdd: number): Promise<boolean>{
 		let boosterFactor = 1;
+		let streakbooster = this.settings.streakbooster;
 		if (this.settings.badgeBoosterState){
 			boosterFactor = this.settings.badgeBoosterFactor;
 		}
 
-		this.settings.statusPoints = pointsToAdd * boosterFactor + this.settings.statusPoints
+		this.settings.statusPoints = pointsToAdd * (boosterFactor + streakbooster) + this.settings.statusPoints
 		await this.saveData(this.settings)
 
 		return this.updateAvatarPage(this.settings.avatarPageName)
