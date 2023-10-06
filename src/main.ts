@@ -1066,6 +1066,7 @@ class MultiSelectModal extends Modal {
     }
 
     onClose() {
+		console.log(`${this.selectedItems}`)
         this.selectedItems = [];
     }
 
@@ -1081,7 +1082,7 @@ class MultiSelectModal extends Modal {
         checkbox.addEventListener('change', () => {
             if (checkbox.checked) {
                 this.selectedItems.push(labelText);
-				console.log(`${labelText}`)
+				//console.log(`${labelText}`)
             } else {
                 this.selectedItems = this.selectedItems.filter(item => item !== labelText);
             }
@@ -1102,10 +1103,10 @@ class MultiSelectModal extends Modal {
         const submitButton = document.createElement('button');
         submitButton.innerText = buttonText;
         submitButton.onclick = () => {
-            this.close();
-            const selectedItems = this.getSelectedItems();
-			console.log(`selectedItems: ${selectedItems}`)
-            this.craftBoosterItem(selectedItems);
+            const selectedItems2 = this.getSelectedItems();
+			//console.log(`selectedItems: ${selectedItems2}`)
+            this.craftBoosterItem(selectedItems2);
+			this.close();
         };
         return submitButton;
     }
@@ -1119,103 +1120,6 @@ class MultiSelectModal extends Modal {
 	}	
 }
 
-
-
-/*function createCheckbox(labelText: string, modal: MultiSelectModal) {
-    const listItem = document.createElement('li');
-
-    const container = document.createElement('div');
-    container.className = 'modal-checkbox-container';
-
-    const checkbox = document.createElement('input');
-    checkbox.type = 'checkbox';
-    checkbox.value = labelText;
-    checkbox.addEventListener('change', function() {
-        if (this.checked) {
-            modal.getSelectedItems().push(labelText);
-        } else {
-            modal.setSelectedItems(modal.getSelectedItems().filter(item => item !== labelText));
-        }
-    });
-
-    const label = document.createElement('label');
-    label.innerText = labelText;
-
-    container.appendChild(checkbox);
-    container.appendChild(label);
-
-    listItem.appendChild(container);
-
-    return listItem;
-}*/
-
-/*function createCheckbox(labelText: string, modal: MultiSelectModal) {
-    const listItem = document.createElement('li');
-
-    const container = document.createElement('div');
-    container.className = 'modal-checkbox-container';
-
-    const checkbox = document.createElement('input');
-    checkbox.type = 'checkbox';
-    checkbox.value = labelText;
-    checkbox.addEventListener('change', function() {
-        modal.updateSelectedItems(labelText, this.checked);
-    });
-
-    const label = document.createElement('label');
-    label.innerText = labelText;
-
-    container.appendChild(checkbox);
-    container.appendChild(label);
-
-    listItem.appendChild(container);
-
-    return listItem;
-}*/
-
-/*function createCheckbox(labelText: string) {
-    const listItem = document.createElement('li');
-
-    const container = document.createElement('div');
-    container.className = 'modal-checkbox-container';
-
-    const checkbox = document.createElement('input');
-    checkbox.type = 'checkbox';
-    checkbox.value = labelText;
-    checkbox.addEventListener('change', () => {
-        if (checkbox.checked) {
-            this.selectedItems.push(labelText);
-        } else {
-            this.selectedItems = this.selectedItems.filter(item => item !== labelText);
-        }
-    });
-
-    const label = document.createElement('label');
-    label.innerText = labelText;
-
-    container.appendChild(checkbox);
-    container.appendChild(label);
-
-    listItem.appendChild(container);
-
-    return listItem;
-}*/
-
-/*function createSubmitButton(modal: MultiSelectModal): HTMLButtonElement {
-    const submitButton = document.createElement('button');
-    submitButton.innerText = 'Craft Booster Item';
-    submitButton.onclick = () => {
-        modal.close();
-        const selectedItems = modal.getSelectedItems();
-		console.log(`selectedItmes: ${selectedItems}`)
-        craftBoosterItem(selectedItems);
-    };
-    return submitButton;
-}*/
-
-/*function craftBoosterItem(selectedItems:string[]) {
-    console.log('Crafted Item:', selectedItems.join(', '));
-}*/
 
 
 class ModalBooster extends Modal {
