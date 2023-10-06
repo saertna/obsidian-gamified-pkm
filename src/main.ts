@@ -1,3 +1,17 @@
+const style = document.createElement('style');
+style.textContent = `
+  .modal-checkbox-container {
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+  }
+
+  .modal-checkbox-container input[type="checkbox"] {
+    margin-right: 5px;
+  }
+`;
+
+document.head.append(style);
 import {App, MarkdownView, Modal, Notice, Plugin, TFile, Vault} from 'obsidian';
 import {defaultSettings, GamificationPluginSettings} from './settings';
 import format from 'date-fns/format';
@@ -1057,7 +1071,8 @@ class MultiSelectModal extends Modal {
         return this.selectedItems;
     }
 }
-function createCheckbox(labelText: string): HTMLDivElement {
+
+/*function createCheckbox(labelText: string): HTMLDivElement {
     const container = document.createElement('div');
     container.className = 'checkbox-container';
 
@@ -1079,7 +1094,62 @@ function createCheckbox(labelText: string): HTMLDivElement {
     container.appendChild(label);
 
     return container;
+}*/
+/*function createCheckbox(labelText: string) {
+    const container = document.createElement('div');
+    container.className = 'checkbox-container';
+
+    const checkbox = document.createElement('input');
+    checkbox.type = 'checkbox';
+    checkbox.value = labelText;
+
+    const label = document.createElement('label');
+    label.innerText = labelText;
+
+    container.appendChild(checkbox);
+    container.appendChild(label);
+
+    return container;
+}*/
+/*function createCheckbox(labelText: string) {
+    const container = document.createElement('div');
+    container.className = 'checkbox-container';
+
+    const checkbox = document.createElement('input');
+    checkbox.type = 'checkbox';
+    checkbox.value = labelText;
+
+    const label = document.createElement('label');
+    label.innerText = labelText;
+
+    container.appendChild(checkbox);
+    container.appendChild(label);
+
+    return container;
+}*/
+function createCheckbox(labelText: string) {
+    const listItem = document.createElement('li');
+
+    const container = document.createElement('div');
+    container.className = 'modal-checkbox-container';
+
+    const checkbox = document.createElement('input');
+    checkbox.type = 'checkbox';
+    checkbox.value = labelText;
+
+    const label = document.createElement('label');
+    label.innerText = labelText;
+
+    container.appendChild(checkbox);
+    container.appendChild(label);
+
+    listItem.appendChild(container);
+
+    return listItem;
 }
+
+
+
 
 function createSubmitButton(modal: MultiSelectModal): HTMLButtonElement {
     const submitButton = document.createElement('button');

@@ -1,8 +1,14 @@
-/* styles.css */
 .checkbox-container {
     margin-bottom: 10px;
+    display: flex; /* Align items horizontally */
+    align-items: center; /* Center items vertically */
 }
 
 .checkbox-container input[type="checkbox"] {
     margin-right: 5px;
+}
+
+.my-modal li {
+    margin-bottom: 10px;
+    list-style-type: none; /* Remove default list styles */
 }
