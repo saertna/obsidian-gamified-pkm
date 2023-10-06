@@ -1066,8 +1066,7 @@ class MultiSelectModal extends Modal {
     }
 
     onClose() {
-		console.log(`${this.selectedItems}`)
-        this.selectedItems = [];
+		this.selectedItems = [];
     }
 
     private createCheckbox(labelText: string) {
@@ -1082,7 +1081,6 @@ class MultiSelectModal extends Modal {
         checkbox.addEventListener('change', () => {
             if (checkbox.checked) {
                 this.selectedItems.push(labelText);
-				//console.log(`${labelText}`)
             } else {
                 this.selectedItems = this.selectedItems.filter(item => item !== labelText);
             }
@@ -1104,8 +1102,7 @@ class MultiSelectModal extends Modal {
         submitButton.innerText = buttonText;
         submitButton.onclick = () => {
             const selectedItems2 = this.getSelectedItems();
-			//console.log(`selectedItems: ${selectedItems2}`)
-            this.craftBoosterItem(selectedItems2);
+			this.craftBoosterItem(selectedItems2);
 			this.close();
         };
         return submitButton;
@@ -1116,7 +1113,7 @@ class MultiSelectModal extends Modal {
     }
 
     private craftBoosterItem(selectedItems: string[]) {
-		console.log('Crafted Item:', selectedItems.join(', '));
+		console.log('Selected:', selectedItems.join(', '));
 	}	
 }
 
