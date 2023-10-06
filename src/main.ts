@@ -56,6 +56,20 @@ export default class gamification extends Plugin {
 	private statusBarItem = this.addStatusBarItem();
 	private statusbarGamification = this.statusBarItem.createEl("span", { text: "" });
 
+
+	getSetting(key) {
+        // Retrieve a specific setting
+		//this.settings['boosterIncredients']
+		//const key = 'boosterIncredients'
+        return this.settings[key];
+    }
+
+    setSetting(key, value) {
+        // Set a specific setting
+        this.settings[key] = value;
+        this.saveSettings();
+    }
+
 	async onload() {
 		console.log('obsidian-pkm-gamification loaded!');
 
@@ -111,7 +125,7 @@ export default class gamification extends Plugin {
 				//await this.resetDailyGoals()
 
 
-				new ModalBooster(this.app, ` `).open();
+				new ModalBooster(this.app, ` `, this).open();
 
 			});
 		}
@@ -615,6 +629,7 @@ export default class gamification extends Plugin {
 		await this.saveData(this.settings);
 	}
 
+
 	async giveStatusPoints(pointsToAdd: number): Promise<boolean>{
 		let boosterFactor = 1;
 		if (this.settings.badgeBoosterState){
@@ -1022,8 +1037,6 @@ function isOneDayBefore(inputDate: Moment): boolean {
 }
 
 
-
-
 async function createAvatarFile(app: App, fileName: string): Promise<void> {
 	//settings: GamificationPluginSettings;
 	// Define the file name and content
@@ -1040,7 +1053,9 @@ async function createAvatarFile(app: App, fileName: string): Promise<void> {
 
 }
 
-
+function stringToList(input: string): string[] {
+    return input.split(',');
+}
 class MultiSelectModal extends Modal {
     private readonly items: string[];
     private selectedItems: string[] = [];
@@ -1145,10 +1160,12 @@ class MultiSelectModal extends Modal {
 
 class ModalBooster extends Modal {
     private readonly displayText: string;
+	private readonly gamificationInstance: gamification;
 
-    constructor(app: App, displayText: string) {
+    constructor(app: App, displayText: string, gamificationInstance: gamification) {
         super(app);
         this.displayText = displayText;
+		this.gamificationInstance = gamificationInstance;
     }
 
     onOpen() {
@@ -1159,7 +1176,7 @@ class ModalBooster extends Modal {
         const button = document.createElement('button');
         button.innerText = 'Open Crating Table';
         button.onclick = () => {
-            const items = [
+            /*const items = [
                 'Whimsical Wisdom Crystals',
                 'Curiosity Coins',
                 'Eureka Energy Orbs',
@@ -1169,6 +1186,9 @@ class ModalBooster extends Modal {
                 'Metaphorical Medals',
                 'Curious Cat Companion'
             ];
+			*/
+			const items = stringToList(this.gamificationInstance.getSetting('boosterIncredients'))
+			
 
             const multiSelectModal = new MultiSelectModal(this.app, items,'Craft Booster Item');
             multiSelectModal.open();

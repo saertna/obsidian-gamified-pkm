@@ -24,6 +24,7 @@ export const defaultSettings: Partial<ISettings> = {
   dailyNoteCreationDate: '12.08.2023',
   weeklyNoteCreationTask: 0,
   weeklyNoteCreationDate: '12.08.2023',
+  boosterIncredients: 'Whimsical Wisdom Crystals,Curiosity Coins,Eureka Energy Orbs,Serendipity Stars,Creativity Crystals,Discovery Dice,Metaphorical Medals,Curious Cat Companion,Another One'
 };
 
 export interface ISettings {
@@ -49,6 +50,7 @@ export interface ISettings {
   dailyNoteCreationDate: string;
   weeklyNoteCreationTask: number,
   weeklyNoteCreationDate: string,
+  boosterIncredients: string,
 }
 
 
@@ -77,6 +79,7 @@ export class GamificationPluginSettings extends PluginSettingTab {
   public dailyNoteCreationDate: string;
   public weeklyNoteCreationTask: number;
   public weeklyNoteCreationDate: string;
+  public boosterIncredients: string;
 
 	constructor(app: App, plugin: gamification) {
 	  super(app, plugin);
