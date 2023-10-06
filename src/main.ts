@@ -484,9 +484,11 @@ export default class gamification extends Plugin {
 			reset = true;
 		}
 		if(!isOneDayBefore(window.moment(this.settings.weeklyNoteCreationDate, 'DD.MM.YYYY')) && !isSameDay(window.moment(this.settings.weeklyNoteCreationDate, 'DD.MM.YYYY'))){
+			const daysPassed = window.moment().diff(window.moment(this.settings.weeklyNoteCreationDate, 'DD.MM.YYYY'), 'days') - 1; //today is still a chance. 
 			this.settings.weeklyNoteCreationTask = 0;
 			this.settings.weeklyNoteCreationDate = window.moment().subtract(1, 'day').format('DD.MM.YYYY')
-			this.decreaseStreakbooster(1)
+			this.decreaseStreakbooster(daysPassed)
+			console.log(`${daysPassed} days passed`)
 			//this.settings.streakboosterDate = window.moment().subtract(1, 'day').format('DD.MM.YYYY')
 			await this.saveSettings();
 			await this.updateStatusBar(this.statusbarGamification)
