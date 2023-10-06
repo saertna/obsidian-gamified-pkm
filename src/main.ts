@@ -97,7 +97,7 @@ export default class gamification extends Plugin {
 				//await this.resetDailyGoals()
 
 
-				new ModalInformationbox(this.app, ``).open();
+				new ModalInformationbox(this.app, ` `).open();
 
 			});
 		}
