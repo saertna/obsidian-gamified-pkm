@@ -1069,7 +1069,7 @@ class MultiSelectModal extends Modal {
 		this.selectedItems = [];
     }
 
-    private createCheckbox(labelText: string) {
+/*    private createCheckbox(labelText: string) {
         const listItem = document.createElement('li');
 
         const container = document.createElement('div');
@@ -1095,7 +1095,31 @@ class MultiSelectModal extends Modal {
         listItem.appendChild(container);
 
         return listItem;
-    }
+    }*/
+	private createCheckbox(labelText: string) {
+		const container = document.createElement('div');
+		container.className = 'modal-checkbox-container';
+	
+		const checkbox = document.createElement('input');
+		checkbox.type = 'checkbox';
+		checkbox.value = labelText;
+		checkbox.addEventListener('change', () => {
+            if (checkbox.checked) {
+                this.selectedItems.push(labelText);
+            } else {
+                this.selectedItems = this.selectedItems.filter(item => item !== labelText);
+            }
+        });
+	
+		const label = document.createElement('label');
+		label.innerText = labelText;
+	
+		container.appendChild(checkbox);
+		container.appendChild(label);
+	
+		return container;
+	}
+	
 
     private createSubmitButton(buttonText:string) {
         const submitButton = document.createElement('button');
