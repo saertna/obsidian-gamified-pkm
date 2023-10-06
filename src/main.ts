@@ -1044,43 +1044,84 @@ async function createAvatarFile(app: App, fileName: string): Promise<void> {
 class MultiSelectModal extends Modal {
     private readonly items: string[];
     private selectedItems: string[] = [];
+	private buttonText: string;
 
-    constructor(app: App, items: string[]) {
+    constructor(app: App, items: string[], buttonText: string) {
         super(app);
         this.items = items;
+		this.buttonText = buttonText;
     }
 
     onOpen() {
-		const { contentEl } = this;
-		contentEl.empty();
-	
-		const modal = this;  // Store 'this' in a variable
-	
-		this.items.forEach(item => {
-			const checkboxContainer = createCheckbox(item, modal);
-			contentEl.appendChild(checkboxContainer);
-		});
-	
-		const submitButton = createSubmitButton(this);
-		contentEl.appendChild(submitButton);
-	}
-	
-	
+        const { contentEl } = this;
+        contentEl.empty();
+
+        this.items.forEach(item => {
+            const listItem = this.createCheckbox(item);
+            contentEl.appendChild(listItem);
+        });
+
+        const submitButton = this.createSubmitButton(this.buttonText);
+        contentEl.appendChild(submitButton);
+    }
 
     onClose() {
         this.selectedItems = [];
     }
 
-    getSelectedItems() {
-		console.log(`selectedItems: ${this.selectedItems}`)
+    private createCheckbox(labelText: string) {
+        const listItem = document.createElement('li');
+
+        const container = document.createElement('div');
+        container.className = 'modal-checkbox-container';
+
+        const checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+        checkbox.value = labelText;
+        checkbox.addEventListener('change', () => {
+            if (checkbox.checked) {
+                this.selectedItems.push(labelText);
+				console.log(`${labelText}`)
+            } else {
+                this.selectedItems = this.selectedItems.filter(item => item !== labelText);
+            }
+        });
+
+        const label = document.createElement('label');
+        label.innerText = labelText;
+
+        container.appendChild(checkbox);
+        container.appendChild(label);
+
+        listItem.appendChild(container);
+
+        return listItem;
+    }
+
+    private createSubmitButton(buttonText:string) {
+        const submitButton = document.createElement('button');
+        submitButton.innerText = buttonText;
+        submitButton.onclick = () => {
+            this.close();
+            const selectedItems = this.getSelectedItems();
+			console.log(`selectedItems: ${selectedItems}`)
+            this.craftBoosterItem(selectedItems);
+        };
+        return submitButton;
+    }
+
+    private getSelectedItems() {
         return this.selectedItems;
     }
 
-	
+    private craftBoosterItem(selectedItems: string[]) {
+		console.log('Crafted Item:', selectedItems.join(', '));
+	}	
 }
 
 
-function createCheckbox(labelText: string, modal: MultiSelectModal) {
+
+/*function createCheckbox(labelText: string, modal: MultiSelectModal) {
     const listItem = document.createElement('li');
 
     const container = document.createElement('div');
@@ -1093,7 +1134,7 @@ function createCheckbox(labelText: string, modal: MultiSelectModal) {
         if (this.checked) {
             modal.getSelectedItems().push(labelText);
         } else {
-            //modal.setSelectedItems(modal.getSelectedItems().filter(item => item !== labelText));
+            modal.setSelectedItems(modal.getSelectedItems().filter(item => item !== labelText));
         }
     });
 
@@ -1106,9 +1147,31 @@ function createCheckbox(labelText: string, modal: MultiSelectModal) {
     listItem.appendChild(container);
 
     return listItem;
-}
+}*/
 
+/*function createCheckbox(labelText: string, modal: MultiSelectModal) {
+    const listItem = document.createElement('li');
 
+    const container = document.createElement('div');
+    container.className = 'modal-checkbox-container';
+
+    const checkbox = document.createElement('input');
+    checkbox.type = 'checkbox';
+    checkbox.value = labelText;
+    checkbox.addEventListener('change', function() {
+        modal.updateSelectedItems(labelText, this.checked);
+    });
+
+    const label = document.createElement('label');
+    label.innerText = labelText;
+
+    container.appendChild(checkbox);
+    container.appendChild(label);
+
+    listItem.appendChild(container);
+
+    return listItem;
+}*/
 
 /*function createCheckbox(labelText: string) {
     const listItem = document.createElement('li');
@@ -1138,12 +1201,7 @@ function createCheckbox(labelText: string, modal: MultiSelectModal) {
     return listItem;
 }*/
 
-
-
-
-
-
-function createSubmitButton(modal: MultiSelectModal): HTMLButtonElement {
+/*function createSubmitButton(modal: MultiSelectModal): HTMLButtonElement {
     const submitButton = document.createElement('button');
     submitButton.innerText = 'Craft Booster Item';
     submitButton.onclick = () => {
@@ -1153,11 +1211,11 @@ function createSubmitButton(modal: MultiSelectModal): HTMLButtonElement {
         craftBoosterItem(selectedItems);
     };
     return submitButton;
-}
+}*/
 
-function craftBoosterItem(selectedItems:string[]) {
+/*function craftBoosterItem(selectedItems:string[]) {
     console.log('Crafted Item:', selectedItems.join(', '));
-}
+}*/
 
 
 class ModalBooster extends Modal {
@@ -1187,11 +1245,28 @@ class ModalBooster extends Modal {
                 'Curious Cat Companion'
             ];
 
-            const multiSelectModal = new MultiSelectModal(this.app, items);
+            const multiSelectModal = new MultiSelectModal(this.app, items,'Craft Booster Item');
+            multiSelectModal.open();
+        };
+
+		const button2 = document.createElement('button');
+        button2.innerText = 'Open Booster board';
+        button2.onclick = () => {
+            const items2 = [
+                'Booster 1',
+                'Booster 2',
+                'Booster 3',
+                'Booster 4',
+                'Booster 5',
+                'Booster 6'
+            ];
+
+            const multiSelectModal = new MultiSelectModal(this.app, items2,'use Booster');
             multiSelectModal.open();
         };
 
         contentEl.appendChild(button);
+		contentEl.appendChild(button2);
     }
 
     onClose() {
