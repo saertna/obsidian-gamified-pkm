@@ -1069,7 +1069,7 @@ class MultiSelectModal extends Modal {
 		this.buttonText = buttonText;
     }
 
-    onOpen() {
+    /*onOpen() {
         const { contentEl } = this;
         contentEl.empty();
 
@@ -1080,12 +1080,42 @@ class MultiSelectModal extends Modal {
 
         const submitButton = this.createSubmitButton(this.buttonText);
         contentEl.appendChild(submitButton);
-    }
+    }*/
+	onOpen() {
+		const { contentEl } = this;
+		contentEl.empty();
+	
+		this.items.forEach(item => {
+			const listItem = this.createCheckbox(item);
+			contentEl.appendChild(listItem);
+		});
+	
+		const submitButton = this.createSubmitButton(this.buttonText);
+		contentEl.appendChild(submitButton);
+	}
+	
+	
 
     onClose() {
 		this.selectedItems = [];
     }
 
+	incrementItem(item: string) {
+        // Check if the item is already in the selected items
+        const selectedItemCount = this.selectedItems.filter(selectedItem => selectedItem === item).length;
+
+        if (selectedItemCount < 5) {
+            this.selectedItems.push(item);
+        }
+    }
+
+    decrementItem(item: string) {
+        const itemIndex = this.selectedItems.indexOf(item);
+
+        if (itemIndex > -1) {
+            this.selectedItems.splice(itemIndex, 1);
+        }
+    }
 
 	private createCheckbox(labelText: string) {
 		const container = document.createElement('div');
@@ -1095,21 +1125,38 @@ class MultiSelectModal extends Modal {
 		checkbox.type = 'checkbox';
 		checkbox.value = labelText;
 		checkbox.addEventListener('change', () => {
-            if (checkbox.checked) {
-                this.selectedItems.push(labelText);
-            } else {
-                this.selectedItems = this.selectedItems.filter(item => item !== labelText);
-            }
-        });
+			if (checkbox.checked) {
+				this.selectedItems.push(labelText);
+			} else {
+				this.selectedItems = this.selectedItems.filter(item => item !== labelText);
+			}
+		});
 	
 		const label = document.createElement('label');
 		label.innerText = labelText;
 	
+		// Create increment button
+		const incrementButton = document.createElement('button');
+		incrementButton.innerText = '+';
+		incrementButton.onclick = () => {
+			this.incrementItem(labelText);
+		};
+	
+		// Create decrement button
+		const decrementButton = document.createElement('button');
+		decrementButton.innerText = '-';
+		decrementButton.onclick = () => {
+			this.decrementItem(labelText);
+		};
+	
 		container.appendChild(checkbox);
 		container.appendChild(label);
+		container.appendChild(incrementButton);
+		container.appendChild(decrementButton);
 	
 		return container;
 	}
+	
 	
 
     private createSubmitButton(buttonText:string) {
