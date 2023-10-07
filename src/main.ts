@@ -1069,24 +1069,13 @@ class MultiSelectModal extends Modal {
 		this.buttonText = buttonText;
     }
 
-    /*onOpen() {
-        const { contentEl } = this;
-        contentEl.empty();
-
-        this.items.forEach(item => {
-            const listItem = this.createCheckbox(item);
-            contentEl.appendChild(listItem);
-        });
-
-        const submitButton = this.createSubmitButton(this.buttonText);
-        contentEl.appendChild(submitButton);
-    }*/
 	onOpen() {
 		const { contentEl } = this;
 		contentEl.empty();
 	
 		this.items.forEach(item => {
-			const listItem = this.createCheckbox(item);
+			const stock = 5; // Replace with the actual stock value
+			const listItem = this.createCheckbox(item, stock);
 			contentEl.appendChild(listItem);
 		});
 	
@@ -1095,29 +1084,34 @@ class MultiSelectModal extends Modal {
 	}
 	
 	
+	
+	
 
     onClose() {
 		this.selectedItems = [];
     }
 
 	incrementItem(item: string) {
-        // Check if the item is already in the selected items
-        const selectedItemCount = this.selectedItems.filter(selectedItem => selectedItem === item).length;
+		const selectedItemCount = this.selectedItems.filter(selectedItem => selectedItem === item).length;
+		const stock = 5; // Replace with the actual stock value
+	
+		if (selectedItemCount < 5 && stock > 0) {
+			this.selectedItems.push(item);
+			this.updateQuantityDisplay(item);
+		}
+	}
+	
+	decrementItem(item: string) {
+		const itemIndex = this.selectedItems.indexOf(item);
+	
+		if (itemIndex > -1) {
+			this.selectedItems.splice(itemIndex, 1);
+			this.updateQuantityDisplay(item);
+		}
+	}
+	
 
-        if (selectedItemCount < 5) {
-            this.selectedItems.push(item);
-        }
-    }
-
-    decrementItem(item: string) {
-        const itemIndex = this.selectedItems.indexOf(item);
-
-        if (itemIndex > -1) {
-            this.selectedItems.splice(itemIndex, 1);
-        }
-    }
-
-	private createCheckbox(labelText: string) {
+	private createCheckbox(labelText: string, stock: number) {
 		const container = document.createElement('div');
 		container.className = 'modal-checkbox-container';
 	
@@ -1130,32 +1124,57 @@ class MultiSelectModal extends Modal {
 			} else {
 				this.selectedItems = this.selectedItems.filter(item => item !== labelText);
 			}
+			this.updateQuantityDisplay(labelText);
 		});
 	
 		const label = document.createElement('label');
-		label.innerText = labelText;
+		label.innerText = `${labelText} (${stock})`;
 	
-		// Create increment button
 		const incrementButton = document.createElement('button');
 		incrementButton.innerText = '+';
 		incrementButton.onclick = () => {
 			this.incrementItem(labelText);
+			this.updateQuantityDisplay(labelText);
 		};
 	
-		// Create decrement button
 		const decrementButton = document.createElement('button');
 		decrementButton.innerText = '-';
 		decrementButton.onclick = () => {
 			this.decrementItem(labelText);
+			this.updateQuantityDisplay(labelText);
 		};
+	
+		const remainingStock = document.createElement('span');
+		remainingStock.innerText = `Remaining: ${stock}`;
+	
+		const selectedQuantity = document.createElement('span');
+		selectedQuantity.innerText = `Selected: 0`;
 	
 		container.appendChild(checkbox);
 		container.appendChild(label);
 		container.appendChild(incrementButton);
 		container.appendChild(decrementButton);
+		container.appendChild(remainingStock);
+		container.appendChild(selectedQuantity);
 	
 		return container;
 	}
+	
+	
+	private updateQuantityDisplay(labelText: string) {
+		const checkbox = document.querySelector(`input[value="${labelText}"]`) as HTMLInputElement;
+		const container = checkbox.parentElement as HTMLDivElement;
+	
+		const remainingStock = container.querySelector('span:nth-child(3)') as HTMLSpanElement;
+		const selectedQuantity = container.querySelector('span:nth-child(4)') as HTMLSpanElement;
+	
+		const stock = parseInt(remainingStock.innerText.match(/\d+/)[0], 10);
+		const selected = this.selectedItems.filter(item => item === labelText).length;
+	
+		remainingStock.innerText = `Remaining: ${stock - selected}`;
+		selectedQuantity.innerText = `Selected: ${selected}`;
+	}
+	
 	
 	
 
