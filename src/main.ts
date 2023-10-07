@@ -1115,18 +1115,6 @@ class MultiSelectModal extends Modal {
 		const container = document.createElement('div');
 		container.className = 'modal-checkbox-container';
 	
-		const checkbox = document.createElement('input');
-		checkbox.type = 'checkbox';
-		checkbox.value = labelText;
-		checkbox.addEventListener('change', () => {
-			if (checkbox.checked) {
-				this.selectedItems.push(labelText);
-			} else {
-				this.selectedItems = this.selectedItems.filter(item => item !== labelText);
-			}
-			this.updateQuantityDisplay(labelText);
-		});
-	
 		const label = document.createElement('label');
 		label.innerText = `${labelText} (${stock})`;
 	
@@ -1150,7 +1138,6 @@ class MultiSelectModal extends Modal {
 		const selectedQuantity = document.createElement('span');
 		selectedQuantity.innerText = `Selected: 0`;
 	
-		container.appendChild(checkbox);
 		container.appendChild(label);
 		container.appendChild(incrementButton);
 		container.appendChild(decrementButton);
@@ -1161,7 +1148,10 @@ class MultiSelectModal extends Modal {
 	}
 	
 	
+	
 	private updateQuantityDisplay(labelText: string) {
+		console.log('updateQuantityDisplay called with label:', labelText);
+		
 		const checkbox = document.querySelector(`input[value="${labelText}"]`) as HTMLInputElement;
 		const container = checkbox.parentElement as HTMLDivElement;
 	
