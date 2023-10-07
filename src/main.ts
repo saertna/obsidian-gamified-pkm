@@ -1053,6 +1053,8 @@ async function createAvatarFile(app: App, fileName: string): Promise<void> {
 
 }
 
+
+
 function stringToList(input: string): string[] {
     return input.split(',');
 }
@@ -1084,33 +1086,7 @@ class MultiSelectModal extends Modal {
 		this.selectedItems = [];
     }
 
-/*    private createCheckbox(labelText: string) {
-        const listItem = document.createElement('li');
 
-        const container = document.createElement('div');
-        container.className = 'modal-checkbox-container';
-
-        const checkbox = document.createElement('input');
-        checkbox.type = 'checkbox';
-        checkbox.value = labelText;
-        checkbox.addEventListener('change', () => {
-            if (checkbox.checked) {
-                this.selectedItems.push(labelText);
-            } else {
-                this.selectedItems = this.selectedItems.filter(item => item !== labelText);
-            }
-        });
-
-        const label = document.createElement('label');
-        label.innerText = labelText;
-
-        container.appendChild(checkbox);
-        container.appendChild(label);
-
-        listItem.appendChild(container);
-
-        return listItem;
-    }*/
 	private createCheckbox(labelText: string) {
 		const container = document.createElement('div');
 		container.className = 'modal-checkbox-container';
@@ -1176,19 +1152,8 @@ class ModalBooster extends Modal {
         const button = document.createElement('button');
         button.innerText = 'Open Crating Table';
         button.onclick = () => {
-            /*const items = [
-                'Whimsical Wisdom Crystals',
-                'Curiosity Coins',
-                'Eureka Energy Orbs',
-                'Serendipity Stars',
-                'Creativity Crystals',
-                'Discovery Dice',
-                'Metaphorical Medals',
-                'Curious Cat Companion'
-            ];
-			*/
-			const items = stringToList(this.gamificationInstance.getSetting('boosterIncredients'))
-			
+            //const items = stringToList(this.gamificationInstance.getSetting('boosterIncredients'))
+			const items = this.readIncredients();
 
             const multiSelectModal = new MultiSelectModal(this.app, items,'Craft Booster Item');
             multiSelectModal.open();
@@ -1218,7 +1183,24 @@ class ModalBooster extends Modal {
         const { contentEl } = this;
         contentEl.empty();
     }
+
+	private readIncredients(): string[] {
+		// read from settings the numbers and provide them as string
+		const nexusNode = 'Nexus Node (' + this.gamificationInstance.getSetting('nexusNode') + ')'
+		const connectionCrystal = 'Connection Crystal (' + this.gamificationInstance.getSetting('connectionCrystal') + ')'
+		const masteryScroll = 'Mastery Scroll (' + this.gamificationInstance.getSetting('masteryScroll') + ')'
+		const insightPrism = 'Insight Prism (' + this.gamificationInstance.getSetting('insightPrism') + ')'
+		const reflectiveEssence = 'Reflective Essence (' + this.gamificationInstance.getSetting('reflectiveEssence') + ')'
+		const amplificationCrystal = 'Amplification Crystal (' + this.gamificationInstance.getSetting('amplificationCrystal') + ')'
+		const creativeCatalyst = 'Creative Catalyst (' + this.gamificationInstance.getSetting('creativeCatalyst') + ')'
+		const precisionLens = 'Precision Lens (' + this.gamificationInstance.getSetting('precisionLens') + ')'
+		const sum = [nexusNode,connectionCrystal,masteryScroll,insightPrism,reflectiveEssence,amplificationCrystal,creativeCatalyst,precisionLens]
+		console.log(`the incredient amount is: ${sum}`)
+		return sum;
+	}
 }
+
+
 
 
 class ModalInformationbox extends Modal {
