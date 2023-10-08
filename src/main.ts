@@ -58,14 +58,14 @@ export default class gamification extends Plugin {
 	private statusbarGamification = this.statusBarItem.createEl("span", { text: "" });
 
 
-	getSetting(key) {
+	getSetting(key: string) {
         // Retrieve a specific setting
 		//this.settings['boosterIncredients']
 		//const key = 'boosterIncredients'
         return this.settings[key];
     }
 
-    setSetting(key, value) {
+    setSetting(key: string, value: number) {
         // Set a specific setting
         this.settings[key] = value;
         this.saveSettings();

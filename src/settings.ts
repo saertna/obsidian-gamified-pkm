@@ -108,6 +108,38 @@ export class GamificationPluginSettings extends PluginSettingTab {
 	constructor(app: App, plugin: gamification) {
 	  super(app, plugin);
 	  this.plugin = plugin;
+	  // Initialize the properties
+	  /*this.enableInitCommand = defaultSettings.enableInitCommand;
+	  this.bindEnter = defaultSettings.bindEnter;
+	  this.bindTab = defaultSettings.bindTab;
+	  this.avatarPageName = defaultSettings.avatarPageName;
+	  this.tagsExclude = defaultSettings.tagsExclude;
+	  this.folderExclude = defaultSettings.folderExclude;
+	  this.progressiveSumLayer2 = defaultSettings.progressiveSumLayer2;
+	  this.progressiveSumLayer3 = defaultSettings.progressiveSumLayer3;
+	  this.numAllFiles = defaultSettings.numAllFiles;
+	  this.numAllFilesCount = defaultSettings.numAllFilesCount;
+	  this.chartReduzierungMonate = defaultSettings.chartReduzierungMonate;
+	  this.statusPoints = defaultSettings.statusPoints;
+	  this.statusLevel = defaultSettings.statusLevel;
+	  this.xpForNextLevel = defaultSettings.xpForNextLevel;
+	  this.gamificationStartDate = defaultSettings.gamificationStartDate;
+	  this.badgeBoosterState = defaultSettings.badgeBoosterState;
+	  this.badgeBoosterFactor = defaultSettings.badgeBoosterFactor;
+	  this.debug = defaultSettings.debug;
+	  this.dailyNoteCreationTask = defaultSettings.dailyNoteCreationTask;
+	  this.dailyNoteCreationDate = defaultSettings.dailyNoteCreationDate;
+	  this.weeklyNoteCreationTask = defaultSettings.weeklyNoteCreationTask;
+	  this.weeklyNoteCreationDate = defaultSettings.weeklyNoteCreationDate;
+	  this.boosterIncredients = defaultSettings.boosterIncredients;
+	  this.nexusNode = defaultSettings.nexusNode;
+	  this.connectionCrystal = defaultSettings.connectionCrystal;
+	  this.masteryScroll = defaultSettings.masteryScroll;
+	  this.insightPrism = defaultSettings.insightPrism;
+	  this.reflectiveEssence = defaultSettings.reflectiveEssence;
+	  this.amplificationCrystal = defaultSettings.amplificationCrystal;
+	  this.creativeCatalyst = defaultSettings.creativeCatalyst;
+	  this.precisionLens = defaultSettings.precisionLens;*/
 	}
   
 	public display(): void {
