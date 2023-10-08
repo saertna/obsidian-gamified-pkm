@@ -92,7 +92,7 @@ export default class gamification extends Plugin {
 
 
 		if (this.settings.debug){
-			this.addRibbonIcon("accessibility", "change text formatting", async () => {
+			this.addRibbonIcon("accessibility", "crafting", async () => {
 
 				// const pointsReceived = 500;
 				// new ModalInformationbox(this.app, `Finalized gamification initialization!\nCongratulation, you earned ${pointsReceived} Points!\n\nCheck the Profile Page: \"${this.settings.avatarPageName}.md\".`).open();
@@ -126,6 +126,9 @@ export default class gamification extends Plugin {
 
 
 				new ModalBooster(this.app, ` `, this).open();
+				
+				
+
 
 			});
 		}
@@ -1095,7 +1098,14 @@ class MultiSelectModal extends Modal {
 		this.selectedItems = [];
     }
 
-
+	updateStock(item: string, stock: number) {
+        this.remainingStock[item] = stock;
+        // Optionally, you can also update the display here if the modal is currently open
+        const labelElement = document.querySelector(`.${item.replace(' ','-')}`);
+        if (labelElement) {
+            this.updateQuantityDisplay(item);
+        }
+    }
 
 
 	incrementItem(item: string) {
@@ -1274,20 +1284,40 @@ class ModalBooster extends Modal {
         contentEl.empty();
     }
 
+	
 	private readIncredients(): string[] {
-		// read from settings the numbers and provide them as string
-		/*const nexusNode = 'Nexus Node (' + this.gamificationInstance.getSetting('nexusNode') + ')'
-		const connectionCrystal = 'Connection Crystal (' + this.gamificationInstance.getSetting('connectionCrystal') + ')'
-		const masteryScroll = 'Mastery Scroll (' + this.gamificationInstance.getSetting('masteryScroll') + ')'
-		const insightPrism = 'Insight Prism (' + this.gamificationInstance.getSetting('insightPrism') + ')'
-		const reflectiveEssence = 'Reflective Essence (' + this.gamificationInstance.getSetting('reflectiveEssence') + ')'
-		const amplificationCrystal = 'Amplification Crystal (' + this.gamificationInstance.getSetting('amplificationCrystal') + ')'
-		const creativeCatalyst = 'Creative Catalyst (' + this.gamificationInstance.getSetting('creativeCatalyst') + ')'
-		const precisionLens = 'Precision Lens (' + this.gamificationInstance.getSetting('precisionLens') + ')'
-		const sum = [nexusNode,connectionCrystal,masteryScroll,insightPrism,reflectiveEssence,amplificationCrystal,creativeCatalyst,precisionLens]
-		console.log(`the incredient amount is: ${sum}`)*/
-		const sum = ['Nexus Node','Connection Crystal','Mastery Scroll','Insight Prism','Reflective Essence','Amplification Crystal','Creative Catalyst','Precision Lens']
-		return sum;
+		const items = [
+			'Nexus Node',
+			'Connection Crystal',
+			'Mastery Scroll',
+			'Insight Prism',
+			'Reflective Essence',
+			'Amplification Crystal',
+			'Creative Catalyst',
+			'Precision Lens'
+		];
+
+		const stockValues = {
+			'Nexus Node': this.gamificationInstance.getSetting('nexusNode'),
+			'Connection Crystal': this.gamificationInstance.getSetting('connectionCrystal'),
+			'Mastery Scroll': this.gamificationInstance.getSetting('masteryScroll'),
+			'Insight Prism': this.gamificationInstance.getSetting('insightPrism'),
+			'Reflective Essence': this.gamificationInstance.getSetting('reflectiveEssence'),
+			'Amplification Crystal': this.gamificationInstance.getSetting('amplificationCrystal'),
+			'Creative Catalyst': this.gamificationInstance.getSetting('creativeCatalyst'),
+			'Precision Lens': this.gamificationInstance.getSetting('precisionLens')
+		};
+
+		const multiSelectModal = new MultiSelectModal(app, items, 'Craft');
+		
+		// Update stock values
+		items.forEach(item => {
+			multiSelectModal.updateStock(item, stockValues[item]);
+		});
+
+		multiSelectModal.open();
+
+		return items;
 	}
 }
 
