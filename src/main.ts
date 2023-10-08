@@ -1075,10 +1075,10 @@ class MultiSelectModal extends Modal {
 		this.buttonText = buttonText;
 
 		// Initialize remaining stock values
-        this.items.forEach(item => {
+        /*this.items.forEach(item => {
 			console.log(`load init stock for ${item}`)
             this.remainingStock[item] = 10; // Replace with the actual stock value
-        });
+        });*/
     }
 
 
@@ -1214,8 +1214,9 @@ class MultiSelectModal extends Modal {
 	
 		console.log(`stock: ${stock}, selected: ${selected}`);
 	
-		remainingStock.innerText = `${5 - selected}`;
-		//remainingStock.innerText = `${stock}`;
+		this.remainingStock[labelText]
+		//remainingStock.innerText = `${this.remainingStock[labelText] - selected}`;
+		remainingStock.innerText = `${this.remainingStock[labelText]}`;
 		selectedQuantity.innerText = `${selected}`;
 	}
 	
@@ -1304,17 +1305,6 @@ class ModalBooster extends Modal {
 
 	private readIncredients(multiSelectModal: MultiSelectModal): string[] {
 
-
-		const items = [
-			'Nexus Node',
-			'Connection Crystal',
-			'Mastery Scroll',
-			'Insight Prism',
-			'Reflective Essence',
-			'Amplification Crystal',
-			'Creative Catalyst',
-			'Precision Lens'
-		  ];
 
 		const stockValues = {
 			'Nexus Node': this.gamificationInstance.getSetting('nexusNode'),
