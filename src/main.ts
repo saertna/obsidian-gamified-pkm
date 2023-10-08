@@ -1073,12 +1073,6 @@ class MultiSelectModal extends Modal {
         super(app);
         this.items = items;
 		this.buttonText = buttonText;
-
-		// Initialize remaining stock values
-        /*this.items.forEach(item => {
-			console.log(`load init stock for ${item}`)
-            this.remainingStock[item] = 10; // Replace with the actual stock value
-        });*/
     }
 
 
@@ -1103,11 +1097,6 @@ class MultiSelectModal extends Modal {
 
 	setItems(items: string[]) {
         this.items = items;
-        this.items.forEach(item => {
-			console.log(`load init stock for ${item}`)
-            //this.remainingStock[item] = this.gamificationInstance.getSetting('nexusNode'); // Initialize remaining stock values
-			//this.gamificationInstance.getSetting('precisionLens')
-        });
     }
 
 	updateStock(item: string, stock: number) {
@@ -1121,10 +1110,8 @@ class MultiSelectModal extends Modal {
 
 
 	incrementItem(item: string) {
-		const selectedItemCount = this.selectedItems.filter(selectedItem => selectedItem === item).length;
 		const stock = this.remainingStock[item];
 		console.log(`incrementItem: stock = ${stock}`)
-		//if (selectedItemCount < stock && stock > 0) {
 		if (stock > 0) {
 			this.selectedItems.push(item);
 			this.remainingStock[item]--;
@@ -1222,7 +1209,6 @@ class MultiSelectModal extends Modal {
 	}
 	
 	
-	
 
     private createSubmitButton(buttonText:string) {
         const submitButton = document.createElement('button');
@@ -1242,6 +1228,7 @@ class MultiSelectModal extends Modal {
 
 
     private craftBoosterItem(selectedItems: string[]) {
+		// call here the recipe logic and reduce the stock
 		console.log('Selected:', selectedItems.join(', '));
 	}	
 }
@@ -1268,12 +1255,7 @@ class ModalBooster extends Modal {
         const button = document.createElement('button');
         button.innerText = 'Open Crating Table';
         button.onclick = () => {
-            //const items = stringToList(this.gamificationInstance.getSetting('boosterIncredients'))
-			//const items = this.readIncredients();
-
-            //const multiSelectModal = new MultiSelectModal(this.app, items,'Craft Booster Item');
-            //multiSelectModal.open();
-			const items = this.readIncredients(multiSelectModal); // Pass the modal instance here
+            const items = this.readIncredients(multiSelectModal); // Pass the modal instance here
             multiSelectModal.setItems(items); // Set the items for the modal
             multiSelectModal.open(); // Open the modal
         };
@@ -1307,7 +1289,7 @@ class ModalBooster extends Modal {
 	private readIncredients(multiSelectModal: MultiSelectModal): string[] {
 
 
-		const stockValues = {
+		const stockValues: Record<string, number> = {
 			'Nexus Node': this.gamificationInstance.getSetting('nexusNode'),
 			'Connection Crystal': this.gamificationInstance.getSetting('connectionCrystal'),
 			'Mastery Scroll': this.gamificationInstance.getSetting('masteryScroll'),
@@ -1320,7 +1302,6 @@ class ModalBooster extends Modal {
 		
 		// Update stock values
 		incrediments.forEach(item => {
-			console.log(`${item} : ${stockValues[item]}`)
 			multiSelectModal.updateStock(item, stockValues[item]);
 		});
 
