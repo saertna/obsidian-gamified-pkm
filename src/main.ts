@@ -1090,20 +1090,18 @@ class MultiSelectModal extends Modal {
     }
 
 
+
+
 	incrementItem(item: string) {
-		console.log(`incrementItem function called`)
 		const selectedItemCount = this.selectedItems.filter(selectedItem => selectedItem === item).length;
-		console.log(`selectedItemCount: ${selectedItemCount}`)
 		const stock = 5; // Replace with the actual stock value
 	
 		if (selectedItemCount < 5 && stock > 0) {
-			console.log(`inside if from incrementItem()`)
 			this.selectedItems.push(item);
 			this.updateQuantityDisplay(item);
 		}
 	}
 	
-
 	decrementItem(item: string) {
 		const itemIndex = this.selectedItems.indexOf(item);
 	
@@ -1112,6 +1110,7 @@ class MultiSelectModal extends Modal {
 			this.updateQuantityDisplay(item);
 		}
 	}
+	
 	
 
 	private createCheckbox(labelText: string, stock: number) {
@@ -1126,23 +1125,22 @@ class MultiSelectModal extends Modal {
 		incrementButton.innerText = '+';
 		incrementButton.onclick = () => {
 			this.incrementItem(labelText);
-			this.updateQuantityDisplay(labelText);
 		};
 	
 		const decrementButton = document.createElement('button');
 		decrementButton.innerText = '-';
 		decrementButton.onclick = () => {
 			this.decrementItem(labelText);
-			this.updateQuantityDisplay(labelText);
 		};
 	
 		const remainingStock = document.createElement('span');
-		remainingStock.innerText = `Remaining: ${stock}  `;
+		remainingStock.innerHTML = `Remaining: <span>${stock}</span> `;
 		remainingStock.id = 'remaining-stock';
-	
+
 		const selectedQuantity = document.createElement('span');
-		selectedQuantity.innerText = `Selected: 0`;
+		selectedQuantity.innerHTML = `Selected: <span>0</span>`;
 		selectedQuantity.id = 'selected-quantity';
+
 	
 		container.appendChild(label);
 		container.appendChild(incrementButton);
@@ -1156,44 +1154,40 @@ class MultiSelectModal extends Modal {
 	
 	private updateQuantityDisplay(labelText: string) {
 		console.log('updateQuantityDisplay called with label:', labelText);
-		//const checkbox = document.querySelector(`label`);
-		const checkbox = document.querySelector(`.${labelText.replace(' ','-')}`);
-		if (!checkbox) {
-			console.log(`checkbox: ${checkbox}`)
+		const labelElement = document.querySelector(`.${labelText.replace(' ','-')}`);
+		if (!labelElement) {
+			console.log(`labelElement not found`);
 			return;
 		}
 	
-		const container = checkbox.parentElement as HTMLDivElement;
+		const container = labelElement.parentElement as HTMLDivElement;
 		if (!container) {
-			console.log(`container: ${container}`)
+			console.log(`container not found`);
 			return;
 		}
 	
-		//const remainingStock = container.querySelector('span:nth-child(3)') as HTMLSpanElement;
-		//const remainingStock = container.querySelector(`.remaining-stock`) as HTMLSpanElement;
-		const remainingStock = container.querySelector(`#remaining-stock`) as HTMLSpanElement;
+		const remainingStock = container.querySelector(`#remaining-stock span`) as HTMLSpanElement;
 		if (!remainingStock) {
-			console.log(`remainingStock: ${remainingStock}`)
+			console.log(`remainingStock not found`);
 			return;
 		}
 	
-		//const selectedQuantity = container.querySelector('span:nth-child(4)') as HTMLSpanElement;
-		//const selectedQuantity = container.querySelector(`.selected-quantity`) as HTMLSpanElement;
-		const selectedQuantity = container.querySelector(`#selected-quantity`) as HTMLSpanElement;
+		const selectedQuantity = container.querySelector(`#selected-quantity span`) as HTMLSpanElement;
 		if (!selectedQuantity) {
-			console.log(`selectedQuantity: ${selectedQuantity}`)
+			console.log(`selectedQuantity not found`);
 			return;
 		}
 	
 		const stock = parseInt(remainingStock.innerText.match(/\d+/)[0], 10);
 		const selected = this.selectedItems.filter(item => item === labelText).length;
 	
-
 		console.log(`stock: ${stock}, selected: ${selected}`);
 	
-		remainingStock.innerText = `Remaining: ${stock - selected}`;
-		selectedQuantity.innerText = `Selected: ${selected}`;
+		remainingStock.innerText = `${stock - selected}`;
+		//remainingStock.innerText = `${stock}`;
+		selectedQuantity.innerText = `${selected}`;
 	}
+	
 	
 
     private createSubmitButton(buttonText:string) {
