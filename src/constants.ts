@@ -159,3 +159,13 @@ from ""
 Where note-maturity = 0 or note-maturity = "0" or note-maturity = "0➡️" or note-maturity = "0⬆️" or note-maturity = "0⬇️"
 \`\`\`
 `;
+export const incrediments = [
+  'Nexus Node',
+  'Connection Crystal',
+  'Mastery Scroll',
+  'Insight Prism',
+  'Reflective Essence',
+  'Amplification Crystal',
+  'Creative Catalyst',
+  'Precision Lens'
+];

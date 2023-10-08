@@ -20,7 +20,8 @@ import {
 	pointsMajurity,
 	pointsNoteMajurity,
 	pointsForDailyChallenge,
-	pointsForWeeklyChallenge
+	pointsForWeeklyChallenge,
+	incrediments
 } from './constants'
 import {
 	count_inlinks,
@@ -1062,10 +1063,11 @@ function stringToList(input: string): string[] {
     return input.split(',');
 }
 class MultiSelectModal extends Modal {
-    private readonly items: string[];
+    private items: string[];
     private selectedItems: string[] = [];
 	private remainingStock: Record<string, number> = {};
     private buttonText: string;
+	private readonly gamificationInstance: gamification;
 
     constructor(app: App, items: string[], buttonText: string) {
         super(app);
@@ -1074,7 +1076,8 @@ class MultiSelectModal extends Modal {
 
 		// Initialize remaining stock values
         this.items.forEach(item => {
-            this.remainingStock[item] = 5; // Replace with the actual stock value
+			console.log(`load init stock for ${item}`)
+            this.remainingStock[item] = 10; // Replace with the actual stock value
         });
     }
 
@@ -1084,7 +1087,7 @@ class MultiSelectModal extends Modal {
 		contentEl.empty();
 	
 		this.items.forEach(item => {
-			const stock = 5; // Replace with the actual stock value
+			//const stock = 10; // Replace with the actual stock value
 			const listItem = this.createCheckbox(item);
 			contentEl.appendChild(listItem);
 		});
@@ -1096,6 +1099,15 @@ class MultiSelectModal extends Modal {
 
     onClose() {
 		this.selectedItems = [];
+    }
+
+	setItems(items: string[]) {
+        this.items = items;
+        this.items.forEach(item => {
+			console.log(`load init stock for ${item}`)
+            //this.remainingStock[item] = this.gamificationInstance.getSetting('nexusNode'); // Initialize remaining stock values
+			//this.gamificationInstance.getSetting('precisionLens')
+        });
     }
 
 	updateStock(item: string, stock: number) {
@@ -1248,15 +1260,20 @@ class ModalBooster extends Modal {
         const { contentEl } = this;
         contentEl.setText(this.displayText);
 
+		const multiSelectModal = new MultiSelectModal(this.app, [], 'Craft Booster Item'); // Create the modal instance
+
         // Add a button to open the multi-select modal
         const button = document.createElement('button');
         button.innerText = 'Open Crating Table';
         button.onclick = () => {
             //const items = stringToList(this.gamificationInstance.getSetting('boosterIncredients'))
-			const items = this.readIncredients();
+			//const items = this.readIncredients();
 
-            const multiSelectModal = new MultiSelectModal(this.app, items,'Craft Booster Item');
-            multiSelectModal.open();
+            //const multiSelectModal = new MultiSelectModal(this.app, items,'Craft Booster Item');
+            //multiSelectModal.open();
+			const items = this.readIncredients(multiSelectModal); // Pass the modal instance here
+            multiSelectModal.setItems(items); // Set the items for the modal
+            multiSelectModal.open(); // Open the modal
         };
 
 		const button2 = document.createElement('button');
@@ -1284,8 +1301,10 @@ class ModalBooster extends Modal {
         contentEl.empty();
     }
 
-	
-	private readIncredients(): string[] {
+
+	private readIncredients(multiSelectModal: MultiSelectModal): string[] {
+
+
 		const items = [
 			'Nexus Node',
 			'Connection Crystal',
@@ -1295,7 +1314,7 @@ class ModalBooster extends Modal {
 			'Amplification Crystal',
 			'Creative Catalyst',
 			'Precision Lens'
-		];
+		  ];
 
 		const stockValues = {
 			'Nexus Node': this.gamificationInstance.getSetting('nexusNode'),
@@ -1307,17 +1326,15 @@ class ModalBooster extends Modal {
 			'Creative Catalyst': this.gamificationInstance.getSetting('creativeCatalyst'),
 			'Precision Lens': this.gamificationInstance.getSetting('precisionLens')
 		};
-
-		const multiSelectModal = new MultiSelectModal(app, items, 'Craft');
 		
 		// Update stock values
-		items.forEach(item => {
+		incrediments.forEach(item => {
+			console.log(`${item} : ${stockValues[item]}`)
 			multiSelectModal.updateStock(item, stockValues[item]);
 		});
 
-		multiSelectModal.open();
 
-		return items;
+		return incrediments;
 	}
 }
 
