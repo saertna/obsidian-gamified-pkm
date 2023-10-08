@@ -1069,6 +1069,7 @@ class MultiSelectModal extends Modal {
 		this.buttonText = buttonText;
     }
 
+
 	onOpen() {
 		const { contentEl } = this;
 		contentEl.empty();
@@ -1081,26 +1082,28 @@ class MultiSelectModal extends Modal {
 	
 		const submitButton = this.createSubmitButton(this.buttonText);
 		contentEl.appendChild(submitButton);
-	}
-	
-	
-	
+	}	
 	
 
     onClose() {
 		this.selectedItems = [];
     }
 
+
 	incrementItem(item: string) {
+		console.log(`incrementItem function called`)
 		const selectedItemCount = this.selectedItems.filter(selectedItem => selectedItem === item).length;
+		console.log(`selectedItemCount: ${selectedItemCount}`)
 		const stock = 5; // Replace with the actual stock value
 	
 		if (selectedItemCount < 5 && stock > 0) {
+			console.log(`inside if from incrementItem()`)
 			this.selectedItems.push(item);
 			this.updateQuantityDisplay(item);
 		}
 	}
 	
+
 	decrementItem(item: string) {
 		const itemIndex = this.selectedItems.indexOf(item);
 	
@@ -1116,7 +1119,8 @@ class MultiSelectModal extends Modal {
 		container.className = 'modal-checkbox-container';
 	
 		const label = document.createElement('label');
-		label.innerText = `${labelText} (${stock})`;
+		label.innerText = `${labelText}`;// (${stock})`;
+		console.log(`label: ${label}`)
 	
 		const incrementButton = document.createElement('button');
 		incrementButton.innerText = '+';
@@ -1143,29 +1147,34 @@ class MultiSelectModal extends Modal {
 		container.appendChild(decrementButton);
 		container.appendChild(remainingStock);
 		container.appendChild(selectedQuantity);
-	
+		console.log(`container for incement id?: ${container.id}`)
 		return container;
 	}
 	
 	
-	
 	private updateQuantityDisplay(labelText: string) {
 		console.log('updateQuantityDisplay called with label:', labelText);
-		
-		const checkbox = document.querySelector(`input[value="${labelText}"]`) as HTMLInputElement;
+		const checkbox = document.querySelector(`label`);
+		if (!checkbox) return;
+	
 		const container = checkbox.parentElement as HTMLDivElement;
+		if (!container) return;
 	
 		const remainingStock = container.querySelector('span:nth-child(3)') as HTMLSpanElement;
+		if (!remainingStock) return;
+	
 		const selectedQuantity = container.querySelector('span:nth-child(4)') as HTMLSpanElement;
+		if (!selectedQuantity) return;
 	
 		const stock = parseInt(remainingStock.innerText.match(/\d+/)[0], 10);
 		const selected = this.selectedItems.filter(item => item === labelText).length;
 	
+
+		console.log(`stock: ${stock}, selected: ${selected}`);
+	
 		remainingStock.innerText = `Remaining: ${stock - selected}`;
 		selectedQuantity.innerText = `Selected: ${selected}`;
 	}
-	
-	
 	
 
     private createSubmitButton(buttonText:string) {
@@ -1179,9 +1188,11 @@ class MultiSelectModal extends Modal {
         return submitButton;
     }
 
+
     private getSelectedItems() {
         return this.selectedItems;
     }
+
 
     private craftBoosterItem(selectedItems: string[]) {
 		console.log('Selected:', selectedItems.join(', '));
@@ -1242,7 +1253,7 @@ class ModalBooster extends Modal {
 
 	private readIncredients(): string[] {
 		// read from settings the numbers and provide them as string
-		const nexusNode = 'Nexus Node (' + this.gamificationInstance.getSetting('nexusNode') + ')'
+		/*const nexusNode = 'Nexus Node (' + this.gamificationInstance.getSetting('nexusNode') + ')'
 		const connectionCrystal = 'Connection Crystal (' + this.gamificationInstance.getSetting('connectionCrystal') + ')'
 		const masteryScroll = 'Mastery Scroll (' + this.gamificationInstance.getSetting('masteryScroll') + ')'
 		const insightPrism = 'Insight Prism (' + this.gamificationInstance.getSetting('insightPrism') + ')'
@@ -1251,7 +1262,8 @@ class ModalBooster extends Modal {
 		const creativeCatalyst = 'Creative Catalyst (' + this.gamificationInstance.getSetting('creativeCatalyst') + ')'
 		const precisionLens = 'Precision Lens (' + this.gamificationInstance.getSetting('precisionLens') + ')'
 		const sum = [nexusNode,connectionCrystal,masteryScroll,insightPrism,reflectiveEssence,amplificationCrystal,creativeCatalyst,precisionLens]
-		console.log(`the incredient amount is: ${sum}`)
+		console.log(`the incredient amount is: ${sum}`)*/
+		const sum = ['Nexus Node','Connection Crystal','Mastery Scroll','Insight Prism','Reflective Essence','Amplification Crystal','Creative Catalyst','Precision Lens']
 		return sum;
 	}
 }
