@@ -1061,12 +1061,18 @@ function stringToList(input: string): string[] {
 class MultiSelectModal extends Modal {
     private readonly items: string[];
     private selectedItems: string[] = [];
-	private buttonText: string;
+	private remainingStock: Record<string, number> = {};
+    private buttonText: string;
 
     constructor(app: App, items: string[], buttonText: string) {
         super(app);
         this.items = items;
 		this.buttonText = buttonText;
+
+		// Initialize remaining stock values
+        this.items.forEach(item => {
+            this.remainingStock[item] = 5; // Replace with the actual stock value
+        });
     }
 
 
@@ -1076,7 +1082,7 @@ class MultiSelectModal extends Modal {
 	
 		this.items.forEach(item => {
 			const stock = 5; // Replace with the actual stock value
-			const listItem = this.createCheckbox(item, stock);
+			const listItem = this.createCheckbox(item);
 			contentEl.appendChild(listItem);
 		});
 	
@@ -1094,10 +1100,11 @@ class MultiSelectModal extends Modal {
 
 	incrementItem(item: string) {
 		const selectedItemCount = this.selectedItems.filter(selectedItem => selectedItem === item).length;
-		const stock = 5; // Replace with the actual stock value
+		const stock = this.remainingStock[item];
 	
 		if (selectedItemCount < 5 && stock > 0) {
 			this.selectedItems.push(item);
+			this.remainingStock[item]--;
 			this.updateQuantityDisplay(item);
 		}
 	}
@@ -1107,15 +1114,17 @@ class MultiSelectModal extends Modal {
 	
 		if (itemIndex > -1) {
 			this.selectedItems.splice(itemIndex, 1);
+			this.remainingStock[item]++;
 			this.updateQuantityDisplay(item);
 		}
 	}
 	
 	
 
-	private createCheckbox(labelText: string, stock: number) {
+	private createCheckbox(labelText: string) {
 		const container = document.createElement('div');
 		container.className = 'modal-checkbox-container';
+		const stock = this.remainingStock[labelText] || 0;
 	
 		const label = document.createElement('label');
 		label.innerText = `${labelText}`;// (${stock})`;
@@ -1178,15 +1187,16 @@ class MultiSelectModal extends Modal {
 			return;
 		}
 	
-		const stock = parseInt(remainingStock.innerText.match(/\d+/)[0], 10);
+		const stock = this.remainingStock[labelText] || 0; // Use global remaining stock value
 		const selected = this.selectedItems.filter(item => item === labelText).length;
 	
 		console.log(`stock: ${stock}, selected: ${selected}`);
 	
-		remainingStock.innerText = `${stock - selected}`;
+		remainingStock.innerText = `${5 - selected}`;
 		//remainingStock.innerText = `${stock}`;
 		selectedQuantity.innerText = `${selected}`;
 	}
+	
 	
 	
 
