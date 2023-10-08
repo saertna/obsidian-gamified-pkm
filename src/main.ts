@@ -1123,8 +1123,9 @@ class MultiSelectModal extends Modal {
 	incrementItem(item: string) {
 		const selectedItemCount = this.selectedItems.filter(selectedItem => selectedItem === item).length;
 		const stock = this.remainingStock[item];
-	
-		if (selectedItemCount < 5 && stock > 0) {
+		console.log(`incrementItem: stock = ${stock}`)
+		//if (selectedItemCount < stock && stock > 0) {
+		if (stock > 0) {
 			this.selectedItems.push(item);
 			this.remainingStock[item]--;
 			this.updateQuantityDisplay(item);
