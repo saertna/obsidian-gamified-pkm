@@ -1120,7 +1120,7 @@ class MultiSelectModal extends Modal {
 	
 		const label = document.createElement('label');
 		label.innerText = `${labelText}`;// (${stock})`;
-		console.log(`label: ${label}`)
+		label.classList.add(`${labelText.replace(' ','-')}`); // Add class 'item-label' to the label
 	
 		const incrementButton = document.createElement('button');
 		incrementButton.innerText = '+';
@@ -1137,10 +1137,12 @@ class MultiSelectModal extends Modal {
 		};
 	
 		const remainingStock = document.createElement('span');
-		remainingStock.innerText = `Remaining: ${stock}`;
+		remainingStock.innerText = `Remaining: ${stock}  `;
+		remainingStock.id = 'remaining-stock';
 	
 		const selectedQuantity = document.createElement('span');
 		selectedQuantity.innerText = `Selected: 0`;
+		selectedQuantity.id = 'selected-quantity';
 	
 		container.appendChild(label);
 		container.appendChild(incrementButton);
@@ -1154,17 +1156,34 @@ class MultiSelectModal extends Modal {
 	
 	private updateQuantityDisplay(labelText: string) {
 		console.log('updateQuantityDisplay called with label:', labelText);
-		const checkbox = document.querySelector(`label`);
-		if (!checkbox) return;
+		//const checkbox = document.querySelector(`label`);
+		const checkbox = document.querySelector(`.${labelText.replace(' ','-')}`);
+		if (!checkbox) {
+			console.log(`checkbox: ${checkbox}`)
+			return;
+		}
 	
 		const container = checkbox.parentElement as HTMLDivElement;
-		if (!container) return;
+		if (!container) {
+			console.log(`container: ${container}`)
+			return;
+		}
 	
-		const remainingStock = container.querySelector('span:nth-child(3)') as HTMLSpanElement;
-		if (!remainingStock) return;
+		//const remainingStock = container.querySelector('span:nth-child(3)') as HTMLSpanElement;
+		//const remainingStock = container.querySelector(`.remaining-stock`) as HTMLSpanElement;
+		const remainingStock = container.querySelector(`#remaining-stock`) as HTMLSpanElement;
+		if (!remainingStock) {
+			console.log(`remainingStock: ${remainingStock}`)
+			return;
+		}
 	
-		const selectedQuantity = container.querySelector('span:nth-child(4)') as HTMLSpanElement;
-		if (!selectedQuantity) return;
+		//const selectedQuantity = container.querySelector('span:nth-child(4)') as HTMLSpanElement;
+		//const selectedQuantity = container.querySelector(`.selected-quantity`) as HTMLSpanElement;
+		const selectedQuantity = container.querySelector(`#selected-quantity`) as HTMLSpanElement;
+		if (!selectedQuantity) {
+			console.log(`selectedQuantity: ${selectedQuantity}`)
+			return;
+		}
 	
 		const stock = parseInt(remainingStock.innerText.match(/\d+/)[0], 10);
 		const selected = this.selectedItems.filter(item => item === labelText).length;
