@@ -1068,6 +1068,7 @@ class MultiSelectModal extends Modal {
 	private remainingStock: Record<string, number> = {};
     private buttonText: string;
 	private readonly gamificationInstance: gamification;
+	private boosters: Record<string, number> = {};
 
     constructor(app: App, items: string[], buttonText: string) {
         super(app);
@@ -1075,6 +1076,16 @@ class MultiSelectModal extends Modal {
 		this.buttonText = buttonText;
     }
 
+	updateBoosterStock(booster: string, stock: number) {
+        this.boosters[booster] = stock;
+    }
+
+	setBoosters(boosters: Record<string, number>) {
+        this.boosters = { 
+			'Booster 1': 5,
+			'Booster 2': 3 
+		};
+    }
 
 	onOpen() {
 		const { contentEl } = this;
@@ -1117,6 +1128,10 @@ class MultiSelectModal extends Modal {
 			this.remainingStock[item]--;
 			this.updateQuantityDisplay(item);
 		}
+		if (this.boosters[item] !== undefined) {
+            this.boosters[item]--;
+            this.updateQuantityDisplay(item);
+        }
 	}
 	
 	decrementItem(item: string) {
@@ -1127,6 +1142,10 @@ class MultiSelectModal extends Modal {
 			this.remainingStock[item]++;
 			this.updateQuantityDisplay(item);
 		}
+		if (this.boosters[item] !== undefined) {
+            this.boosters[item]++;
+            this.updateQuantityDisplay(item);
+        }
 	}
 	
 	
@@ -1256,6 +1275,18 @@ class ModalBooster extends Modal {
         button.innerText = 'Open Crating Table';
         button.onclick = () => {
             const items = this.readIncredients(multiSelectModal); // Pass the modal instance here
+
+            // Get the booster quantities from the gamification instance
+            const boosters = {
+                'Booster 1': this.gamificationInstance.getSetting('booster1Stock'),
+                'Booster 2': this.gamificationInstance.getSetting('booster2Stock'),
+                // Add more boosters as needed
+            };
+
+            multiSelectModal.setBoosters(boosters); // Set the boosters for the modal
+            multiSelectModal.updateBoosterStock('Booster 1', boosters['Booster 1']); // Update the stock
+            multiSelectModal.updateBoosterStock('Booster 2', boosters['Booster 2']); // Update the stock
+
             multiSelectModal.setItems(items); // Set the items for the modal
             multiSelectModal.open(); // Open the modal
         };
