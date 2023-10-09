@@ -1295,12 +1295,18 @@ class ModalBooster extends Modal {
         button2.innerText = 'Open Booster board';
         button2.onclick = () => {
             const items2 = [
-                'Booster 1',
-                'Booster 2',
-                'Booster 3',
-                'Booster 4',
-                'Booster 5',
-                'Booster 6'
+                'Temporal Tweaker',
+                'Perpetual Progress',
+                'Strategic Synapses',
+                'Accelerated Acquisition',
+                'Linker`s Lode',
+                'Effortless Expansion',
+				'Recursive Reflection',
+				'Synaptic Surge',
+				'Inspiration Infusion',
+				'Title Titan',
+				'Precision Prism',
+				'Hyperlink Harmony'
             ];
 
             const multiSelectModal = new MultiSelectModal(this.app, items2,'use Booster');
