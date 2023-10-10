@@ -12,3 +12,24 @@
     margin-bottom: 10px;
     list-style-type: none; /* Remove default list styles */
 }
+
+.modal-crafting-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.crafting-item-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.crafting-item-container button {
+    font-size: 14px;
+}
+
+.crafting-item-container span {
+    font-size: 16px;
+}
+

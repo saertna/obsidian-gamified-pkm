@@ -1106,14 +1106,20 @@ class MultiSelectModal extends Modal {
 		const { contentEl } = this;
 		contentEl.empty();
 	
+
+		const craftingLayout = this.createCraftingLayout();
+        contentEl.appendChild(craftingLayout);
+
+		const submitButton = this.createSubmitButton(this.buttonText);
+        contentEl.appendChild(submitButton);
+
 		this.items.forEach(item => {
 			//const stock = 10; // Replace with the actual stock value
 			const listItem = this.createItemContainer(item);
 			contentEl.appendChild(listItem);
 		});
 	
-		const submitButton = this.createSubmitButton(this.buttonText);
-		contentEl.appendChild(submitButton);
+		
 	}	
 	
 	
@@ -1126,6 +1132,46 @@ class MultiSelectModal extends Modal {
 	setItems(items: string[]) {
         this.items = items;
     }
+
+
+	private createCraftingLayout() {
+        const container = document.createElement('div');
+        container.className = 'modal-crafting-container';
+
+        const craftingItems = [
+            { name: 'Temporal Tweaker', incredients: ['2xS1', '1xS6'] },
+            { name: 'Perpetual Progress', incredients: ['2xS2', '1xS4'] },
+            { name: 'Strategic Synapses', incredients: ['3xS1', '22xS2'] },
+			{ name: 'Accelerated Acquisition', incredients: ['1xS3', '2xS4'] },
+			{ name: 'Linkers Lode', incredients: ['3xS2', '1xS1'] },
+			{ name: 'Effortless Expansion', incredients: ['2xS3', '1xS6'] },
+			{ name: 'Recursive Reflection', incredients: ['2xS4', '1xS5'] },
+			{ name: 'Synaptic Surge', incredients: ['2xS2', '1xS1'] },
+			{ name: 'Inspiration Infusion', incredients: ['2xS7', '1xS1'] },
+			{ name: 'Title Titan', incredients: ['2xS8', '1xS7'] },
+			{ name: 'Precision Prism', incredients: ['2xS8', '1xS2'] },
+			{ name: 'Hyperlink Harmony', incredients: ['2xS2', '1xS6'] },
+        ];
+
+        craftingItems.forEach(item => {
+            const itemContainer = document.createElement('div');
+            itemContainer.className = 'crafting-item-container';
+
+            const button = document.createElement('button');
+            button.innerText = 'Craft';
+            button.onclick = () => this.craftBoosterItem(item);
+
+            const itemText = document.createElement('span');
+            itemText.innerText = `${item.name} ⇒ ${item.incredients.join('x ')}`;
+
+            itemContainer.appendChild(button);
+            itemContainer.appendChild(itemText);
+            container.appendChild(itemContainer);
+		});
+
+        return container;
+    }
+
 
 	updateStock(item: string, stock: number) {
         this.remainingStock[item] = stock;
@@ -1315,6 +1361,8 @@ class ModalBooster extends Modal {
         const { contentEl } = this;
         contentEl.setText(this.displayText);
 
+		
+
 		const multiSelectModal = new MultiSelectModal(this.app, [], 'Craft Booster Item'); // Create the modal instance
 
         // Add a button to open the multi-select modal
@@ -1344,6 +1392,8 @@ class ModalBooster extends Modal {
         contentEl.empty();
     }
 
+
+	
 
 	private readIncredients(multiSelectModal: MultiSelectModal): string[] {
 
