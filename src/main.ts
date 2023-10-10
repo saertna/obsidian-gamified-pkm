@@ -127,13 +127,14 @@ export default class gamification extends Plugin {
 
 
 				new ModalBooster(this.app, ` `, this).open();
-				
-				
-
 
 			});
 		}
 
+		this.addRibbonIcon("test-tube-2", "Boosters", async () => {
+			//const file: TFile | null = this.app.workspace.getActiveFile();
+			new ModalBooster(this.app, ` `, this).open();
+		});
 
 		this.addRibbonIcon("sprout", "Calculate Note Maturity", async () => {
 			//const file: TFile | null = this.app.workspace.getActiveFile();
@@ -1069,11 +1070,25 @@ class MultiSelectModal extends Modal {
     private buttonText: string;
 	private readonly gamificationInstance: gamification;
 	private boosters: Record<string, number> = {};
+	private useBooster: boolean = false;
 
     constructor(app: App, items: string[], buttonText: string) {
         super(app);
         this.items = items;
 		this.buttonText = buttonText;
+    }
+
+	setUseBooster(useBooster: boolean) {
+        this.useBooster = useBooster;
+    }
+
+	// Updated createItemContainer method
+    private createItemContainer(labelText: string) {
+        if (this.useBooster) {
+            return this.createBoosterList(labelText);
+        } else {
+            return this.createCheckbox(labelText);
+        }
     }
 
 	updateBoosterStock(booster: string, stock: number) {
@@ -1093,7 +1108,7 @@ class MultiSelectModal extends Modal {
 	
 		this.items.forEach(item => {
 			//const stock = 10; // Replace with the actual stock value
-			const listItem = this.createCheckbox(item);
+			const listItem = this.createItemContainer(item);
 			contentEl.appendChild(listItem);
 		});
 	
@@ -1101,6 +1116,8 @@ class MultiSelectModal extends Modal {
 		contentEl.appendChild(submitButton);
 	}	
 	
+	
+
 
     onClose() {
 		this.selectedItems = [];
@@ -1151,6 +1168,7 @@ class MultiSelectModal extends Modal {
 	
 
 	private createCheckbox(labelText: string) {
+		
 		const container = document.createElement('div');
 		container.className = 'modal-checkbox-container';
 		const stock = this.remainingStock[labelText] || 0;
@@ -1187,6 +1205,35 @@ class MultiSelectModal extends Modal {
 		container.appendChild(selectedQuantity);
 		console.log(`container for incement id?: ${container.id}`)
 		return container;
+	}
+
+	private createBoosterList(labelText: string) {
+		const container = document.createElement('div');
+		container.className = 'modal-checkbox-container';
+		const stock = this.remainingStock[labelText] || 0;
+	
+		const label = document.createElement('label');
+		label.innerText = `${labelText} ⇒ ${stock}x (s)`;
+	
+		const useButton = document.createElement('button');
+		useButton.innerText = 'Use';
+		useButton.onclick = () => {
+			this.useBoosterItem(labelText);
+		};
+	
+		container.appendChild(label);
+		container.appendChild(useButton);
+	
+		return container;
+	}
+
+	private useBoosterItem(labelText: string) {
+		const stock = this.remainingStock[labelText];
+		if (stock > 0) {
+			this.selectedItems.push(labelText);
+			this.remainingStock[labelText]--;
+			this.updateQuantityDisplay(labelText);
+		}
 	}
 	
 	
@@ -1272,44 +1319,19 @@ class ModalBooster extends Modal {
 
         // Add a button to open the multi-select modal
         const button = document.createElement('button');
-        button.innerText = 'Open Crating Table';
+        button.innerText = 'Open Crafting Table';
         button.onclick = () => {
-            const items = this.readIncredients(multiSelectModal); // Pass the modal instance here
-
-            // Get the booster quantities from the gamification instance
-            const boosters = {
-                'Booster 1': this.gamificationInstance.getSetting('booster1Stock'),
-                'Booster 2': this.gamificationInstance.getSetting('booster2Stock'),
-                // Add more boosters as needed
-            };
-
-            multiSelectModal.setBoosters(boosters); // Set the boosters for the modal
-            multiSelectModal.updateBoosterStock('Booster 1', boosters['Booster 1']); // Update the stock
-            multiSelectModal.updateBoosterStock('Booster 2', boosters['Booster 2']); // Update the stock
-
-            multiSelectModal.setItems(items); // Set the items for the modal
-            multiSelectModal.open(); // Open the modal
+            const items = this.readIncredients(multiSelectModal);
+            multiSelectModal.setUseBooster(false); // Set the flag for crafting table
+            multiSelectModal.setItems(items);
+            multiSelectModal.open();
         };
 
 		const button2 = document.createElement('button');
-        button2.innerText = 'Open Booster board';
+        button2.innerText = 'Open Booster Board';
         button2.onclick = () => {
-            const items2 = [
-                'Temporal Tweaker',
-                'Perpetual Progress',
-                'Strategic Synapses',
-                'Accelerated Acquisition',
-                'Linker`s Lode',
-                'Effortless Expansion',
-				'Recursive Reflection',
-				'Synaptic Surge',
-				'Inspiration Infusion',
-				'Title Titan',
-				'Precision Prism',
-				'Hyperlink Harmony'
-            ];
-
-            const multiSelectModal = new MultiSelectModal(this.app, items2,'use Booster');
+            multiSelectModal.setUseBooster(true); // Set the flag for booster board
+            multiSelectModal.setItems(['Booster 1', 'Booster 2', 'Booster 3', 'Booster 4', 'Booster 5', 'Booster 6']);
             multiSelectModal.open();
         };
 
