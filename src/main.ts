@@ -1071,6 +1071,7 @@ class MultiSelectModal extends Modal {
 	private readonly gamificationInstance: gamification;
 	private boosters: Record<string, number> = {};
 	private useBooster: boolean = false;
+	private remainingBoosterStock: Record<string, number> = {};
 
     constructor(app: App, items: string[], buttonText: string) {
         super(app);
@@ -1087,13 +1088,16 @@ class MultiSelectModal extends Modal {
         if (this.useBooster) {
             return this.createBoosterList(labelText);
         } else {
-            return this.createCheckbox(labelText);
+            //return this.createCheckbox(labelText);
+			return this.createCraftingLayout()
         }
     }
 
 	updateBoosterStock(booster: string, stock: number) {
         this.boosters[booster] = stock;
     }
+
+	
 
 	setBoosters(boosters: Record<string, number>) {
         this.boosters = { 
@@ -1106,21 +1110,21 @@ class MultiSelectModal extends Modal {
 		const { contentEl } = this;
 		contentEl.empty();
 	
-
-		const craftingLayout = this.createCraftingLayout();
-        contentEl.appendChild(craftingLayout);
-
-		const submitButton = this.createSubmitButton(this.buttonText);
-        contentEl.appendChild(submitButton);
-
-		this.items.forEach(item => {
-			//const stock = 10; // Replace with the actual stock value
-			const listItem = this.createItemContainer(item);
-			contentEl.appendChild(listItem);
-		});
+		//const craftingLayout = this.createCraftingLayout();
+		//contentEl.appendChild(craftingLayout);
 	
-		
-	}	
+		// take care only to run several times through when boosters are used
+		if (this.useBooster){
+			this.items.forEach(item => {
+				const listItem = this.createItemContainer(item);
+				contentEl.appendChild(listItem);
+			});
+		} else {
+			const listItem = this.createItemContainer("");
+			contentEl.appendChild(listItem);
+		}
+	}
+	
 	
 	
 
@@ -1181,6 +1185,8 @@ class MultiSelectModal extends Modal {
             this.updateQuantityDisplay(item);
         }
     }
+
+	
 
 
 	incrementItem(item: string) {
@@ -1256,6 +1262,7 @@ class MultiSelectModal extends Modal {
 	private createBoosterList(labelText: string) {
 		const container = document.createElement('div');
 		container.className = 'modal-checkbox-container';
+		
 		const stock = this.remainingStock[labelText] || 0;
 	
 		const label = document.createElement('label');
@@ -1269,11 +1276,13 @@ class MultiSelectModal extends Modal {
 	
 		container.appendChild(label);
 		container.appendChild(useButton);
-	
+
+		
 		return container;
 	}
 
 	private useBoosterItem(labelText: string) {
+		console.log(`use Booster ${labelText}`)
 		const stock = this.remainingStock[labelText];
 		if (stock > 0) {
 			this.selectedItems.push(labelText);
@@ -1361,8 +1370,6 @@ class ModalBooster extends Modal {
         const { contentEl } = this;
         contentEl.setText(this.displayText);
 
-		
-
 		const multiSelectModal = new MultiSelectModal(this.app, [], 'Craft Booster Item'); // Create the modal instance
 
         // Add a button to open the multi-select modal
@@ -1377,11 +1384,11 @@ class ModalBooster extends Modal {
 
 		const button2 = document.createElement('button');
         button2.innerText = 'Open Booster Board';
-        button2.onclick = () => {
-            multiSelectModal.setUseBooster(true); // Set the flag for booster board
-            multiSelectModal.setItems(['Booster 1', 'Booster 2', 'Booster 3', 'Booster 4', 'Booster 5', 'Booster 6']);
-            multiSelectModal.open();
-        };
+       	button2.onclick = () => {
+			multiSelectModal.setUseBooster(true);
+			multiSelectModal.setItems(['Temporal Tweaker', 'Perpetual Progress', 'Strategic Synapses', 'Accelerated Acquisition', 'Linkers Lode', 'Effortless Expansion', 'Recursive Reflection', 'Synaptic Surge', 'Inspiration Infusion', 'Title Titan', 'Precision Prism', 'Hyperlink Harmony']);
+			multiSelectModal.open();
+		};
 
         contentEl.appendChild(button);
 		contentEl.appendChild(button2);
@@ -1415,7 +1422,7 @@ class ModalBooster extends Modal {
 		});
 
 
-		return incrediments;
+		return ['','']//incrediments;
 	}
 }
 
