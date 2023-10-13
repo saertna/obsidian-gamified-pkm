@@ -1195,10 +1195,11 @@ class MultiSelectModal extends Modal {
 
 		// Iterate through elements and add stock information to the stock container
 		elements.forEach(element => {
-			stockInfo.innerText += `${element.shortName} ${this.remainingStock[element.shortName] || 0}   `;
+			stockInfo.innerHTML += `${element.shortName} ${this.remainingStock[element.shortName] || 0}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`; // Add non-breaking spaces
 		});
 
 		stockContainer.appendChild(stockInfo);
+
 
 	
 		// Add the stock container to the main container
