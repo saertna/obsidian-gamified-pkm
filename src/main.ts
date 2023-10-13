@@ -1203,12 +1203,12 @@ class MultiSelectModal extends Modal {
 	
 
         craftingItems.forEach(item => {
-            const itemContainer = document.createElement('div');
+			const itemContainer = document.createElement('div');
             itemContainer.className = 'crafting-item-container';
 
             const button = document.createElement('button');
             button.innerText = 'Craft';
-            button.onclick = () => this.craftBoosterItem(item);
+            button.onclick = () => this.craftBoosterItem(item.name);
 
             const itemText = document.createElement('span');
             itemText.innerText = `${item.name} ⇒ ${item.incredients.join('x ')}`;
@@ -1391,7 +1391,7 @@ class MultiSelectModal extends Modal {
 	
 	
 
-    private createSubmitButton(buttonText:string) {
+    /*private createSubmitButton(buttonText:string) {
         const submitButton = document.createElement('button');
         submitButton.innerText = buttonText;
         submitButton.onclick = () => {
@@ -1400,7 +1400,7 @@ class MultiSelectModal extends Modal {
 			this.close();
         };
         return submitButton;
-    }
+    }*/
 
 
     private getSelectedItems() {
@@ -1408,9 +1408,9 @@ class MultiSelectModal extends Modal {
     }
 
 
-    private craftBoosterItem(selectedItems: string[]) {
+    private craftBoosterItem(selectedItems: string) {
 		// call here the recipe logic and reduce the stock
-		console.log('Selected:', selectedItems.join(', '));
+		console.log(`Selected: ${selectedItems}`);
 	}	
 }
 
