@@ -1157,6 +1157,23 @@ class MultiSelectModal extends Modal {
 			{ name: 'Hyperlink Harmony', incredients: ['2xS2', '1xS6'] },
         ];
 
+		// Create a container for the stock information
+		const stockContainer = document.createElement('div');
+		stockContainer.className = 'stock-container';
+
+		// Define the elements and their corresponding names
+		const elements = [
+			{ shortName: 'S1', name: 'Nexus Node' },
+			{ shortName: 'S2', name: 'Connection Crystal' },
+			{ shortName: 'S3', name: 'Mastery Scroll' },
+			{ shortName: 'S4', name: 'Insight Prism' },
+			{ shortName: 'S5', name: 'Reflective Essence' },
+			{ shortName: 'S6', name: 'Amplification Crystal' },
+			{ shortName: 'S7', name: 'Creative Catalyst' },
+			{ shortName: 'S8', name: 'Precision Lens' }
+		];
+	
+
         craftingItems.forEach(item => {
             const itemContainer = document.createElement('div');
             itemContainer.className = 'crafting-item-container';
@@ -1172,6 +1189,19 @@ class MultiSelectModal extends Modal {
             itemContainer.appendChild(itemText);
             container.appendChild(itemContainer);
 		});
+
+
+		// Iterate through elements and add stock information to the stock container
+		elements.forEach(element => {
+			const stockInfo = document.createElement('div');
+			stockInfo.className = 'stock-info';
+			stockInfo.innerText = `${element.shortName} ${this.remainingStock[element.shortName] || 0}`;
+			stockContainer.appendChild(stockInfo);
+		
+		});
+	
+		// Add the stock container to the main container
+		container.appendChild(stockContainer);
 
         return container;
     }
@@ -1381,6 +1411,7 @@ class ModalBooster extends Modal {
             multiSelectModal.setItems(items);
             multiSelectModal.open();
         };
+
 
 		const button2 = document.createElement('button');
         button2.innerText = 'Open Booster Board';
