@@ -1190,15 +1190,16 @@ class MultiSelectModal extends Modal {
             container.appendChild(itemContainer);
 		});
 
+		const stockInfo = document.createElement('div');
+		stockInfo.className = 'stock-info';
 
 		// Iterate through elements and add stock information to the stock container
 		elements.forEach(element => {
-			const stockInfo = document.createElement('div');
-			stockInfo.className = 'stock-info';
-			stockInfo.innerText = `${element.shortName} ${this.remainingStock[element.shortName] || 0}`;
-			stockContainer.appendChild(stockInfo);
-		
+			stockInfo.innerText += `${element.shortName} ${this.remainingStock[element.shortName] || 0}   `;
 		});
+
+		stockContainer.appendChild(stockInfo);
+
 	
 		// Add the stock container to the main container
 		container.appendChild(stockContainer);
