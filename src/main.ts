@@ -22,7 +22,8 @@ import {
 	pointsForDailyChallenge,
 	pointsForWeeklyChallenge,
 	incrediments,
-	incredimentsDataName
+	craftingItems,
+	elements
 } from './constants'
 import {
 	count_inlinks,
@@ -1098,26 +1099,6 @@ class MultiSelectModal extends Modal {
         this.remainingStock[increment] = stock;
     }
 
-	/*private readIncredients(multiSelectModal: MultiSelectModal){
-
-
-		const stockValues: Record<string, number> = {
-			'Nexus Node': this.gamificationInstance.getSetting('nexusNode'),
-			'Connection Crystal': this.gamificationInstance.getSetting('connectionCrystal'),
-			'Mastery Scroll': this.gamificationInstance.getSetting('masteryScroll'),
-			'Insight Prism': this.gamificationInstance.getSetting('insightPrism'),
-			'Reflective Essence': this.gamificationInstance.getSetting('reflectiveEssence'),
-			'Amplification Crystal': this.gamificationInstance.getSetting('amplificationCrystal'),
-			'Creative Catalyst': this.gamificationInstance.getSetting('creativeCatalyst'),
-			'Precision Lens': this.gamificationInstance.getSetting('precisionLens')
-		};
-		
-		// Update stock values
-		incrediments.forEach(item => {
-			multiSelectModal.updateStock(item, stockValues[item]);
-		});
-
-	}*/
 
 	updateBoosterStock(booster: string, stock: number) {
         this.boosters[booster] = stock;
@@ -1136,10 +1117,6 @@ class MultiSelectModal extends Modal {
 		const { contentEl } = this;
 		contentEl.empty();
 
-		//readIncredients()
-	
-		//const craftingLayout = this.createCraftingLayout();
-		//contentEl.appendChild(craftingLayout);
 	
 		// take care only to run several times through when boosters are used
 		if (this.useBooster){
@@ -1153,9 +1130,6 @@ class MultiSelectModal extends Modal {
 		}
 	}
 	
-	
-	
-
 
     onClose() {
 		this.selectedItems = [];
@@ -1170,58 +1144,30 @@ class MultiSelectModal extends Modal {
         const container = document.createElement('div');
         container.className = 'modal-crafting-container';
 
-        const craftingItems = [
-            { name: 'Temporal Tweaker', incredients: ['2xS1', '1xS6'] },
-            { name: 'Perpetual Progress', incredients: ['2xS2', '1xS4'] },
-            { name: 'Strategic Synapses', incredients: ['3xS1', '22xS2'] },
-			{ name: 'Accelerated Acquisition', incredients: ['1xS3', '2xS4'] },
-			{ name: 'Linkers Lode', incredients: ['3xS2', '1xS1'] },
-			{ name: 'Effortless Expansion', incredients: ['2xS3', '1xS6'] },
-			{ name: 'Recursive Reflection', incredients: ['2xS4', '1xS5'] },
-			{ name: 'Synaptic Surge', incredients: ['2xS2', '1xS1'] },
-			{ name: 'Inspiration Infusion', incredients: ['2xS7', '1xS1'] },
-			{ name: 'Title Titan', incredients: ['2xS8', '1xS7'] },
-			{ name: 'Precision Prism', incredients: ['2xS8', '1xS2'] },
-			{ name: 'Hyperlink Harmony', incredients: ['2xS2', '1xS6'] },
-        ];
-
 		// Create a container for the stock information
 		const stockContainer = document.createElement('div');
 		stockContainer.className = 'stock-container';
-
-		// Define the elements and their corresponding names
-		const elements = [
-			{ shortName: 'S1', name: 'Nexus Node' },
-			{ shortName: 'S2', name: 'Connection Crystal' },
-			{ shortName: 'S3', name: 'Mastery Scroll' },
-			{ shortName: 'S4', name: 'Insight Prism' },
-			{ shortName: 'S5', name: 'Reflective Essence' },
-			{ shortName: 'S6', name: 'Amplification Crystal' },
-			{ shortName: 'S7', name: 'Creative Catalyst' },
-			{ shortName: 'S8', name: 'Precision Lens' }
-		];
 	
 
-        craftingItems.forEach(item => {
+		craftingItems.forEach(recipe => {
 			const itemContainer = document.createElement('div');
-            itemContainer.className = 'crafting-item-container';
+			itemContainer.className = 'crafting-item-container';
 
-            const button = document.createElement('button');
-            button.innerText = 'Craft';
-            button.onclick = () => this.craftBoosterItem(item.name);
+			const button = document.createElement('button');
+			button.innerText = 'Craft';
+			button.onclick = () => this.craftBoosterItem(recipe);
 
-            const itemText = document.createElement('span');
-            itemText.innerText = `${item.name} ⇒ ${item.incredients.join('x ')}`;
+			const itemText = document.createElement('span');
+			itemText.innerText = `${recipe.name} ⇒ ${recipe.incredients.join('x ')}`;
 
-            itemContainer.appendChild(button);
-            itemContainer.appendChild(itemText);
-            container.appendChild(itemContainer);
+			itemContainer.appendChild(button);
+			itemContainer.appendChild(itemText);
+			container.appendChild(itemContainer);
 		});
 
 		const stockInfo = document.createElement('div');
 		stockInfo.className = 'stock-info';
 
-		// Iterate through elements and add stock information to the stock container
 		elements.forEach(element => {
 			stockInfo.innerHTML += `${element.shortName} [${this.remainingStock[element.name] || 0}]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`; // Add non-breaking spaces
 		});
@@ -1236,6 +1182,7 @@ class MultiSelectModal extends Modal {
         return container;
     }
 
+	
 
 	updateStock(item: string, stock: number) {
         this.remainingStock[item] = stock;
@@ -1277,47 +1224,6 @@ class MultiSelectModal extends Modal {
         }
 	}
 	
-	
-
-	private createCheckbox(labelText: string) {
-		
-		const container = document.createElement('div');
-		container.className = 'modal-checkbox-container';
-		const stock = this.remainingStock[labelText] || 0;
-	
-		const label = document.createElement('label');
-		label.innerText = `${labelText}`;// (${stock})`;
-		label.classList.add(`${labelText.replace(' ','-')}`); // Add class 'item-label' to the label
-	
-		const incrementButton = document.createElement('button');
-		incrementButton.innerText = '+';
-		incrementButton.onclick = () => {
-			this.incrementItem(labelText);
-		};
-	
-		const decrementButton = document.createElement('button');
-		decrementButton.innerText = '-';
-		decrementButton.onclick = () => {
-			this.decrementItem(labelText);
-		};
-	
-		const remainingStock = document.createElement('span');
-		remainingStock.innerHTML = `Remaining: <span>${stock}</span> `;
-		remainingStock.id = 'remaining-stock';
-
-		const selectedQuantity = document.createElement('span');
-		selectedQuantity.innerHTML = `Selected: <span>0</span>`;
-		selectedQuantity.id = 'selected-quantity';
-
-	
-		container.appendChild(label);
-		container.appendChild(incrementButton);
-		container.appendChild(decrementButton);
-		container.appendChild(remainingStock);
-		container.appendChild(selectedQuantity);
-		console.log(`container for incement id?: ${container.id}`)
-		return container;
-	}
 
 	private createBoosterList(labelText: string) {
 		const container = document.createElement('div');
@@ -1389,28 +1295,28 @@ class MultiSelectModal extends Modal {
 		selectedQuantity.innerText = `${selected}`;
 	}
 	
+	private checkIngredientsAvailability(incredients: {name: string; incredients: string[];}) {
+		for (const ingredient of incredients.incredients) {
+			const [quantity, shortName] = ingredient.split('x');
+			console.log(`quantity: ${quantity}\tshortName: ${shortName}`)
+			const requiredQuantity = parseInt(quantity);
+			const availableStock = this.remainingStock[shortName] || 0;
+			console.log(`requiredQuantity: ${requiredQuantity}\tavailableStock: ́${availableStock}`)
+	
+			if (requiredQuantity > availableStock) {
+				return false; // Not enough stock for this ingredient
+			}
+		}
+	
+		return true; // All ingredients are available
+	}
 	
 
-    /*private createSubmitButton(buttonText:string) {
-        const submitButton = document.createElement('button');
-        submitButton.innerText = buttonText;
-        submitButton.onclick = () => {
-            const selectedItems2 = this.getSelectedItems();
-			this.craftBoosterItem(selectedItems2);
-			this.close();
-        };
-        return submitButton;
-    }*/
 
-
-    private getSelectedItems() {
-        return this.selectedItems;
-    }
-
-
-    private craftBoosterItem(selectedItems: string) {
+    private craftBoosterItem(selectedItems: {name: string; incredients: string[];}) {
 		// call here the recipe logic and reduce the stock
-		console.log(`Selected: ${selectedItems}`);
+		console.log(`Selected: ${selectedItems.name}`);
+		console.log(`enough ingrediments : ${this.checkIngredientsAvailability(selectedItems)}`);
 	}	
 }
 

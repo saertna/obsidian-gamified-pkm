@@ -180,3 +180,30 @@ export const incredimentsDataName = [
   'creativeCatalyst',
   'precisionLens'
 ];
+
+export const craftingItems = [
+  { name: 'Temporal Tweaker', incredients: ['2xS1', '1xS6'] },
+  { name: 'Perpetual Progress', incredients: ['2xS2', '1xS4'] },
+  { name: 'Strategic Synapses', incredients: ['3xS1', '22xS2'] },
+  { name: 'Accelerated Acquisition', incredients: ['1xS3', '2xS4'] },
+  { name: 'Linkers Lode', incredients: ['3xS2', '1xS1'] },
+  { name: 'Effortless Expansion', incredients: ['2xS3', '1xS6'] },
+  { name: 'Recursive Reflection', incredients: ['2xS4', '1xS5'] },
+  { name: 'Synaptic Surge', incredients: ['2xS2', '1xS1'] },
+  { name: 'Inspiration Infusion', incredients: ['2xS7', '1xS1'] },
+  { name: 'Title Titan', incredients: ['2xS8', '1xS7'] },
+  { name: 'Precision Prism', incredients: ['2xS8', '1xS2'] },
+  { name: 'Hyperlink Harmony', incredients: ['2xS2', '1xS6'] },
+];
+
+
+export const elements = [
+  { shortName: 'S1', name: 'Nexus Node' },
+  { shortName: 'S2', name: 'Connection Crystal' },
+  { shortName: 'S3', name: 'Mastery Scroll' },
+  { shortName: 'S4', name: 'Insight Prism' },
+  { shortName: 'S5', name: 'Reflective Essence' },
+  { shortName: 'S6', name: 'Amplification Crystal' },
+  { shortName: 'S7', name: 'Creative Catalyst' },
+  { shortName: 'S8', name: 'Precision Lens' }
+];
