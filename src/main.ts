@@ -21,7 +21,8 @@ import {
 	pointsNoteMajurity,
 	pointsForDailyChallenge,
 	pointsForWeeklyChallenge,
-	incrediments
+	incrediments,
+	incredimentsDataName
 } from './constants'
 import {
 	count_inlinks,
@@ -1093,6 +1094,31 @@ class MultiSelectModal extends Modal {
         }
     }
 
+	updateIncrementStock(increment: string, stock: number) {
+        this.remainingStock[increment] = stock;
+    }
+
+	/*private readIncredients(multiSelectModal: MultiSelectModal){
+
+
+		const stockValues: Record<string, number> = {
+			'Nexus Node': this.gamificationInstance.getSetting('nexusNode'),
+			'Connection Crystal': this.gamificationInstance.getSetting('connectionCrystal'),
+			'Mastery Scroll': this.gamificationInstance.getSetting('masteryScroll'),
+			'Insight Prism': this.gamificationInstance.getSetting('insightPrism'),
+			'Reflective Essence': this.gamificationInstance.getSetting('reflectiveEssence'),
+			'Amplification Crystal': this.gamificationInstance.getSetting('amplificationCrystal'),
+			'Creative Catalyst': this.gamificationInstance.getSetting('creativeCatalyst'),
+			'Precision Lens': this.gamificationInstance.getSetting('precisionLens')
+		};
+		
+		// Update stock values
+		incrediments.forEach(item => {
+			multiSelectModal.updateStock(item, stockValues[item]);
+		});
+
+	}*/
+
 	updateBoosterStock(booster: string, stock: number) {
         this.boosters[booster] = stock;
     }
@@ -1109,6 +1135,8 @@ class MultiSelectModal extends Modal {
 	onOpen() {
 		const { contentEl } = this;
 		contentEl.empty();
+
+		//readIncredients()
 	
 		//const craftingLayout = this.createCraftingLayout();
 		//contentEl.appendChild(craftingLayout);
@@ -1195,7 +1223,7 @@ class MultiSelectModal extends Modal {
 
 		// Iterate through elements and add stock information to the stock container
 		elements.forEach(element => {
-			stockInfo.innerHTML += `${element.shortName} ${this.remainingStock[element.shortName] || 0}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`; // Add non-breaking spaces
+			stockInfo.innerHTML += `${element.shortName} [${this.remainingStock[element.name] || 0}]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`; // Add non-breaking spaces
 		});
 
 		stockContainer.appendChild(stockInfo);

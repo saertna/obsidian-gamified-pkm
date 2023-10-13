@@ -169,3 +169,14 @@ export const incrediments = [
   'Creative Catalyst',
   'Precision Lens'
 ];
+
+export const incredimentsDataName = [
+  'nexusNode',
+  'connectionCrystal',
+  'masteryScroll',
+  'insightPrism',
+  'reflectiveEssence',
+  'amplificationCrystal',
+  'creativeCatalyst',
+  'precisionLens'
+];
