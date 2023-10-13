@@ -1300,7 +1300,7 @@ class MultiSelectModal extends Modal {
 			const [quantity, shortName] = ingredient.split('x');
 			console.log(`quantity: ${quantity}\tshortName: ${shortName}`)
 			const requiredQuantity = parseInt(quantity);
-			const availableStock = this.remainingStock[shortName] || 0;
+			const availableStock = this.remainingStock[this.getNameFromShortName(shortName) || 0];
 			console.log(`requiredQuantity: ${requiredQuantity}\tavailableStock: ́${availableStock}`)
 	
 			if (requiredQuantity > availableStock) {
@@ -1317,7 +1317,18 @@ class MultiSelectModal extends Modal {
 		// call here the recipe logic and reduce the stock
 		console.log(`Selected: ${selectedItems.name}`);
 		console.log(`enough ingrediments : ${this.checkIngredientsAvailability(selectedItems)}`);
+		
 	}	
+
+	private getNameFromShortName(shortName: string) {
+		for (const element of elements) {
+			if (element.shortName === shortName) {
+				return element.name;
+			}
+		}
+		return null; // Return null if no matching element is found
+	}
+	
 }
 
 
