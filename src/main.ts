@@ -1096,8 +1096,10 @@ class MultiSelectModal extends Modal {
 		// take care only to run several times through when boosters are used
 		if (this.useBooster){
 			boosterRecipes.forEach(item => {
-				const listItem = this.createItemContainer(item.name);
-				contentEl.appendChild(listItem);
+				if(item.name == 'Linkers Lode' || item.name == 'Title Titan'){
+					const listItem = this.createItemContainer(item.name);
+					contentEl.appendChild(listItem);
+				}
 			});
 		} else {
 			const listItem = this.createItemContainer("");
@@ -1196,19 +1198,21 @@ class MultiSelectModal extends Modal {
 	
 
 		craftingItems.forEach(recipe => {
-			const itemContainer = document.createElement('div');
-			itemContainer.className = 'crafting-item-container';
+			if(recipe.name == 'Linkers Lode' || recipe.name == 'Title Titan'){
+				const itemContainer = document.createElement('div');
+				itemContainer.className = 'crafting-item-container';
 
-			const button = document.createElement('button');
-			button.innerText = 'Craft';
-			button.onclick = () => this.craftBoosterItem(recipe);
+				const button = document.createElement('button');
+				button.innerText = 'Craft';
+				button.onclick = () => this.craftBoosterItem(recipe);
 
-			const itemText = document.createElement('span');
-			itemText.innerText = `${recipe.name} ⇒ ${recipe.incredients.join('    ')}`;
+				const itemText = document.createElement('span');
+				itemText.innerText = `${recipe.name} ⇒ ${recipe.incredients.join('    ')}`;
 
-			itemContainer.appendChild(button);
-			itemContainer.appendChild(itemText);
-			container.appendChild(itemContainer);
+				itemContainer.appendChild(button);
+				itemContainer.appendChild(itemText);
+				container.appendChild(itemContainer);
+			}
 		});
 
 		const stockInfo = document.createElement('div');
@@ -1273,6 +1277,9 @@ class MultiSelectModal extends Modal {
 	
 
 	private createBoosterList(labelText: string) {
+		
+		console.log(`labelText: ${labelText}`)
+		
 		const container = document.createElement('div');
 		container.className = 'modal-checkbox-container';
 		
@@ -1291,8 +1298,8 @@ class MultiSelectModal extends Modal {
 		container.appendChild(label);
 		container.appendChild(useButton);
 
-		
 		return container;
+		
 	}
 
 	private useBoosterItem(labelText: string) {
@@ -1479,7 +1486,6 @@ class ModalBooster extends Modal {
         button2.innerText = 'Open Booster Board';
        	button2.onclick = () => {
 			multiSelectModal.setUseBooster(true);
-			//multiSelectModal.setItems(['Temporal Tweaker', 'Perpetual Progress', 'Strategic Synapses', 'Accelerated Acquisition', 'Linkers Lode', 'Effortless Expansion', 'Recursive Reflection', 'Synaptic Surge', 'Inspiration Infusion', 'Title Titan', 'Precision Prism', 'Hyperlink Harmony']);
 			multiSelectModal.open();
 		};
 
