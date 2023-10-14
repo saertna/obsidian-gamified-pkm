@@ -1127,7 +1127,9 @@ class MultiSelectModal extends Modal {
     }
 
 	updateIncrementStock(increment: string, stock: number) {
+		console.log(`updateIncrementStock: increment ${increment}  stock ${stock}`)
         this.remainingStock[increment] = stock;
+		this.gamificationInstance.setSetting(this.getIngerementVarNameFromName(increment)|| '', stock)
     }
 
 
@@ -1357,8 +1359,36 @@ class MultiSelectModal extends Modal {
 	
 		return true;
 	}
-	
 
+	private useIngrediments(incredients: {name: string; incredients: string[];}) {
+		console.log(`useIngrediments: ${incredients}`)
+		for (const ingredient of incredients.incredients) {
+			const [quantity, shortName] = ingredient.split('x');
+			console.log(`quantity: ${quantity}\tshortName: ${shortName}`)
+			const requiredQuantity = parseInt(quantity);
+			const availableStock = this.remainingStock[this.getIngerementNameFromShortName(shortName) || 0];
+			const ingrementName = this.getIngerementNameFromShortName(shortName) || '';
+			//console.log(`requiredQuantity: ${requiredQuantity}\tavailableStock: ́${availableStock}`)
+			//this.remainingStock[this.getIngerementNameFromShortName(shortName) = this.remainingStock[this.getIngerementNameFromShortName(shortName) || 0] -= quantity;
+			console.log(`this.getIngerementNameFromShortName(shortName): ${this.getIngerementNameFromShortName(shortName)}`)
+			this.updateIncrementStock(ingrementName,availableStock - requiredQuantity)
+			console.log(`${incredients.name}  ${availableStock - requiredQuantity}`)
+		}
+		
+		return true;
+	}
+	
+	private updateStockInformation() {
+		const stockInfo = document.querySelector('.stock-info');
+		if (stockInfo) {
+			stockInfo.innerHTML = ''; // Clear the current content
+	
+			elements.forEach(element => {
+				stockInfo.innerHTML += `${element.shortName} [${this.remainingStock[element.name] || 0}]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`;
+			});
+		}
+	}
+	
 
     private craftBoosterItem(selectedItems: {name: string; incredients: string[];}) {
 		// call here the recipe logic and reduce the stock
@@ -1366,6 +1396,9 @@ class MultiSelectModal extends Modal {
 			console.log(`craft booster ${selectedItems.name}`)
 			this.updateBoosterStock(selectedItems.name, 1)
 			this.gamificationInstance.setSetting(this.getBoosterVarNameFromName(selectedItems.name), this.boosters[selectedItems.name])
+			this.useIngrediments(selectedItems)
+			//this.updateQuantityDisplay(selectedItems.name)
+			this.updateStockInformation()
 		} else {
 			console.log(`not enough ingredients for booster ${selectedItems.name} in stock`)
 		}
@@ -1375,6 +1408,24 @@ class MultiSelectModal extends Modal {
 		for (const element of elements) {
 			if (element.shortName === shortName) {
 				return element.name;
+			}
+		}
+		return null; // Return null if no matching element is found
+	}
+
+	private getIngerementVarNameFromShortName(shortName: string) {
+		for (const element of elements) {
+			if (element.shortName === shortName) {
+				return element.varName;
+			}
+		}
+		return null; // Return null if no matching element is found
+	}
+	
+	private getIngerementVarNameFromName(name: string) {
+		for (const element of elements) {
+			if (element.name === name) {
+				return element.varName;
 			}
 		}
 		return null; // Return null if no matching element is found
