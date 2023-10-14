@@ -1082,6 +1082,30 @@ class MultiSelectModal extends Modal {
 		this.buttonText = buttonText;
     }
 
+	onOpen() {
+		const { contentEl } = this;
+		contentEl.empty();
+
+		this.readBoostersStock();
+
+		// take care only to run several times through when boosters are used
+		if (this.useBooster){
+			boosterRecipes.forEach(item => {
+				const listItem = this.createItemContainer(item.name);
+				contentEl.appendChild(listItem);
+			});
+		} else {
+			const listItem = this.createItemContainer("");
+			contentEl.appendChild(listItem);
+		}
+	}
+	
+
+    onClose() {
+		this.selectedItems = [];
+    }
+
+
 	setUseBooster(useBooster: boolean) {
         this.useBooster = useBooster;
     }
@@ -1135,39 +1159,18 @@ class MultiSelectModal extends Modal {
 			'Perpetual Progress': 0,
 			'Strategic Synapses': 3,
 			'Accelerated Acquisition': 2,
-			'Linkers Lode': 0,
-			'Effortless Expansion': 0,
-			'Recursive Reflection': 0,
-			'Synaptic Surge': 0,
-			'Inspiration Infusion': 0,
-			'Title Titan': 0,
-			'Precision Prism': 0,
-			'Hyperlink Harmony': 0,
+			'Linkers Lode': 10,
+			'Effortless Expansion': 20,
+			'Recursive Reflection': 30,
+			'Synaptic Surge': 40,
+			'Inspiration Infusion': 50,
+			'Title Titan': 60,
+			'Precision Prism': 70,
+			'Hyperlink Harmony': 80,
 		};
 	}
 
-	onOpen() {
-		const { contentEl } = this;
-		contentEl.empty();
 
-		this.readBoostersStock();
-
-		// take care only to run several times through when boosters are used
-		if (this.useBooster){
-			boosterRecipes.forEach(item => {
-				const listItem = this.createItemContainer(item.name);
-				contentEl.appendChild(listItem);
-			});
-		} else {
-			const listItem = this.createItemContainer("");
-			contentEl.appendChild(listItem);
-		}
-	}
-	
-
-    onClose() {
-		this.selectedItems = [];
-    }
 
 	
 	/*setItems(items: string[]) {
@@ -1264,7 +1267,8 @@ class MultiSelectModal extends Modal {
 		const container = document.createElement('div');
 		container.className = 'modal-checkbox-container';
 		
-		const stock = this.remainingStock[labelText] || 0;
+		//const stock = this.remainingStock[labelText] || 0;
+		const stock = this.boosters[labelText]
 	
 		const label = document.createElement('label');
 		label.innerText = `${labelText} ⇒ ${stock}x (s)`;
