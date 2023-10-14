@@ -24,7 +24,8 @@ import {
 	incrediments,
 	craftingItems,
 	elements,
-	boosterRecipes
+	boosterRecipes,
+	listOfUseableBoostersToBeShown
 } from './constants'
 import {
 	count_inlinks,
@@ -1096,7 +1097,7 @@ class MultiSelectModal extends Modal {
 		// take care only to run several times through when boosters are used
 		if (this.useBooster){
 			boosterRecipes.forEach(item => {
-				if(item.name == 'Linkers Lode' || item.name == 'Title Titan'){
+				if(this.boosterAvailableForUse(item.name)){
 					const listItem = this.createItemContainer(item.name);
 					contentEl.appendChild(listItem);
 				}
@@ -1112,6 +1113,21 @@ class MultiSelectModal extends Modal {
 		this.selectedItems = [];
     }
 
+	private boosterAvailableForUse(item:string){
+		console.log(`boosterAvailableForUse: ${item}`)
+		let found = false
+		listOfUseableBoostersToBeShown.forEach(element => {
+			console.log(`${item} == ${element} ??`)
+			if(item == element){
+				if(!found){
+					found = true;
+				}
+			
+			}
+			
+		});
+		return found
+	}
 
 	setUseBooster(useBooster: boolean) {
         this.useBooster = useBooster;
@@ -1198,7 +1214,7 @@ class MultiSelectModal extends Modal {
 	
 
 		craftingItems.forEach(recipe => {
-			if(recipe.name == 'Linkers Lode' || recipe.name == 'Title Titan'){
+			if(this.boosterAvailableForUse(recipe.name)){
 				const itemContainer = document.createElement('div');
 				itemContainer.className = 'crafting-item-container';
 

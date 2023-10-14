@@ -196,6 +196,7 @@ export const craftingItems = [
   { name: 'Hyperlink Harmony', incredients: ['2xS2', '1xS6'] },
 ];
 
+export const listOfUseableBoostersToBeShown = ['Linkers Lode', 'Title Titan']
 
 export const elements = [
   { shortName: 'S1', name: 'Nexus Node', varName: 'nexusNode' },
