@@ -184,7 +184,7 @@ export const incredimentsDataName = [
 export const craftingItems = [
   { name: 'Temporal Tweaker', incredients: ['2xS1', '1xS6'] },
   { name: 'Perpetual Progress', incredients: ['2xS2', '1xS4'] },
-  { name: 'Strategic Synapses', incredients: ['3xS1', '22xS2'] },
+  { name: 'Strategic Synapses', incredients: ['3xS1', '2xS2'] },
   { name: 'Accelerated Acquisition', incredients: ['1xS3', '2xS4'] },
   { name: 'Linkers Lode', incredients: ['3xS2', '1xS1'] },
   { name: 'Effortless Expansion', incredients: ['2xS3', '1xS6'] },

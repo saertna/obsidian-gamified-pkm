@@ -1100,8 +1100,8 @@ class MultiSelectModal extends Modal {
     }
 
 
-	updateBoosterStock(booster: string, stock: number) {
-        this.boosters[booster] = stock;
+	updateBoosterStock(booster: string, stockIncrease: number) {
+        this.boosters[booster] = stockIncrease;
     }
 
 	
@@ -1296,15 +1296,12 @@ class MultiSelectModal extends Modal {
 	}
 	
 	private checkIngredientsAvailability(incredients: {name: string; incredients: string[];}) {
-		let counter = 0
 		for (const ingredient of incredients.incredients) {
-			counter +=1;
-			console.log(`called ${counter}`)
 			const [quantity, shortName] = ingredient.split('x');
-			console.log(`quantity: ${quantity}\tshortName: ${shortName}`)
+			//console.log(`quantity: ${quantity}\tshortName: ${shortName}`)
 			const requiredQuantity = parseInt(quantity);
 			const availableStock = this.remainingStock[this.getNameFromShortName(shortName) || 0];
-			console.log(`requiredQuantity: ${requiredQuantity}\tavailableStock: ́${availableStock}`)
+			//console.log(`requiredQuantity: ${requiredQuantity}\tavailableStock: ́${availableStock}`)
 	
 			if (requiredQuantity > availableStock) {
 				return false; // Not enough stock for this ingredient
@@ -1318,9 +1315,12 @@ class MultiSelectModal extends Modal {
 
     private craftBoosterItem(selectedItems: {name: string; incredients: string[];}) {
 		// call here the recipe logic and reduce the stock
-		console.log(`Selected: ${selectedItems.name}`);
-		console.log(`enough ingrediments : ${this.checkIngredientsAvailability(selectedItems)}`);
-		
+		if(this.checkIngredientsAvailability(selectedItems)){
+			console.log(`craft booster ${selectedItems.name}`)
+			this.updateBoosterStock(selectedItems.name, 1)
+		} else {
+			console.log(`not enough ingredients for booster ${selectedItems.name} in stock`)
+		}
 	}	
 
 	private getNameFromShortName(shortName: string) {
