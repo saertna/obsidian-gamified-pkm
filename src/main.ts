@@ -65,12 +65,12 @@ export default class gamification extends Plugin {
         // Retrieve a specific setting
 		//this.settings['boosterIncredients']
 		//const key = 'boosterIncredients'
-		console.log(`getSetting ${key} : ${this.settings[key]}`)
-        return this.settings[key];
+		return this.settings[key];
     }
 
     setSetting(key: string, value: number) {
         // Set a specific setting
+		console.log(`new value for ${key} is ${value}`)
         this.settings[key] = value;
         this.saveSettings();
     }
@@ -1354,7 +1354,7 @@ class MultiSelectModal extends Modal {
 			}
 		}
 	
-		return true; // All ingredients are available
+		return true;
 	}
 	
 
@@ -1364,6 +1364,7 @@ class MultiSelectModal extends Modal {
 		if(this.checkIngredientsAvailability(selectedItems)){
 			console.log(`craft booster ${selectedItems.name}`)
 			this.updateBoosterStock(selectedItems.name, 1)
+			this.gamificationInstance.setSetting(this.getVarNameFromBoosterName(selectedItems.name), this.boosters[selectedItems.name])
 		} else {
 			console.log(`not enough ingredients for booster ${selectedItems.name} in stock`)
 		}
@@ -1376,6 +1377,15 @@ class MultiSelectModal extends Modal {
 			}
 		}
 		return null; // Return null if no matching element is found
+	}
+
+	private getVarNameFromBoosterName(boosterName: string) {
+		for (const element of boosterRecipes) {
+			if (element.name === boosterName) {
+				return element.varname;
+			}
+		}
+		return ''; // Return null if no matching element is found
 	}
 	
 }
