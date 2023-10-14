@@ -198,14 +198,14 @@ export const craftingItems = [
 
 
 export const elements = [
-  { shortName: 'S1', name: 'Nexus Node' },
-  { shortName: 'S2', name: 'Connection Crystal' },
-  { shortName: 'S3', name: 'Mastery Scroll' },
-  { shortName: 'S4', name: 'Insight Prism' },
-  { shortName: 'S5', name: 'Reflective Essence' },
-  { shortName: 'S6', name: 'Amplification Crystal' },
-  { shortName: 'S7', name: 'Creative Catalyst' },
-  { shortName: 'S8', name: 'Precision Lens' }
+  { shortName: 'S1', name: 'Nexus Node', varName: 'nexusNode' },
+  { shortName: 'S2', name: 'Connection Crystal', varName: 'connectionCrystal' },
+  { shortName: 'S3', name: 'Mastery Scroll', varName: 'masteryScroll' },
+  { shortName: 'S4', name: 'Insight Prism', varName: 'insightPrism' },
+  { shortName: 'S5', name: 'Reflective Essence', varName: 'reflectiveEssence' },
+  { shortName: 'S6', name: 'Amplification Crystal', varName: 'amplificationCrystal' },
+  { shortName: 'S7', name: 'Creative Catalyst', varName: 'creativeCatalyst' },
+  { shortName: 'S8', name: 'Precision Lens', varName: 'precisionLens' }
 ];
 
 export const boosterRecipes = [

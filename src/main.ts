@@ -65,7 +65,7 @@ export default class gamification extends Plugin {
         // Retrieve a specific setting
 		//this.settings['boosterIncredients']
 		//const key = 'boosterIncredients'
-		console.log(`getSetting ${key}`)
+		console.log(`getSetting ${key} : ${this.settings[key]}`)
         return this.settings[key];
     }
 
@@ -1163,20 +1163,22 @@ class MultiSelectModal extends Modal {
 				'Hyperlink Harmony': this.gamificationInstance.getSetting('hyperlinkHarmony'),
 			};
 		}
-/*		this.boosters = { 
-			'Temporal Tweaker': 3,
-			'Perpetual Progress': 0,
-			'Strategic Synapses': 3,
-			'Accelerated Acquisition': 2,
-			'Linkers Lode': 10,
-			'Effortless Expansion': 20,
-			'Recursive Reflection': 30,
-			'Synaptic Surge': 40,
-			'Inspiration Infusion': 50,
-			'Title Titan': 60,
-			'Precision Prism': 70,
-			'Hyperlink Harmony': 80,
-		};*/
+	}
+
+
+	readIngrementStock(){
+		if (this.gamificationInstance) {
+			this.remainingStock = { 
+				'Nexus Node': this.gamificationInstance.getSetting('nexusNode'),
+				'Connection Crystal': this.gamificationInstance.getSetting('connectionCrystal'),
+				'Mastery Scroll': this.gamificationInstance.getSetting('masteryScroll'),
+				'Insight Prism': this.gamificationInstance.getSetting('insightPrism'),
+				'Reflective Essence': this.gamificationInstance.getSetting('reflectiveEssence'),
+				'Amplification Crystal': this.gamificationInstance.getSetting('amplificationCrystal'),
+				'Creative Catalyst': this.gamificationInstance.getSetting('creativeCatalyst'),
+				'Precision Lens': this.gamificationInstance.getSetting('precisionLens'),
+			};
+		}
 	}
 
 
@@ -1408,6 +1410,8 @@ class ModalBooster extends Modal {
 
 
 		multiSelectModal.readBoostersStock();
+		multiSelectModal.readIngrementStock();
+
 
 		const button2 = document.createElement('button');
         button2.innerText = 'Open Booster Board';
