@@ -24,7 +24,7 @@ export const defaultSettings: Partial<ISettings> = {
   dailyNoteCreationDate: '12.08.2023',
   weeklyNoteCreationTask: 0,
   weeklyNoteCreationDate: '12.08.2023',
-  boosterIncredients: 'Whimsical Wisdom Crystals,Curiosity Coins,Eureka Energy Orbs,Serendipity Stars,Creativity Crystals,Discovery Dice,Metaphorical Medals,Curious Cat Companion,Another One',
+  // boosterIncredients: 'Whimsical Wisdom Crystals,Curiosity Coins,Eureka Energy Orbs,Serendipity Stars,Creativity Crystals,Discovery Dice,Metaphorical Medals,Curious Cat Companion,Another One',
   nexusNode: 0,
   connectionCrystal: 0,
   masteryScroll: 0,
@@ -68,29 +68,29 @@ export interface ISettings {
   debug: boolean;
   dailyNoteCreationTask: number;
   dailyNoteCreationDate: string;
-  weeklyNoteCreationTask: number,
-  weeklyNoteCreationDate: string,
-  boosterIncredients: string,
-  nexusNode: number,
-  connectionCrystal: number,
-  masteryScroll: number,
-  insightPrism: number,
-  reflectiveEssence: number,
-  amplificationCrystal: number,
-  creativeCatalyst: number,
-  precisionLens: number,
-  temporalTweaker: number,
-  perpetualProgress: number,
-  strategicSynapses: number,
-  acceleratedAcquisition: number,
-  linkersLode: number,
-  effortlessExpansion: number,
-  recursiveReflection: number,
-  synapticSurge: number,
-  inspirationInfusion: number,
-  titleTitan: number,
-  precisionPrism: number,
-  hyperlinkHarmony: number,
+  weeklyNoteCreationTask: number;
+  weeklyNoteCreationDate: string;
+  // boosterIncredients: string;
+  nexusNode: number;
+  connectionCrystal: number;
+  masteryScroll: number;
+  insightPrism: number;
+  reflectiveEssence: number;
+  amplificationCrystal: number;
+  creativeCatalyst: number;
+  precisionLens: number;
+  temporalTweaker: number;
+  perpetualProgress: number;
+  strategicSynapses: number;
+  acceleratedAcquisition: number;
+  linkersLode: number;
+  effortlessExpansion: number;
+  recursiveReflection: number;
+  synapticSurge: number;
+  inspirationInfusion: number;
+  titleTitan: number;
+  precisionPrism: number;
+  hyperlinkHarmony: number;
 }
 
 
@@ -119,7 +119,7 @@ export class GamificationPluginSettings extends PluginSettingTab {
   public dailyNoteCreationDate: string;
   public weeklyNoteCreationTask: number;
   public weeklyNoteCreationDate: string;
-  public boosterIncredients: string;
+  // public boosterIncredients: string;
   public nexusNode: number;
   public connectionCrystal: number;
   public masteryScroll: number;

@@ -1086,6 +1086,7 @@ class MultiSelectModal extends Modal {
         this.useBooster = useBooster;
     }
 
+
 	// Updated createItemContainer method
     private createItemContainer(labelText: string) {
         if (this.useBooster) {
@@ -1115,7 +1116,7 @@ class MultiSelectModal extends Modal {
     }
 
 	readBoostersStock(){
-		this.boosters = { 
+		/*this.boosters = { 
 			'Temporal Tweaker': this.gamificationInstance.getSetting('temporalTweaker'),
 			'Perpetual Progress': this.gamificationInstance.getSetting('perpetualProgress'),
 			'Strategic Synapses': this.gamificationInstance.getSetting('strategicSynapses'),
@@ -1128,6 +1129,20 @@ class MultiSelectModal extends Modal {
 			'Title Titan': this.gamificationInstance.getSetting('titleTitan'),
 			'Precision Prism': this.gamificationInstance.getSetting('precisionPrism'),
 			'Hyperlink Harmony': this.gamificationInstance.getSetting('hyperlinkHarmony'),
+		};*/
+		this.boosters = { 
+			'Temporal Tweaker': 3,
+			'Perpetual Progress': 0,
+			'Strategic Synapses': 3,
+			'Accelerated Acquisition': 2,
+			'Linkers Lode': 0,
+			'Effortless Expansion': 0,
+			'Recursive Reflection': 0,
+			'Synaptic Surge': 0,
+			'Inspiration Infusion': 0,
+			'Title Titan': 0,
+			'Precision Prism': 0,
+			'Hyperlink Harmony': 0,
 		};
 	}
 
@@ -1154,6 +1169,7 @@ class MultiSelectModal extends Modal {
 		this.selectedItems = [];
     }
 
+	
 	/*setItems(items: string[]) {
         this.items = items;
     }*/
