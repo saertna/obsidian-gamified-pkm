@@ -1158,7 +1158,7 @@ class MultiSelectModal extends Modal {
 			button.onclick = () => this.craftBoosterItem(recipe);
 
 			const itemText = document.createElement('span');
-			itemText.innerText = `${recipe.name} ⇒ ${recipe.incredients.join('x ')}`;
+			itemText.innerText = `${recipe.name} ⇒ ${recipe.incredients.join('    ')}`;
 
 			itemContainer.appendChild(button);
 			itemContainer.appendChild(itemText);
@@ -1169,7 +1169,7 @@ class MultiSelectModal extends Modal {
 		stockInfo.className = 'stock-info';
 
 		elements.forEach(element => {
-			stockInfo.innerHTML += `${element.shortName} [${this.remainingStock[element.name] || 0}]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`; // Add non-breaking spaces
+			stockInfo.innerHTML += `${element.shortName} [${this.remainingStock[element.name] || 0}]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`; 
 		});
 
 		stockContainer.appendChild(stockInfo);
@@ -1296,7 +1296,10 @@ class MultiSelectModal extends Modal {
 	}
 	
 	private checkIngredientsAvailability(incredients: {name: string; incredients: string[];}) {
+		let counter = 0
 		for (const ingredient of incredients.incredients) {
+			counter +=1;
+			console.log(`called ${counter}`)
 			const [quantity, shortName] = ingredient.split('x');
 			console.log(`quantity: ${quantity}\tshortName: ${shortName}`)
 			const requiredQuantity = parseInt(quantity);
