@@ -23,7 +23,8 @@ import {
 	pointsForWeeklyChallenge,
 	incrediments,
 	craftingItems,
-	elements
+	elements,
+	boosterRecipes
 } from './constants'
 import {
 	count_inlinks,
@@ -1113,15 +1114,33 @@ class MultiSelectModal extends Modal {
 		};
     }
 
+	readBoostersStock(){
+		this.boosters = { 
+			'Temporal Tweaker': this.gamificationInstance.getSetting('temporalTweaker'),
+			'Perpetual Progress': this.gamificationInstance.getSetting('perpetualProgress'),
+			'Strategic Synapses': this.gamificationInstance.getSetting('strategicSynapses'),
+			'Accelerated Acquisition': this.gamificationInstance.getSetting('acceleratedAcquisition'),
+			'Linkers Lode': this.gamificationInstance.getSetting('linkersLode'),
+			'Effortless Expansion': this.gamificationInstance.getSetting('effortlessExpansion'),
+			'Recursive Reflection': this.gamificationInstance.getSetting('recursiveReflection'),
+			'Synaptic Surge': this.gamificationInstance.getSetting('synapticSurge'),
+			'Inspiration Infusion': this.gamificationInstance.getSetting('inspirationInfusion'),
+			'Title Titan': this.gamificationInstance.getSetting('titleTitan'),
+			'Precision Prism': this.gamificationInstance.getSetting('precisionPrism'),
+			'Hyperlink Harmony': this.gamificationInstance.getSetting('hyperlinkHarmony'),
+		};
+	}
+
 	onOpen() {
 		const { contentEl } = this;
 		contentEl.empty();
 
-	
+		this.readBoostersStock();
+
 		// take care only to run several times through when boosters are used
 		if (this.useBooster){
-			this.items.forEach(item => {
-				const listItem = this.createItemContainer(item);
+			boosterRecipes.forEach(item => {
+				const listItem = this.createItemContainer(item.name);
 				contentEl.appendChild(listItem);
 			});
 		} else {
@@ -1135,9 +1154,9 @@ class MultiSelectModal extends Modal {
 		this.selectedItems = [];
     }
 
-	setItems(items: string[]) {
+	/*setItems(items: string[]) {
         this.items = items;
-    }
+    }*/
 
 
 	private createCraftingLayout() {
@@ -1356,9 +1375,9 @@ class ModalBooster extends Modal {
         const button = document.createElement('button');
         button.innerText = 'Open Crafting Table';
         button.onclick = () => {
-            const items = this.readIncredients(multiSelectModal);
+            //const items = this.readIncredients(multiSelectModal);
             multiSelectModal.setUseBooster(false); // Set the flag for crafting table
-            multiSelectModal.setItems(items);
+            //multiSelectModal.setItems(items);
             multiSelectModal.open();
         };
 
@@ -1367,7 +1386,7 @@ class ModalBooster extends Modal {
         button2.innerText = 'Open Booster Board';
        	button2.onclick = () => {
 			multiSelectModal.setUseBooster(true);
-			multiSelectModal.setItems(['Temporal Tweaker', 'Perpetual Progress', 'Strategic Synapses', 'Accelerated Acquisition', 'Linkers Lode', 'Effortless Expansion', 'Recursive Reflection', 'Synaptic Surge', 'Inspiration Infusion', 'Title Titan', 'Precision Prism', 'Hyperlink Harmony']);
+			//multiSelectModal.setItems(['Temporal Tweaker', 'Perpetual Progress', 'Strategic Synapses', 'Accelerated Acquisition', 'Linkers Lode', 'Effortless Expansion', 'Recursive Reflection', 'Synaptic Surge', 'Inspiration Infusion', 'Title Titan', 'Precision Prism', 'Hyperlink Harmony']);
 			multiSelectModal.open();
 		};
 

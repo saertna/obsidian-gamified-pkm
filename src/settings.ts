@@ -33,6 +33,18 @@ export const defaultSettings: Partial<ISettings> = {
   amplificationCrystal: 0,
   creativeCatalyst: 0,
   precisionLens: 0
+  temporalTweaker: 0
+  perpetualProgress: 0
+  strategicSynapses: 0
+  acceleratedAcquisition: 0
+  linkersLode: 0
+  effortlessExpansion: 0
+  recursiveReflection: 0
+  synapticSurge: 0
+  inspirationInfusion: 0
+  titleTitan: 0
+  precisionPrism: 0
+  hyperlinkHarmony: 0
 };
 
 export interface ISettings {
@@ -67,6 +79,18 @@ export interface ISettings {
   amplificationCrystal: number,
   creativeCatalyst: number,
   precisionLens: number,
+  temporalTweaker: number,
+  perpetualProgress: number,
+  strategicSynapses: number,
+  acceleratedAcquisition: number,
+  linkersLode: number,
+  effortlessExpansion: number,
+  recursiveReflection: number,
+  synapticSurge: number,
+  inspirationInfusion: number,
+  titleTitan: number,
+  precisionPrism: number,
+  hyperlinkHarmony: number,
 }
 
 
@@ -104,6 +128,18 @@ export class GamificationPluginSettings extends PluginSettingTab {
   public amplificationCrystal: number;
   public creativeCatalyst: number;
   public precisionLens: number;
+  public temporalTweaker: number;
+  public perpetualProgress: number;
+  public strategicSynapses: number;
+  public acceleratedAcquisition: number;
+  public linkersLode: number;
+  public effortlessExpansion: number;
+  public recursiveReflection: number;
+  public synapticSurge: number;
+  public inspirationInfusion: number;
+  public titleTitan: number;
+  public precisionPrism: number;
+  public hyperlinkHarmony: number;
 
 	constructor(app: App, plugin: gamification) {
 	  super(app, plugin);

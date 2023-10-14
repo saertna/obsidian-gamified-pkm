@@ -207,3 +207,19 @@ export const elements = [
   { shortName: 'S7', name: 'Creative Catalyst' },
   { shortName: 'S8', name: 'Precision Lens' }
 ];
+
+export const boosterRecipes = [
+  { varname: 'temporalTweaker' ,name: 'Temporal Tweaker', incredients: ['2xS1', '1xS6'] },
+  { varname: 'perpetualProgress' ,name: 'Perpetual Progress', incredients: ['2xS2', '1xS4'] },
+  { varname: 'strategicSynapses' ,name: 'Strategic Synapses', incredients: ['3xS1', '2xS2'] },
+  { varname: 'acceleratedAcquisition' ,name: 'Accelerated Acquisition', incredients: ['1xS3', '2xS4'] },
+  { varname: 'linkersLode' ,name: 'Linkers Lode', incredients: ['3xS2', '1xS1'] },
+  { varname: 'effortlessExpansion' ,name: 'Effortless Expansion', incredients: ['2xS3', '1xS6'] },
+  { varname: 'recursiveReflection' ,name: 'Recursive Reflection', incredients: ['2xS4', '1xS5'] },
+  { varname: 'synapticSurge' ,name: 'Synaptic Surge', incredients: ['2xS2', '1xS1'] },
+  { varname: 'inspirationInfusion' ,name: 'Inspiration Infusion', incredients: ['2xS7', '1xS1'] },
+  { varname: 'titleTitan' ,name: 'Title Titan', incredients: ['2xS8', '1xS7'] },
+  { varname: 'precisionPrism' ,name: 'Precision Prism', incredients: ['2xS8', '1xS2'] },
+  { varname: 'hyperlinkHarmony' ,name: 'Hyperlink Harmony', incredients: ['2xS2', '1xS6'] },
+];
+
