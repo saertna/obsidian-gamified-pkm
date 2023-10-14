@@ -1346,7 +1346,8 @@ class MultiSelectModal extends Modal {
 			const [quantity, shortName] = ingredient.split('x');
 			//console.log(`quantity: ${quantity}\tshortName: ${shortName}`)
 			const requiredQuantity = parseInt(quantity);
-			const availableStock = this.remainingStock[this.getNameFromShortName(shortName) || 0];
+			const availableStock = this.remainingStock[this.getIngerementNameFromShortName
+		(shortName) || 0];
 			//console.log(`requiredQuantity: ${requiredQuantity}\tavailableStock: ́${availableStock}`)
 	
 			if (requiredQuantity > availableStock) {
@@ -1364,13 +1365,13 @@ class MultiSelectModal extends Modal {
 		if(this.checkIngredientsAvailability(selectedItems)){
 			console.log(`craft booster ${selectedItems.name}`)
 			this.updateBoosterStock(selectedItems.name, 1)
-			this.gamificationInstance.setSetting(this.getVarNameFromBoosterName(selectedItems.name), this.boosters[selectedItems.name])
+			this.gamificationInstance.setSetting(this.getBoosterVarNameFromName(selectedItems.name), this.boosters[selectedItems.name])
 		} else {
 			console.log(`not enough ingredients for booster ${selectedItems.name} in stock`)
 		}
 	}	
 
-	private getNameFromShortName(shortName: string) {
+	private getIngerementNameFromShortName(shortName: string) {
 		for (const element of elements) {
 			if (element.shortName === shortName) {
 				return element.name;
@@ -1379,7 +1380,7 @@ class MultiSelectModal extends Modal {
 		return null; // Return null if no matching element is found
 	}
 
-	private getVarNameFromBoosterName(boosterName: string) {
+	private getBoosterVarNameFromName(boosterName: string) {
 		for (const element of boosterRecipes) {
 			if (element.name === boosterName) {
 				return element.varname;
