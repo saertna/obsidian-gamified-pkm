@@ -65,6 +65,7 @@ export default class gamification extends Plugin {
         // Retrieve a specific setting
 		//this.settings['boosterIncredients']
 		//const key = 'boosterIncredients'
+		console.log(`getSetting ${key}`)
         return this.settings[key];
     }
 
@@ -1066,6 +1067,9 @@ async function createAvatarFile(app: App, fileName: string): Promise<void> {
 function stringToList(input: string): string[] {
     return input.split(',');
 }
+
+
+
 class MultiSelectModal extends Modal {
     private items: string[];
     private selectedItems: string[] = [];
@@ -1076,10 +1080,11 @@ class MultiSelectModal extends Modal {
 	private useBooster: boolean = false;
 	private remainingBoosterStock: Record<string, number> = {};
 
-    constructor(app: App, items: string[], buttonText: string) {
+    constructor(app: App, items: string[], buttonText: string,gamificationInstance: gamification) {
         super(app);
         this.items = items;
 		this.buttonText = buttonText;
+		this.gamificationInstance = gamificationInstance;
     }
 
 	onOpen() {
@@ -1142,21 +1147,23 @@ class MultiSelectModal extends Modal {
     }
 
 	readBoostersStock(){
-		/*this.boosters = { 
-			'Temporal Tweaker': this.gamificationInstance.getSetting('temporalTweaker'),
-			'Perpetual Progress': this.gamificationInstance.getSetting('perpetualProgress'),
-			'Strategic Synapses': this.gamificationInstance.getSetting('strategicSynapses'),
-			'Accelerated Acquisition': this.gamificationInstance.getSetting('acceleratedAcquisition'),
-			'Linkers Lode': this.gamificationInstance.getSetting('linkersLode'),
-			'Effortless Expansion': this.gamificationInstance.getSetting('effortlessExpansion'),
-			'Recursive Reflection': this.gamificationInstance.getSetting('recursiveReflection'),
-			'Synaptic Surge': this.gamificationInstance.getSetting('synapticSurge'),
-			'Inspiration Infusion': this.gamificationInstance.getSetting('inspirationInfusion'),
-			'Title Titan': this.gamificationInstance.getSetting('titleTitan'),
-			'Precision Prism': this.gamificationInstance.getSetting('precisionPrism'),
-			'Hyperlink Harmony': this.gamificationInstance.getSetting('hyperlinkHarmony'),
-		};*/
-		this.boosters = { 
+		if (this.gamificationInstance) {
+			this.boosters = { 
+				'Temporal Tweaker': this.gamificationInstance.getSetting('temporalTweaker'),
+				'Perpetual Progress': this.gamificationInstance.getSetting('perpetualProgress'),
+				'Strategic Synapses': this.gamificationInstance.getSetting('strategicSynapses'),
+				'Accelerated Acquisition': this.gamificationInstance.getSetting('acceleratedAcquisition'),
+				'Linkers Lode': this.gamificationInstance.getSetting('linkersLode'),
+				'Effortless Expansion': this.gamificationInstance.getSetting('effortlessExpansion'),
+				'Recursive Reflection': this.gamificationInstance.getSetting('recursiveReflection'),
+				'Synaptic Surge': this.gamificationInstance.getSetting('synapticSurge'),
+				'Inspiration Infusion': this.gamificationInstance.getSetting('inspirationInfusion'),
+				'Title Titan': this.gamificationInstance.getSetting('titleTitan'),
+				'Precision Prism': this.gamificationInstance.getSetting('precisionPrism'),
+				'Hyperlink Harmony': this.gamificationInstance.getSetting('hyperlinkHarmony'),
+			};
+		}
+/*		this.boosters = { 
 			'Temporal Tweaker': 3,
 			'Perpetual Progress': 0,
 			'Strategic Synapses': 3,
@@ -1169,15 +1176,10 @@ class MultiSelectModal extends Modal {
 			'Title Titan': 60,
 			'Precision Prism': 70,
 			'Hyperlink Harmony': 80,
-		};
+		};*/
 	}
 
 
-
-	
-	/*setItems(items: string[]) {
-        this.items = items;
-    }*/
 
 
 	private createCraftingLayout() {
@@ -1209,6 +1211,7 @@ class MultiSelectModal extends Modal {
 		stockInfo.className = 'stock-info';
 
 		elements.forEach(element => {
+			console.log(`${element.name} : ${this.remainingStock[element.name]}`)
 			stockInfo.innerHTML += `${element.shortName} [${this.remainingStock[element.name] || 0}]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`; 
 		});
 
@@ -1391,7 +1394,7 @@ class ModalBooster extends Modal {
         const { contentEl } = this;
         contentEl.setText(this.displayText);
 
-		const multiSelectModal = new MultiSelectModal(this.app, [], 'Craft Booster Item'); // Create the modal instance
+		const multiSelectModal = new MultiSelectModal(this.app, [], 'Craft Booster Item', this.gamificationInstance); // Create the modal instance
 
         // Add a button to open the multi-select modal
         const button = document.createElement('button');
@@ -1448,6 +1451,7 @@ class ModalBooster extends Modal {
 
 		return ['','']//incrediments;
 	}
+	
 }
 
 
