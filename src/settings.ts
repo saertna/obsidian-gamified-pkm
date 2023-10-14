@@ -32,18 +32,18 @@ export const defaultSettings: Partial<ISettings> = {
   reflectiveEssence: 0,
   amplificationCrystal: 0,
   creativeCatalyst: 0,
-  precisionLens: 0
-  temporalTweaker: 0
-  perpetualProgress: 0
-  strategicSynapses: 0
-  acceleratedAcquisition: 0
-  linkersLode: 0
-  effortlessExpansion: 0
-  recursiveReflection: 0
-  synapticSurge: 0
-  inspirationInfusion: 0
-  titleTitan: 0
-  precisionPrism: 0
+  precisionLens: 0,
+  temporalTweaker: 0,
+  perpetualProgress: 0,
+  strategicSynapses: 0,
+  acceleratedAcquisition: 0,
+  linkersLode: 0,
+  effortlessExpansion: 0,
+  recursiveReflection: 0,
+  synapticSurge: 0,
+  inspirationInfusion: 0,
+  titleTitan: 0,
+  precisionPrism: 0,
   hyperlinkHarmony: 0
 };
 
