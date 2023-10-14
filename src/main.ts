@@ -1086,7 +1086,7 @@ class MultiSelectModal extends Modal {
 		const { contentEl } = this;
 		contentEl.empty();
 
-		this.readBoostersStock();
+		//this.readBoostersStock();
 
 		// take care only to run several times through when boosters are used
 		if (this.useBooster){
@@ -1127,10 +1127,12 @@ class MultiSelectModal extends Modal {
 
 
 	updateBoosterStock(booster: string, stockIncrease: number) {
-        this.boosters[booster] = stockIncrease;
+        this.boosters[booster] += stockIncrease;
     }
 
-	
+	decrementBooster(booster: string, stockIncrease: number) {
+        this.boosters[booster] -= stockIncrease;
+    }
 
 	setBoosters(boosters: Record<string, number>) {
         this.boosters = { 
@@ -1401,6 +1403,8 @@ class ModalBooster extends Modal {
             multiSelectModal.open();
         };
 
+
+		multiSelectModal.readBoostersStock();
 
 		const button2 = document.createElement('button');
         button2.innerText = 'Open Booster Board';
