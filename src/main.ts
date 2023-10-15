@@ -146,6 +146,13 @@ export default class gamification extends Plugin {
 			await this.calculateNoteMajurity();
 		});
 
+		this.addCommand({
+			id: 'boosters',
+			name: 'open booter pallete',
+			callback: async () => {
+				new ModalBooster(this.app, ` `, this).open();
+			},
+		});
 
 		if (this.settings.enableInitCommand){
 			// command Initialize gamification ratings
