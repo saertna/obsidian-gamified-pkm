@@ -1311,8 +1311,17 @@ class MultiSelectModal extends Modal {
 			this.useBoosterItem(labelText);
 		};
 	
-		container.appendChild(label);
+		const useInfoButton = document.createElement('button');
+		useInfoButton.innerText = '?';
+		useInfoButton.onclick = () => {
+			new ModalInformationbox(this.app, this.getBoosterInforFromFromName(labelText)).open();
+		};
+
+
 		container.appendChild(useButton);
+		container.appendChild(useInfoButton);
+		container.appendChild(label);
+		 
 
 		return container;
 		
@@ -1458,6 +1467,15 @@ class MultiSelectModal extends Modal {
 		for (const element of boosterRecipes) {
 			if (element.name === boosterName) {
 				return element.varname;
+			}
+		}
+		return ''; // Return null if no matching element is found
+	}
+
+	private getBoosterInforFromFromName(boosterName: string) {
+		for (const element of boosterRecipes) {
+			if (element.name === boosterName) {
+				return element.description;
 			}
 		}
 		return ''; // Return null if no matching element is found
