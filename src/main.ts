@@ -1229,10 +1229,17 @@ class MultiSelectModal extends Modal {
 				button.innerText = 'Craft';
 				button.onclick = () => this.craftBoosterItem(recipe);
 
+				const useInfoButton = document.createElement('button');
+				useInfoButton.innerText = '?';
+				useInfoButton.onclick = () => {
+					new ModalInformationbox(this.app, this.getBoosterInforFromFromName(recipe.name)).open();
+				};
+
 				const itemText = document.createElement('span');
 				itemText.innerText = `${recipe.name} ⇒ ${recipe.incredients.join('    ')}`;
 
 				itemContainer.appendChild(button);
+				itemContainer.appendChild(useInfoButton);
 				itemContainer.appendChild(itemText);
 				container.appendChild(itemContainer);
 			}
@@ -1256,6 +1263,40 @@ class MultiSelectModal extends Modal {
         return container;
     }
 
+	private createBoosterList(labelText: string) {
+		
+		console.log(`labelText: ${labelText}`)
+		
+		const container = document.createElement('div');
+		container.className = 'modal-checkbox-container';
+		
+		//const stock = this.remainingStock[labelText] || 0;
+		const stock = this.boosters[labelText]
+	
+		const label = document.createElement('label');
+		label.innerText = `${labelText} ⇒ ${stock}x (s)`;
+	
+		const useButton = document.createElement('button');
+		useButton.innerText = 'Use';
+		useButton.onclick = () => {
+			this.useBoosterItem(labelText);
+		};
+	
+		const useInfoButton = document.createElement('button');
+		useInfoButton.innerText = '?';
+		useInfoButton.onclick = () => {
+			new ModalInformationbox(this.app, this.getBoosterInforFromFromName(labelText)).open();
+		};
+
+
+		container.appendChild(useButton);
+		container.appendChild(useInfoButton);
+		container.appendChild(label);
+		 
+
+		return container;
+		
+	}
 	
 
 	updateStock(item: string, stock: number) {
@@ -1298,41 +1339,6 @@ class MultiSelectModal extends Modal {
         }
 	}
 	
-
-	private createBoosterList(labelText: string) {
-		
-		console.log(`labelText: ${labelText}`)
-		
-		const container = document.createElement('div');
-		container.className = 'modal-checkbox-container';
-		
-		//const stock = this.remainingStock[labelText] || 0;
-		const stock = this.boosters[labelText]
-	
-		const label = document.createElement('label');
-		label.innerText = `${labelText} ⇒ ${stock}x (s)`;
-	
-		const useButton = document.createElement('button');
-		useButton.innerText = 'Use';
-		useButton.onclick = () => {
-			this.useBoosterItem(labelText);
-		};
-	
-		const useInfoButton = document.createElement('button');
-		useInfoButton.innerText = '?';
-		useInfoButton.onclick = () => {
-			new ModalInformationbox(this.app, this.getBoosterInforFromFromName(labelText)).open();
-		};
-
-
-		container.appendChild(useButton);
-		container.appendChild(useInfoButton);
-		container.appendChild(label);
-		 
-
-		return container;
-		
-	}
 
 	private useBoosterItem(labelText: string) {
 		console.log(`use Booster ${labelText}`)
