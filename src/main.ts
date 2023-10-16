@@ -72,21 +72,21 @@ export default class gamification extends Plugin {
 
     setSetting(key: string, value: number) {
         // Set a specific setting
-		console.log(`new value for ${key} is ${value}`)
+		//console.log(`new value for ${key} is ${value}`)
         this.settings[key] = value;
         this.saveSettings();
     }
 
 	setSettingBoolean(key: string, value: boolean) {
         // Set a specific setting
-		console.log(`new value for ${key} is ${value}`)
+		//console.log(`new value for ${key} is ${value}`)
         this.settings[key] = value;
         this.saveSettings();
 	}
 
 	setSettingString(key: string, value: string) {
         // Set a specific setting
-		console.log(`new value for ${key} is ${value}`)
+		//console.log(`new value for ${key} is ${value}`)
         this.settings[key] = value;
         this.saveSettings();
 	}
@@ -1375,9 +1375,6 @@ class MultiSelectModal extends Modal {
 
 
 	private createBoosterList(labelText: string) {
-		
-		console.log(`labelText: ${labelText}`)
-		
 		const container = document.createElement('div');
 		container.className = 'modal-checkbox-container';
 		
@@ -1386,7 +1383,7 @@ class MultiSelectModal extends Modal {
 	
 		const label = document.createElement('div');
 		label.className = `${labelText.replace(' ','-')}`;
-		label.innerHTML = `${labelText} : ${stock}x (s)`;
+		label.innerHTML = `${labelText} : (${stock})`;
 	
 		const useButton = document.createElement('button');
 		useButton.innerText = 'Use';
@@ -1455,13 +1452,11 @@ class MultiSelectModal extends Modal {
 	
 
 	private updateQuantityDisplay(labelText: string) {
-		console.log('updateQuantityDisplay called with label:', labelText);
-
 		const stock = this.boosters[labelText]
 		const stockInfo = document.querySelector(`.${labelText.replace(' ','-')}`);
 		if (stockInfo) {
 			stockInfo.innerHTML = ''; // Clear the current content
-			stockInfo.innerHTML = `${labelText} : ${stock}x (s)`
+			stockInfo.innerHTML = `${labelText} : (${stock})`
 		}
 	}
 
