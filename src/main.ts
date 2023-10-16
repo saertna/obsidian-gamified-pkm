@@ -1357,11 +1357,6 @@ class MultiSelectModal extends Modal {
 		const stockInfo = document.createElement('div');
 		stockInfo.className = 'stock-info';
 
-		/*elements.forEach(element => {
-			console.log(`${element.name} : ${this.remainingStock[element.name]}`)
-			stockInfo.innerHTML += `${element.shortName} [${this.remainingStock[element.name] || 0}]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`; 
-		});*/
-
 		listOfUseableIngredientsToBeShown.forEach(element => {
 			//console.log(`${element.name} : ${this.remainingStock[element.name]}`)
 			stockInfo.innerHTML += `${this.getIngerementFromName(element).shortName} [${this.remainingStock[this.getIngerementFromName(element).name] || 0}]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`; 
@@ -1377,40 +1372,6 @@ class MultiSelectModal extends Modal {
         return container;
     }
 
-	/*private createBoosterList(labelText: string) {
-		
-		console.log(`labelText: ${labelText}`)
-		
-		const container = document.createElement('div');
-		container.className = 'modal-checkbox-container';
-		
-		//const stock = this.remainingStock[labelText] || 0;
-		const stock = this.boosters[labelText]
-	
-		const label = document.createElement('label');
-		label.innerText = `${labelText} : ${stock}x (s)`;
-	
-		const useButton = document.createElement('button');
-		useButton.innerText = 'Use';
-		useButton.onclick = () => {
-			this.useBoosterItem(labelText);
-		};
-	
-		const useInfoButton = document.createElement('button');
-		useInfoButton.innerText = '?';
-		useInfoButton.onclick = () => {
-			new ModalInformationbox(this.app, this.getBoosterInforFromFromName(labelText)).open();
-		};
-
-
-		container.appendChild(useButton);
-		container.appendChild(useInfoButton);
-		container.appendChild(label);
-		 
-
-		return container;
-		
-	}*/
 
 
 	private createBoosterList(labelText: string) {
@@ -1449,17 +1410,6 @@ class MultiSelectModal extends Modal {
 		
 	}
 	
-/*
-	updateStock(item: string, stock: number) {
-		console.log(`updateStock(${item}, ${stock}) called`)
-        this.remainingStock[item] = stock;
-        // Optionally, you can also update the display here if the modal is currently open
-        const labelElement = document.querySelector(`.${item.replace(' ','-')}`);
-        if (labelElement) {
-            this.updateQuantityDisplay(item);
-        }
-    }
-*/
 
 	incrementItem(item: string) {
 		const stock = this.remainingStock[item];
@@ -1503,68 +1453,10 @@ class MultiSelectModal extends Modal {
 		
 	}
 	
-	
-	/*private updateQuantityDisplay(labelText: string) {
-		console.log('updateQuantityDisplay called with label:', labelText);
-		const labelElement = document.querySelector(`.${labelText}`);//.replace(' ','-')}`);
-		if (!labelElement) {
-			console.log(`labelElement not found`);
-			return;
-		}
-	
-		const container = labelElement.parentElement as HTMLDivElement;
-		if (!container) {
-			console.log(`container not found`);
-			return;
-		}
-	
-		const remainingStock = container.querySelector(`#remaining-stock span`) as HTMLSpanElement;
-		if (!remainingStock) {
-			console.log(`remainingStock not found`);
-			return;
-		}
-	
-		const selectedQuantity = container.querySelector(`#selected-quantity span`) as HTMLSpanElement;
-		if (!selectedQuantity) {
-			console.log(`selectedQuantity not found`);
-			return;
-		}
-	
-		const stock = this.remainingStock[labelText] || 0; // Use global remaining stock value
-		const selected = this.selectedItems.filter(item => item === labelText).length;
-	
-		console.log(`stock: ${stock}, selected: ${selected}`);
-	
-		this.remainingStock[labelText]
-		//remainingStock.innerText = `${this.remainingStock[labelText] - selected}`;
-		remainingStock.innerText = `${this.remainingStock[labelText]}`;
-		selectedQuantity.innerText = `${selected}`;
-	}*/
-
-	/*private updateQuantityDisplay(labelText: string) {
-		console.log('updateQuantityDisplay called with label:', labelText);
-	
-		const labelElements = document.querySelectorAll(`.modal-checkbox-container`);
-		labelElements.forEach(labelElement => {
-			console.log(`found a label - ${labelElement}`)
-			if ((labelElement as HTMLLabelElement).innerText.startsWith(labelText)) {
-				console.log(`label starts wiht ${labelText}`)
-				const container = labelElement.parentElement as HTMLDivElement;
-				const remainingStock = container.querySelector(`#remaining-stock span`) as HTMLSpanElement;
-				const stock = this.boosters[labelText] || 0;
-				remainingStock.innerText = `${stock}`;
-	
-				// If you have a selectedItems array, update the selected quantity as well
-				const selectedQuantity = container.querySelector(`#selected-quantity span`) as HTMLSpanElement;
-				const selected = this.selectedItems.filter(item => item === labelText).length;
-				selectedQuantity.innerText = `${selected}`;
-			}
-		});
-	}*/
 
 	private updateQuantityDisplay(labelText: string) {
 		console.log('updateQuantityDisplay called with label:', labelText);
-		
+
 		const stock = this.boosters[labelText]
 		const stockInfo = document.querySelector(`.${labelText.replace(' ','-')}`);
 		if (stockInfo) {
@@ -1573,30 +1465,6 @@ class MultiSelectModal extends Modal {
 		}
 	}
 
-	/*private updateQuantityDisplay(labelText: string) {
-		console.log('updateQuantityDisplay called with label:', labelText);
-	
-		const labelElements = document.querySelectorAll(`.modal-checkbox-container label`);
-		labelElements.forEach(labelElement => {
-			const labelTextContent = labelElement.textContent || labelElement.innerText;
-			const [boosterName] = labelTextContent.split(' : ');
-	
-			if (boosterName === labelText) {
-				const container = labelElement.parentElement as HTMLDivElement;
-				const remainingStock = container.querySelector(`#remaining-stock span`) as HTMLSpanElement;
-				const stock = this.remainingStock[labelText] || 0;
-				remainingStock.innerText = `${stock}`;
-	
-				// If you have a selectedItems array, update the selected quantity as well
-				const selectedQuantity = container.querySelector(`#selected-quantity span`) as HTMLSpanElement;
-				const selected = this.selectedItems.filter(item => item === labelText).length;
-				selectedQuantity.innerText = `${selected}`;
-			}
-		});
-	}*/
-	
-	
-	
 	
 	private checkIngredientsAvailability(incredients: {name: string; incredients: string[];}) {
 		for (const ingredient of incredients.incredients) {
@@ -1766,9 +1634,7 @@ class ModalBooster extends Modal {
         const button = document.createElement('button');
         button.innerText = 'Open Crafting Table';
         button.onclick = () => {
-            //const items = this.readIncredients(multiSelectModal);
             multiSelectModal.setUseBooster(false); // Set the flag for crafting table
-            //multiSelectModal.setItems(items);
             multiSelectModal.open();
         };
 
@@ -1793,32 +1659,6 @@ class ModalBooster extends Modal {
         contentEl.empty();
     }
 
-
-	
-/*
-	private readIncredients(multiSelectModal: MultiSelectModal): string[] {
-
-
-		const stockValues: Record<string, number> = {
-			'Nexus Node': this.gamificationInstance.getSetting('nexusNode'),
-			'Connection Crystal': this.gamificationInstance.getSetting('connectionCrystal'),
-			'Mastery Scroll': this.gamificationInstance.getSetting('masteryScroll'),
-			'Insight Prism': this.gamificationInstance.getSetting('insightPrism'),
-			'Reflective Essence': this.gamificationInstance.getSetting('reflectiveEssence'),
-			'Amplification Crystal': this.gamificationInstance.getSetting('amplificationCrystal'),
-			'Creative Catalyst': this.gamificationInstance.getSetting('creativeCatalyst'),
-			'Precision Lens': this.gamificationInstance.getSetting('precisionLens')
-		};
-		
-		// Update stock values
-		incrediments.forEach(item => {
-			multiSelectModal.updateStock(item, stockValues[item]);
-		});
-
-
-		return ['','']//incrediments;
-	}
-*/	
 }
 
 
