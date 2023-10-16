@@ -1231,10 +1231,10 @@ class MultiSelectModal extends Modal {
     }
 
 	private boosterAvailableForUse(item:string){
-		console.log(`boosterAvailableForUse: ${item}`)
+		//console.log(`boosterAvailableForUse: ${item}`)
 		let found = false
 		listOfUseableBoostersToBeShown.forEach(element => {
-			console.log(`${item} == ${element} ??`)
+			//console.log(`${item} == ${element} ??`)
 			if(item == element){
 				if(!found){
 					found = true;
@@ -1273,8 +1273,14 @@ class MultiSelectModal extends Modal {
     }
 
 	decrementBooster(booster: string, stockIncrease: number) {
-        this.boosters[booster] -= stockIncrease;
-		this.gamificationInstance.setSetting(this.getBoosterVarNameFromName(booster),this.boosters[booster])
+		const stock = this.boosters[booster];
+		if (stock > 0) {
+        	this.boosters[booster] -= stockIncrease;
+			this.gamificationInstance.setSetting(this.getBoosterVarNameFromName(booster),this.boosters[booster])
+			this.gamificationInstance.setSettingBoolean(this.getBoosterSwitchFromName(booster),true)
+			this.gamificationInstance.setSettingString(this.getBoosterDateFromName(booster),window.moment().format('YYYY-MM-DD HH:mm:ss'))
+			this.updateQuantityDisplay(booster);
+		}
     }
 
 
@@ -1312,8 +1318,6 @@ class MultiSelectModal extends Modal {
 			};
 		}
 	}
-
-
 
 
 	private createCraftingLayout() {
@@ -1373,7 +1377,7 @@ class MultiSelectModal extends Modal {
         return container;
     }
 
-	private createBoosterList(labelText: string) {
+	/*private createBoosterList(labelText: string) {
 		
 		console.log(`labelText: ${labelText}`)
 		
@@ -1384,7 +1388,44 @@ class MultiSelectModal extends Modal {
 		const stock = this.boosters[labelText]
 	
 		const label = document.createElement('label');
-		label.innerText = `${labelText} ⇒ ${stock}x (s)`;
+		label.innerText = `${labelText} : ${stock}x (s)`;
+	
+		const useButton = document.createElement('button');
+		useButton.innerText = 'Use';
+		useButton.onclick = () => {
+			this.useBoosterItem(labelText);
+		};
+	
+		const useInfoButton = document.createElement('button');
+		useInfoButton.innerText = '?';
+		useInfoButton.onclick = () => {
+			new ModalInformationbox(this.app, this.getBoosterInforFromFromName(labelText)).open();
+		};
+
+
+		container.appendChild(useButton);
+		container.appendChild(useInfoButton);
+		container.appendChild(label);
+		 
+
+		return container;
+		
+	}*/
+
+
+	private createBoosterList(labelText: string) {
+		
+		console.log(`labelText: ${labelText}`)
+		
+		const container = document.createElement('div');
+		container.className = 'modal-checkbox-container';
+		
+		//const stock = this.remainingStock[labelText] || 0;
+		const stock = this.boosters[labelText]
+	
+		const label = document.createElement('div');
+		label.className = `${labelText.replace(' ','-')}`;
+		label.innerHTML = `${labelText} : ${stock}x (s)`;
 	
 		const useButton = document.createElement('button');
 		useButton.innerText = 'Use';
@@ -1408,8 +1449,9 @@ class MultiSelectModal extends Modal {
 		
 	}
 	
-
+/*
 	updateStock(item: string, stock: number) {
+		console.log(`updateStock(${item}, ${stock}) called`)
         this.remainingStock[item] = stock;
         // Optionally, you can also update the display here if the modal is currently open
         const labelElement = document.querySelector(`.${item.replace(' ','-')}`);
@@ -1417,9 +1459,7 @@ class MultiSelectModal extends Modal {
             this.updateQuantityDisplay(item);
         }
     }
-
-	
-
+*/
 
 	incrementItem(item: string) {
 		const stock = this.remainingStock[item];
@@ -1435,6 +1475,7 @@ class MultiSelectModal extends Modal {
         }
 	}
 	
+
 	decrementItem(item: string) {
 		const itemIndex = this.selectedItems.indexOf(item);
 	
@@ -1452,21 +1493,20 @@ class MultiSelectModal extends Modal {
 
 	private useBoosterItem(labelText: string) {
 		console.log(`use Booster ${labelText}`)
-		const stock = this.remainingStock[labelText];
+		/*const stock = this.boosters[labelText];
 		if (stock > 0) {
-			this.selectedItems.push(labelText);
-			this.remainingStock[labelText]--;
+			//this.selectedItems.push(labelText);
+			//this.boosters[labelText]--;
 			this.updateQuantityDisplay(labelText);
-		}
+		}*/
 		this.decrementBooster(labelText,1)
-		this.gamificationInstance.setSettingBoolean(this.getBoosterSwitchFromName(labelText),true)
-		this.gamificationInstance.setSettingString(this.getBoosterDateFromName(labelText),window.moment().format('YYYY-MM-DD HH:mm:ss'))
+		
 	}
 	
 	
-	private updateQuantityDisplay(labelText: string) {
+	/*private updateQuantityDisplay(labelText: string) {
 		console.log('updateQuantityDisplay called with label:', labelText);
-		const labelElement = document.querySelector(`.${labelText.replace(' ','-')}`);
+		const labelElement = document.querySelector(`.${labelText}`);//.replace(' ','-')}`);
 		if (!labelElement) {
 			console.log(`labelElement not found`);
 			return;
@@ -1499,7 +1539,64 @@ class MultiSelectModal extends Modal {
 		//remainingStock.innerText = `${this.remainingStock[labelText] - selected}`;
 		remainingStock.innerText = `${this.remainingStock[labelText]}`;
 		selectedQuantity.innerText = `${selected}`;
+	}*/
+
+	/*private updateQuantityDisplay(labelText: string) {
+		console.log('updateQuantityDisplay called with label:', labelText);
+	
+		const labelElements = document.querySelectorAll(`.modal-checkbox-container`);
+		labelElements.forEach(labelElement => {
+			console.log(`found a label - ${labelElement}`)
+			if ((labelElement as HTMLLabelElement).innerText.startsWith(labelText)) {
+				console.log(`label starts wiht ${labelText}`)
+				const container = labelElement.parentElement as HTMLDivElement;
+				const remainingStock = container.querySelector(`#remaining-stock span`) as HTMLSpanElement;
+				const stock = this.boosters[labelText] || 0;
+				remainingStock.innerText = `${stock}`;
+	
+				// If you have a selectedItems array, update the selected quantity as well
+				const selectedQuantity = container.querySelector(`#selected-quantity span`) as HTMLSpanElement;
+				const selected = this.selectedItems.filter(item => item === labelText).length;
+				selectedQuantity.innerText = `${selected}`;
+			}
+		});
+	}*/
+
+	private updateQuantityDisplay(labelText: string) {
+		console.log('updateQuantityDisplay called with label:', labelText);
+		
+		const stock = this.boosters[labelText]
+		const stockInfo = document.querySelector(`.${labelText.replace(' ','-')}`);
+		if (stockInfo) {
+			stockInfo.innerHTML = ''; // Clear the current content
+			stockInfo.innerHTML = `${labelText} : ${stock}x (s)`
+		}
 	}
+
+	/*private updateQuantityDisplay(labelText: string) {
+		console.log('updateQuantityDisplay called with label:', labelText);
+	
+		const labelElements = document.querySelectorAll(`.modal-checkbox-container label`);
+		labelElements.forEach(labelElement => {
+			const labelTextContent = labelElement.textContent || labelElement.innerText;
+			const [boosterName] = labelTextContent.split(' : ');
+	
+			if (boosterName === labelText) {
+				const container = labelElement.parentElement as HTMLDivElement;
+				const remainingStock = container.querySelector(`#remaining-stock span`) as HTMLSpanElement;
+				const stock = this.remainingStock[labelText] || 0;
+				remainingStock.innerText = `${stock}`;
+	
+				// If you have a selectedItems array, update the selected quantity as well
+				const selectedQuantity = container.querySelector(`#selected-quantity span`) as HTMLSpanElement;
+				const selected = this.selectedItems.filter(item => item === labelText).length;
+				selectedQuantity.innerText = `${selected}`;
+			}
+		});
+	}*/
+	
+	
+	
 	
 	private checkIngredientsAvailability(incredients: {name: string; incredients: string[];}) {
 		for (const ingredient of incredients.incredients) {
@@ -1698,7 +1795,7 @@ class ModalBooster extends Modal {
 
 
 	
-
+/*
 	private readIncredients(multiSelectModal: MultiSelectModal): string[] {
 
 
@@ -1721,7 +1818,7 @@ class ModalBooster extends Modal {
 
 		return ['','']//incrediments;
 	}
-	
+*/	
 }
 
 
