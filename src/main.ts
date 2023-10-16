@@ -25,7 +25,8 @@ import {
 	craftingItems,
 	elements,
 	boosterRecipes,
-	listOfUseableBoostersToBeShown
+	listOfUseableBoostersToBeShown,
+	listOfUseableIngredientsToBeShown
 } from './constants'
 import {
 	count_inlinks,
@@ -75,6 +76,20 @@ export default class gamification extends Plugin {
         this.settings[key] = value;
         this.saveSettings();
     }
+
+	setSettingBoolean(key: string, value: boolean) {
+        // Set a specific setting
+		console.log(`new value for ${key} is ${value}`)
+        this.settings[key] = value;
+        this.saveSettings();
+	}
+
+	setSettingString(key: string, value: string) {
+        // Set a specific setting
+		console.log(`new value for ${key} is ${value}`)
+        this.settings[key] = value;
+        this.saveSettings();
+	}
 
 	async onload() {
 		console.log('obsidian-pkm-gamification loaded!');
@@ -131,7 +146,9 @@ export default class gamification extends Plugin {
 				//await this.resetDailyGoals()
 
 
-				new ModalBooster(this.app, ` `, this).open();
+				//new ModalBooster(this.app, ` `, this).open();
+
+				this.acquireIngredients();
 
 			});
 		}
@@ -548,6 +565,40 @@ export default class gamification extends Plugin {
 			await this.updateAvatarPage(this.settings.avatarPageName);
 		}
 
+		// deativate boosters
+		if (this.settings.boosterFactorPerpetualProgress == true && isMinutesPassed(window.moment(this.settings.boosterDatePerpetualProgress, 'YYYY-MM-DD HH:mm:ss'),4*60)){
+			this.setSettingBoolean('boosterFactorPerpetualProgress',false);
+			console.log('"Perpetual Progress" has ended.')
+		}
+		if (this.settings.boosterFactorStrategicSynapses == true && isMinutesPassed(window.moment(this.settings.boosterDateStrategicSynapses, 'YYYY-MM-DD HH:mm:ss'),4*60)){
+			this.setSettingBoolean('boosterFactorStrategicSynapses',false);
+			console.log('"Strategic Synapses" has ended.')
+		}
+		if (this.settings.boosterFactorLinkersLode == true && isMinutesPassed(window.moment(this.settings.boosterDateLinkersLode, 'YYYY-MM-DD HH:mm:ss'),3*60)){
+			this.setSettingBoolean('boosterFactorLinkersLode',false);
+			console.log('"Linkers Lode" has ended.')
+		}
+		if (this.settings.boosterFactorRecursiveReflection == true && isMinutesPassed(window.moment(this.settings.boosterDateRecursiveReflection, 'YYYY-MM-DD HH:mm:ss'),5*60)){
+			this.setSettingBoolean('boosterFactorRecursiveReflection',false);
+			console.log('"Recursive Reflection" has ended.')
+		}
+		if (this.settings.boosterFactorSynapticSurge == true && isMinutesPassed(window.moment(this.settings.boosterDateSynapticSurge, 'YYYY-MM-DD HH:mm:ss'),2*60)){
+			this.setSettingBoolean('boosterFactorSynapticSurge',false);
+			console.log('"Synaptic Surge" has ended.')
+		}
+		if (this.settings.boosterFactorTitleTitan == true && isMinutesPassed(window.moment(this.settings.boosterDateTitleTitan, 'YYYY-MM-DD HH:mm:ss'),3*60)){
+			this.setSettingBoolean('boosterFactorTitleTitan',false);
+			console.log('"Title Titan" has ended.')
+		}
+		if (this.settings.boosterFactorPrecisionPrism == true && isMinutesPassed(window.moment(this.settings.boosterDatePrecisionPrism, 'YYYY-MM-DD HH:mm:ss'),3*60)){
+			this.setSettingBoolean('boosterFactorPrecisionPrism',false);
+			console.log('"Precision Prism" has ended.')
+		}
+		if (this.settings.boosterFactorHyperlinkHarmony == true && isMinutesPassed(window.moment(this.settings.boosterDateHyperlinkHarmony, 'YYYY-MM-DD HH:mm:ss'),3*60)){
+			this.setSettingBoolean('boosterFactorHyperlinkHarmony',false);
+			console.log('"Hyperlink Harmony" has ended.')
+		}
+
 	}
 
 	async increaseDailyCreatedNoteCount(){
@@ -649,11 +700,44 @@ export default class gamification extends Plugin {
 
 	async giveStatusPoints(pointsToAdd: number): Promise<boolean>{
 		let boosterFactor = 1;
+		let boosterFactorPerpetualProgress = 0;
+		let boosterFactorStrategicSynapses = 0;
+		let boosterFactorLinkersLode = 0;
+		let boosterFactorRecursiveReflection = 0;
+		let boosterFactorSynapticSurge = 0;
+		let boosterFactorTitleTitan = 0;
+		let boosterFactorPrecisionPrism = 0;
+		let boosterFactorHyperlinkHarmony = 0;
 		if (this.settings.badgeBoosterState){
 			boosterFactor = this.settings.badgeBoosterFactor;
 		}
+		if (this.settings.boosterFactorPerpetualProgress){
+			boosterFactorPerpetualProgress = 3;
+		}
+		if (this.settings.boosterFactorStrategicSynapses){
+			boosterFactorStrategicSynapses = 3;
+		}
+		if (this.settings.boosterFactorLinkersLode){
+			boosterFactorLinkersLode = 10;
+		}
+		if (this.settings.boosterFactorRecursiveReflection){
+			boosterFactorRecursiveReflection = 5;
+		}
+		if (this.settings.boosterFactorSynapticSurge){
+			boosterFactorSynapticSurge = 20;
+		}
+		if (this.settings.boosterFactorTitleTitan){
+			boosterFactorTitleTitan = 4;
+		}
+		if (this.settings.boosterFactorPrecisionPrism){
+			boosterFactorPrecisionPrism = 4;
+		}
+		if (this.settings.boosterFactorHyperlinkHarmony){
+			boosterFactorHyperlinkHarmony = 5;
+		}
+		
 
-		this.settings.statusPoints = pointsToAdd * boosterFactor + this.settings.statusPoints
+		this.settings.statusPoints = pointsToAdd * (boosterFactor + boosterFactorPerpetualProgress + boosterFactorStrategicSynapses + boosterFactorLinkersLode + boosterFactorRecursiveReflection + boosterFactorSynapticSurge + boosterFactorTitleTitan + boosterFactorPrecisionPrism + boosterFactorHyperlinkHarmony ) + this.settings.statusPoints
 		await this.saveData(this.settings)
 
 		return this.updateAvatarPage(this.settings.avatarPageName)
@@ -1040,8 +1124,29 @@ export default class gamification extends Plugin {
 		}
 	}
 
+	getRandomInt(min: number, max: number) {
+		return Math.floor(Math.random() * (max - min + 1)) + min;
+	  }
+	
+	  async acquireIngredients() {
+		const chanceToEarnIngredient = 0.5; // Adjust this probability as needed (e.g., 0.5 for 50% chance)
+	
+		if (Math.random() < chanceToEarnIngredient) {
+			const randomIngredientIndex = this.getRandomInt(0, 3);//elements.length - 1);
+			const earnedIngredient = elements[randomIngredientIndex];
+			const elementCount = this.getSetting(earnedIngredient.varName);
+			this.setSetting(earnedIngredient.varName, elementCount + 1);
+			this.saveSettings();
+			console.log(`You earned: ${earnedIngredient.name}`);
+		} else {
+			console.log('You did not earn an ingredient this time.');
+		}
+	}
 }
 
+
+  
+  
 
 function isSameDay(inputDate: Moment): boolean {
 	const currentDate = window.moment(); // Get the current date
@@ -1051,6 +1156,11 @@ function isSameDay(inputDate: Moment): boolean {
 function isOneDayBefore(inputDate: Moment): boolean {
 	const oneDayBeforeCurrent = window.moment().subtract(1, 'day'); // Calculate one day before current date
 	return inputDate.isSame(oneDayBeforeCurrent, 'day');
+}
+
+function isMinutesPassed(inputDate: Moment, minutesPassed: number): boolean {
+    const minutesAgo = window.moment().subtract(minutesPassed, 'minutes'); // Calculate time 'minutesPassed' minutes ago
+    return inputDate.isSameOrBefore(minutesAgo);
 }
 
 
@@ -1164,14 +1274,9 @@ class MultiSelectModal extends Modal {
 
 	decrementBooster(booster: string, stockIncrease: number) {
         this.boosters[booster] -= stockIncrease;
+		this.gamificationInstance.setSetting(this.getBoosterVarNameFromName(booster),this.boosters[booster])
     }
 
-	setBoosters(boosters: Record<string, number>) {
-        this.boosters = { 
-			'Booster 1': 5,
-			'Booster 2': 3 
-		};
-    }
 
 	readBoostersStock(){
 		if (this.gamificationInstance) {
@@ -1248,9 +1353,14 @@ class MultiSelectModal extends Modal {
 		const stockInfo = document.createElement('div');
 		stockInfo.className = 'stock-info';
 
-		elements.forEach(element => {
+		/*elements.forEach(element => {
 			console.log(`${element.name} : ${this.remainingStock[element.name]}`)
 			stockInfo.innerHTML += `${element.shortName} [${this.remainingStock[element.name] || 0}]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`; 
+		});*/
+
+		listOfUseableIngredientsToBeShown.forEach(element => {
+			//console.log(`${element.name} : ${this.remainingStock[element.name]}`)
+			stockInfo.innerHTML += `${this.getIngerementFromName(element).shortName} [${this.remainingStock[this.getIngerementFromName(element).name] || 0}]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`; 
 		});
 
 		stockContainer.appendChild(stockInfo);
@@ -1348,6 +1458,9 @@ class MultiSelectModal extends Modal {
 			this.remainingStock[labelText]--;
 			this.updateQuantityDisplay(labelText);
 		}
+		this.decrementBooster(labelText,1)
+		this.gamificationInstance.setSettingBoolean(this.getBoosterSwitchFromName(labelText),true)
+		this.gamificationInstance.setSettingString(this.getBoosterDateFromName(labelText),window.moment().format('YYYY-MM-DD HH:mm:ss'))
 	}
 	
 	
@@ -1447,7 +1560,8 @@ class MultiSelectModal extends Modal {
 		} else {
 			console.log(`not enough ingredients for booster ${selectedItems.name} in stock`)
 		}
-	}	
+	}
+		
 
 	private getIngerementNameFromShortName(shortName: string) {
 		for (const element of elements) {
@@ -1457,6 +1571,25 @@ class MultiSelectModal extends Modal {
 		}
 		return null; // Return null if no matching element is found
 	}
+
+	private getIngerementShortNameFromName(name: string) {
+		for (const element of elements) {
+			if (element.name === name) {
+				return element.shortName;
+			}
+		}
+		return null; // Return null if no matching element is found
+	}
+
+	private getIngerementFromName(name: string) {
+		for (const element of elements) {
+			if (element.name === name) {
+				return element;
+			}
+		}
+		return {shortName: '', name: '', varName: ''}; // Return null if no matching element is found
+	}
+
 
 	private getIngerementVarNameFromShortName(shortName: string) {
 		for (const element of elements) {
@@ -1489,6 +1622,24 @@ class MultiSelectModal extends Modal {
 		for (const element of boosterRecipes) {
 			if (element.name === boosterName) {
 				return element.description;
+			}
+		}
+		return ''; // Return null if no matching element is found
+	}
+
+	private getBoosterSwitchFromName(boosterName: string) {
+		for (const element of boosterRecipes) {
+			if (element.name === boosterName) {
+				return element.boosterSwitch;
+			}
+		}
+		return ''; // Return null if no matching element is found
+	}
+
+	private getBoosterDateFromName(boosterName: string) {
+		for (const element of boosterRecipes) {
+			if (element.name === boosterName) {
+				return element.boosterDate;
 			}
 		}
 		return ''; // Return null if no matching element is found

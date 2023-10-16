@@ -24,7 +24,6 @@ export const defaultSettings: Partial<ISettings> = {
   dailyNoteCreationDate: '12.08.2023',
   weeklyNoteCreationTask: 0,
   weeklyNoteCreationDate: '12.08.2023',
-  // boosterIncredients: 'Whimsical Wisdom Crystals,Curiosity Coins,Eureka Energy Orbs,Serendipity Stars,Creativity Crystals,Discovery Dice,Metaphorical Medals,Curious Cat Companion,Another One',
   nexusNode: 0,
   connectionCrystal: 0,
   masteryScroll: 0,
@@ -44,7 +43,23 @@ export const defaultSettings: Partial<ISettings> = {
   inspirationInfusion: 0,
   titleTitan: 0,
   precisionPrism: 0,
-  hyperlinkHarmony: 0
+  hyperlinkHarmony: 0,
+  boosterFactorPerpetualProgress: false,
+  boosterDatePerpetualProgress: '2023-08-15 20:00:00',
+  boosterFactorStrategicSynapses: false,
+  boosterDateStrategicSynapses: '2023-08-15 20:00:00',
+  boosterFactorLinkersLode: false,
+  boosterDateLinkersLode: '2023-08-15 20:00:00',
+  boosterFactorRecursiveReflection: false,
+  boosterDateRecursiveReflection:'2023-08-15 20:00:00',
+  boosterFactorSynapticSurge: false,
+  boosterDateSynapticSurge: '2023-08-15 20:00:00',
+  boosterFactorTitleTitan: false,
+  boosterDateTitleTitan: '2023-08-15 20:00:00',
+  boosterFactorPrecisionPrism: false,
+  boosterDatePrecisionPrism: '2023-08-15 20:00:00',
+  boosterFactorHyperlinkHarmony: false,
+  boosterDateHyperlinkHarmony: '2023-08-15 20:00:00'
 };
 
 export interface ISettings {
@@ -70,7 +85,6 @@ export interface ISettings {
   dailyNoteCreationDate: string;
   weeklyNoteCreationTask: number;
   weeklyNoteCreationDate: string;
-  // boosterIncredients: string;
   nexusNode: number;
   connectionCrystal: number;
   masteryScroll: number;
@@ -91,6 +105,22 @@ export interface ISettings {
   titleTitan: number;
   precisionPrism: number;
   hyperlinkHarmony: number;
+  boosterFactorPerpetualProgress: boolean;
+  boosterDatePerpetualProgress: string
+  boosterFactorStrategicSynapses: boolean;
+  boosterDateStrategicSynapses: string;
+  boosterFactorLinkersLode: boolean;
+  boosterDateLinkersLode: string;
+  boosterFactorRecursiveReflection: boolean;
+  boosterDateRecursiveReflection: string;
+  boosterFactorSynapticSurge: boolean;
+  boosterDateSynapticSurge: string;
+  boosterFactorTitleTitan: boolean;
+  boosterDateTitleTitan: string
+  boosterFactorPrecisionPrism: boolean;
+  boosterDatePrecisionPrism: string
+  boosterFactorHyperlinkHarmony: boolean;
+  boosterDateHyperlinkHarmony: string;
 }
 
 
@@ -119,7 +149,6 @@ export class GamificationPluginSettings extends PluginSettingTab {
   public dailyNoteCreationDate: string;
   public weeklyNoteCreationTask: number;
   public weeklyNoteCreationDate: string;
-  // public boosterIncredients: string;
   public nexusNode: number;
   public connectionCrystal: number;
   public masteryScroll: number;
@@ -140,42 +169,26 @@ export class GamificationPluginSettings extends PluginSettingTab {
   public titleTitan: number;
   public precisionPrism: number;
   public hyperlinkHarmony: number;
+  public boosterFactorPerpetualProgress: boolean;
+  public boosterDatePerpetualProgress: string
+  public boosterFactorStrategicSynapses: boolean;
+  public boosterDateStrategicSynapses: string
+  public boosterFactorLinkersLode: boolean;
+  public boosterDateLinkersLode: string
+  public boosterFactorRecursiveReflection: boolean;
+  public boosterDateRecursiveReflection: string
+  public boosterFactorSynapticSurge: boolean;
+  public boosterDateSynapticSurge: string
+  public boosterFactorTitleTitan: boolean;
+  public boosterDateTitleTitan: string
+  public boosterFactorPrecisionPrism: boolean;
+  public boosterDatePrecisionPrism: string
+  public boosterFactorHyperlinkHarmony: boolean;
+  public boosterDateHyperlinkHarmony: string
 
 	constructor(app: App, plugin: gamification) {
 	  super(app, plugin);
 	  this.plugin = plugin;
-	  // Initialize the properties
-	  /*this.enableInitCommand = defaultSettings.enableInitCommand;
-	  this.bindEnter = defaultSettings.bindEnter;
-	  this.bindTab = defaultSettings.bindTab;
-	  this.avatarPageName = defaultSettings.avatarPageName;
-	  this.tagsExclude = defaultSettings.tagsExclude;
-	  this.folderExclude = defaultSettings.folderExclude;
-	  this.progressiveSumLayer2 = defaultSettings.progressiveSumLayer2;
-	  this.progressiveSumLayer3 = defaultSettings.progressiveSumLayer3;
-	  this.numAllFiles = defaultSettings.numAllFiles;
-	  this.numAllFilesCount = defaultSettings.numAllFilesCount;
-	  this.chartReduzierungMonate = defaultSettings.chartReduzierungMonate;
-	  this.statusPoints = defaultSettings.statusPoints;
-	  this.statusLevel = defaultSettings.statusLevel;
-	  this.xpForNextLevel = defaultSettings.xpForNextLevel;
-	  this.gamificationStartDate = defaultSettings.gamificationStartDate;
-	  this.badgeBoosterState = defaultSettings.badgeBoosterState;
-	  this.badgeBoosterFactor = defaultSettings.badgeBoosterFactor;
-	  this.debug = defaultSettings.debug;
-	  this.dailyNoteCreationTask = defaultSettings.dailyNoteCreationTask;
-	  this.dailyNoteCreationDate = defaultSettings.dailyNoteCreationDate;
-	  this.weeklyNoteCreationTask = defaultSettings.weeklyNoteCreationTask;
-	  this.weeklyNoteCreationDate = defaultSettings.weeklyNoteCreationDate;
-	  this.boosterIncredients = defaultSettings.boosterIncredients;
-	  this.nexusNode = defaultSettings.nexusNode;
-	  this.connectionCrystal = defaultSettings.connectionCrystal;
-	  this.masteryScroll = defaultSettings.masteryScroll;
-	  this.insightPrism = defaultSettings.insightPrism;
-	  this.reflectiveEssence = defaultSettings.reflectiveEssence;
-	  this.amplificationCrystal = defaultSettings.amplificationCrystal;
-	  this.creativeCatalyst = defaultSettings.creativeCatalyst;
-	  this.precisionLens = defaultSettings.precisionLens;*/
 	}
   
 	public display(): void {
