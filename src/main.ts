@@ -1489,7 +1489,7 @@ class MultiSelectModal extends Modal {
 		
 	}
 	
-
+	
 	private updateQuantityDisplay(labelText: string) {
 		const stock = this.boosters[labelText]
 		const stockInfo = document.querySelector(`.${labelText.replace(' ','-')}`);

@@ -44,6 +44,7 @@ export const defaultSettings: Partial<ISettings> = {
   titleTitan: 0,
   precisionPrism: 0,
   hyperlinkHarmony: 0,
+  ephemeralEuphoria: 0,
   boosterFactorPerpetualProgress: false,
   boosterDatePerpetualProgress: '2023-08-15 20:00:00',
   boosterFactorStrategicSynapses: false,
@@ -59,7 +60,9 @@ export const defaultSettings: Partial<ISettings> = {
   boosterFactorPrecisionPrism: false,
   boosterDatePrecisionPrism: '2023-08-15 20:00:00',
   boosterFactorHyperlinkHarmony: false,
-  boosterDateHyperlinkHarmony: '2023-08-15 20:00:00'
+  boosterDateHyperlinkHarmony: '2023-08-15 20:00:00',
+  boosterFactorEphemeralEuphoria: false,
+  boosterDateEphemeralEuphoria: '2023-08-15 20:00:00'
 };
 
 export interface ISettings {
@@ -105,6 +108,7 @@ export interface ISettings {
   titleTitan: number;
   precisionPrism: number;
   hyperlinkHarmony: number;
+  ephemeralEuphoria: number;
   boosterFactorPerpetualProgress: boolean;
   boosterDatePerpetualProgress: string
   boosterFactorStrategicSynapses: boolean;
@@ -121,6 +125,8 @@ export interface ISettings {
   boosterDatePrecisionPrism: string
   boosterFactorHyperlinkHarmony: boolean;
   boosterDateHyperlinkHarmony: string;
+  boosterFactorEphemeralEuphoria: boolean;
+  boosterDateEphemeralEuphoria: string;
 }
 
 
@@ -169,6 +175,7 @@ export class GamificationPluginSettings extends PluginSettingTab {
   public titleTitan: number;
   public precisionPrism: number;
   public hyperlinkHarmony: number;
+  public ephemeralEuphoria: number;
   public boosterFactorPerpetualProgress: boolean;
   public boosterDatePerpetualProgress: string
   public boosterFactorStrategicSynapses: boolean;
@@ -184,7 +191,9 @@ export class GamificationPluginSettings extends PluginSettingTab {
   public boosterFactorPrecisionPrism: boolean;
   public boosterDatePrecisionPrism: string
   public boosterFactorHyperlinkHarmony: boolean;
-  public boosterDateHyperlinkHarmony: string
+  public boosterDateHyperlinkHarmony: string;
+  public boosterFactorEphemeralEuphoria: boolean;
+  public boosterDateEphemeralEuphoria: string;
 
 	constructor(app: App, plugin: gamification) {
 	  super(app, plugin);
