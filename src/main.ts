@@ -1415,7 +1415,7 @@ class MultiSelectModal extends Modal {
 			label.innerHTML = `${labelText} : (${stock})`;
 			//const useButton = document.createElement('button');
 			useButton.innerText = `cooldown ${hoursUntilMinutesPassed(window.moment(this.gamificationInstance.getSetting(this.getBoosterDateFromName(labelText)), 'YYYY-MM-DD HH:mm:ss'),this.getBoosterCooldownFromName(labelText))} hours`;
-			
+			useButton.id = `use-button-${labelText.replace(' ','-')}`;
 			useButton.onclick = () => {
 				new ModalInformationbox(this.app, `${labelText} is for ${hoursUntilMinutesPassed(window.moment(this.gamificationInstance.getSetting(this.getBoosterDateFromName(labelText)), 'YYYY-MM-DD HH:mm:ss'),this.getBoosterCooldownFromName(labelText))} hours in cooldown and can only then be used again.`).open();
 			};
@@ -1423,6 +1423,7 @@ class MultiSelectModal extends Modal {
 			label.innerHTML = `${labelText} : (${stock})`;
 			//const useButton = document.createElement('button');
 			useButton.innerText = 'Use';
+			useButton.id = `use-button-${labelText.replace(' ','-')}`;
 			useButton.onclick = () => {
 				this.useBoosterItem(labelText);
 			};
@@ -1430,6 +1431,7 @@ class MultiSelectModal extends Modal {
 	
 		const useInfoButton = document.createElement('button');
 		useInfoButton.innerText = '?';
+		useInfoButton.id = `information-${labelText.replace(' ','-')}`;
 		useInfoButton.onclick = () => {
 			new ModalInformationbox(this.app, this.getBoosterInforFromFromName(labelText)).open();
 		};
@@ -1495,6 +1497,10 @@ class MultiSelectModal extends Modal {
 			stockInfo.innerHTML = ''; // Clear the current content
 			stockInfo.innerHTML = `${labelText} : (${stock})`
 		}
+		const buttonUse = document.querySelector(`#use-button-${labelText.replace(' ','-')}`);
+		if (buttonUse && isMinutesPassed(window.moment(this.gamificationInstance.getSetting(this.getBoosterDateFromName(labelText)), 'YYYY-MM-DD HH:mm:ss'),this.getBoosterCooldownFromName(labelText)) == false){
+			buttonUse.setText(`cooldown ${hoursUntilMinutesPassed(window.moment(this.gamificationInstance.getSetting(this.getBoosterDateFromName(labelText)), 'YYYY-MM-DD HH:mm:ss'),this.getBoosterCooldownFromName(labelText))} hours`)
+		}
 	}
 
 	
@@ -1515,6 +1521,7 @@ class MultiSelectModal extends Modal {
 		return true;
 	}
 
+
 	private useIngrediments(incredients: {name: string; incredients: string[];}) {
 		console.log(`useIngrediments: ${incredients}`)
 		for (const ingredient of incredients.incredients) {
@@ -1533,6 +1540,7 @@ class MultiSelectModal extends Modal {
 		return true;
 	}
 	
+
 	private updateStockInformation() {
 		const stockInfo = document.querySelector('.stock-info');
 		if (stockInfo) {
