@@ -708,6 +708,7 @@ export default class gamification extends Plugin {
 		let boosterFactorTitleTitan = 0;
 		let boosterFactorPrecisionPrism = 0;
 		let boosterFactorHyperlinkHarmony = 0;
+		let boosterFactorEphemeralEuphoria = 0;
 		if (this.settings.badgeBoosterState){
 			boosterFactor = this.settings.badgeBoosterFactor;
 		}
@@ -735,9 +736,12 @@ export default class gamification extends Plugin {
 		if (this.settings.boosterFactorHyperlinkHarmony){
 			boosterFactorHyperlinkHarmony = 5;
 		}
+		if (this.settings.boosterFactorEphemeralEuphoria){
+			boosterFactorEphemeralEuphoria = 80;
+		}
 		
 
-		this.settings.statusPoints = pointsToAdd * (boosterFactor + boosterFactorPerpetualProgress + boosterFactorStrategicSynapses + boosterFactorLinkersLode + boosterFactorRecursiveReflection + boosterFactorSynapticSurge + boosterFactorTitleTitan + boosterFactorPrecisionPrism + boosterFactorHyperlinkHarmony ) + this.settings.statusPoints
+		this.settings.statusPoints = pointsToAdd * (boosterFactor + boosterFactorPerpetualProgress + boosterFactorStrategicSynapses + boosterFactorLinkersLode + boosterFactorRecursiveReflection + boosterFactorSynapticSurge + boosterFactorTitleTitan + boosterFactorPrecisionPrism + boosterFactorHyperlinkHarmony + boosterFactorEphemeralEuphoria ) + this.settings.statusPoints
 		await this.saveData(this.settings)
 
 		return this.updateAvatarPage(this.settings.avatarPageName)
@@ -1489,7 +1493,8 @@ class MultiSelectModal extends Modal {
 		
 	}
 	
-	
+
+
 	private updateQuantityDisplay(labelText: string) {
 		const stock = this.boosters[labelText]
 		const stockInfo = document.querySelector(`.${labelText.replace(' ','-')}`);
