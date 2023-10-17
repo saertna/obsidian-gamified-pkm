@@ -1163,7 +1163,7 @@ function isMinutesPassed(inputDate: Moment, minutesPassed: number): boolean {
     return inputDate.isSameOrBefore(minutesAgo);
 }
 
-function hoursUntilMinutesPassed(inputDate: Moment, minutesPassed: number): number {
+/*function hoursUntilMinutesPassed(inputDate: Moment, minutesPassed: number): number {
     const currentTime = window.moment(); // Get the current time
     const targetTime = inputDate.clone().add(minutesPassed, 'minutes'); // Calculate target time
 
@@ -1173,7 +1173,20 @@ function hoursUntilMinutesPassed(inputDate: Moment, minutesPassed: number): numb
 
     const timeDiff = targetTime.diff(currentTime, 'hours', true); // Calculate the difference in hours
     return Math.ceil(timeDiff);
+}*/
+
+function hoursUntilMinutesPassed(inputDate: Moment, minutesToPass: number): number {
+    const currentTime = window.moment(); // Get the current time
+    const targetTime = inputDate.clone().add(minutesToPass, 'minutes'); // Calculate the target time
+
+    if (targetTime.isAfter(currentTime)) {
+        const hoursRemaining = targetTime.diff(currentTime, 'hours');
+        return hoursRemaining;
+    } else {
+        return 0;
+    }
 }
+
 
 
 
@@ -1401,9 +1414,10 @@ class MultiSelectModal extends Modal {
 			console.log(`Booster ${labelText} is still in cooldown for ${window.moment(this.gamificationInstance.getSetting(this.getBoosterDateFromName(labelText)), 'YYYY-MM-DD HH:mm:ss'),this.getBoosterCooldownFromName(labelText)/60} hours`)
 			label.innerHTML = `${labelText} : (${stock})`;
 			//const useButton = document.createElement('button');
-			useButton.innerText = `cooldown ${window.moment(this.gamificationInstance.getSetting(this.getBoosterDateFromName(labelText)), 'YYYY-MM-DD HH:mm:ss'),this.getBoosterCooldownFromName(labelText)/60} hours`;
+			useButton.innerText = `cooldown ${hoursUntilMinutesPassed(window.moment(this.gamificationInstance.getSetting(this.getBoosterDateFromName(labelText)), 'YYYY-MM-DD HH:mm:ss'),this.getBoosterCooldownFromName(labelText))} hours`;
+			
 			useButton.onclick = () => {
-				new ModalInformationbox(this.app, `${labelText} is for ${window.moment(this.gamificationInstance.getSetting(this.getBoosterDateFromName(labelText)), 'YYYY-MM-DD HH:mm:ss'),this.getBoosterCooldownFromName(labelText)/60} hours in cooldown and can only then be used again.`).open();
+				new ModalInformationbox(this.app, `${labelText} is for ${hoursUntilMinutesPassed(window.moment(this.gamificationInstance.getSetting(this.getBoosterDateFromName(labelText)), 'YYYY-MM-DD HH:mm:ss'),this.getBoosterCooldownFromName(labelText))} hours in cooldown and can only then be used again.`).open();
 			};
 		} else {
 			label.innerHTML = `${labelText} : (${stock})`;
