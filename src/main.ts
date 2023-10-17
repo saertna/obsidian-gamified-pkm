@@ -567,40 +567,45 @@ export default class gamification extends Plugin {
 		}
 
 		// deativate boosters
-		if (this.settings.boosterFactorPerpetualProgress == true && isMinutesPassed(window.moment(this.settings.boosterDatePerpetualProgress, 'YYYY-MM-DD HH:mm:ss'),4*60)){
+		if (this.settings.boosterFactorPerpetualProgress == true && isMinutesPassed(window.moment(this.settings.boosterDatePerpetualProgress, 'YYYY-MM-DD HH:mm:ss'),getBoosterRunTimeFromVarName('perpetualProgress'))){
 			this.setSettingBoolean('boosterFactorPerpetualProgress',false);
 			console.log('"Perpetual Progress" has ended.')
 		}
-		if (this.settings.boosterFactorStrategicSynapses == true && isMinutesPassed(window.moment(this.settings.boosterDateStrategicSynapses, 'YYYY-MM-DD HH:mm:ss'),4*60)){
+		if (this.settings.boosterFactorStrategicSynapses == true && isMinutesPassed(window.moment(this.settings.boosterDateStrategicSynapses, 'YYYY-MM-DD HH:mm:ss'),getBoosterRunTimeFromVarName('strategicSynapses'))){
 			this.setSettingBoolean('boosterFactorStrategicSynapses',false);
 			console.log('"Strategic Synapses" has ended.')
 		}
-		if (this.settings.boosterFactorLinkersLode == true && isMinutesPassed(window.moment(this.settings.boosterDateLinkersLode, 'YYYY-MM-DD HH:mm:ss'),3*60)){
+		if (this.settings.boosterFactorLinkersLode == true && isMinutesPassed(window.moment(this.settings.boosterDateLinkersLode, 'YYYY-MM-DD HH:mm:ss'),getBoosterRunTimeFromVarName('linkersLode'))){
 			this.setSettingBoolean('boosterFactorLinkersLode',false);
 			console.log('"Linkers Lode" has ended.')
 		}
-		if (this.settings.boosterFactorRecursiveReflection == true && isMinutesPassed(window.moment(this.settings.boosterDateRecursiveReflection, 'YYYY-MM-DD HH:mm:ss'),5*60)){
+		if (this.settings.boosterFactorRecursiveReflection == true && isMinutesPassed(window.moment(this.settings.boosterDateRecursiveReflection, 'YYYY-MM-DD HH:mm:ss'),getBoosterRunTimeFromVarName('recursiveReflection'))){
 			this.setSettingBoolean('boosterFactorRecursiveReflection',false);
 			console.log('"Recursive Reflection" has ended.')
 		}
-		if (this.settings.boosterFactorSynapticSurge == true && isMinutesPassed(window.moment(this.settings.boosterDateSynapticSurge, 'YYYY-MM-DD HH:mm:ss'),2*60)){
+		if (this.settings.boosterFactorSynapticSurge == true && isMinutesPassed(window.moment(this.settings.boosterDateSynapticSurge, 'YYYY-MM-DD HH:mm:ss'),getBoosterRunTimeFromVarName('synapticSurge'))){
 			this.setSettingBoolean('boosterFactorSynapticSurge',false);
 			console.log('"Synaptic Surge" has ended.')
 		}
-		if (this.settings.boosterFactorTitleTitan == true && isMinutesPassed(window.moment(this.settings.boosterDateTitleTitan, 'YYYY-MM-DD HH:mm:ss'),3*60)){
+		if (this.settings.boosterFactorTitleTitan == true && isMinutesPassed(window.moment(this.settings.boosterDateTitleTitan, 'YYYY-MM-DD HH:mm:ss'),getBoosterRunTimeFromVarName('titleTitan'))){
 			this.setSettingBoolean('boosterFactorTitleTitan',false);
 			console.log('"Title Titan" has ended.')
 		}
-		if (this.settings.boosterFactorPrecisionPrism == true && isMinutesPassed(window.moment(this.settings.boosterDatePrecisionPrism, 'YYYY-MM-DD HH:mm:ss'),3*60)){
+		if (this.settings.boosterFactorPrecisionPrism == true && isMinutesPassed(window.moment(this.settings.boosterDatePrecisionPrism, 'YYYY-MM-DD HH:mm:ss'),getBoosterRunTimeFromVarName('precisionPrism'))){
 			this.setSettingBoolean('boosterFactorPrecisionPrism',false);
 			console.log('"Precision Prism" has ended.')
 		}
-		if (this.settings.boosterFactorHyperlinkHarmony == true && isMinutesPassed(window.moment(this.settings.boosterDateHyperlinkHarmony, 'YYYY-MM-DD HH:mm:ss'),3*60)){
+		if (this.settings.boosterFactorHyperlinkHarmony == true && isMinutesPassed(window.moment(this.settings.boosterDateHyperlinkHarmony, 'YYYY-MM-DD HH:mm:ss'),getBoosterRunTimeFromVarName('hyperlinkHarmony'))){
 			this.setSettingBoolean('boosterFactorHyperlinkHarmony',false);
 			console.log('"Hyperlink Harmony" has ended.')
 		}
+		if (this.settings.boosterFactorEphemeralEuphoria == true && isMinutesPassed(window.moment(this.settings.boosterDateEphemeralEuphoria, 'YYYY-MM-DD HH:mm:ss'),getBoosterRunTimeFromVarName('ephemeralEuphoria'))){
+			this.setSettingBoolean('boosterFactorEphemeralEuphoria',false);
+			console.log('"Ephemeral Euphoria" has ended.')
+		}
 
 	}
+
 
 	async increaseDailyCreatedNoteCount(){
 		let newDailyNoteCreationTask = this.settings.dailyNoteCreationTask;
@@ -1158,7 +1163,14 @@ export default class gamification extends Plugin {
 
 
   
-  
+function getBoosterRunTimeFromVarName(boosterVarName: string) {
+	for (const element of boosterRecipes) {
+		if (element.varname === boosterVarName) {
+			return element.boosterRunTime as number;
+		}
+	}
+	return 0; // Return null if no matching element is found
+}
 
 function isSameDay(inputDate: Moment): boolean {
 	const currentDate = window.moment(); // Get the current date
