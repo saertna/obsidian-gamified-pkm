@@ -1163,6 +1163,19 @@ function isMinutesPassed(inputDate: Moment, minutesPassed: number): boolean {
     return inputDate.isSameOrBefore(minutesAgo);
 }
 
+function hoursUntilMinutesPassed(inputDate: Moment, minutesPassed: number): number {
+    const currentTime = window.moment(); // Get the current time
+    const targetTime = inputDate.clone().add(minutesPassed, 'minutes'); // Calculate target time
+
+    if (currentTime.isSameOrAfter(targetTime)) {
+        return 0; // If the target time has already passed, return 0 hours
+    }
+
+    const timeDiff = targetTime.diff(currentTime, 'hours', true); // Calculate the difference in hours
+    return Math.ceil(timeDiff);
+}
+
+
 
 async function createAvatarFile(app: App, fileName: string): Promise<void> {
 	//settings: GamificationPluginSettings;
@@ -1274,7 +1287,7 @@ class MultiSelectModal extends Modal {
 
 	decrementBooster(booster: string, stockIncrease: number) {
 		const stock = this.boosters[booster];
-		if (stock > 0) {
+		if (stock > 0 && isMinutesPassed(window.moment(this.gamificationInstance.getSetting(this.getBoosterDateFromName(booster)), 'YYYY-MM-DD HH:mm:ss'),this.getBoosterCooldownFromName(booster))) {
         	this.boosters[booster] -= stockIncrease;
 			this.gamificationInstance.setSetting(this.getBoosterVarNameFromName(booster),this.boosters[booster])
 			this.gamificationInstance.setSettingBoolean(this.getBoosterSwitchFromName(booster),true)
@@ -1383,12 +1396,22 @@ class MultiSelectModal extends Modal {
 	
 		const label = document.createElement('div');
 		label.className = `${labelText.replace(' ','-')}`;
-		label.innerHTML = `${labelText} : (${stock})`;
+		if(isMinutesPassed(window.moment(this.gamificationInstance.getSetting(this.getBoosterDateFromName(labelText)), 'YYYY-MM-DD HH:mm:ss'),this.getBoosterCooldownFromName(labelText)) == false){
+			//console.log(`Booster ${labelText} is still in cooldown for ${window.moment(this.gamificationInstance.getSetting(this.getBoosterDateFromName(labelText)), 'YYYY-MM-DD HH:mm:ss'),this.getBoosterCooldownFromName(labelText)/60} hours`)
+			label.innerHTML = `${labelText} : (${stock})`;
+		} else {
+			label.innerHTML = `${labelText} : (${stock})`;
+		}
+		
 	
 		const useButton = document.createElement('button');
 		useButton.innerText = 'Use';
 		useButton.onclick = () => {
-			this.useBoosterItem(labelText);
+			if(isMinutesPassed(window.moment(this.gamificationInstance.getSetting(this.getBoosterDateFromName(labelText)), 'YYYY-MM-DD HH:mm:ss'),this.getBoosterCooldownFromName(labelText)) == false){
+				console.log(`Booster ${labelText} is still in cooldown for ${window.moment(this.gamificationInstance.getSetting(this.getBoosterDateFromName(labelText)), 'YYYY-MM-DD HH:mm:ss'),this.getBoosterCooldownFromName(labelText)/60} hours`)
+			} else {
+				this.useBoosterItem(labelText);
+			}
 		};
 	
 		const useInfoButton = document.createElement('button');
@@ -1603,6 +1626,15 @@ class MultiSelectModal extends Modal {
 			}
 		}
 		return ''; // Return null if no matching element is found
+	}
+
+	private getBoosterCooldownFromName(boosterName: string) {
+		for (const element of boosterRecipes) {
+			if (element.name === boosterName) {
+				return element.boosterCooldown;
+			}
+		}
+		return 0; // Return null if no matching element is found
 	}
 	
 }
