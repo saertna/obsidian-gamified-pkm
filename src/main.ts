@@ -13,7 +13,7 @@ style.textContent = `
 
 document.head.append(style);
 import {App, MarkdownView, Modal, Notice, Plugin, TFile, Vault} from 'obsidian';
-import {defaultSettings, GamificationPluginSettings} from './settings';
+import {defaultSettings, ISettings, GamificationPluginSettings} from './settings';
 import format from 'date-fns/format';
 import {
 	avatarInitContent,
@@ -56,18 +56,18 @@ import type {Moment} from 'moment';
 import { getRandomMessageWeeklyChallenge, getRandomMessageTwoNoteChallenge , getRandomMessagePoints } from './randomNotificationText'
 
 export default class gamification extends Plugin {
-	public settings: GamificationPluginSettings;
+	//public settings: GamificationPluginSettings;
 	private timerInterval: number;
 	private timerId: number | null;
 	private statusBarItem = this.addStatusBarItem();
 	private statusbarGamification = this.statusBarItem.createEl("span", { text: "" });
+	public settings: ISettings;
 
 
 	getSetting(key: string) {
         // Retrieve a specific setting
-		//this.settings['boosterIncredients']
-		//const key = 'boosterIncredients'
-		return this.settings[key];
+		// return this.settings[key];
+		return this.settings[key] !== undefined ? this.settings[key] : null;
     }
 
     setSetting(key: string, value: number) {
@@ -93,6 +93,7 @@ export default class gamification extends Plugin {
 
 	async onload() {
 		console.log('obsidian-pkm-gamification loaded!');
+		//this.settings = defaultSettings;
 
 		await this.loadSettings();
 
@@ -1133,19 +1134,26 @@ export default class gamification extends Plugin {
 	  }
 	
 	  async acquireIngredients() {
-		const chanceToEarnIngredient = 0.5; // Adjust this probability as needed (e.g., 0.5 for 50% chance)
+		const chanceToEarnIngredient = 0.5;
 	
 		if (Math.random() < chanceToEarnIngredient) {
-			const randomIngredientIndex = this.getRandomInt(0, 3);//elements.length - 1);
+			const randomIngredientIndex = this.getRandomInt(0, 3);
 			const earnedIngredient = elements[randomIngredientIndex];
-			const elementCount = this.getSetting(earnedIngredient.varName);
-			this.setSetting(earnedIngredient.varName, elementCount + 1);
-			this.saveSettings();
-			console.log(`You earned: ${earnedIngredient.name}`);
+			let elementCount = this.getSetting(earnedIngredient.varName);
+	
+			// Perform a null check
+			if (elementCount !== null && typeof elementCount === 'number') {
+				this.setSetting(earnedIngredient.varName, elementCount + 1);
+				this.saveSettings();
+				console.log(`You earned: ${earnedIngredient.name}`);
+			} else {
+				console.error(`Invalid element count for ${earnedIngredient.varName}`);
+			}
 		} else {
 			console.log('You did not earn an ingredient this time.');
 		}
 	}
+	
 }
 
 
@@ -1304,7 +1312,8 @@ class MultiSelectModal extends Modal {
 
 	decrementBooster(booster: string, stockIncrease: number) {
 		const stock = this.boosters[booster];
-		if (stock > 0 && isMinutesPassed(window.moment(this.gamificationInstance.getSetting(this.getBoosterDateFromName(booster)), 'YYYY-MM-DD HH:mm:ss'),this.getBoosterCooldownFromName(booster))) {
+		const momentDate = window.moment(booster, 'YYYY-MM-DD HH:mm:ss');
+		if (stock > 0 && isMinutesPassed(momentDate,this.getBoosterCooldownFromName(booster))) {
         	this.boosters[booster] -= stockIncrease;
 			this.gamificationInstance.setSetting(this.getBoosterVarNameFromName(booster),this.boosters[booster])
 			this.gamificationInstance.setSettingBoolean(this.getBoosterSwitchFromName(booster),true)
@@ -1317,18 +1326,18 @@ class MultiSelectModal extends Modal {
 	readBoostersStock(){
 		if (this.gamificationInstance) {
 			this.boosters = { 
-				'Temporal Tweaker': this.gamificationInstance.getSetting('temporalTweaker'),
-				'Perpetual Progress': this.gamificationInstance.getSetting('perpetualProgress'),
-				'Strategic Synapses': this.gamificationInstance.getSetting('strategicSynapses'),
-				'Accelerated Acquisition': this.gamificationInstance.getSetting('acceleratedAcquisition'),
-				'Linkers Lode': this.gamificationInstance.getSetting('linkersLode'),
-				'Effortless Expansion': this.gamificationInstance.getSetting('effortlessExpansion'),
-				'Recursive Reflection': this.gamificationInstance.getSetting('recursiveReflection'),
-				'Synaptic Surge': this.gamificationInstance.getSetting('synapticSurge'),
-				'Inspiration Infusion': this.gamificationInstance.getSetting('inspirationInfusion'),
-				'Title Titan': this.gamificationInstance.getSetting('titleTitan'),
-				'Precision Prism': this.gamificationInstance.getSetting('precisionPrism'),
-				'Hyperlink Harmony': this.gamificationInstance.getSetting('hyperlinkHarmony'),
+				'Temporal Tweaker': this.gamificationInstance.getSetting('temporalTweaker') as number,
+				'Perpetual Progress': this.gamificationInstance.getSetting('perpetualProgress') as number,
+				'Strategic Synapses': this.gamificationInstance.getSetting('strategicSynapses') as number,
+				'Accelerated Acquisition': this.gamificationInstance.getSetting('acceleratedAcquisition') as number,
+				'Linkers Lode': this.gamificationInstance.getSetting('linkersLode') as number,
+				'Effortless Expansion': this.gamificationInstance.getSetting('effortlessExpansion') as number,
+				'Recursive Reflection': this.gamificationInstance.getSetting('recursiveReflection') as number,
+				'Synaptic Surge': this.gamificationInstance.getSetting('synapticSurge') as number,
+				'Inspiration Infusion': this.gamificationInstance.getSetting('inspirationInfusion') as number,
+				'Title Titan': this.gamificationInstance.getSetting('titleTitan') as number,
+				'Precision Prism': this.gamificationInstance.getSetting('precisionPrism') as number,
+				'Hyperlink Harmony': this.gamificationInstance.getSetting('hyperlinkHarmony') as number,
 			};
 		}
 	}
@@ -1337,14 +1346,14 @@ class MultiSelectModal extends Modal {
 	readIngrementStock(){
 		if (this.gamificationInstance) {
 			this.remainingStock = { 
-				'Nexus Node': this.gamificationInstance.getSetting('nexusNode'),
-				'Connection Crystal': this.gamificationInstance.getSetting('connectionCrystal'),
-				'Mastery Scroll': this.gamificationInstance.getSetting('masteryScroll'),
-				'Insight Prism': this.gamificationInstance.getSetting('insightPrism'),
-				'Reflective Essence': this.gamificationInstance.getSetting('reflectiveEssence'),
-				'Amplification Crystal': this.gamificationInstance.getSetting('amplificationCrystal'),
-				'Creative Catalyst': this.gamificationInstance.getSetting('creativeCatalyst'),
-				'Precision Lens': this.gamificationInstance.getSetting('precisionLens'),
+				'Nexus Node': this.gamificationInstance.getSetting('nexusNode') as number,
+				'Connection Crystal': this.gamificationInstance.getSetting('connectionCrystal') as number,
+				'Mastery Scroll': this.gamificationInstance.getSetting('masteryScroll') as number,
+				'Insight Prism': this.gamificationInstance.getSetting('insightPrism') as number,
+				'Reflective Essence': this.gamificationInstance.getSetting('reflectiveEssence') as number,
+				'Amplification Crystal': this.gamificationInstance.getSetting('amplificationCrystal') as number,
+				'Creative Catalyst': this.gamificationInstance.getSetting('creativeCatalyst') as number,
+				'Precision Lens': this.gamificationInstance.getSetting('precisionLens') as number,
 			};
 		}
 	}
@@ -1414,14 +1423,15 @@ class MultiSelectModal extends Modal {
 		const label = document.createElement('div');
 		label.className = `${labelText.replace(' ','-')}`;
 		const useButton = document.createElement('button');
-		if(isMinutesPassed(window.moment(this.gamificationInstance.getSetting(this.getBoosterDateFromName(labelText)), 'YYYY-MM-DD HH:mm:ss'),this.getBoosterCooldownFromName(labelText)) == false){
-			console.log(`Booster ${labelText} is still in cooldown for ${window.moment(this.gamificationInstance.getSetting(this.getBoosterDateFromName(labelText)), 'YYYY-MM-DD HH:mm:ss'),this.getBoosterCooldownFromName(labelText)/60} hours`)
+		const momentDate = this.gamificationInstance.getSetting(this.getBoosterDateFromName(labelText));
+		if(isMinutesPassed(window.moment(momentDate as string, 'YYYY-MM-DD HH:mm:ss'),this.getBoosterCooldownFromName(labelText)) == false){
+			console.log(`Booster ${labelText} is still in cooldown for ${window.moment(momentDate as string, 'YYYY-MM-DD HH:mm:ss'),this.getBoosterCooldownFromName(labelText)/60} hours`)
 			label.innerHTML = `${labelText} : (${stock})`;
 			//const useButton = document.createElement('button');
-			useButton.innerText = `cooldown ${hoursUntilMinutesPassed(window.moment(this.gamificationInstance.getSetting(this.getBoosterDateFromName(labelText)), 'YYYY-MM-DD HH:mm:ss'),this.getBoosterCooldownFromName(labelText))} hours`;
+			useButton.innerText = `cooldown ${hoursUntilMinutesPassed(window.moment(momentDate as string, 'YYYY-MM-DD HH:mm:ss'),this.getBoosterCooldownFromName(labelText))} hours`;
 			useButton.id = `use-button-${labelText.replace(' ','-')}`;
 			useButton.onclick = () => {
-				new ModalInformationbox(this.app, `${labelText} is for ${hoursUntilMinutesPassed(window.moment(this.gamificationInstance.getSetting(this.getBoosterDateFromName(labelText)), 'YYYY-MM-DD HH:mm:ss'),this.getBoosterCooldownFromName(labelText))} hours in cooldown and can only then be used again.`).open();
+				new ModalInformationbox(this.app, `${labelText} is for ${hoursUntilMinutesPassed(window.moment(momentDate as string, 'YYYY-MM-DD HH:mm:ss'),this.getBoosterCooldownFromName(labelText))} hours in cooldown and can only then be used again.`).open();
 			};
 		} else {
 			label.innerHTML = `${labelText} : (${stock})`;
@@ -1503,8 +1513,10 @@ class MultiSelectModal extends Modal {
 			stockInfo.innerHTML = `${labelText} : (${stock})`
 		}
 		const buttonUse = document.querySelector(`#use-button-${labelText.replace(' ','-')}`);
-		if (buttonUse && isMinutesPassed(window.moment(this.gamificationInstance.getSetting(this.getBoosterDateFromName(labelText)), 'YYYY-MM-DD HH:mm:ss'),this.getBoosterCooldownFromName(labelText)) == false){
-			buttonUse.setText(`cooldown ${hoursUntilMinutesPassed(window.moment(this.gamificationInstance.getSetting(this.getBoosterDateFromName(labelText)), 'YYYY-MM-DD HH:mm:ss'),this.getBoosterCooldownFromName(labelText))} hours`)
+		const date = this.gamificationInstance.getSetting(this.getBoosterDateFromName(labelText));
+		const momentDate = window.moment(date as string, 'YYYY-MM-DD HH:mm:ss')
+		if (buttonUse && isMinutesPassed(momentDate, this.getBoosterCooldownFromName(labelText)) == false){
+			buttonUse.setText(`cooldown ${hoursUntilMinutesPassed(momentDate,this.getBoosterCooldownFromName(labelText))} hours`)
 		}
 	}
 
@@ -1649,7 +1661,7 @@ class MultiSelectModal extends Modal {
 	private getBoosterDateFromName(boosterName: string) {
 		for (const element of boosterRecipes) {
 			if (element.name === boosterName) {
-				return element.boosterDate;
+				return element.boosterDate as string;
 			}
 		}
 		return ''; // Return null if no matching element is found

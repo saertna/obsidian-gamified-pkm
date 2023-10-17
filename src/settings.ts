@@ -1,5 +1,6 @@
 import { App, PluginSettingTab, Setting } from 'obsidian';
 import gamification from './main';
+import type {MomentInput} from 'moment';
 
 export const defaultSettings: Partial<ISettings> = {
   enableInitCommand: true,
@@ -65,7 +66,11 @@ export const defaultSettings: Partial<ISettings> = {
   boosterDateEphemeralEuphoria: '2023-08-15 20:00:00'
 };
 
-export interface ISettings {
+export interface DynamicSettings {
+  [key: string]: number | string | boolean;
+}
+
+export interface ISettings extends DynamicSettings{
   enableInitCommand: boolean;
   bindEnter: boolean;
   bindTab: boolean;
@@ -127,11 +132,13 @@ export interface ISettings {
   boosterDateHyperlinkHarmony: string;
   boosterFactorEphemeralEuphoria: boolean;
   boosterDateEphemeralEuphoria: string;
+  //[key: string]: number | string | boolean | MomentInput;
 }
 
 
 export class GamificationPluginSettings extends PluginSettingTab {
 	private readonly plugin: gamification;
+  public settings: ISettings;
   
   public enableInitCommand: boolean;
   public bindEnter: boolean;
