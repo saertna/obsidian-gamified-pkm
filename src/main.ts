@@ -1396,23 +1396,23 @@ class MultiSelectModal extends Modal {
 	
 		const label = document.createElement('div');
 		label.className = `${labelText.replace(' ','-')}`;
+		const useButton = document.createElement('button');
 		if(isMinutesPassed(window.moment(this.gamificationInstance.getSetting(this.getBoosterDateFromName(labelText)), 'YYYY-MM-DD HH:mm:ss'),this.getBoosterCooldownFromName(labelText)) == false){
-			//console.log(`Booster ${labelText} is still in cooldown for ${window.moment(this.gamificationInstance.getSetting(this.getBoosterDateFromName(labelText)), 'YYYY-MM-DD HH:mm:ss'),this.getBoosterCooldownFromName(labelText)/60} hours`)
+			console.log(`Booster ${labelText} is still in cooldown for ${window.moment(this.gamificationInstance.getSetting(this.getBoosterDateFromName(labelText)), 'YYYY-MM-DD HH:mm:ss'),this.getBoosterCooldownFromName(labelText)/60} hours`)
 			label.innerHTML = `${labelText} : (${stock})`;
+			//const useButton = document.createElement('button');
+			useButton.innerText = `cooldown ${window.moment(this.gamificationInstance.getSetting(this.getBoosterDateFromName(labelText)), 'YYYY-MM-DD HH:mm:ss'),this.getBoosterCooldownFromName(labelText)/60} hours`;
+			useButton.onclick = () => {
+				new ModalInformationbox(this.app, `${labelText} is for ${window.moment(this.gamificationInstance.getSetting(this.getBoosterDateFromName(labelText)), 'YYYY-MM-DD HH:mm:ss'),this.getBoosterCooldownFromName(labelText)/60} hours in cooldown and can only then be used again.`).open();
+			};
 		} else {
 			label.innerHTML = `${labelText} : (${stock})`;
-		}
-		
-	
-		const useButton = document.createElement('button');
-		useButton.innerText = 'Use';
-		useButton.onclick = () => {
-			if(isMinutesPassed(window.moment(this.gamificationInstance.getSetting(this.getBoosterDateFromName(labelText)), 'YYYY-MM-DD HH:mm:ss'),this.getBoosterCooldownFromName(labelText)) == false){
-				console.log(`Booster ${labelText} is still in cooldown for ${window.moment(this.gamificationInstance.getSetting(this.getBoosterDateFromName(labelText)), 'YYYY-MM-DD HH:mm:ss'),this.getBoosterCooldownFromName(labelText)/60} hours`)
-			} else {
+			//const useButton = document.createElement('button');
+			useButton.innerText = 'Use';
+			useButton.onclick = () => {
 				this.useBoosterItem(labelText);
-			}
-		};
+			};
+		}
 	
 		const useInfoButton = document.createElement('button');
 		useInfoButton.innerText = '?';
