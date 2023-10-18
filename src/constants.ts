@@ -2,6 +2,9 @@ export const pointsNoteMajurity = 100;
 export const pointsMajurity = 10;
 export const pointsForDailyChallenge = 500;
 export const pointsForWeeklyChallenge = 2000;
+export const streakboosterDecrease = 0.2;
+export const streakboosterIncreaseDaily = 0.1;
+export const streakboosterIncreaseWeekly = 1;
 export const avatarInitContent =  `# Avatar
 
 |        |     |

@@ -6,7 +6,10 @@ import {
 	pointsMajurity,
 	pointsNoteMajurity,
 	pointsForDailyChallenge,
-	pointsForWeeklyChallenge
+	pointsForWeeklyChallenge,
+	streakboosterDecrease,
+	streakboosterIncreaseDaily,
+	streakboosterIncreaseWeekly
 } from './constants'
 import {
 	count_inlinks,
@@ -42,6 +45,7 @@ export default class gamification extends Plugin {
 	private statusBarItem = this.addStatusBarItem();
 	private statusbarGamification = this.statusBarItem.createEl("span", { text: "" });
 
+	
 	async onload() {
 		console.log('obsidian-pkm-gamification loaded!');
 
@@ -520,7 +524,7 @@ export default class gamification extends Plugin {
 				await this.updateAvatarPage(this.settings.avatarPageName);
 				console.log(`${newDailyNoteCreationTask}/2 Notes created today.`)
 			} else if (newDailyNoteCreationTask == 2) {
-				this.increaseStreakbooster(0.1)
+				this.increaseStreakbooster(streakboosterIncreaseDaily)
 				//this.settings.streakboosterDate = window.moment().format('DD.MM.YYYY');
 				await this.saveSettings();
 				await this.updateStatusBar(this.statusbarGamification)
@@ -567,7 +571,7 @@ export default class gamification extends Plugin {
 			await this.updateAvatarPage(this.settings.avatarPageName);
 			console.log(`${newWeeklyNoteCreationTask}/7 Notes created in a chain.`)
 		} else if (newWeeklyNoteCreationTask == 7) {
-			this.increaseStreakbooster(1);
+			this.increaseStreakbooster(streakboosterIncreaseWeekly);
 			//this.settings.streakboosterDate = window.moment().format('DD.MM.YYYY');
 			await this.saveSettings();
 			await this.giveStatusPoints(pointsForWeeklyChallenge)
@@ -642,7 +646,7 @@ export default class gamification extends Plugin {
 	}
 
 	async increaseStreakbooster(increaseValue:number){
-		let newBoosterFakfor = parseFloat((this.settings.streakbooster + increaseValue).toFixed(1));
+		let newBoosterFakfor = parseFloat((this.settings.streakbooster + increaseValue).toFixed(streakboosterIncreaseWeekly));
 		if(newBoosterFakfor > 80){
 			newBoosterFakfor = 80;
 		}
@@ -654,7 +658,7 @@ export default class gamification extends Plugin {
 
 
 	async decreaseStreakbooster(decreaseValue:number){
-		let newBoosterFakfor = parseFloat((this.settings.streakbooster - decreaseValue).toFixed(1))
+		let newBoosterFakfor = parseFloat((this.settings.streakbooster - decreaseValue).toFixed(streakboosterDecrease))
 		this.settings.streakbooster = newBoosterFakfor
 		if (newBoosterFakfor < 0){
 			newBoosterFakfor = 0
