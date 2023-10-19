@@ -63,7 +63,9 @@ export const defaultSettings: Partial<ISettings> = {
   boosterFactorHyperlinkHarmony: false,
   boosterDateHyperlinkHarmony: '2023-08-15 20:00:00',
   boosterFactorEphemeralEuphoria: false,
-  boosterDateEphemeralEuphoria: '2023-08-15 20:00:00'
+  boosterDateEphemeralEuphoria: '2023-08-15 20:00:00',
+  streakbooster: 0,
+  streakboosterDate: false
 };
 
 export interface DynamicSettings {
@@ -93,6 +95,8 @@ export interface ISettings extends DynamicSettings{
   dailyNoteCreationDate: string;
   weeklyNoteCreationTask: number;
   weeklyNoteCreationDate: string;
+  streakbooster: number;
+  streakboosterDate: boolean;
   nexusNode: number;
   connectionCrystal: number;
   masteryScroll: number;
@@ -162,6 +166,8 @@ export class GamificationPluginSettings extends PluginSettingTab {
   public dailyNoteCreationDate: string;
   public weeklyNoteCreationTask: number;
   public weeklyNoteCreationDate: string;
+  public streakbooster: number;
+  public streakboosterDate: boolean;
   public nexusNode: number;
   public connectionCrystal: number;
   public masteryScroll: number;
