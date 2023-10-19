@@ -72,12 +72,14 @@ export default class gamification extends Plugin {
 		return this.settings[key] !== undefined ? this.settings[key] : null;
     }
 
+	
     setSetting(key: string, value: number) {
         // Set a specific setting
 		//console.log(`new value for ${key} is ${value}`)
         this.settings[key] = value;
         this.saveSettings();
     }
+
 
 	setSettingBoolean(key: string, value: boolean) {
         // Set a specific setting
@@ -86,12 +88,14 @@ export default class gamification extends Plugin {
         this.saveSettings();
 	}
 
+
 	setSettingString(key: string, value: string) {
         // Set a specific setting
 		//console.log(`new value for ${key} is ${value}`)
         this.settings[key] = value;
         this.saveSettings();
 	}
+
 
 	async onload() {
 		console.log('obsidian-pkm-gamification loaded!');
@@ -259,6 +263,7 @@ export default class gamification extends Plugin {
         new ModalInformationbox(this.app, `Game is now reseted. Please delete the Profile Page: "${this.settings.avatarPageName}.md" manually.`).open();
     }
 
+
     private async initializeGame(statusbarGamification: HTMLSpanElement) {
 		this.settings.gamificationStartDate = format(new Date(), 'yyyy-MM-dd');
 		await this.saveSettings();
@@ -385,6 +390,7 @@ export default class gamification extends Plugin {
 		new ModalInformationbox(this.app, `Finallized gamification initialistation!\nCongratulation, you earned ${pointsReceived} Points!\n\nCheck the Profile Page: "${this.settings.avatarPageName}.md"\n\nYou received an initialisation Booster aktiv for your first level ups. Game on!`).open();
 	}
 
+
 	private writeFrontmatter(frontmatter: any, fileNameRate: number, rateFileLength: number, inlinkClass: number, rateOut: number, rateProgressiveSum: number, noteMajurity: number) {
 		frontmatter['title-class'] = rateDirection(frontmatter['title-class'], fileNameRate)
 		frontmatter['note-length-class'] = rateDirection(frontmatter['note-length-class'], rateFileLength)
@@ -393,6 +399,7 @@ export default class gamification extends Plugin {
 		frontmatter['progressive-summarization-maturity'] = rateDirection(frontmatter['progressive-summarization-maturity'], rateProgressiveSum)
 		frontmatter['note-maturity'] = rateDirection(frontmatter['note-maturity'], noteMajurity)
 	}
+
 
 	onunload() {
 		console.log('obsidian-pkm-gamification unloaded!');
@@ -403,6 +410,7 @@ export default class gamification extends Plugin {
 			this.timerId = null;
 		}
 	}
+
 
 	async calculateNoteMajurity(){
 		const file: TFile | null= this.app.workspace.getActiveFile();
@@ -642,6 +650,7 @@ export default class gamification extends Plugin {
 		}
 	}
 
+
 	async increaseWeeklyCreatedNoteCount(){
 		if(isOneDayBefore(window.moment(this.settings.weeklyNoteCreationDate, 'DD.MM.YYYY'))){
 			await this.checkForWeeklyNoteChallengeBelow7();
@@ -655,6 +664,7 @@ export default class gamification extends Plugin {
 		}
 	}
 
+
 	private async checkForWeeklyNoteChallengeBelow7() {
 		let currentWeeklyCreatedNotes = this.settings.weeklyNoteCreationTask;
 		if (currentWeeklyCreatedNotes < 7) {
@@ -666,6 +676,7 @@ export default class gamification extends Plugin {
 			await this.checkForWeeklyNoteChallengeEvaluation(currentWeeklyCreatedNotes);
 		}
 	}
+
 
 	private async checkForWeeklyNoteChallengeEvaluation(newWeeklyNoteCreationTask: number) {
 		if (newWeeklyNoteCreationTask <= 6) {
@@ -687,6 +698,7 @@ export default class gamification extends Plugin {
 		}
 	}
 
+
 	async updateStatusBar(statusbar: HTMLSpanElement){
 		const currentLevel = getLevelForPoints(this.settings.statusPoints)
 		const progressbarPercent = (this.settings.statusPoints - currentLevel.points)/(currentLevel.pointsNext - currentLevel.points)*100;
@@ -695,6 +707,7 @@ export default class gamification extends Plugin {
 		const boosterFactor = this.settings.streakbooster
 		statusbar.setText(`🎲|lvl: ${this.settings.statusLevel} | ${this.createProgressbar(charNumProgressbar, barLength)}|🚀${boosterFactor}${this.rateBoosterDirection()}`)
 	}
+
 
 	private rateBoosterDirection(){
 		let direction = '⬆️'
@@ -711,6 +724,7 @@ export default class gamification extends Plugin {
 		}
 		return direction
 	}
+
 
 	private createProgressbar(charNumProgressbar: number, barLength: number) {
 		let progressbar = ''
@@ -784,6 +798,7 @@ export default class gamification extends Plugin {
 
 		return this.updateAvatarPage(this.settings.avatarPageName)
 	}
+
 
 	async increaseStreakbooster(increaseValue:number){
 		let newBoosterFakfor = parseFloat((this.settings.streakbooster + increaseValue).toFixed(streakboosterIncreaseWeekly));
@@ -883,12 +898,12 @@ export default class gamification extends Plugin {
 		if (reference != null && reference2 != null && reference3 != null && reference4 != null){
 			start = reference - 2;
 			end = reference + 24;
-			start2 = reference2 - 1 - 25; // no idea wby offset 25 is needed
-			end2 = reference2 - 25; // no idea wby offset 25 is needed
-			start3 = reference3 - 1 -25; // no idea wby offset 25 is needed
-			end3 = reference3 + 24 -25; // no idea wby offset 25 is needed
-			start4 = reference4 - 1 - 25; // no idea wby offset 55 is needed
-			end4 = reference4 - 25 ; // no idea wby offset 55 is needed
+			start2 = reference2 - 1 - 25; // no idea why offset 25 is needed
+			end2 = reference2 - 25; // no idea why offset 25 is needed
+			start3 = reference3 - 1 -25; // no idea why offset 25 is needed
+			end3 = reference3 + 24 -25; // no idea why offset 25 is needed
+			start4 = reference4 - 1 - 25; // no idea why offset 25 is needed
+			end4 = reference4 - 25 ; // no idea why offset 25 is needed
 
 
 			const newLines = [...lines.slice(0, start), newPointsString, ...lines.slice(end)];
@@ -946,6 +961,7 @@ export default class gamification extends Plugin {
 		}
 	}
 
+
 	async giveInitBadgeInProfile(avatarPageName: string, badge: Badge){
 		const existingFile = app.vault.getAbstractFileByPath(`${avatarPageName}.md`);
 		if (existingFile == null) {
@@ -978,6 +994,7 @@ export default class gamification extends Plugin {
 			console.log(`badgeString: ${badgeString}`)
 		}
 	}
+
 
 	async removeBadgesWhenInitLevelHigher(avatarPageName: string, level: number){
 		const existingFile = app.vault.getAbstractFileByPath(`${avatarPageName}.md`);
@@ -1023,26 +1040,14 @@ export default class gamification extends Plugin {
 	async createChart(vault: Vault): Promise<string>{
 		const files = vault.getMarkdownFiles();
 		const earliestFile = findEarliestModifiedFile(files)
-		//let earliestDate = earliestFile.stat.ctime
-		//if (earliestFile.stat.mtime < earliestFile.stat.ctime ){
 		const earliestDate = earliestFile.stat.mtime
-		//}
 
 		let monthCounter = 0 //format(new Date(earliestDate), 'MM');
 		let dateCount = new Date(earliestDate); // um es hochzählen zu können
-		//const fileDateMonthMap = new Map<string, number>();
 		const fileDateMonthMapMod = new Map<string, number>();
 		const monthcount = monthsBetween(new Date(earliestDate), new Date())
 		let dateString = dateCount.getMonth()+1 + "." + dateCount.getFullYear()
 		let yLabel = ""
-		// create Base for counting created
-		/*while (monthCounter < monthcount){
-			dateString = dateCount.getMonth()+1 + "." + dateCount.getFullYear()
-			//console.log(`dateString: ${dateString}`)
-			dateCount.setMonth(dateCount.getMonth() + 1)
-			monthCounter += 1;
-			fileDateMonthMap.set(dateString, 0)
-		}*/
 
 		monthCounter = 0
 		dateCount = new Date(earliestDate); // um es hochzählen zu können
@@ -1050,28 +1055,12 @@ export default class gamification extends Plugin {
 		// create Base for counting modified
 		while (monthCounter < monthcount){
 			dateString = dateCount.getMonth()+1 + "." + dateCount.getFullYear()
-			//console.log(`dateString: ${dateString}`)
 			yLabel = yLabel + dateString + ", "
 			dateCount.setMonth(dateCount.getMonth() + 1)
 			monthCounter += 1;
 			fileDateMonthMapMod.set(dateString, 0)
 		}
 		yLabel = yLabel.slice(0,yLabel.length-2)
-
-		// count how many files in each month
-		/*const creationDates = getCreationDates(files)
-		for (let i = 0; i < creationDates.length; i++){
-			//fileDateMonthMap.set(format(creationDates[i], 'M.yyyy'),fileDateMonthMap.get(format(creationDates[i], 'M.yyyy'))+1)
-			const formattedDate = format(creationDates[i], 'M.yyyy');
-			const currentCount = fileDateMonthMap.get(formattedDate);
-
-			if (currentCount !== undefined) {
-				fileDateMonthMap.set(formattedDate, currentCount + 1);
-			} else {
-				// If the key doesn't exist in the map, initialize it with a count of 1
-				fileDateMonthMap.set(formattedDate, 1);
-			}
-		}*/
 
 		// count how many mod files in each month
 		const modificationDates = getModificationDates(files)
@@ -1088,14 +1077,6 @@ export default class gamification extends Plugin {
 			}
 		}
 
-		// build Chart String created
-		/*let charStringCreated = ""
-		for (const [value] of fileDateMonthMap) {
-			charStringCreated = charStringCreated + value + ", "
-		}
-		charStringCreated = charStringCreated.slice(0,charStringCreated.length-2)*/
-
-		// build Chart String modified
 		let charStringModified = ""
 		for (const [value] of fileDateMonthMapMod) {
 			//console.log(`key: ${key}, value: ${value}`);
@@ -1112,7 +1093,6 @@ export default class gamification extends Plugin {
 				const badge : Badge = getBadgeForLevel(this.settings.statusLevel, false)
 				new Notice(`You've earned the "${badge.name}" badge. ${badge.description}`)
 				console.log(`You've earned the "${badge.name}" badge. ${badge.description}`)
-				//console.log(`badge for level ${this.settings.statusLevel} is ${badge.name} - ${badge.level}`)
 				this.giveBadgeInProfile(this.settings.avatarPageName, badge)
 				this.settings.badgeBoosterState = false;
 				this.settings.badgeBoosterFactor = 1;
@@ -1123,12 +1103,7 @@ export default class gamification extends Plugin {
 
 
 	async removeKeysFromFrontmatter() {
-		//const { Vault, TFile } = window.app;
 		const { vault } = this.app
-		//const vault = Vault.reopen();
-
-		// Get all Markdown files in the vault
-		//const markdownFiles = vault.getMarkdownFiles();
 		const fileCountMap = await getFileCountMap(this.app, this.settings.tagsExclude, this.settings.folderExclude);
 		for (const fileName of fileCountMap.keys()) {
 			const files = vault.getFiles();
@@ -1137,7 +1112,6 @@ export default class gamification extends Plugin {
 				console.warn(`File ${fileName} not found.`);
 				continue;
 			}
-			//const fileContents = await app.vault.read(file);
 			console.log(`Processing file ${fileName}`);
 			try {
 				await this.app.fileManager.processFrontMatter(file, (frontmatter) => {
@@ -1155,9 +1129,9 @@ export default class gamification extends Plugin {
 					console.error(errorMessage);
 				}
 			}
-			// new Notice(`Removed specified keys from frontmatter from file \"${fileName}\".`);
 		}
 	}
+
 
 	async whichLevelNextBadge(currentLevel: number): Promise<number>{
 		let nextBadgeLevel = 0
@@ -1177,6 +1151,7 @@ export default class gamification extends Plugin {
 		return nextBadgeLevel
 	}
 
+
 	async boosterForInit(): Promise<number> {
 		const nextBadgeAt = await this.whichLevelNextBadge(this.settings.statusLevel)
 		const statusPointsToReach = statusPointsForLevel(nextBadgeAt)
@@ -1191,6 +1166,7 @@ export default class gamification extends Plugin {
 		return boosterFactor
 	}
 
+
 	async openAvatarFile() {
 		const existingFile = app.vault.getAbstractFileByPath(`${this.settings.avatarPageName}.md`);
 		if (existingFile){
@@ -1200,6 +1176,7 @@ export default class gamification extends Plugin {
 			console.log("File not found or unable to open.");
 		}
 	}
+
 
 	getRandomInt(min: number, max: number) {
 		return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -1229,7 +1206,6 @@ export default class gamification extends Plugin {
 }
 
 
-  
 function getBoosterRunTimeFromVarName(boosterVarName: string) {
 	for (const element of boosterRecipes) {
 		if (element.varname === boosterVarName) {
@@ -1239,32 +1215,24 @@ function getBoosterRunTimeFromVarName(boosterVarName: string) {
 	return 0; // Return null if no matching element is found
 }
 
+
 function isSameDay(inputDate: Moment): boolean {
 	const currentDate = window.moment(); // Get the current date
 	return currentDate.isSame(inputDate, 'day'); // Check if they are the same day
 }
+
 
 function isOneDayBefore(inputDate: Moment): boolean {
 	const oneDayBeforeCurrent = window.moment().subtract(1, 'day'); // Calculate one day before current date
 	return inputDate.isSame(oneDayBeforeCurrent, 'day');
 }
 
+
 export function isMinutesPassed(inputDate: Moment, minutesPassed: number): boolean {
     const minutesAgo = window.moment().subtract(minutesPassed, 'minutes'); // Calculate time 'minutesPassed' minutes ago
     return inputDate.isSameOrBefore(minutesAgo);
 }
 
-/*function hoursUntilMinutesPassed(inputDate: Moment, minutesPassed: number): number {
-    const currentTime = window.moment(); // Get the current time
-    const targetTime = inputDate.clone().add(minutesPassed, 'minutes'); // Calculate target time
-
-    if (currentTime.isSameOrAfter(targetTime)) {
-        return 0; // If the target time has already passed, return 0 hours
-    }
-
-    const timeDiff = targetTime.diff(currentTime, 'hours', true); // Calculate the difference in hours
-    return Math.ceil(timeDiff);
-}*/
 
 export function hoursUntilMinutesPassed(inputDate: Moment, minutesToPass: number): number {
     const currentTime = window.moment(); // Get the current time
@@ -1279,13 +1247,7 @@ export function hoursUntilMinutesPassed(inputDate: Moment, minutesToPass: number
 }
 
 
-
-
 async function createAvatarFile(app: App, fileName: string): Promise<void> {
-	//settings: GamificationPluginSettings;
-	// Define the file name and content
-	//const fileName = 'Avatar - Gamification'; // this.settings.avatarPageName;
-	//console.log(`fileName: ${fileName}`)
 
 	const existingFile = app.vault.getAbstractFileByPath(`${fileName}.md`);
 	if (existingFile instanceof TFile) {
@@ -1296,13 +1258,6 @@ async function createAvatarFile(app: App, fileName: string): Promise<void> {
 	await app.vault.create(`${fileName}.md`, avatarInitContent);
 
 }
-
-
-
-function stringToList(input: string): string[] {
-    return input.split(',');
-}
-
 
 
 async function replaceFormatStrings(layer2: string, layer3: string) {
