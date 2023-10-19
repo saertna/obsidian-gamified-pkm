@@ -63,7 +63,7 @@ export const defaultSettings: Partial<ISettings> = {
   boosterFactorHyperlinkHarmony: false,
   boosterDateHyperlinkHarmony: '2023-08-15 20:00:00',
   boosterFactorEphemeralEuphoria: false,
-  boosterDateEphemeralEuphoria: '2023-08-15 20:00:00',
+  boosterDateEphemeralEuphoria: '2022-08-15 20:00:00',
   streakbooster: 0,
   streakboosterDate: false
 };

@@ -123,6 +123,7 @@ export class MultiSelectModal extends Modal {
 				'Title Titan': this.gamificationInstance.getSetting('titleTitan') as number,
 				'Precision Prism': this.gamificationInstance.getSetting('precisionPrism') as number,
 				'Hyperlink Harmony': this.gamificationInstance.getSetting('hyperlinkHarmony') as number,
+				'Ephemeral Euphoria': this.gamificationInstance.getSetting('ephemeralEuphoria') as number,
 			};
 		}
 	}
@@ -321,6 +322,49 @@ export class MultiSelectModal extends Modal {
 		return true;
 	}
 
+	private check1000IngredientsAvailableAndBurn() {
+		let totalAvailableIngredients = 0;
+	
+		// Calculate the total number of available ingredients
+		elements.forEach(increment => {
+			totalAvailableIngredients += this.remainingStock[increment.name] || 0;
+		});
+	
+		// If at least 1000 ingredients are available
+		if (totalAvailableIngredients >= 1000) {
+			// Calculate the amount to burn
+			const amountToBurn = totalAvailableIngredients - 1000;
+	
+			// Determine the highest remaining amount
+			let highestAmount = 0;
+			elements.forEach(increment => {
+				if (this.remainingStock[increment.name] && this.remainingStock[increment.name] > highestAmount) {
+					highestAmount = this.remainingStock[increment.name];
+				}
+			});
+	
+			// Reduce all ingredient amounts by the difference, but keep the highest amount at 50
+			elements.forEach(increment => {
+				if (this.remainingStock[increment.name] && this.remainingStock[increment.name] > highestAmount) {
+					const difference = this.remainingStock[increment.name] - highestAmount;
+					if (highestAmount + difference > 50) {
+						this.remainingStock[increment.name] -= difference;
+					} else {
+						this.remainingStock[increment.name] = 50;
+					}
+				}
+			});
+	
+			// Update the stock information display
+			this.updateStockInformation();
+	
+			return true;
+		}
+	
+		return false;
+	}
+	
+
 
 	private useIngrediments(incredients: { name: string; incredients: string[]; }) {
 		for (const ingredient of incredients.incredients) {
@@ -349,15 +393,26 @@ export class MultiSelectModal extends Modal {
 
 	private craftBoosterItem(selectedItems: { name: string; incredients: string[]; }) {
 		// call here the recipe logic and reduce the stock
-		if (this.checkIngredientsAvailability(selectedItems)) {
-			//console.log(`craft booster ${selectedItems.name}`);
-			this.updateBoosterStock(selectedItems.name, 1);
-			this.gamificationInstance.setSetting(this.getBoosterVarNameFromName(selectedItems.name), this.boosters[selectedItems.name]);
-			this.useIngrediments(selectedItems);
-			//this.updateQuantityDisplay(selectedItems.name)
-			this.updateStockInformation();
+		if(selectedItems.name == 'Ephemeral Euphoria'){
+			if(this.check1000IngredientsAvailableAndBurn()){
+				this.updateBoosterStock(selectedItems.name, 1);
+				this.gamificationInstance.setSetting(this.getBoosterVarNameFromName(selectedItems.name), this.boosters[selectedItems.name]);
+			} else {
+				console.log(`not enough ingredients for booster ${selectedItems.name} in stock`);
+				new ModalInformationbox(this.app, `Not enough ingrediments available for '${selectedItems.name}'. Craft more Notes to collect new ingrediments.`).open();
+			}
 		} else {
-			console.log(`not enough ingredients for booster ${selectedItems.name} in stock`);
+			if (this.checkIngredientsAvailability(selectedItems)) {
+				//console.log(`craft booster ${selectedItems.name}`);
+				this.updateBoosterStock(selectedItems.name, 1);
+				this.gamificationInstance.setSetting(this.getBoosterVarNameFromName(selectedItems.name), this.boosters[selectedItems.name]);
+				this.useIngrediments(selectedItems);
+				//this.updateQuantityDisplay(selectedItems.name)
+				this.updateStockInformation();
+			} else {
+				console.log(`not enough ingredients for booster ${selectedItems.name} in stock`);
+				new ModalInformationbox(this.app, `Not enough ingrediments available for '${selectedItems.name}'. Craft more Notes to collect new ingrediments.`).open();
+			}
 		}
 	}
 
