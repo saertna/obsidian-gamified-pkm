@@ -72,7 +72,7 @@ export default class gamification extends Plugin {
 		return this.settings[key] !== undefined ? this.settings[key] : null;
     }
 
-	
+
     setSetting(key: string, value: number) {
         // Set a specific setting
 		//console.log(`new value for ${key} is ${value}`)
@@ -149,13 +149,14 @@ export default class gamification extends Plugin {
 				//await this.loadSettings();
 				//await this.updateAvatarPage(this.settings.avatarPageName);
 
-				// this.loadSettings()
-				//await this.resetDailyGoals()
+				this.loadSettings()
+				await this.resetDailyGoals()
+				await this.updateStatusBar(this.statusbarGamification)
 
 
 				//new ModalBooster(this.app, ` `, this).open();
 
-				this.acquireIngredients();
+				//this.acquireIngredients();
 
 			});
 		}
@@ -813,7 +814,8 @@ export default class gamification extends Plugin {
 
 
 	async decreaseStreakbooster(decreaseValue:number){
-		let newBoosterFakfor = parseFloat((this.settings.streakbooster - decreaseValue).toFixed(streakboosterDecrease))
+		//let newBoosterFakfor = parseFloat((this.settings.streakbooster - decreaseValue).toFixed(streakboosterDecrease))
+		let newBoosterFakfor = parseFloat((this.settings.streakbooster - (decreaseValue * streakboosterDecrease)).toFixed(1))
 		this.settings.streakbooster = newBoosterFakfor
 		if (newBoosterFakfor < 0){
 			newBoosterFakfor = 0
