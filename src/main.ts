@@ -6,7 +6,10 @@ import {
 	pointsMajurity,
 	pointsNoteMajurity,
 	pointsForDailyChallenge,
-	pointsForWeeklyChallenge
+	pointsForWeeklyChallenge,
+	streakboosterDecrease,
+	streakboosterIncreaseDaily,
+	streakboosterIncreaseWeekly
 } from './constants'
 import {
 	count_inlinks,
@@ -42,6 +45,7 @@ export default class gamification extends Plugin {
 	private statusBarItem = this.addStatusBarItem();
 	private statusbarGamification = this.statusBarItem.createEl("span", { text: "" });
 
+	
 	async onload() {
 		console.log('obsidian-pkm-gamification loaded!');
 
@@ -445,7 +449,7 @@ export default class gamification extends Plugin {
 						}
 						console.log(`pointsReceived: ${pointsReceived}`)
 						if (pointsReceived > 0){
-							const messagePoints = getRandomMessagePoints(pointsReceived * this.settings.badgeBoosterFactor)
+							const messagePoints = getRandomMessagePoints(pointsReceived * (this.settings.badgeBoosterFactor + this.settings.streakbooster))
 							new Notice(messagePoints)
 							console.log(messagePoints)
 						}
@@ -484,9 +488,14 @@ export default class gamification extends Plugin {
 			reset = true;
 		}
 		if(!isOneDayBefore(window.moment(this.settings.weeklyNoteCreationDate, 'DD.MM.YYYY')) && !isSameDay(window.moment(this.settings.weeklyNoteCreationDate, 'DD.MM.YYYY'))){
+			const daysPassed = window.moment().diff(window.moment(this.settings.weeklyNoteCreationDate, 'DD.MM.YYYY'), 'days') - 1; //today is still a chance. 
 			this.settings.weeklyNoteCreationTask = 0;
 			this.settings.weeklyNoteCreationDate = window.moment().subtract(1, 'day').format('DD.MM.YYYY')
+			this.decreaseStreakbooster(daysPassed)
+			console.log(`${daysPassed} days passed`)
+			//this.settings.streakboosterDate = window.moment().subtract(1, 'day').format('DD.MM.YYYY')
 			await this.saveSettings();
+			await this.updateStatusBar(this.statusbarGamification)
 			console.log(`weekly Challenge reseted`)
 			reset = true;
 		}
@@ -515,8 +524,12 @@ export default class gamification extends Plugin {
 				await this.updateAvatarPage(this.settings.avatarPageName);
 				console.log(`${newDailyNoteCreationTask}/2 Notes created today.`)
 			} else if (newDailyNoteCreationTask == 2) {
+				this.increaseStreakbooster(streakboosterIncreaseDaily)
+				//this.settings.streakboosterDate = window.moment().format('DD.MM.YYYY');
+				await this.saveSettings();
+				await this.updateStatusBar(this.statusbarGamification)
 				await this.giveStatusPoints(pointsForDailyChallenge)
-				const message = getRandomMessageTwoNoteChallenge(pointsForDailyChallenge);
+				const message = getRandomMessageTwoNoteChallenge(pointsForDailyChallenge * (this.settings.badgeBoosterFactor + this.settings.streakbooster));
 				console.log(`daily Challenge reached! ${newDailyNoteCreationTask}/2 created.`)
 				new Notice(message)
 				console.log(message)
@@ -558,9 +571,12 @@ export default class gamification extends Plugin {
 			await this.updateAvatarPage(this.settings.avatarPageName);
 			console.log(`${newWeeklyNoteCreationTask}/7 Notes created in a chain.`)
 		} else if (newWeeklyNoteCreationTask == 7) {
+			this.increaseStreakbooster(streakboosterIncreaseWeekly);
+			//this.settings.streakboosterDate = window.moment().format('DD.MM.YYYY');
+			await this.saveSettings();
 			await this.giveStatusPoints(pointsForWeeklyChallenge)
 			console.log(`Weekly Challenge reached! ${newWeeklyNoteCreationTask}/7 created in a chain.`)
-			const message = getRandomMessageWeeklyChallenge(pointsForWeeklyChallenge);
+			const message = getRandomMessageWeeklyChallenge(pointsForWeeklyChallenge * (this.settings.badgeBoosterFactor + this.settings.streakbooster));
 			new Notice(message)
 			console.log(message)
 		} else {
@@ -572,9 +588,26 @@ export default class gamification extends Plugin {
 	async updateStatusBar(statusbar: HTMLSpanElement){
 		const currentLevel = getLevelForPoints(this.settings.statusPoints)
 		const progressbarPercent = (this.settings.statusPoints - currentLevel.points)/(currentLevel.pointsNext - currentLevel.points)*100;
-		const charNumProgressbar = 10
+		const charNumProgressbar = 10;
 		const barLength = Math.round(progressbarPercent / charNumProgressbar)
-		statusbar.setText(`🎲|lvl: ${this.settings.statusLevel} | ${this.createProgressbar(charNumProgressbar, barLength)}`)
+		const boosterFactor = this.settings.streakbooster
+		statusbar.setText(`🎲|lvl: ${this.settings.statusLevel} | ${this.createProgressbar(charNumProgressbar, barLength)}|🚀${boosterFactor}${this.rateBoosterDirection()}`)
+	}
+
+	private rateBoosterDirection(){
+		let direction = '⬆️'
+		/*const oneDayBeforeCurrent = window.moment().subtract(1, 'day'); // Calculate one day before current date
+		if(window.moment(this.settings.weeklyNoteCreationDate, 'DD.MM.YYYY').isSame(oneDayBeforeCurrent, 'day')){
+			direction = '⬆️'
+		} else {
+			direction = '⬇️'
+		}*/
+		if(this.settings.streakboosterDate){
+			direction = '⬆️';
+		} else {
+			direction = '⬇️';
+		}
+		return direction
 	}
 
 	private createProgressbar(charNumProgressbar: number, barLength: number) {
@@ -601,15 +634,41 @@ export default class gamification extends Plugin {
 
 	async giveStatusPoints(pointsToAdd: number): Promise<boolean>{
 		let boosterFactor = 1;
+		let streakbooster = this.settings.streakbooster;
 		if (this.settings.badgeBoosterState){
 			boosterFactor = this.settings.badgeBoosterFactor;
 		}
 
-		this.settings.statusPoints = pointsToAdd * boosterFactor + this.settings.statusPoints
+		this.settings.statusPoints = pointsToAdd * (boosterFactor + streakbooster) + this.settings.statusPoints
 		await this.saveData(this.settings)
 
 		return this.updateAvatarPage(this.settings.avatarPageName)
 	}
+
+	async increaseStreakbooster(increaseValue:number){
+		let newBoosterFakfor = parseFloat((this.settings.streakbooster + increaseValue).toFixed(streakboosterIncreaseWeekly));
+		if(newBoosterFakfor > 80){
+			newBoosterFakfor = 80;
+		}
+		this.settings.streakbooster = newBoosterFakfor;
+		this.settings.streakboosterDate = true;
+		await this.saveData(this.settings)
+		console.log(`streakbooster: ${this.settings.streakbooster}`)
+	}
+
+
+	async decreaseStreakbooster(decreaseValue:number){
+		let newBoosterFakfor = parseFloat((this.settings.streakbooster - decreaseValue).toFixed(streakboosterDecrease))
+		this.settings.streakbooster = newBoosterFakfor
+		if (newBoosterFakfor < 0){
+			newBoosterFakfor = 0
+		}
+		this.settings.streakbooster = newBoosterFakfor
+		this.settings.streakboosterDate = false;
+		await this.saveData(this.settings)
+	}
+
+
 
 
 	async updateAvatarPage(avatarPageName: string): Promise<boolean>{
@@ -625,12 +684,15 @@ export default class gamification extends Plugin {
 		let reference: number | null = null;
 		let reference2: number | null = null;
 		let reference3: number | null = null;
+		let reference4: number | null = null;
 		let end: number | null = null;
 		let start: number | null = null;
 		let end2: number | null = null;
 		let start2: number | null = null;
 		let end3: number | null = null;
 		let start3: number | null = null;
+		let end4: number | null = null;
+		let start4: number | null = null;
 
 		const lines = content.split("\n");
 		for (let i = 0; i < lines.length; i++) {
@@ -648,6 +710,11 @@ export default class gamification extends Plugin {
 			if (line === "^weeklyNotesChallenge") {
 				if (reference3 === null) {
 					reference3 = i;
+				}
+			}
+			if (line === "^boosterFactor") {
+				if (reference4 === null) {
+					reference4 = i;
 				}
 			}
 		}
@@ -670,23 +737,27 @@ export default class gamification extends Plugin {
 
 		const progressBarEnd = nextLevelAt - newPoints;
 		const newPointsString = '| **Level**  | **' + level.level + '** |\n| Points | ' + newPoints + '    |\n^levelAndPoints\n```chart\ntype: bar\nlabels: [Expririence]\nseries:\n  - title: points reached\n    data: [' + newPoints + ']\n  - title: points to earn to level up\n    data: [' + progressBarEnd + ']\nxMin: ' + level.points + '\nxMax: ' + level.pointsNext + '\ntension: 0.2\nwidth: 40%\nlabelColors: false\nfill: false\nbeginAtZero: false\nbestFit: false\nbestFitTitle: undefined\nbestFitNumber: 0\nstacked: true\nindexAxis: y\nxTitle: "progress"\nlegend: false\n```'
-		const dailyChallenge = '| **daily Notes** | *500EP* | **' + this.settings.dailyNoteCreationTask + '/2**   |';
+		const dailyChallenge = '| **daily Notes** | *' + pointsForDailyChallenge * (this.settings.badgeBoosterFactor + this.settings.streakbooster) + 'EP* | **' + this.settings.dailyNoteCreationTask + '/2**   |';
 		const daysLeftInWeeklyChain : number = 7 - this.settings.weeklyNoteCreationTask;
-		const weeklyChallenge = '| **weekly Notes** | *2000EP*     |  **' + this.settings.weeklyNoteCreationTask + '/7**   |\n^weeklyNotesChallenge\n```chart\ntype: bar\nlabels: [days done in a row]\nseries:\n  - title: days to do in a row\n    data: [' + this.settings.weeklyNoteCreationTask + ']\n  - title: points to earn to level up\n    data: [' + daysLeftInWeeklyChain + ']\nxMin: 0\nxMax: 7\ntension: 0.2\nwidth: 40%\nlabelColors: false\nfill: false\nbeginAtZero: false\nbestFit: false\nbestFitTitle: undefined\nbestFitNumber: 0\nstacked: true\nindexAxis: y\nxTitle: "progress"\nlegend: false\n```';
+		const weeklyChallenge = '| **weekly Notes** | *' + pointsForWeeklyChallenge * (this.settings.badgeBoosterFactor + this.settings.streakbooster) + 'EP*     |  **' + this.settings.weeklyNoteCreationTask + '/7**   |\n^weeklyNotesChallenge\n```chart\ntype: bar\nlabels: [days done in a row]\nseries:\n  - title: days to do in a row\n    data: [' + this.settings.weeklyNoteCreationTask + ']\n  - title: points to earn to level up\n    data: [' + daysLeftInWeeklyChain + ']\nxMin: 0\nxMax: 7\ntension: 0.2\nwidth: 40%\nlabelColors: false\nfill: false\nbeginAtZero: false\nbestFit: false\nbestFitTitle: undefined\nbestFitNumber: 0\nstacked: true\nindexAxis: y\nxTitle: "progress"\nlegend: false\n```';
+		const boosterFactor = '| **booster factor** | **' + this.settings.streakbooster + '** |'
 
-		if (reference != null && reference2 != null && reference3 != null){
+		if (reference != null && reference2 != null && reference3 != null && reference4 != null){
 			start = reference - 2;
 			end = reference + 24;
 			start2 = reference2 - 1 - 25; // no idea wby offset 25 is needed
 			end2 = reference2 - 25; // no idea wby offset 25 is needed
 			start3 = reference3 - 1 -25; // no idea wby offset 25 is needed
 			end3 = reference3 + 24 -25; // no idea wby offset 25 is needed
-
+			start4 = reference4 - 1 - 25; // no idea wby offset 55 is needed
+			end4 = reference4 - 25 ; // no idea wby offset 55 is needed
+			
 
 			const newLines = [...lines.slice(0, start), newPointsString, ...lines.slice(end)];
 			const newLines2 = [...newLines.slice(0, start2), dailyChallenge, ...newLines.slice(end2)];
 			const newLines3 = [...newLines2.slice(0, start3), weeklyChallenge, ...newLines2.slice(end3)];
-			await app.vault.modify(file, newLines3.join("\n"));
+			const newLines4 = [...newLines3.slice(0, start4), boosterFactor, ...newLines3.slice(end4)];
+			await app.vault.modify(file, newLines4.join("\n"));
 		}
 		return receiveBadge
 	}
