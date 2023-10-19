@@ -208,7 +208,7 @@ export const craftingItems = [
 
 export const listOfUseableBoostersToBeShown = ['Perpetual Progress', 'Title Titan', 'Precision Prism']
 export const listOfUseableIngredientsToBeShown = ['Connection Crystal', 'Insight Prism', 'Creative Catalyst', 'Precision Lens']
-
+export const chanceToEarnIngredient = 0.5;
 
 export const elements = [
   { shortName: 'S2', name: 'Connection Crystal', varName: 'connectionCrystal' },

@@ -26,7 +26,9 @@ import {
 	boosterRecipes,
 	streakboosterDecrease,
 	streakboosterIncreaseDaily,
-	streakboosterIncreaseWeekly
+	streakboosterIncreaseWeekly,
+	chanceToEarnIngredient,
+	listOfUseableIngredientsToBeShown
 } from './constants'
 import {
 	count_inlinks,
@@ -149,14 +151,14 @@ export default class gamification extends Plugin {
 				//await this.loadSettings();
 				//await this.updateAvatarPage(this.settings.avatarPageName);
 
-				this.loadSettings()
-				await this.resetDailyGoals()
-				await this.updateStatusBar(this.statusbarGamification)
+				//this.loadSettings()
+				//await this.resetDailyGoals()
+				//await this.updateStatusBar(this.statusbarGamification)
 
 
 				//new ModalBooster(this.app, ` `, this).open();
 
-				//this.acquireIngredients();
+				this.acquireIngredients();
 
 			});
 		}
@@ -372,7 +374,7 @@ export default class gamification extends Plugin {
 			if (this.settings.badgeBoosterState){
 				boosterFactor = this.settings.badgeBoosterFactor;
 			}
-			new Notice(`${pointsReceived * boosterFactor} Points received`)
+			new Notice(`${pointsReceived * boosterFactor} Points received`,4000)
 			console.log(`${pointsReceived * boosterFactor} Points received`)
 		}
 
@@ -380,7 +382,7 @@ export default class gamification extends Plugin {
 		setTimeout(async () => {
 			// Code that you want to execute after the delay
 			const initBadge: Badge = getBadgeForInitLevel(this.settings.statusLevel);
-			new Notice(`You've earned the "${initBadge.name}" badge. ${initBadge.description}`)
+			new Notice(`You've earned the "${initBadge.name}" badge. ${initBadge.description}`,5000)
 			console.log(`You earned ${initBadge.name} - ${initBadge.description}`)
 			await this.giveInitBadgeInProfile(this.settings.avatarPageName, initBadge);
 			await this.removeBadgesWhenInitLevelHigher(this.settings.avatarPageName, this.settings.statusLevel)
@@ -522,7 +524,7 @@ export default class gamification extends Plugin {
 						console.log(`pointsReceived: ${pointsReceived}`)
 						if (pointsReceived > 0){
 							const messagePoints = getRandomMessagePoints(pointsReceived * (this.settings.badgeBoosterFactor + this.settings.streakbooster))
-							new Notice(messagePoints)
+							new Notice(messagePoints,4000)
 							console.log(messagePoints)
 						}
 
@@ -642,7 +644,7 @@ export default class gamification extends Plugin {
 				await this.giveStatusPoints(pointsForDailyChallenge)
 				const message = getRandomMessageTwoNoteChallenge(pointsForDailyChallenge * (this.settings.badgeBoosterFactor + this.settings.streakbooster));
 				console.log(`daily Challenge reached! ${newDailyNoteCreationTask}/2 created.`)
-				new Notice(message)
+				new Notice(message,4000)
 				console.log(message)
 			} else {
 				// nothing else to do here
@@ -691,7 +693,7 @@ export default class gamification extends Plugin {
 			await this.giveStatusPoints(pointsForWeeklyChallenge)
 			console.log(`Weekly Challenge reached! ${newWeeklyNoteCreationTask}/7 created in a chain.`)
 			const message = getRandomMessageWeeklyChallenge(pointsForWeeklyChallenge * (this.settings.badgeBoosterFactor + this.settings.streakbooster));
-			new Notice(message)
+			new Notice(message,4000)
 			console.log(message)
 		} else {
 			// nothing else to do here
@@ -881,7 +883,7 @@ export default class gamification extends Plugin {
 		let receiveBadge = false
 		if (this.settings.statusLevel < level.level){
 			// Level Up archived
-			new Notice(`With ${newPoints} points, the current level is ${level.level}.`)
+			new Notice(`With ${newPoints} points, the current level is ${level.level}.`,5000)
 			// check first if this means a new badge before it gets overwritten
 			receiveBadge = checkIfReceiveABadge(this.settings.statusLevel, level.level)
 			this.settings.statusLevel = level.level;
@@ -1093,7 +1095,7 @@ export default class gamification extends Plugin {
 		newLevel.then((result: boolean)=> {
 			if(result){
 				const badge : Badge = getBadgeForLevel(this.settings.statusLevel, false)
-				new Notice(`You've earned the "${badge.name}" badge. ${badge.description}`)
+				new Notice(`You've earned the "${badge.name}" badge. ${badge.description}`,5000)
 				console.log(`You've earned the "${badge.name}" badge. ${badge.description}`)
 				this.giveBadgeInProfile(this.settings.avatarPageName, badge)
 				this.settings.badgeBoosterState = false;
@@ -1183,28 +1185,63 @@ export default class gamification extends Plugin {
 	getRandomInt(min: number, max: number) {
 		return Math.floor(Math.random() * (max - min + 1)) + min;
 	  }
-	
-	  async acquireIngredients() {
-		const chanceToEarnIngredient = 0.5;
-	
+
+	async acquireIngredients() {
+		let earnedIngredientToShow = [];
 		if (Math.random() < chanceToEarnIngredient) {
-			const randomIngredientIndex = this.getRandomInt(0, 3);
-			const earnedIngredient = elements[randomIngredientIndex];
-			let elementCount = this.getSetting(earnedIngredient.varName);
-	
-			// Perform a null check
-			if (elementCount !== null && typeof elementCount === 'number') {
-				this.setSetting(earnedIngredient.varName, elementCount + 1);
-				this.saveSettings();
-				console.log(`You earned: ${earnedIngredient.name}`);
-			} else {
-				console.error(`Invalid element count for ${earnedIngredient.varName}`);
+			const randomAmount = this.getRandomInt(1,3);
+			for (let i=1;i<=randomAmount;i++){
+				const randomIngredientIndex = this.getRandomInt(0, listOfUseableIngredientsToBeShown.length-1);
+				const earnedIngredient = elements[randomIngredientIndex];
+				let elementCount = this.getSetting(earnedIngredient.varName);
+				earnedIngredientToShow.push(earnedIngredient.name);
+
+				// Perform a null check
+				if (elementCount !== null && typeof elementCount === 'number') {
+					this.setSetting(earnedIngredient.varName, elementCount + 1);
+					this.saveSettings();
+					
+				} else {
+					console.error(`Invalid element count for ${earnedIngredient.varName}`);
+				}
 			}
+			console.log(`You earned: ${concatenateStrings(earnedIngredientToShow)}`);
+			new Notice(`You earned ${concatenateStrings(earnedIngredientToShow)}`,3000)
 		} else {
 			console.log('You did not earn an ingredient this time.');
 		}
+		
 	}
 	
+	
+}
+
+function concatenateStrings(arr: string[]): string {
+    if (arr.length === 1) {
+        return arr[0];
+    } else {
+        const frequencyMap: Record<string, number> = {};
+
+        arr.forEach(item => {
+            if (frequencyMap[item]) {
+                frequencyMap[item]++;
+            } else {
+                frequencyMap[item] = 1;
+            }
+        });
+
+        const resultArray: string[] = [];
+
+        for (const [key, value] of Object.entries(frequencyMap)) {
+            if (value === 1) {
+                resultArray.push(key);
+            } else {
+                resultArray.push(`${value} x ${key}`);
+            }
+        }
+
+        return resultArray.join(', ');
+    }
 }
 
 
