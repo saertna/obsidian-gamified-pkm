@@ -85,7 +85,7 @@ export class MultiSelectModal extends Modal {
 	}
 
 	updateIncrementStock(increment: string, stock: number) {
-		console.log(`updateIncrementStock: increment ${increment}  stock ${stock}`);
+		console.log(`increment "${increment}" new value ${stock}`);
 		this.remainingStock[increment] = stock;
 		this.gamificationInstance.setSetting(this.getIngerementVarNameFromName(increment) || '', stock);
 	}
@@ -153,7 +153,7 @@ export class MultiSelectModal extends Modal {
 		stockContainer.className = 'stock-container';
 
 
-		craftingItems.forEach(recipe => {
+		boosterRecipes.forEach(recipe => {
 			if (this.boosterAvailableForUse(recipe.name)) {
 				const itemContainer = document.createElement('div');
 				itemContainer.className = 'crafting-item-container';
@@ -248,7 +248,7 @@ export class MultiSelectModal extends Modal {
 
 	incrementItem(item: string) {
 		const stock = this.remainingStock[item];
-		console.log(`incrementItem: stock = ${stock}`);
+		//console.log(`incrementItem: stock = ${stock}`);
 		if (stock > 0) {
 			this.selectedItems.push(item);
 			this.remainingStock[item]--;
@@ -323,18 +323,12 @@ export class MultiSelectModal extends Modal {
 
 
 	private useIngrediments(incredients: { name: string; incredients: string[]; }) {
-		console.log(`useIngrediments: ${incredients}`);
 		for (const ingredient of incredients.incredients) {
 			const [quantity, shortName] = ingredient.split('x');
-			console.log(`quantity: ${quantity}\tshortName: ${shortName}`);
 			const requiredQuantity = parseInt(quantity);
 			const availableStock = this.remainingStock[this.getIngerementNameFromShortName(shortName) || 0];
 			const ingrementName = this.getIngerementNameFromShortName(shortName) || '';
-			//console.log(`requiredQuantity: ${requiredQuantity}\tavailableStock: ́${availableStock}`)
-			//this.remainingStock[this.getIngerementNameFromShortName(shortName) = this.remainingStock[this.getIngerementNameFromShortName(shortName) || 0] -= quantity;
-			console.log(`this.getIngerementNameFromShortName(shortName): ${this.getIngerementNameFromShortName(shortName)}`);
 			this.updateIncrementStock(ingrementName, availableStock - requiredQuantity);
-			console.log(`${incredients.name}  ${availableStock - requiredQuantity}`);
 		}
 
 		return true;
@@ -356,7 +350,7 @@ export class MultiSelectModal extends Modal {
 	private craftBoosterItem(selectedItems: { name: string; incredients: string[]; }) {
 		// call here the recipe logic and reduce the stock
 		if (this.checkIngredientsAvailability(selectedItems)) {
-			console.log(`craft booster ${selectedItems.name}`);
+			//console.log(`craft booster ${selectedItems.name}`);
 			this.updateBoosterStock(selectedItems.name, 1);
 			this.gamificationInstance.setSetting(this.getBoosterVarNameFromName(selectedItems.name), this.boosters[selectedItems.name]);
 			this.useIngrediments(selectedItems);

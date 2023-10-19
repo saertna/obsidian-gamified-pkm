@@ -358,7 +358,6 @@ export default class gamification extends Plugin {
 
 					}
 
-
 					this.writeFrontmatter(frontmatter, fileNameRate, rateFileLength, inlinkClass, rateOut, rateProgressiveSum, noteMajurity);
 				});
 			} catch (e) {
