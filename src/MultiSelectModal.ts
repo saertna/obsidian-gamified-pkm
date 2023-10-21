@@ -322,22 +322,27 @@ export class MultiSelectModal extends Modal {
 		return true;
 	}
 
+
 	private check1000IngredientsAvailableAndBurn() {
 		let totalAvailableIngredients = 0;
 	
 		// Calculate the total number of available ingredients
-		elements.forEach(increment => {
-			totalAvailableIngredients += this.remainingStock[increment.name] || 0;
+		//elements.forEach(increment => {
+		listOfUseableIngredientsToBeShown.forEach(increment => {
+			totalAvailableIngredients += this.remainingStock[this.getIngerementFromName(increment).name] || 0;
 		});
 	
+		console.log(`total amount of ingrediments: ${totalAvailableIngredients}`)
 		// If at least 1000 ingredients are available
 		if (totalAvailableIngredients >= 1000) {
 			// Burn ingredients proportionally
-			elements.forEach(increment => {
-				if (this.remainingStock[increment.name]) {
-					const proportionalAmount = Math.ceil((this.remainingStock[increment.name] / totalAvailableIngredients) * 1000);
-					const difference = this.remainingStock[increment.name] - proportionalAmount;
-					this.remainingStock[increment.name] -= difference;
+			//elements.forEach(increment => {
+			listOfUseableIngredientsToBeShown.forEach(increment => {
+				if (this.remainingStock[this.getIngerementFromName(increment).name]) {
+					const proportionalAmount = Math.ceil((this.remainingStock[this.getIngerementFromName(increment).name] / totalAvailableIngredients) * 1000);
+					//const rest = this.remainingStock[this.getIngerementFromName(increment).name] - proportionalAmount;
+					//console.log(`${this.getIngerementFromName(increment).shortName} ${this.remainingStock[this.getIngerementFromName(increment).name]} shall be ${this.remainingStock[this.getIngerementFromName(increment).name] - rest} = ${this.remainingStock[this.getIngerementFromName(increment).name]} - ${rest}`)
+					this.remainingStock[this.getIngerementFromName(increment).name] = this.remainingStock[this.getIngerementFromName(increment).name] - proportionalAmount;;
 				}
 			});
 	
