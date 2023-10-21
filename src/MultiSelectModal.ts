@@ -332,26 +332,12 @@ export class MultiSelectModal extends Modal {
 	
 		// If at least 1000 ingredients are available
 		if (totalAvailableIngredients >= 1000) {
-			// Calculate the amount to burn
-			const amountToBurn = totalAvailableIngredients - 1000;
-	
-			// Determine the highest remaining amount
-			let highestAmount = 0;
+			// Burn ingredients proportionally
 			elements.forEach(increment => {
-				if (this.remainingStock[increment.name] && this.remainingStock[increment.name] > highestAmount) {
-					highestAmount = this.remainingStock[increment.name];
-				}
-			});
-	
-			// Reduce all ingredient amounts by the difference, but keep the highest amount at 50
-			elements.forEach(increment => {
-				if (this.remainingStock[increment.name] && this.remainingStock[increment.name] > highestAmount) {
-					const difference = this.remainingStock[increment.name] - highestAmount;
-					if (highestAmount + difference > 50) {
-						this.remainingStock[increment.name] -= difference;
-					} else {
-						this.remainingStock[increment.name] = 50;
-					}
+				if (this.remainingStock[increment.name]) {
+					const proportionalAmount = Math.ceil((this.remainingStock[increment.name] / totalAvailableIngredients) * 1000);
+					const difference = this.remainingStock[increment.name] - proportionalAmount;
+					this.remainingStock[increment.name] -= difference;
 				}
 			});
 	
@@ -363,6 +349,8 @@ export class MultiSelectModal extends Modal {
 	
 		return false;
 	}
+	
+
 	
 
 
@@ -384,8 +372,10 @@ export class MultiSelectModal extends Modal {
 		if (stockInfo) {
 			stockInfo.innerHTML = ''; // Clear the current content
 
-			elements.forEach(element => {
-				stockInfo.innerHTML += `${element.shortName} [${this.remainingStock[element.name] || 0}]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`;
+			//elements.forEach(element => {
+			listOfUseableIngredientsToBeShown.forEach(element => {
+				//stockInfo.innerHTML += `${element.shortName} [${this.remainingStock[element.name] || 0}]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`;
+				stockInfo.innerHTML += `${this.getIngerementFromName(element).shortName} [${this.remainingStock[this.getIngerementFromName(element).name] || 0}]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`;
 			});
 		}
 	}
@@ -397,13 +387,14 @@ export class MultiSelectModal extends Modal {
 			if(this.check1000IngredientsAvailableAndBurn()){
 				this.updateBoosterStock(selectedItems.name, 1);
 				this.gamificationInstance.setSetting(this.getBoosterVarNameFromName(selectedItems.name), this.boosters[selectedItems.name]);
+				console.log(`craft booster ${selectedItems.name}`);
 			} else {
 				console.log(`not enough ingredients for booster ${selectedItems.name} in stock`);
 				new ModalInformationbox(this.app, `Not enough ingrediments available for '${selectedItems.name}'. Craft more Notes to collect new ingrediments.`).open();
 			}
 		} else {
 			if (this.checkIngredientsAvailability(selectedItems)) {
-				//console.log(`craft booster ${selectedItems.name}`);
+				console.log(`craft booster ${selectedItems.name}`);
 				this.updateBoosterStock(selectedItems.name, 1);
 				this.gamificationInstance.setSetting(this.getBoosterVarNameFromName(selectedItems.name), this.boosters[selectedItems.name]);
 				this.useIngrediments(selectedItems);
