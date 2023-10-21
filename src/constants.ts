@@ -1,10 +1,10 @@
-export const pointsNoteMajurity = 100;
-export const pointsMajurity = 10;
-export const pointsForDailyChallenge = 500;
-export const pointsForWeeklyChallenge = 2000;
-export const streakboosterDecrease = 0.2;
-export const streakboosterIncreaseDaily = 0.1;
-export const streakboosterIncreaseWeekly = 1;
+export const pointsNoteMajurity: number = 100;
+export const pointsMajurity: number = 10;
+export const pointsForDailyChallenge: number = 500;
+export const pointsForWeeklyChallenge: number = 2000;
+export const streakboosterDecrease: number = 0.2;
+export const streakboosterIncreaseDaily: number = 0.1;
+export const streakboosterIncreaseWeekly: number = 1;
 export const avatarInitContent =  `# Avatar
 
 |        |     |
@@ -40,14 +40,17 @@ legend: false
 | ------------------ | ----- |
 | **booster factor** | **0** |
 ^boosterFactor
+
 |             |     |       |
 | ----------- | --- | ----- |
 | **daily Notes** | *500EP* | **0/2** |
 ^dailyNotesChallenge
+
 |  |     ||
 | ---- | --- | --- |
 | **weekly Notes** | *2000EP*     |  **0/7**   |
 ^weeklyNotesChallenge
+
 \`\`\`chart
 type: bar
 labels: [Notes]
@@ -166,3 +169,71 @@ from ""
 Where note-maturity = 0 or note-maturity = "0" or note-maturity = "0➡️" or note-maturity = "0⬆️" or note-maturity = "0⬇️"
 \`\`\`
 `;
+export const incrediments = [
+  'Nexus Node',
+  'Connection Crystal',
+  'Mastery Scroll',
+  'Insight Prism',
+  'Reflective Essence',
+  'Amplification Crystal',
+  'Creative Catalyst',
+  'Precision Lens'
+];
+
+export const incredimentsDataName = [
+  'nexusNode',
+  'connectionCrystal',
+  'masteryScroll',
+  'insightPrism',
+  'reflectiveEssence',
+  'amplificationCrystal',
+  'creativeCatalyst',
+  'precisionLens'
+];
+
+export const craftingItems = [
+  { name: 'Temporal Tweaker', incredients: ['2xS1', '1xS6'] },
+  { name: 'Perpetual Progress', incredients: ['2xS2', '1xS4'] },
+  { name: 'Strategic Synapses', incredients: ['3xS1', '2xS2'] },
+  { name: 'Accelerated Acquisition', incredients: ['1xS3', '2xS4'] },
+  { name: 'Linkers Lode', incredients: ['3xS2', '1xS1'] },
+  { name: 'Effortless Expansion', incredients: ['2xS3', '1xS6'] },
+  { name: 'Recursive Reflection', incredients: ['2xS4', '1xS5'] },
+  { name: 'Synaptic Surge', incredients: ['2xS2', '1xS1'] },
+  { name: 'Inspiration Infusion', incredients: ['2xS7', '1xS1'] },
+  { name: 'Title Titan', incredients: ['2xS8', '1xS7'] },
+  { name: 'Precision Prism', incredients: ['2xS8', '1xS2'] },
+  { name: 'Hyperlink Harmony', incredients: ['2xS2', '1xS6'] },
+];
+
+export const listOfUseableBoostersToBeShown = ['Perpetual Progress', 'Title Titan', 'Precision Prism', 'Ephemeral Euphoria']
+export const listOfUseableIngredientsToBeShown = ['Connection Crystal', 'Insight Prism', 'Creative Catalyst', 'Precision Lens']
+export const chanceToEarnIngredient = 0.5;
+
+export const elements = [
+  { shortName: 'S2', name: 'Connection Crystal', varName: 'connectionCrystal' },
+  { shortName: 'S4', name: 'Insight Prism', varName: 'insightPrism' },
+  { shortName: 'S7', name: 'Creative Catalyst', varName: 'creativeCatalyst' },
+  { shortName: 'S8', name: 'Precision Lens', varName: 'precisionLens' },
+  { shortName: 'S1', name: 'Nexus Node', varName: 'nexusNode' },
+  { shortName: 'S3', name: 'Mastery Scroll', varName: 'masteryScroll' },
+  { shortName: 'S5', name: 'Reflective Essence', varName: 'reflectiveEssence' },
+  { shortName: 'S6', name: 'Amplification Crystal', varName: 'amplificationCrystal' }
+];
+
+export const boosterRecipes = [
+  { boosterRunTime: 0, boosterCooldown: 0, boosterDate: '', boosterSwitch: '', varname: 'temporalTweaker' ,name: 'Temporal Tweaker', incredients: ['2xS1', '1xS6'], description: 'Temporal Tweaker: reset the cooldown phase for a booster your choice' },
+  { boosterRunTime: 4*60, boosterCooldown: 36*60, boosterDate: 'boosterDatePerpetualProgress', boosterSwitch: 'boosterFactorPerpetualProgress', varname: 'perpetualProgress' ,name: 'Perpetual Progress', incredients: ['2xS2', '1xS4'], description: 'Perpetual Progress: get 3 times points an all your actions for the next 4 hours. You can use Perpetual Progress every three days, if you have the ingredients to craft it.' },
+  { boosterRunTime: 4*60, boosterCooldown: 120*60, boosterDate: 'boosterDateStrategicSynapses', boosterSwitch: 'boosterFactorStrategicSynapses', varname: 'strategicSynapses' ,name: 'Strategic Synapses', incredients: ['3xS1', '2xS2'], description: 'Strategic Synapses: gain 3 times EP for all actions on Map Of Content ratings for the next 4 hours. This booster has a cooldown time of 5 days.' },
+  { boosterRunTime: 0, boosterCooldown: 36*60, boosterDate: '', boosterSwitch: '', varname: 'acceleratedAcquisition' ,name: 'Accelerated Acquisition', incredients: ['1xS3', '2xS4'], description: 'Accelerated Acquisition: Use Accelerated Acquisition and collect much faster for the next 12 hours all sorts of ingredients when creating and improving notes' },
+  { boosterRunTime: 3*60, boosterCooldown: 48*60, boosterDate: 'boosterDateLinkersLode', boosterSwitch: 'boosterFactorLinkersLode', varname: 'linkersLode' ,name: 'Linkers Lode', incredients: ['3xS2', '1xS1'], description: 'Linkers Lode: collect extra points when creating chain of thoughts for the next 3 hours. (cooldown 2 days)' },
+  { boosterRunTime: 0, boosterCooldown: 480*60, boosterDate: '', boosterSwitch: '', varname: 'effortlessExpansion' ,name: 'Effortless Expansion', incredients: ['2xS3', '1xS6'], description: 'Effortless Expansion: Cast "Effortless Expansion" and lower the cap to the next level about 20% in the next 5 days. (Cooldown 20 days)' },
+  { boosterRunTime: 5*60, boosterCooldown: 36*60, boosterDate: 'boosterDateRecursiveReflection', boosterSwitch: 'boosterFactorRecursiveReflection', varname: 'recursiveReflection' ,name: 'Recursive Reflection', incredients: ['2xS4', '1xS5'], description: 'Recursive Reflection: Improve your notes and get 5 times the points you get on normal condition for the next 5 hours. Cooldown 3 days.' },
+  { boosterRunTime: 2*60, boosterCooldown: 36*60, boosterDate: 'boosterDateSynapticSurge', boosterSwitch: 'boosterFactorSynapticSurge', varname: 'synapticSurge' ,name: 'Synaptic Surge', incredients: ['2xS2', '1xS1'], description: 'Synaptic Surge: Link your ideas together, every increase in "linking maturity" pays out 20 times for the next 2 hours.' },
+  { boosterRunTime: 0, boosterCooldown: 48*60, boosterDate: '', boosterSwitch: '', varname: 'inspirationInfusion' ,name: 'Inspiration Infusion', incredients: ['2xS7', '1xS1'], description: 'Inspiration Infusion: Increase the frequency to get helpful prompts to power up you personal knowledge management for the next 2 days.' },
+  { boosterRunTime: 3*60, boosterCooldown: 36*60, boosterDate: 'boosterDateTitleTitan', boosterSwitch: 'boosterFactorTitleTitan', varname: 'titleTitan' ,name: 'Title Titan', incredients: ['2xS8', '1xS7'], description: 'Title Titan: Quadro your points when making your note title more to the point expressing the idea of your note for the next 3 hours.' },
+  { boosterRunTime: 3*60, boosterCooldown: 36*60, boosterDate: 'boosterDatePrecisionPrism', boosterSwitch: 'boosterFactorPrecisionPrism', varname: 'precisionPrism' ,name: 'Precision Prism', incredients: ['2xS8', '1xS2'], description: 'Precision Prism: 4 times the points when increasing the "note length majurity" for a note the next 3 hours.' },
+  { boosterRunTime: 3*60, boosterCooldown: 36*60, boosterDate: 'boosterDateHyperlinkHarmony', boosterSwitch: 'boosterFactorHyperlinkHarmony', varname: 'hyperlinkHarmony' ,name: 'Hyperlink Harmony', incredients: ['2xS2', '1xS6'], description: 'Hyperlink Harmony: Get for "Inlink majurity" AND "outlink majurity" improvements 5 times the point the next 3 hours.' },
+  { boosterRunTime: 2*60, boosterCooldown: 2160*60, boosterDate: 'boosterDateEphemeralEuphoria', boosterSwitch: 'boosterFactorEphemeralEuphoria', varname: 'ephemeralEuphoria' ,name: 'Ephemeral Euphoria', incredients: ['1000xSX'], description: 'Unearth the hidden potential within your knowledge repository with the Ephemeral Euphoria booster. For a fleeting two-hour window, your notes will resonate with an extraordinary vitality, allowing you to earn points at an astonishing rate. Seize this moment of boundless opportunity and watch your knowledge flourish like never before! Be aware, you need in sum 1000 ingrediments to craft, ingrediments will be taken from all pots.' },
+];
+

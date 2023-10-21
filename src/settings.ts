@@ -1,5 +1,6 @@
 import { App, PluginSettingTab, Setting } from 'obsidian';
 import gamification from './main';
+import type {MomentInput} from 'moment';
 
 export const defaultSettings: Partial<ISettings> = {
   enableInitCommand: true,
@@ -24,11 +25,54 @@ export const defaultSettings: Partial<ISettings> = {
   dailyNoteCreationDate: '12.08.2023',
   weeklyNoteCreationTask: 0,
   weeklyNoteCreationDate: '12.08.2023',
+  nexusNode: 0,
+  connectionCrystal: 0,
+  masteryScroll: 0,
+  insightPrism: 0,
+  reflectiveEssence: 0,
+  amplificationCrystal: 0,
+  creativeCatalyst: 0,
+  precisionLens: 0,
+  temporalTweaker: 0,
+  perpetualProgress: 0,
+  strategicSynapses: 0,
+  acceleratedAcquisition: 0,
+  linkersLode: 0,
+  effortlessExpansion: 0,
+  recursiveReflection: 0,
+  synapticSurge: 0,
+  inspirationInfusion: 0,
+  titleTitan: 0,
+  precisionPrism: 0,
+  hyperlinkHarmony: 0,
+  ephemeralEuphoria: 0,
+  boosterFactorPerpetualProgress: false,
+  boosterDatePerpetualProgress: '2023-08-15 20:00:00',
+  boosterFactorStrategicSynapses: false,
+  boosterDateStrategicSynapses: '2023-08-15 20:00:00',
+  boosterFactorLinkersLode: false,
+  boosterDateLinkersLode: '2023-08-15 20:00:00',
+  boosterFactorRecursiveReflection: false,
+  boosterDateRecursiveReflection:'2023-08-15 20:00:00',
+  boosterFactorSynapticSurge: false,
+  boosterDateSynapticSurge: '2023-08-15 20:00:00',
+  boosterFactorTitleTitan: false,
+  boosterDateTitleTitan: '2023-08-15 20:00:00',
+  boosterFactorPrecisionPrism: false,
+  boosterDatePrecisionPrism: '2023-08-15 20:00:00',
+  boosterFactorHyperlinkHarmony: false,
+  boosterDateHyperlinkHarmony: '2023-08-15 20:00:00',
+  boosterFactorEphemeralEuphoria: false,
+  boosterDateEphemeralEuphoria: '2022-08-15 20:00:00',
   streakbooster: 0,
-  streakboosterDate: false,
+  streakboosterDate: false
 };
 
-export interface ISettings {
+export interface DynamicSettings {
+  [key: string]: number | string | boolean;
+}
+
+export interface ISettings extends DynamicSettings{
   enableInitCommand: boolean;
   bindEnter: boolean;
   bindTab: boolean;
@@ -53,11 +97,52 @@ export interface ISettings {
   weeklyNoteCreationDate: string;
   streakbooster: number;
   streakboosterDate: boolean;
+  nexusNode: number;
+  connectionCrystal: number;
+  masteryScroll: number;
+  insightPrism: number;
+  reflectiveEssence: number;
+  amplificationCrystal: number;
+  creativeCatalyst: number;
+  precisionLens: number;
+  temporalTweaker: number;
+  perpetualProgress: number;
+  strategicSynapses: number;
+  acceleratedAcquisition: number;
+  linkersLode: number;
+  effortlessExpansion: number;
+  recursiveReflection: number;
+  synapticSurge: number;
+  inspirationInfusion: number;
+  titleTitan: number;
+  precisionPrism: number;
+  hyperlinkHarmony: number;
+  ephemeralEuphoria: number;
+  boosterFactorPerpetualProgress: boolean;
+  boosterDatePerpetualProgress: string
+  boosterFactorStrategicSynapses: boolean;
+  boosterDateStrategicSynapses: string;
+  boosterFactorLinkersLode: boolean;
+  boosterDateLinkersLode: string;
+  boosterFactorRecursiveReflection: boolean;
+  boosterDateRecursiveReflection: string;
+  boosterFactorSynapticSurge: boolean;
+  boosterDateSynapticSurge: string;
+  boosterFactorTitleTitan: boolean;
+  boosterDateTitleTitan: string
+  boosterFactorPrecisionPrism: boolean;
+  boosterDatePrecisionPrism: string
+  boosterFactorHyperlinkHarmony: boolean;
+  boosterDateHyperlinkHarmony: string;
+  boosterFactorEphemeralEuphoria: boolean;
+  boosterDateEphemeralEuphoria: string;
+  //[key: string]: number | string | boolean | MomentInput;
 }
 
 
 export class GamificationPluginSettings extends PluginSettingTab {
 	private readonly plugin: gamification;
+  public settings: ISettings;
   
   public enableInitCommand: boolean;
   public bindEnter: boolean;
@@ -83,6 +168,45 @@ export class GamificationPluginSettings extends PluginSettingTab {
   public weeklyNoteCreationDate: string;
   public streakbooster: number;
   public streakboosterDate: boolean;
+  public nexusNode: number;
+  public connectionCrystal: number;
+  public masteryScroll: number;
+  public insightPrism: number;
+  public reflectiveEssence: number;
+  public amplificationCrystal: number;
+  public creativeCatalyst: number;
+  public precisionLens: number;
+  public temporalTweaker: number;
+  public perpetualProgress: number;
+  public strategicSynapses: number;
+  public acceleratedAcquisition: number;
+  public linkersLode: number;
+  public effortlessExpansion: number;
+  public recursiveReflection: number;
+  public synapticSurge: number;
+  public inspirationInfusion: number;
+  public titleTitan: number;
+  public precisionPrism: number;
+  public hyperlinkHarmony: number;
+  public ephemeralEuphoria: number;
+  public boosterFactorPerpetualProgress: boolean;
+  public boosterDatePerpetualProgress: string
+  public boosterFactorStrategicSynapses: boolean;
+  public boosterDateStrategicSynapses: string
+  public boosterFactorLinkersLode: boolean;
+  public boosterDateLinkersLode: string
+  public boosterFactorRecursiveReflection: boolean;
+  public boosterDateRecursiveReflection: string
+  public boosterFactorSynapticSurge: boolean;
+  public boosterDateSynapticSurge: string
+  public boosterFactorTitleTitan: boolean;
+  public boosterDateTitleTitan: string
+  public boosterFactorPrecisionPrism: boolean;
+  public boosterDatePrecisionPrism: string
+  public boosterFactorHyperlinkHarmony: boolean;
+  public boosterDateHyperlinkHarmony: string;
+  public boosterFactorEphemeralEuphoria: boolean;
+  public boosterDateEphemeralEuphoria: string;
 
 	constructor(app: App, plugin: gamification) {
 	  super(app, plugin);

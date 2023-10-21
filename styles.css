@@ -1,8 +1,35 @@
-/*
+.checkbox-container {
+    margin-bottom: 10px;
+    display: flex; /* Align items horizontally */
+    align-items: center; /* Center items vertically */
+}
 
-This CSS file will be included with your plugin, and
-available in the app when your plugin is enabled.
+.checkbox-container input[type="checkbox"] {
+    margin-right: 5px;
+}
 
-If your plugin does not need CSS, delete this file.
+.my-modal li {
+    margin-bottom: 10px;
+    list-style-type: none; /* Remove default list styles */
+}
 
-*/
+.modal-crafting-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.crafting-item-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.crafting-item-container button {
+    font-size: 14px;
+}
+
+.crafting-item-container span {
+    font-size: 16px;
+}
+
