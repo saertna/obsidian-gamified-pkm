@@ -848,33 +848,6 @@ export default class gamification extends Plugin {
 	}
 
 
-
-
-	async increaseStreakbooster(increaseValue:number){
-		let newBoosterFakfor = parseFloat((this.settings.streakbooster + increaseValue).toFixed(streakboosterIncreaseWeekly));
-		if(newBoosterFakfor > 80){
-			newBoosterFakfor = 80;
-		}
-		this.settings.streakbooster = newBoosterFakfor;
-		this.settings.streakboosterDate = true;
-		await this.saveData(this.settings)
-		console.log(`streakbooster: ${this.settings.streakbooster}`)
-	}
-
-
-	async decreaseStreakbooster(decreaseValue:number){
-		//let newBoosterFakfor = parseFloat((this.settings.streakbooster - decreaseValue).toFixed(streakboosterDecrease))
-		let newBoosterFakfor = parseFloat((this.settings.streakbooster - (decreaseValue * streakboosterDecrease)).toFixed(1))
-		this.settings.streakbooster = newBoosterFakfor
-		if (newBoosterFakfor < 0){
-			newBoosterFakfor = 0
-		}
-		this.settings.streakbooster = newBoosterFakfor
-		this.settings.streakboosterDate = false;
-		await this.saveData(this.settings)
-	}
-
-
 	async updateAvatarPage(avatarPageName: string): Promise<boolean>{
 		const existingFile = app.vault.getAbstractFileByPath(`${avatarPageName}.md`);
 		if (existingFile == null) {
