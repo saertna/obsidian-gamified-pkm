@@ -377,7 +377,7 @@ export default class gamification extends Plugin {
 			console.log(`${pointsReceived * boosterFactor} Points received`)
 		}
 
-		
+
 		// Inside your function where you want to introduce a delay
 		setTimeout(async () => {
 			// Code that you want to execute after the delay
@@ -796,8 +796,8 @@ export default class gamification extends Plugin {
 			boosterFactorEphemeralEuphoria = 80;
 		}
 		
-
-		this.settings.statusPoints = pointsToAdd * (boosterFactor + streakbooster + boosterFactorPerpetualProgress + boosterFactorStrategicSynapses + boosterFactorLinkersLode + boosterFactorRecursiveReflection + boosterFactorSynapticSurge + boosterFactorTitleTitan + boosterFactorPrecisionPrism + boosterFactorHyperlinkHarmony + boosterFactorEphemeralEuphoria ) + this.settings.statusPoints
+		const pointsReceived = pointsToAdd * (boosterFactor + streakbooster + boosterFactorPerpetualProgress + boosterFactorStrategicSynapses + boosterFactorLinkersLode + boosterFactorRecursiveReflection + boosterFactorSynapticSurge + boosterFactorTitleTitan + boosterFactorPrecisionPrism + boosterFactorHyperlinkHarmony + boosterFactorEphemeralEuphoria )
+		this.settings.statusPoints = pointsReceived + this.settings.statusPoints
 		await this.saveData(this.settings)
 
 		return this.updateAvatarPage(this.settings.avatarPageName)
