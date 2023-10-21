@@ -261,7 +261,7 @@ export default class gamification extends Plugin {
         this.settings.badgeBoosterState = false
         this.settings.badgeBoosterFactor = 1
         await this.saveData(this.settings);
-        await this.giveStatusPoints(0)
+        await this.giveStatusPoints(0,'')
         await this.updateStatusBar(this.statusbarGamification)
         new ModalInformationbox(this.app, `Game is now reseted. Please delete the Profile Page: "${this.settings.avatarPageName}.md" manually.`).open();
     }
@@ -311,50 +311,50 @@ export default class gamification extends Plugin {
 				await this.app.fileManager.processFrontMatter(file, (frontmatter) => {
 					if (rateDirectionForStatusPoints(frontmatter['note-maturity'], noteMajurity) >= 1) {
 						pointsReceived += pointsNoteMajurity * rateDirectionForStatusPoints(frontmatter['note-maturity'], noteMajurity)
-						this.giveStatusPoints(pointsNoteMajurity * rateDirectionForStatusPoints("frontmatter['note-maturity']", noteMajurity))
+						this.giveStatusPoints(pointsNoteMajurity * rateDirectionForStatusPoints("frontmatter['note-maturity']", noteMajurity),'fromNoteMajurity')
 					} else if (!('note-maturity' in frontmatter)) {
 						pointsReceived += pointsNoteMajurity * rateDirectionForStatusPoints("0", noteMajurity)
-						this.giveStatusPoints(pointsNoteMajurity * rateDirectionForStatusPoints("0", noteMajurity))
+						this.giveStatusPoints(pointsNoteMajurity * rateDirectionForStatusPoints("0", noteMajurity),'fromNoteMajurityFirstTime')
 					}
 
 					if (rateDirectionForStatusPoints(frontmatter['title-class'], fileNameRate) >= 1 && 'title-class' in frontmatter) {
 						pointsReceived += pointsMajurity * rateDirectionForStatusPoints(frontmatter['title-class'], fileNameRate)
-						this.giveStatusPoints(pointsMajurity * rateDirectionForStatusPoints(frontmatter['title-class'], fileNameRate))
+						this.giveStatusPoints(pointsMajurity * rateDirectionForStatusPoints(frontmatter['title-class'], fileNameRate),'fromTitleClass')
 					} else if (!('title-class' in frontmatter)) {
 						pointsReceived += pointsMajurity * rateDirectionForStatusPoints("0", fileNameRate)
-						this.giveStatusPoints(pointsMajurity * rateDirectionForStatusPoints("0", fileNameRate))
+						this.giveStatusPoints(pointsMajurity * rateDirectionForStatusPoints("0", fileNameRate),'fromTitleClassFirstTime')
 					}
 
 					if (rateDirectionForStatusPoints(frontmatter['note-length-class'], rateFileLength) >= 1) {
 						pointsReceived += pointsMajurity * rateDirectionForStatusPoints(frontmatter['note-length-class'], rateFileLength)
-						this.giveStatusPoints(pointsMajurity * rateDirectionForStatusPoints(frontmatter['note-length-class'], rateFileLength))
+						this.giveStatusPoints(pointsMajurity * rateDirectionForStatusPoints(frontmatter['note-length-class'], rateFileLength),'fromNoteLengthClass')
 					} else if (!('note-length-class' in frontmatter)) {
 						pointsReceived += pointsMajurity * rateDirectionForStatusPoints("0", rateFileLength)
-						this.giveStatusPoints(pointsMajurity * rateDirectionForStatusPoints("0", rateFileLength))
+						this.giveStatusPoints(pointsMajurity * rateDirectionForStatusPoints("0", rateFileLength),'fromNoteLengthClassFirstTime')
 					}
 
 					if (rateDirectionForStatusPoints(frontmatter['inlink-class'], inlinkClass) >= 1) {
 						pointsReceived += pointsMajurity * rateDirectionForStatusPoints(frontmatter['inlink-class'], inlinkClass)
-						this.giveStatusPoints(pointsMajurity * rateDirectionForStatusPoints(frontmatter['inlink-class'], inlinkClass))
+						this.giveStatusPoints(pointsMajurity * rateDirectionForStatusPoints(frontmatter['inlink-class'], inlinkClass),'fromInlinkClass')
 					} else if (!('inlink-class' in frontmatter)) {
 						pointsReceived += pointsMajurity * rateDirectionForStatusPoints("0", inlinkClass)
-						this.giveStatusPoints(pointsMajurity * rateDirectionForStatusPoints("0", inlinkClass))
+						this.giveStatusPoints(pointsMajurity * rateDirectionForStatusPoints("0", inlinkClass),'fromInlinkClassFirstTime')
 					}
 
 					if (rateDirectionForStatusPoints(frontmatter['outlink-class'], rateOut) >= 1) {
 						pointsReceived += pointsMajurity * rateDirectionForStatusPoints(frontmatter['outlink-class'], rateOut)
-						this.giveStatusPoints(pointsMajurity * rateDirectionForStatusPoints(frontmatter['outlink-class'], rateOut))
+						this.giveStatusPoints(pointsMajurity * rateDirectionForStatusPoints(frontmatter['outlink-class'], rateOut),'fromOutlinkClass')
 					} else if (!('outlink-class' in frontmatter)) {
 						pointsReceived += pointsMajurity * rateDirectionForStatusPoints("0", rateOut)
-						this.giveStatusPoints(pointsMajurity * rateDirectionForStatusPoints("0", rateOut))
+						this.giveStatusPoints(pointsMajurity * rateDirectionForStatusPoints("0", rateOut),'fromOutlinkClassFirstTime')
 					}
 
 					if (rateDirectionForStatusPoints(frontmatter['progressive-summarization-maturity'], rateProgressiveSum) >= 1) {
 						pointsReceived += pointsMajurity * rateDirectionForStatusPoints(frontmatter['progressive-summarization-maturity'], rateProgressiveSum)
-						this.giveStatusPoints(pointsMajurity * rateDirectionForStatusPoints(frontmatter['progressive-summarization-maturity'], rateProgressiveSum))
+						this.giveStatusPoints(pointsMajurity * rateDirectionForStatusPoints(frontmatter['progressive-summarization-maturity'], rateProgressiveSum),'fromProgressiveTummarizationMaturity')
 					} else if (!('progressive-summarization-maturity' in frontmatter)) {
 						pointsReceived += pointsMajurity * rateDirectionForStatusPoints(frontmatter['progressive-summarization-maturity'], rateProgressiveSum)
-						this.giveStatusPoints(pointsMajurity * rateDirectionForStatusPoints("0", rateProgressiveSum))
+						this.giveStatusPoints(pointsMajurity * rateDirectionForStatusPoints("0", rateProgressiveSum),'fromProgressiveTummarizationMaturityFirstTime')
 
 					}
 
@@ -462,62 +462,62 @@ export default class gamification extends Plugin {
 						if (rateDirectionForStatusPoints(frontmatter['note-maturity'], noteMajurity) >= 1){
 							console.log(`note-maturity >=1`)
 							pointsReceived += pointsNoteMajurity*rateDirectionForStatusPoints(frontmatter['note-maturity'], noteMajurity)
-							const newLevel = this.giveStatusPoints(pointsNoteMajurity * rateDirectionForStatusPoints("frontmatter['note-maturity']", noteMajurity))
+							const newLevel = this.giveStatusPoints(pointsNoteMajurity * rateDirectionForStatusPoints("frontmatter['note-maturity']", noteMajurity),'fromNoteMajurity')
 							this.decisionIfBadge(newLevel)
 						} else if (!('note-maturity' in frontmatter)){
 							pointsReceived += pointsNoteMajurity*rateDirectionForStatusPoints("0", noteMajurity)
-							const newLevel = this.giveStatusPoints(pointsNoteMajurity * rateDirectionForStatusPoints("0", noteMajurity))
+							const newLevel = this.giveStatusPoints(pointsNoteMajurity * rateDirectionForStatusPoints("0", noteMajurity),'fromNoteMajurityFirstTime')
 							this.decisionIfBadge(newLevel);
 							detectIfNoteIsFirstTimeRated = true;
 						}
 
 						if (rateDirectionForStatusPoints(frontmatter['title-class'], fileNameRate) >= 1 && 'title-class' in frontmatter){
 							pointsReceived += pointsMajurity*rateDirectionForStatusPoints(frontmatter['title-class'], fileNameRate)
-							const newLevel = this.giveStatusPoints(pointsMajurity * rateDirectionForStatusPoints(frontmatter['title-class'], fileNameRate))
+							const newLevel = this.giveStatusPoints(pointsMajurity * rateDirectionForStatusPoints(frontmatter['title-class'], fileNameRate),'fromTitleClass')
 							this.decisionIfBadge(newLevel)
 						} else if (!('title-class' in frontmatter)){
 							pointsReceived += pointsMajurity*rateDirectionForStatusPoints("0", fileNameRate)
-							const newLevel = this.giveStatusPoints(pointsMajurity * rateDirectionForStatusPoints("0", fileNameRate))
+							const newLevel = this.giveStatusPoints(pointsMajurity * rateDirectionForStatusPoints("0", fileNameRate),'fromTitleClassFirstTime')
 							this.decisionIfBadge(newLevel)
 						}
 
 						if (rateDirectionForStatusPoints(frontmatter['note-length-class'], rateFileLength) >= 1){
 							pointsReceived += pointsMajurity*rateDirectionForStatusPoints(frontmatter['note-length-class'], rateFileLength)
-							const newLevel = this.giveStatusPoints(pointsMajurity * rateDirectionForStatusPoints(frontmatter['note-length-class'], rateFileLength))
+							const newLevel = this.giveStatusPoints(pointsMajurity * rateDirectionForStatusPoints(frontmatter['note-length-class'], rateFileLength),'fromNoteLengthClass')
 							this.decisionIfBadge(newLevel)
 						}else if (!('note-length-class' in frontmatter)){
 							pointsReceived += pointsMajurity*rateDirectionForStatusPoints("0", rateFileLength)
-							const newLevel = this.giveStatusPoints(pointsMajurity * rateDirectionForStatusPoints("0", rateFileLength))
+							const newLevel = this.giveStatusPoints(pointsMajurity * rateDirectionForStatusPoints("0", rateFileLength),'fromNoteLengthClassFirstTime')
 							this.decisionIfBadge(newLevel)
 						}
 
 						if (rateDirectionForStatusPoints(frontmatter['inlink-class'], inlinkClass) >= 1){
 							pointsReceived += pointsMajurity*rateDirectionForStatusPoints(frontmatter['inlink-class'], inlinkClass)
-							const newLevel = this.giveStatusPoints(pointsMajurity * rateDirectionForStatusPoints(frontmatter['inlink-class'], inlinkClass))
+							const newLevel = this.giveStatusPoints(pointsMajurity * rateDirectionForStatusPoints(frontmatter['inlink-class'], inlinkClass),'fromInlinkClass')
 							this.decisionIfBadge(newLevel)
 						}else if (!('inlink-class' in frontmatter)){
 							pointsReceived += pointsMajurity*rateDirectionForStatusPoints("0", inlinkClass)
-							const newLevel = this.giveStatusPoints(pointsMajurity * rateDirectionForStatusPoints("0", inlinkClass))
+							const newLevel = this.giveStatusPoints(pointsMajurity * rateDirectionForStatusPoints("0", inlinkClass),'fromInlinkClassFirstTime')
 							this.decisionIfBadge(newLevel)
 						}
 
 						if (rateDirectionForStatusPoints(frontmatter['outlink-class'], rateOut) >= 1){
 							pointsReceived += pointsMajurity*rateDirectionForStatusPoints(frontmatter['outlink-class'], rateOut)
-							const newLevel = this.giveStatusPoints(pointsMajurity * rateDirectionForStatusPoints(frontmatter['outlink-class'], rateOut))
+							const newLevel = this.giveStatusPoints(pointsMajurity * rateDirectionForStatusPoints(frontmatter['outlink-class'], rateOut),'fromOutlinkClass')
 							this.decisionIfBadge(newLevel)
 						}else if (!('outlink-class' in frontmatter)){
 							pointsReceived += pointsMajurity*rateDirectionForStatusPoints("0", rateOut)
-							const newLevel = this.giveStatusPoints(pointsMajurity * rateDirectionForStatusPoints("0", rateOut))
+							const newLevel = this.giveStatusPoints(pointsMajurity * rateDirectionForStatusPoints("0", rateOut),'fromOutlinkClassFirstTime')
 							this.decisionIfBadge(newLevel)
 						}
 
 						if (rateDirectionForStatusPoints(frontmatter['progressive-summarization-maturity'], rateProgressiveSum) >= 1){
 							pointsReceived += pointsMajurity*rateDirectionForStatusPoints(frontmatter['progressive-summarization-maturity'], rateProgressiveSum)
-							const newLevel = this.giveStatusPoints(pointsMajurity * rateDirectionForStatusPoints(frontmatter['progressive-summarization-maturity'], rateProgressiveSum))
+							const newLevel = this.giveStatusPoints(pointsMajurity * rateDirectionForStatusPoints(frontmatter['progressive-summarization-maturity'], rateProgressiveSum),'fromProgressiveTummarizationMaturity')
 							this.decisionIfBadge(newLevel)
 						}else if (!('progressive-summarization-maturity' in frontmatter)){
 							pointsReceived += pointsMajurity*rateDirectionForStatusPoints(frontmatter['progressive-summarization-maturity'], rateProgressiveSum)
-							const newLevel = this.giveStatusPoints(pointsMajurity * rateDirectionForStatusPoints("0", rateProgressiveSum))
+							const newLevel = this.giveStatusPoints(pointsMajurity * rateDirectionForStatusPoints("0", rateProgressiveSum),'fromProgressiveTummarizationMaturityFirstTime')
 							this.decisionIfBadge(newLevel)
 						}
 						console.log(`pointsReceived: ${pointsReceived}`)
@@ -640,7 +640,7 @@ export default class gamification extends Plugin {
 				//this.settings.streakboosterDate = window.moment().format('DD.MM.YYYY');
 				await this.saveSettings();
 				await this.updateStatusBar(this.statusbarGamification)
-				await this.giveStatusPoints(pointsForDailyChallenge)
+				await this.giveStatusPoints(pointsForDailyChallenge,'formIncreaseDailyCreatedNoteCount')
 				const message = getRandomMessageTwoNoteChallenge(pointsForDailyChallenge * (this.settings.badgeBoosterFactor + this.settings.streakbooster));
 				console.log(`daily Challenge reached! ${newDailyNoteCreationTask}/2 created.`)
 				new Notice(message,4000)
@@ -689,7 +689,7 @@ export default class gamification extends Plugin {
 			this.increaseStreakbooster(streakboosterIncreaseWeekly);
 			//this.settings.streakboosterDate = window.moment().format('DD.MM.YYYY');
 			await this.saveSettings();
-			await this.giveStatusPoints(pointsForWeeklyChallenge)
+			await this.giveStatusPoints(pointsForWeeklyChallenge, 'fromCheckForWeeklyNoteChallengeEvaluation')
 			console.log(`Weekly Challenge reached! ${newWeeklyNoteCreationTask}/7 created in a chain.`)
 			const message = getRandomMessageWeeklyChallenge(pointsForWeeklyChallenge * (this.settings.badgeBoosterFactor + this.settings.streakbooster));
 			new Notice(message,4000)
@@ -751,7 +751,7 @@ export default class gamification extends Plugin {
 	}
 
 
-	async giveStatusPoints(pointsToAdd: number): Promise<boolean>{
+	async giveStatusPoints(pointsToAdd: number, caller: string): Promise<boolean>{
 		let boosterFactor = 1;
 		let streakbooster = this.settings.streakbooster;
 		let boosterFactorPerpetualProgress = 0;
@@ -763,6 +763,7 @@ export default class gamification extends Plugin {
 		let boosterFactorPrecisionPrism = 0;
 		let boosterFactorHyperlinkHarmony = 0;
 		let boosterFactorEphemeralEuphoria = 0;
+		
 		if (this.settings.badgeBoosterState){
 			boosterFactor = this.settings.badgeBoosterFactor;
 		}
@@ -775,19 +776,19 @@ export default class gamification extends Plugin {
 		if (this.settings.boosterFactorLinkersLode){
 			boosterFactorLinkersLode = 10;
 		}
-		if (this.settings.boosterFactorRecursiveReflection){
+		if (this.settings.boosterFactorRecursiveReflection && ( caller == 'fromNoteMajurity' || caller == 'fromTitleClass' || caller == 'fromNoteLengthClass' || caller == 'fromInlinkClass' || caller == 'fromOutlinkClass' || caller == 'fromProgressiveTummarizationMaturity')){
 			boosterFactorRecursiveReflection = 5;
 		}
-		if (this.settings.boosterFactorSynapticSurge){
+		if (this.settings.boosterFactorSynapticSurge && (caller == 'fromInlinkClass' || caller == 'fromOutlinkClass')){
 			boosterFactorSynapticSurge = 20;
 		}
-		if (this.settings.boosterFactorTitleTitan){
+		if (this.settings.boosterFactorTitleTitan && caller == 'fromTitleClass'){
 			boosterFactorTitleTitan = 4;
 		}
-		if (this.settings.boosterFactorPrecisionPrism){
+		if (this.settings.boosterFactorPrecisionPrism && caller == 'fromNoteLengthClass'){
 			boosterFactorPrecisionPrism = 4;
 		}
-		if (this.settings.boosterFactorHyperlinkHarmony){
+		if (this.settings.boosterFactorHyperlinkHarmony && (caller == 'fromInlinkClass' || caller == 'fromOutlinkClass')){
 			boosterFactorHyperlinkHarmony = 5;
 		}
 		if (this.settings.boosterFactorEphemeralEuphoria){
