@@ -464,7 +464,12 @@ export default class gamification extends Plugin {
 			rateOut = rateOutlinks(getNumberOfOutlinks(file));
 
 			const noteMajurity = rateLevelOfMaturity(rateFileLength, fileNameRate, inlinkClass, rateOut, rateProgressiveSum);
-
+			
+			
+			
+			this.setSetting('counterMajurityCalc',this.settings.counterMajurityCalc + 1)
+			
+			
 			try {
 				await this.app.fileManager.processFrontMatter(file, (frontmatter) => {
 					if (frontmatter) {
@@ -481,6 +486,7 @@ export default class gamification extends Plugin {
 							pointsReceived += pointsToReceived;
 							this.decisionIfBadge(newLevel);
 							detectIfNoteIsFirstTimeRated = true;
+							this.setSetting('counterMajurityCalcInitial',this.settings.counterMajurityCalcInitial + 1)
 						}
 
 						if (rateDirectionForStatusPoints(frontmatter['title-class'], fileNameRate) >= 1 && 'title-class' in frontmatter){

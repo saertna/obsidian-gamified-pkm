@@ -79,7 +79,9 @@ export const defaultSettings: Partial<ISettings> = {
   boosterUseCountTitleTitan: 0,
   boosterUseCountPrecisionPrism: 0,
   boosterUseCountHyperlinkHarmony: 0,
-  boosterUseCountEphemeralEuphoria: 0
+  boosterUseCountEphemeralEuphoria: 0,
+  counterMajurityCalc: 0,
+  counterMajurityCalcInitial: 0
 };
 
 export interface DynamicSettings {
@@ -164,6 +166,8 @@ export interface ISettings extends DynamicSettings{
   boosterUseCountPrecisionPrism: number;
   boosterUseCountHyperlinkHarmony: number;
   boosterUseCountEphemeralEuphoria: number;
+  counterMajurityCalc: number;
+  counterMajurityCalcInitial: number;
   //[key: string]: number | string | boolean | MomentInput;
 }
 
@@ -249,6 +253,8 @@ export class GamificationPluginSettings extends PluginSettingTab {
   public boosterUseCountPrecisionPrism: number;
   public boosterUseCountHyperlinkHarmony: number;
   public boosterUseCountEphemeralEuphoria: number;
+  public counterMajurityCalc: number;
+  public counterMajurityCalcInitial: number;
 
 	constructor(app: App, plugin: gamification) {
 	  super(app, plugin);
