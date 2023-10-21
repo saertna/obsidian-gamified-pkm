@@ -97,7 +97,9 @@ export class MultiSelectModal extends Modal {
 
 	decrementBooster(booster: string, stockIncrease: number) {
 		const stock = this.boosters[booster];
-		const momentDate = window.moment(booster, 'YYYY-MM-DD HH:mm:ss');
+		const boosterLastUsedDate = this.gamificationInstance.getSetting(this.getBoosterDateFromName(booster));
+		if (typeof boosterLastUsedDate === 'string' && boosterLastUsedDate !== null) {
+		const momentDate = window.moment(boosterLastUsedDate, 'YYYY-MM-DD HH:mm:ss');
 		if (stock > 0 && isMinutesPassed(momentDate, this.getBoosterCooldownFromName(booster))) {
 			this.boosters[booster] -= stockIncrease;
 			this.gamificationInstance.setSetting(this.getBoosterVarNameFromName(booster), this.boosters[booster]);
@@ -105,6 +107,11 @@ export class MultiSelectModal extends Modal {
 			this.gamificationInstance.setSettingString(this.getBoosterDateFromName(booster), window.moment().format('YYYY-MM-DD HH:mm:ss'));
 			this.updateQuantityDisplay(booster);
 		}
+		} else {
+		// Handle the case where boosterLastUsedDate is not a valid string.
+		console.error(`value from ${this.getBoosterVarNameFromName(booster)} could not be read from Settings in decrementBooster()`)
+		}
+		
 	}
 
 

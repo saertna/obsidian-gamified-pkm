@@ -377,6 +377,7 @@ export default class gamification extends Plugin {
 			console.log(`${pointsReceived * boosterFactor} Points received`)
 		}
 
+		
 		// Inside your function where you want to introduce a delay
 		setTimeout(async () => {
 			// Code that you want to execute after the delay
@@ -783,7 +784,7 @@ export default class gamification extends Plugin {
 			boosterFactorSynapticSurge = 20;
 		}
 		if (this.settings.boosterFactorTitleTitan && caller == 'fromTitleClass'){
-			boosterFactorTitleTitan = 4;
+			boosterFactorTitleTitan = 70;
 		}
 		if (this.settings.boosterFactorPrecisionPrism && caller == 'fromNoteLengthClass'){
 			boosterFactorPrecisionPrism = 4;
