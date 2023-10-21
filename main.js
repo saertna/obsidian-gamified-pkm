@@ -3470,6 +3470,7 @@ You received an initialisation Booster aktiv for your first level ups. Game on!`
             if (pointsReceived > 0) {
               const messagePoints = getRandomMessagePoints(pointsReceived);
               new import_obsidian5.Notice(messagePoints, 4e3);
+
               console.log(messagePoints);
             }
             this.writeFrontmatter(frontmatter, fileNameRate, rateFileLength, inlinkClass, rateOut, rateProgressiveSum, noteMajurity);
@@ -3573,6 +3574,7 @@ You received an initialisation Booster aktiv for your first level ups. Game on!`
         await this.saveSettings();
         await this.updateStatusBar(this.statusbarGamification);
         await this.giveStatusPoints(pointsForDailyChallenge, "formIncreaseDailyCreatedNoteCount");
+
         const message = getRandomMessageTwoNoteChallenge(pointsForDailyChallenge * (this.settings.badgeBoosterFactor + this.settings.streakbooster));
         console.log(`daily Challenge reached! ${newDailyNoteCreationTask}/2 created.`);
         new import_obsidian5.Notice(message, 4e3);
@@ -3614,6 +3616,7 @@ You received an initialisation Booster aktiv for your first level ups. Game on!`
       console.log(`Weekly Challenge reached! ${newWeeklyNoteCreationTask}/7 created in a chain.`);
       const message = getRandomMessageWeeklyChallenge(pointsForWeeklyChallenge * (this.settings.badgeBoosterFactor + this.settings.streakbooster));
       new import_obsidian5.Notice(message, 4e3);
+
       console.log(message);
     } else {
       console.log(`${newWeeklyNoteCreationTask}/7 Notes created in a chain.`);
@@ -3698,6 +3701,7 @@ You received an initialisation Booster aktiv for your first level ups. Game on!`
     }
     pointsToReceived = pointsToAdd * (boosterFactor + streakbooster + boosterFactorPerpetualProgress + boosterFactorStrategicSynapses + boosterFactorLinkersLode + boosterFactorRecursiveReflection + boosterFactorSynapticSurge + boosterFactorTitleTitan + boosterFactorPrecisionPrism + boosterFactorHyperlinkHarmony + boosterFactorEphemeralEuphoria);
     this.settings.statusPoints = pointsToReceived + this.settings.statusPoints;
+
     await this.saveData(this.settings);
     return this.updateAvatarPage(this.settings.avatarPageName);
   }
@@ -3713,6 +3717,7 @@ You received an initialisation Booster aktiv for your first level ups. Game on!`
   }
   async decreaseStreakbooster(decreaseValue) {
     let newBoosterFakfor = parseFloat((this.settings.streakbooster - decreaseValue * streakboosterDecrease).toFixed(1));
+
     this.settings.streakbooster = newBoosterFakfor;
     if (newBoosterFakfor < 0) {
       newBoosterFakfor = 0;

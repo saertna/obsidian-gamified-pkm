@@ -100,6 +100,7 @@ export default class gamification extends Plugin {
 	}
 
 
+	
 	async onload() {
 		console.log('obsidian-pkm-gamification loaded!');
 		//this.settings = defaultSettings;
@@ -543,7 +544,7 @@ export default class gamification extends Plugin {
 						}
 						//console.log(`pointsReceived: ${pointsReceived}`)
 						if (pointsReceived > 0){
-							const messagePoints = getRandomMessagePoints(pointsReceived);// * (this.settings.badgeBoosterFactor + this.settings.streakbooster))
+							const messagePoints = getRandomMessagePoints(pointsReceived);
 							new Notice(messagePoints,4000)
 							console.log(messagePoints)
 						}
@@ -823,6 +824,31 @@ export default class gamification extends Plugin {
 		return this.updateAvatarPage(this.settings.avatarPageName)
 	}
 
+	async increaseStreakbooster(increaseValue:number){
+		let newBoosterFakfor = parseFloat((this.settings.streakbooster + increaseValue).toFixed(streakboosterIncreaseWeekly));
+		if(newBoosterFakfor > 80){
+			newBoosterFakfor = 80;
+		}
+		this.settings.streakbooster = newBoosterFakfor;
+		this.settings.streakboosterDate = true;
+		await this.saveData(this.settings)
+		console.log(`streakbooster: ${this.settings.streakbooster}`)
+	}
+
+
+	async decreaseStreakbooster(decreaseValue:number){
+		let newBoosterFakfor = parseFloat((this.settings.streakbooster - decreaseValue).toFixed(streakboosterDecrease))
+		this.settings.streakbooster = newBoosterFakfor
+		if (newBoosterFakfor < 0){
+			newBoosterFakfor = 0
+		}
+		this.settings.streakbooster = newBoosterFakfor
+		this.settings.streakboosterDate = false;
+		await this.saveData(this.settings)
+	}
+
+
+
 
 	async increaseStreakbooster(increaseValue:number){
 		let newBoosterFakfor = parseFloat((this.settings.streakbooster + increaseValue).toFixed(streakboosterIncreaseWeekly));
@@ -929,7 +955,6 @@ export default class gamification extends Plugin {
 			end3 = reference3 + 24 -25; // no idea why offset 25 is needed
 			start4 = reference4 - 1 - 25; // no idea why offset 25 is needed
 			end4 = reference4 - 25 ; // no idea why offset 25 is needed
-
 
 			const newLines = [...lines.slice(0, start), newPointsString, ...lines.slice(end)];
 			const newLines2 = [...newLines.slice(0, start2), dailyChallenge, ...newLines.slice(end2)];
