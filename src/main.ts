@@ -161,27 +161,32 @@ export default class gamification extends Plugin {
 				//new ModalBooster(this.app, ` `, this).open();
 
 				this.acquireIngredients();
+				
 
 			});
 		}
 
-		this.addRibbonIcon("test-tube-2", "Boosters", async () => {
-			//const file: TFile | null = this.app.workspace.getActiveFile();
-			new ModalBooster(this.app, ` `, this).open();
-		});
+		if(this.settings.counterMajurityCalcInitial >= 50){
+			this.addRibbonIcon("test-tube-2", "Boosters", async () => {
+				//const file: TFile | null = this.app.workspace.getActiveFile();
+				new ModalBooster(this.app, ` `, this).open();
+			});
+
+			this.addCommand({
+				id: 'boosters',
+				name: 'open booter pallete',
+				callback: async () => {
+					new ModalBooster(this.app, ` `, this).open();
+				},
+			});
+		}
 
 		this.addRibbonIcon("sprout", "Calculate Note Maturity", async () => {
 			//const file: TFile | null = this.app.workspace.getActiveFile();
 			await this.calculateNoteMajurity();
 		});
 
-		this.addCommand({
-			id: 'boosters',
-			name: 'open booter pallete',
-			callback: async () => {
-				new ModalBooster(this.app, ` `, this).open();
-			},
-		});
+
 
 		if (this.settings.enableInitCommand){
 			// command Initialize gamification ratings
@@ -436,6 +441,7 @@ export default class gamification extends Plugin {
 		const activeView = this.app.workspace.getActiveViewOfType(MarkdownView);
 		const fileContents = activeView?.editor.getValue();
 		const fileName = activeView?.file.basename;
+		
 
 		let rateFileLength = 0;
 		let fileLength = 0;
@@ -487,6 +493,9 @@ export default class gamification extends Plugin {
 							this.decisionIfBadge(newLevel);
 							detectIfNoteIsFirstTimeRated = true;
 							this.setSetting('counterMajurityCalcInitial',this.settings.counterMajurityCalcInitial + 1)
+							if(this.settings.counterMajurityCalcInitial == 50){
+								new ModalInformationbox(this.app, `🚀 Introducing Boosters! 🚀Level up faster, you enabled the next stage! Craft Boosters for an accelerated knowledge journey. Click the "test-tube" on the right or type 'Open Booster Palette' to get started! you got one booster as a gift, so try it out!🌟📚🔍`).open();
+							}
 						}
 
 						if (rateDirectionForStatusPoints(frontmatter['title-class'], fileNameRate) >= 1 && 'title-class' in frontmatter){

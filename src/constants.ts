@@ -206,7 +206,7 @@ export const craftingItems = [
   { name: 'Hyperlink Harmony', incredients: ['2xS2', '1xS6'] },
 ];
 
-export const listOfUseableBoostersToBeShown = ['Perpetual Progress', 'Title Titan', 'Precision Prism', 'Ephemeral Euphoria']
+export const listOfUseableBoostersToBeShown = ['Perpetual Progress', 'Title Titan', 'Precision Prism']
 export const listOfUseableIngredientsToBeShown = ['Connection Crystal', 'Insight Prism', 'Creative Catalyst', 'Precision Lens']
 export const chanceToEarnIngredient = 0.5;
 

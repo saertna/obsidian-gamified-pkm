@@ -34,7 +34,7 @@ export const defaultSettings: Partial<ISettings> = {
   creativeCatalyst: 0,
   precisionLens: 0,
   temporalTweaker: 0,
-  perpetualProgress: 0,
+  perpetualProgress: 1,
   strategicSynapses: 0,
   acceleratedAcquisition: 0,
   linkersLode: 0,
