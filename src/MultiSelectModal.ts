@@ -105,6 +105,22 @@ export class MultiSelectModal extends Modal {
 			this.gamificationInstance.setSetting(this.getBoosterVarNameFromName(booster), this.boosters[booster]);
 			this.gamificationInstance.setSettingBoolean(this.getBoosterSwitchFromName(booster), true);
 			this.gamificationInstance.setSettingString(this.getBoosterDateFromName(booster), window.moment().format('YYYY-MM-DD HH:mm:ss'));
+			const boosterOverallUse = this.gamificationInstance.getSetting('boosterUseCount')
+			if (typeof boosterOverallUse === 'number' && boosterOverallUse !== null) {
+				// Now you can safely assign boosterLastUsedDate to boosterLastUsedDate.
+				this.gamificationInstance.setSetting('boosterUseCount',boosterOverallUse + 1)
+			  } else {
+				// Handle the case where boosterLastUsedDate is not a valid string.
+				console.debug(`decrementBooster: "boosterUseCount" could not got read.`)
+			  }
+			const boosterUse = this.gamificationInstance.getSetting(this.getBoosterUseFromName(booster))
+			if (typeof boosterUse === 'number' && boosterUse !== null) {
+				// Now you can safely assign boosterLastUsedDate to boosterLastUsedDate.
+				this.gamificationInstance.setSetting(this.getBoosterUseFromName(booster),boosterUse + 1)
+			  } else {
+				// Handle the case where boosterLastUsedDate is not a valid string.
+				console.debug(`decrementBooster: "${this.getBoosterUseFromName(booster)}" could not got read.`)
+			  }
 			this.updateQuantityDisplay(booster);
 		}
 		} else {
@@ -513,6 +529,15 @@ export class MultiSelectModal extends Modal {
 			}
 		}
 		return 0; // Return null if no matching element is found
+	}
+
+	private getBoosterUseFromName(boosterName: string) {
+		for (const element of boosterRecipes) {
+			if (element.name === boosterName) {
+				return element.boosterUseCountName as string;
+			}
+		}
+		return ''; // Return null if no matching element is found
 	}
 
 }

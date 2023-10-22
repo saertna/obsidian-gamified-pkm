@@ -34,7 +34,7 @@ export const defaultSettings: Partial<ISettings> = {
   creativeCatalyst: 0,
   precisionLens: 0,
   temporalTweaker: 0,
-  perpetualProgress: 0,
+  perpetualProgress: 1,
   strategicSynapses: 0,
   acceleratedAcquisition: 0,
   linkersLode: 0,
@@ -65,7 +65,23 @@ export const defaultSettings: Partial<ISettings> = {
   boosterFactorEphemeralEuphoria: false,
   boosterDateEphemeralEuphoria: '2022-08-15 20:00:00',
   streakbooster: 0,
-  streakboosterDate: false
+  streakboosterDate: false,
+  boosterUseCount: 0,
+  boosterUseCountTemporalTweaker: 0,
+  boosterUseCountPerpetualProgress: 0,
+  boosterUseCountStrategicSynapses: 0,
+  boosterUseCountAcceleratedAcquisition: 0,
+  boosterUseCountLinkersLode: 0,
+  boosterUseCountEffortlessExpansion: 0,
+  boosterUseCountrEcursiveReflection: 0,
+  boosterUseCountSynapticSurge: 0,
+  boosterUseCountInspirationInfusion: 0,
+  boosterUseCountTitleTitan: 0,
+  boosterUseCountPrecisionPrism: 0,
+  boosterUseCountHyperlinkHarmony: 0,
+  boosterUseCountEphemeralEuphoria: 0,
+  counterMajurityCalc: 0,
+  counterMajurityCalcInitial: 0
 };
 
 export interface DynamicSettings {
@@ -136,6 +152,22 @@ export interface ISettings extends DynamicSettings{
   boosterDateHyperlinkHarmony: string;
   boosterFactorEphemeralEuphoria: boolean;
   boosterDateEphemeralEuphoria: string;
+  boosterUseCount: number;
+  boosterUseCountTemporalTweaker: number;
+  boosterUseCountPerpetualProgress: number;
+  boosterUseCountStrategicSynapses: number;
+  boosterUseCountAcceleratedAcquisition: number;
+  boosterUseCountLinkersLode: number;
+  boosterUseCountEffortlessExpansion: number;
+  boosterUseCountrEcursiveReflection: number;
+  boosterUseCountSynapticSurge: number;
+  boosterUseCountInspirationInfusion: number;
+  boosterUseCountTitleTitan: number;
+  boosterUseCountPrecisionPrism: number;
+  boosterUseCountHyperlinkHarmony: number;
+  boosterUseCountEphemeralEuphoria: number;
+  counterMajurityCalc: number;
+  counterMajurityCalcInitial: number;
   //[key: string]: number | string | boolean | MomentInput;
 }
 
@@ -207,6 +239,22 @@ export class GamificationPluginSettings extends PluginSettingTab {
   public boosterDateHyperlinkHarmony: string;
   public boosterFactorEphemeralEuphoria: boolean;
   public boosterDateEphemeralEuphoria: string;
+  public boosterUseCount: number;
+  public boosterUseCountTemporalTweaker: number;
+  public boosterUseCountPerpetualProgress: number;
+  public boosterUseCountStrategicSynapses: number;
+  public boosterUseCountAcceleratedAcquisition: number;
+  public boosterUseCountLinkersLode: number;
+  public boosterUseCountEffortlessExpansion: number;
+  public boosterUseCountrEcursiveReflection: number;
+  public boosterUseCountSynapticSurge: number;
+  public boosterUseCountInspirationInfusion: number;
+  public boosterUseCountTitleTitan: number;
+  public boosterUseCountPrecisionPrism: number;
+  public boosterUseCountHyperlinkHarmony: number;
+  public boosterUseCountEphemeralEuphoria: number;
+  public counterMajurityCalc: number;
+  public counterMajurityCalcInitial: number;
 
 	constructor(app: App, plugin: gamification) {
 	  super(app, plugin);
