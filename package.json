@@ -35,6 +35,7 @@
 		"typescript": "4.7.4"
 	},
 	"dependencies": {
+		"crypto-js": "^4.1.1",
 		"date-fns": "^2.30.0",
 		"markdown-it": "^13.0.1",
 		"moment": "^2.29.4",

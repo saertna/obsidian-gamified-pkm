@@ -28,8 +28,7 @@ import {
 	streakboosterIncreaseDaily,
 	streakboosterIncreaseWeekly,
 	chanceToEarnIngredient,
-	listOfUseableIngredientsToBeShown
-} from './constants'
+	listOfUseableIngredientsToBeShown} from './constants'
 import {
 	count_inlinks,
 	countCharactersInActiveFile,
@@ -58,6 +57,7 @@ import type {Moment} from 'moment';
 import { getRandomMessageWeeklyChallenge, getRandomMessageTwoNoteChallenge , getRandomMessagePoints } from './randomNotificationText'
 import { ModalInformationbox } from 'ModalInformationbox';
 import { ModalBooster } from 'ModalBooster';
+import { encryptString, decryptSrting, encryptNumber, decryptNumber, encryptBoolean, decryptBoolean } from 'encryption';
 
 let pointsToReceived: number = 0;  
 export default class gamification extends Plugin {
@@ -1249,6 +1249,22 @@ export default class gamification extends Plugin {
 	
 	
 }
+
+
+
+
+
+// Example usage
+//const originalData = '2023-08-15 20:00:00';
+//const encryptedData = encryptString(originalData);
+
+// Save `encryptedData` in your settings
+
+// Later, when you retrieve the data
+//const decryptedData = decryptSrting(encryptedData);
+
+// Use `decryptedData` in your plugin
+
 
 function concatenateStrings(arr: string[]): string {
     if (arr.length === 1) {
