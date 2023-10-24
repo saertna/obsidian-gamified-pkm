@@ -157,7 +157,7 @@ export default class gamification extends Plugin {
 		await this.updateStatusBar(this.statusbarGamification)
 
 
-		if (!this.settings.debug){
+		if (this.settings.debug){
 			this.addRibbonIcon("accessibility", "crafting", async () => {
 
 				// const pointsReceived = 500;
@@ -194,24 +194,9 @@ export default class gamification extends Plugin {
 
 				//new ModalBooster(this.app, ` `, this).open();
 
-				//this.acquireIngredients();
+				this.acquireIngredients();
 				
-				for (const key in this.settings) {
-					console.log(`key: ${key}`)
-					if (this.settings.hasOwnProperty(key)) {
-					  if(typeof key === 'number'){
-						console.log(`${this.settings[key]} : ${encryptNumber(this.settings[key] as number)}`)
-						this.settings[key] = encryptNumber(this.settings[key] as number)
-					  } else if (typeof key === 'string'){
-						console.log(`${this.settings[key]} : ${encryptString(this.settings[key] as string)}`)
-						this.settings[key] = encryptString(this.settings[key] as string)
-					  } else if (typeof key === 'boolean'){
-						console.log(`${this.settings[key]} : ${encryptBoolean(this.settings[key] as boolean)}`)
-						this.settings[key] = encryptBoolean(this.settings[key] as boolean)
-					  }
-					}
-				  }
-				  this.saveSettings();
+				
 
 			});
 		}
