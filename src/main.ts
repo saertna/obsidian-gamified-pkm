@@ -57,7 +57,7 @@ import type {Moment} from 'moment';
 import { getRandomMessageWeeklyChallenge, getRandomMessageTwoNoteChallenge , getRandomMessagePoints } from './randomNotificationText'
 import { ModalInformationbox } from 'ModalInformationbox';
 import { ModalBooster } from 'ModalBooster';
-import { encryptString, decryptSrting, encryptNumber, decryptNumber, encryptBoolean, decryptBoolean } from 'encryption';
+import { encryptValue, encryptString, decryptString, encryptNumber, decryptNumber, encryptBoolean, decryptBoolean } from 'encryption';
 
 let pointsToReceived: number = 0;  
 export default class gamification extends Plugin {
@@ -74,6 +74,21 @@ export default class gamification extends Plugin {
 		// return this.settings[key];
 		return this.settings[key] !== undefined ? this.settings[key] : null;
     }
+	getSettingString(key: string) {
+        // Retrieve a specific setting
+		// return this.settings[key];
+		return decryptString(this.settings[key] !== undefined ? this.settings[key].toString() : '');
+    }
+	getSettingNumber(key: string) {
+        // Retrieve a specific setting
+		// return this.settings[key];
+		return decryptNumber(this.settings[key] !== undefined ? this.settings[key].toString() : '');
+    }
+	getSettingBoolean(key: string) {
+        // Retrieve a specific setting
+		// return this.settings[key];
+		return decryptBoolean(this.settings[key] !== undefined ? this.settings[key].toString() : '');
+    }
 
 
     setSetting(key: string, value: number) {
@@ -83,11 +98,21 @@ export default class gamification extends Plugin {
         this.saveSettings();
     }
 
+	setSettingNumber(key: string, value: number) {
+        // Set a specific setting
+		//console.log(`new value for ${key} is ${value}`)
+		const valueEncrypted = encryptNumber(value)
+        this.settings[key] = valueEncrypted;
+        this.settings[key] = value;
+        this.saveSettings();
+    }
+
 
 	setSettingBoolean(key: string, value: boolean) {
         // Set a specific setting
 		//console.log(`new value for ${key} is ${value}`)
-        this.settings[key] = value;
+		const valueEncrypted = encryptBoolean(value)
+        this.settings[key] = valueEncrypted;
         this.saveSettings();
 	}
 
@@ -95,6 +120,8 @@ export default class gamification extends Plugin {
 	setSettingString(key: string, value: string) {
         // Set a specific setting
 		//console.log(`new value for ${key} is ${value}`)
+		const valueEncrypted = encryptString(value)
+        this.settings[key] = valueEncrypted;
         this.settings[key] = value;
         this.saveSettings();
 	}
@@ -105,10 +132,17 @@ export default class gamification extends Plugin {
 		console.log('obsidian-pkm-gamification loaded!');
 		//this.settings = defaultSettings;
 
+		
+		
+  
+
 		await this.loadSettings();
+		
 
 		this.addSettingTab(new GamificationPluginSettings(this.app, this));
 
+
+		
 		// take care to reset when opened on a new day, don't wait for trigger
 		setTimeout(async () => {
 			// Code that you want to execute after the delay

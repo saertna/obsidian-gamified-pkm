@@ -1,6 +1,7 @@
 import { App, PluginSettingTab, Setting } from 'obsidian';
 import gamification from './main';
 import type {MomentInput} from 'moment';
+import { encryptValue, encryptString, decryptString, encryptNumber, decryptNumber, encryptBoolean, decryptBoolean } from 'encryption';
 
 export const defaultSettings: Partial<ISettings> = {
   enableInitCommand: true,
@@ -259,6 +260,23 @@ export class GamificationPluginSettings extends PluginSettingTab {
 	constructor(app: App, plugin: gamification) {
 	  super(app, plugin);
 	  this.plugin = plugin;
+
+    let settings = Object.assign({}, defaultSettings);
+
+    for (const key in settings) {
+      if (settings.hasOwnProperty(key)) {
+        if(typeof key === 'number'){
+          settings[key] = encryptNumber(settings[key] as number)
+        } else if (typeof key === 'string'){
+          settings[key] = encryptString(settings[key] as string)
+        } else if (typeof key === 'boolean'){
+          settings[key] = encryptBoolean(settings[key] as boolean)
+        }
+      }
+    }
+
+    // Save `settings` with encrypted values to your storage
+
 	}
   
 	public display(): void {
