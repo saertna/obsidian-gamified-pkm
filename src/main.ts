@@ -69,19 +69,22 @@ export default class gamification extends Plugin {
 	public settings: ISettings;
 
 
-	getSetting(key: string) {
+	/*getSetting(key: string) {
         // Retrieve a specific setting
 		// return this.settings[key];
 		return this.settings[key] !== undefined ? this.settings[key] : null;
-    }
+    }*/
+
 	getSettingString(key: string) {
         // Retrieve a specific setting
 		// return this.settings[key];
 		return decryptString(this.settings[key] !== undefined ? this.settings[key].toString() : '');
     }
+
 	getSettingNumber(key: string) {
         // Retrieve a specific setting
 		// return this.settings[key];
+		//console.log(`key: ${key}`)
 		return decryptNumber(this.settings[key] !== undefined ? this.settings[key].toString() : '');
     }
 
@@ -92,28 +95,29 @@ export default class gamification extends Plugin {
     }
 
 
-    setSetting(key: string, value: number) {
+    /*setSetting(key: string, value: number) {
         // Set a specific setting
 		//console.log(`new value for ${key} is ${value}`)
         this.settings[key] = value;
         this.saveSettings();
-    }
+    }*/
 
 	setSettingString(key: string, value: string) {
         // Set a specific setting
 		//console.log(`new value for ${key} is ${value}`)
 		const valueEncrypted = encryptString(value)
         this.settings[key] = valueEncrypted;
-        this.settings[key] = value;
+        //this.settings[key] = value;
         this.saveSettings();
 	}
+
 
 	setSettingNumber(key: string, value: number) {
         // Set a specific setting
 		//console.log(`new value for ${key} is ${value}`)
 		const valueEncrypted = encryptNumber(value)
         this.settings[key] = valueEncrypted;
-        this.settings[key] = value;
+        //this.settings[key] = value;
         this.saveSettings();
     }
 
@@ -473,7 +477,7 @@ export default class gamification extends Plugin {
 			
 			
 			
-			this.setSetting('counterMajurityCalc',this.getSettingNumber('counterMajurityCalc') + 1)
+			this.setSettingNumber('counterMajurityCalc',this.getSettingNumber('counterMajurityCalc') + 1)
 			
 			
 			try {
@@ -492,7 +496,7 @@ export default class gamification extends Plugin {
 							pointsReceived += pointsToReceived;
 							this.decisionIfBadge(newLevel);
 							detectIfNoteIsFirstTimeRated = true;
-							this.setSetting('counterMajurityCalcInitial',this.getSettingNumber('counterMajurityCalcInitial') + 1)
+							this.setSettingNumber('counterMajurityCalcInitial',this.getSettingNumber('counterMajurityCalcInitial') + 1)
 							if(this.getSettingNumber('counterMajurityCalcInitial') == 50){
 								new ModalInformationbox(this.app, `🚀 Introducing Boosters! 🚀Level up faster, you enabled the next stage! Craft Boosters for an accelerated knowledge journey. Click the "test-tube" on the right or type 'Open Booster Palette' to get started! you got one booster as a gift, so try it out!🌟📚🔍`).open();
 							}
@@ -1215,12 +1219,12 @@ export default class gamification extends Plugin {
 			for (let i=1;i<=randomAmount;i++){
 				const randomIngredientIndex = this.getRandomInt(0, listOfUseableIngredientsToBeShown.length-1);
 				const earnedIngredient = elements[randomIngredientIndex];
-				let elementCount = this.getSetting(earnedIngredient.varName);
+				let elementCount = this.getSettingNumber(earnedIngredient.varName);
 				earnedIngredientToShow.push(earnedIngredient.name);
 
 				// Perform a null check
 				if (elementCount !== null && typeof elementCount === 'number') {
-					this.setSetting(earnedIngredient.varName, elementCount + 1);
+					this.setSettingNumber(earnedIngredient.varName, elementCount + 1);
 					this.saveSettings();
 					
 				} else {
