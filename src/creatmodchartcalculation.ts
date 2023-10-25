@@ -75,7 +75,6 @@ export function createChartFormat(y_axis: string, countsStringMod: string, chart
 		monatsbegrenzung = countsStringMod.split(',').length - chartReduzierungMonate
 	}
 	
-	//const monatsbegrenzung = lengthcountsStringCreate - this.settings.chartReduzierungMonate
 	return "```chart\ntype: bar\nlabels: [" + y_axis + "]\nseries:\n  - title: modified\n    data: [" + countsStringMod + "]\ntension: 0.2\nwidth: 80 %\nlabelColors: false\nfill: false\nbeginAtZero: false\nbestFit: false\nbestFitTitle: undefined\nbestFitNumber: 0\nstacked: true\nyTitle: \"Number of Notes\"\nxTitle: \"Months\"\nxMin: " + monatsbegrenzung + "\n```";
 }
 

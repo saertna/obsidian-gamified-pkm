@@ -84,6 +84,7 @@ export default class gamification extends Plugin {
 		// return this.settings[key];
 		return decryptNumber(this.settings[key] !== undefined ? this.settings[key].toString() : '');
     }
+
 	getSettingBoolean(key: string) {
         // Retrieve a specific setting
 		// return this.settings[key];
@@ -98,6 +99,15 @@ export default class gamification extends Plugin {
         this.saveSettings();
     }
 
+	setSettingString(key: string, value: string) {
+        // Set a specific setting
+		//console.log(`new value for ${key} is ${value}`)
+		const valueEncrypted = encryptString(value)
+        this.settings[key] = valueEncrypted;
+        this.settings[key] = value;
+        this.saveSettings();
+	}
+
 	setSettingNumber(key: string, value: number) {
         // Set a specific setting
 		//console.log(`new value for ${key} is ${value}`)
@@ -106,7 +116,6 @@ export default class gamification extends Plugin {
         this.settings[key] = value;
         this.saveSettings();
     }
-
 
 	setSettingBoolean(key: string, value: boolean) {
         // Set a specific setting
@@ -117,15 +126,7 @@ export default class gamification extends Plugin {
 	}
 
 
-	setSettingString(key: string, value: string) {
-        // Set a specific setting
-		//console.log(`new value for ${key} is ${value}`)
-		const valueEncrypted = encryptString(value)
-        this.settings[key] = valueEncrypted;
-        this.settings[key] = value;
-        this.saveSettings();
-	}
-
+	
 
 	
 	async onload() {
@@ -157,51 +158,15 @@ export default class gamification extends Plugin {
 		await this.updateStatusBar(this.statusbarGamification)
 
 
-		if (this.settings.debug){
+		if (this.getSettingBoolean('debug')){
 			this.addRibbonIcon("accessibility", "crafting", async () => {
-
-				// const pointsReceived = 500;
-				// new ModalInformationbox(this.app, `Finalized gamification initialization!\nCongratulation, you earned ${pointsReceived} Points!\n\nCheck the Profile Page: \"${this.settings.avatarPageName}.md\".`).open();
-
-				// const newLevel = this.giveStatusPoints(this.settings.avatarPageName, 300)
-				// this.decisionIfBadge(newLevel)
-
-				// const nextBadgeLevel = await this.whichLevelNextBadge(this.settings.statusLevel)
-				// console.log(`Nächste Badge mit Level ${nextBadgeLevel}`)
-
-
-				// const initBadge : Badge = await getBadgeForInitLevel(this.settings.statusLevel);
-				// await this.giveInitBadgeInProfile(this.settings.avatarPageName, initBadge);
-				// await this.removeBadgesWhenInitLevelHigher(this.settings.avatarPageName ,this.settings.statusLevel)
-				// await this.boosterForInit()
-
-				// this.openAvatarFile()
-
-
-				// change text in status bar
-
-				// this.updateStatusBar(statusbarGamification)
-				//statusbarGamification.setText("Hallo")
-
-
-				//await this.loadSettings();
-				//await this.updateAvatarPage(this.settings.avatarPageName);
-
-				//this.loadSettings()
-				//await this.resetDailyGoals()
-				//await this.updateStatusBar(this.statusbarGamification)
-
-
-				//new ModalBooster(this.app, ` `, this).open();
 
 				this.acquireIngredients();
 				
-				
-
 			});
 		}
 
-		if(this.settings.counterMajurityCalcInitial >= 50){
+		if(this.getSettingNumber('counterMajurityCalcInitial') >= 50){
 			this.addRibbonIcon("test-tube-2", "Boosters", async () => {
 				//const file: TFile | null = this.app.workspace.getActiveFile();
 				new ModalBooster(this.app, ` `, this).open();
@@ -223,7 +188,7 @@ export default class gamification extends Plugin {
 
 
 
-		if (this.settings.enableInitCommand){
+		if (this.getSettingBoolean('enableInitCommand')){
 			// command Initialize gamification ratings
 			this.addCommand({
 				id: 'init-rate-gamification',
@@ -234,22 +199,22 @@ export default class gamification extends Plugin {
 			});
 		}
 
-		if (this.settings.enableInitCommand){
+		if (this.getSettingBoolean('enableInitCommand')){
 			// command create avatar profile page
 			this.addCommand({
 				id: 'create-avatar-page',
 				name: 'create profile page',
 				callback: async () => {
 					const { vault } = this.app;
-					await createAvatarFile(this.app, this.settings.avatarPageName)
+					await createAvatarFile(this.app, this.getSettingString('avatarPageName'))
 					const chartString = await this.createChart(vault)
-					await replaceChartContent(this.settings.avatarPageName, chartString)
+					await replaceChartContent(this.getSettingString('avatarPageName'), chartString)
 				},
 			});
 		}
 
 
-		if (this.settings.enableInitCommand) {
+		if (this.getSettingBoolean('enableInitCommand')) {
 			// command: reset game
 			this.addCommand({
 				id: 'reset-game',
@@ -268,7 +233,7 @@ export default class gamification extends Plugin {
 			callback: async () => {
 				const { vault } = app;
 				const chartString = await this.createChart(vault)
-				await replaceChartContent(this.settings.avatarPageName, chartString)
+				await replaceChartContent(this.getSettingString('avatarPageName'), chartString)
 			},
 		});
 
@@ -288,7 +253,7 @@ export default class gamification extends Plugin {
 			id: 'change-progressive-formatting',
 			name: 'toggle progressive summarization formatting',
 			callback: async () => {
-				await replaceFormatStrings(this.settings.progressiveSumLayer2, this.settings.progressiveSumLayer3);
+				await replaceFormatStrings(this.getSettingString('progressiveSumLayer2'), this.getSettingString('progressiveSumLayer3'));
 			},
 		});
 
@@ -297,28 +262,28 @@ export default class gamification extends Plugin {
 
     private async resetGame() {
         await this.removeKeysFromFrontmatter();
-        this.settings.statusLevel = 1;
-        this.settings.statusPoints = 0;
-        this.settings.xpForNextLevel = 1000
-        this.settings.badgeBoosterState = false
-        this.settings.badgeBoosterFactor = 1
-        await this.saveData(this.settings);
+        this.setSettingNumber('statusLevel', 1)
+        this.setSettingNumber('statusPoints', 0)
+        this.setSettingNumber('xpForNextLevel', 1000)
+        this.setSettingBoolean('badgeBoosterState', false)
+        this.setSettingNumber('badgeBoosterFactor', 1)
+        //await this.saveData(this.settings);
         await this.giveStatusPoints(0,'')
         await this.updateStatusBar(this.statusbarGamification)
-        new ModalInformationbox(this.app, `Game is now reseted. Please delete the Profile Page: "${this.settings.avatarPageName}.md" manually.`).open();
+        new ModalInformationbox(this.app, `Game is now reseted. Please delete the Profile Page: "${this.getSettingString('avatarPageName')}.md" manually.`).open();
     }
 
 
     private async initializeGame(statusbarGamification: HTMLSpanElement) {
-		this.settings.gamificationStartDate = format(new Date(), 'yyyy-MM-dd');
+		this.setSettingString('gamificationStartDate', format(new Date(), 'yyyy-MM-dd'));
 		await this.saveSettings();
 
 		const {vault} = this.app;
-		await createAvatarFile(this.app, this.settings.avatarPageName)
+		await createAvatarFile(this.app, this.getSettingString('avatarPageName'))
 		const chartString = await this.createChart(vault)
-		await replaceChartContent(this.settings.avatarPageName, chartString)
+		await replaceChartContent(this.getSettingString('avatarPageName'), chartString)
 		await this.openAvatarFile()
-		const fileCountMap: TFile[] = await getFileMap(this.app, this.settings.tagsExclude, this.settings.folderExclude);
+		const fileCountMap: TFile[] = await getFileMap(this.app, this.getSettingString('tagsExclude'), this.getSettingString('folderExclude'));
 		console.log(`fileCountMap loaded. Number of files: ${fileCountMap.length}`);
 
 		let pointsReceived = 0; // to have one message at the end how many points received
@@ -338,7 +303,7 @@ export default class gamification extends Plugin {
 				charCount,
 				highlightedCount,
 				boldCount
-			} = countLayer2AndLayer3Characters(fileContents, fileName.basename, this.settings.progressiveSumLayer2, this.settings.progressiveSumLayer3);
+			} = countLayer2AndLayer3Characters(fileContents, fileName.basename, this.getSettingString('progressiveSumLayer2'), this.getSettingString('progressiveSumLayer3'));
 			const rateProgressiveSum: number = rateProgressiveSummarization(charCount, highlightedCount, boldCount);
 			const fileNameRate = rateLengthFilename(file.name);
 			const inlinkNumber = count_inlinks(file);
@@ -430,16 +395,16 @@ export default class gamification extends Plugin {
 		// Inside your function where you want to introduce a delay
 		setTimeout(async () => {
 			// Code that you want to execute after the delay
-			const initBadge: Badge = getBadgeForInitLevel(this.settings.statusLevel);
+			const initBadge: Badge = getBadgeForInitLevel(this.getSettingNumber('statusLevel'));
 			new Notice(`You've earned the "${initBadge.name}" badge. ${initBadge.description}`,5000)
 			console.log(`You earned ${initBadge.name} - ${initBadge.description}`)
-			await this.giveInitBadgeInProfile(this.settings.avatarPageName, initBadge);
-			await this.removeBadgesWhenInitLevelHigher(this.settings.avatarPageName, this.settings.statusLevel)
+			await this.giveInitBadgeInProfile(this.getSettingString('avatarPageName'), initBadge);
+			await this.removeBadgesWhenInitLevelHigher(this.getSettingString('avatarPageName'), this.getSettingNumber('statusLevel'))
 			await this.boosterForInit()
 			await this.updateStatusBar(statusbarGamification)
 		}, 2000); // 2000 milliseconds = 2 seconds
 
-		new ModalInformationbox(this.app, `Finallized gamification initialistation!\nCongratulation, you earned ${pointsReceived} Points!\n\nCheck the Profile Page: "${this.settings.avatarPageName}.md"\n\nYou received an initialisation Booster aktiv for your first level ups. Game on!`).open();
+		new ModalInformationbox(this.app, `Finallized gamification initialistation!\nCongratulation, you earned ${pointsReceived} Points!\n\nCheck the Profile Page: "${this.getSettingString('avatarPageName')}.md"\n\nYou received an initialisation Booster aktiv for your first level ups. Game on!`).open();
 	}
 
 
@@ -488,7 +453,7 @@ export default class gamification extends Plugin {
 
 			// Check if fileContents and fileName are not null
 			if (fileContents !== null && fileName !== null) {
-				const { charCount, highlightedCount, boldCount } = countLayer2AndLayer3Characters(fileContents, fileName, this.settings.progressiveSumLayer2, this.settings.progressiveSumLayer3);
+				const { charCount, highlightedCount, boldCount } = countLayer2AndLayer3Characters(fileContents, fileName, this.getSettingString('progressiveSumLayer2'), this.getSettingString('progressiveSumLayer3'));
 				rateProgressiveSum = rateProgressiveSummarization(charCount, highlightedCount, boldCount);
 			}
 		}
@@ -508,7 +473,7 @@ export default class gamification extends Plugin {
 			
 			
 			
-			this.setSetting('counterMajurityCalc',this.settings.counterMajurityCalc + 1)
+			this.setSetting('counterMajurityCalc',this.getSettingNumber('counterMajurityCalc') + 1)
 			
 			
 			try {
@@ -527,8 +492,8 @@ export default class gamification extends Plugin {
 							pointsReceived += pointsToReceived;
 							this.decisionIfBadge(newLevel);
 							detectIfNoteIsFirstTimeRated = true;
-							this.setSetting('counterMajurityCalcInitial',this.settings.counterMajurityCalcInitial + 1)
-							if(this.settings.counterMajurityCalcInitial == 50){
+							this.setSetting('counterMajurityCalcInitial',this.getSettingNumber('counterMajurityCalcInitial') + 1)
+							if(this.getSettingNumber('counterMajurityCalcInitial') == 50){
 								new ModalInformationbox(this.app, `🚀 Introducing Boosters! 🚀Level up faster, you enabled the next stage! Craft Boosters for an accelerated knowledge journey. Click the "test-tube" on the right or type 'Open Booster Palette' to get started! you got one booster as a gift, so try it out!🌟📚🔍`).open();
 							}
 						}
@@ -611,7 +576,6 @@ export default class gamification extends Plugin {
 			}
 			new Notice('note majurity updated!');
 			console.log('note majurity updated!')
-			//await this.updateAvatarPage(this.settings.avatarPageName)
 			await this.updateStatusBar(this.statusbarGamification)
 		} else {
 			console.error('file was not found to calculate majurities. Make sure one is active.')
@@ -625,70 +589,68 @@ export default class gamification extends Plugin {
 
 	async resetDailyGoals(){
 		let reset = false;
-		if(!isSameDay(window.moment(this.settings.dailyNoteCreationDate, 'DD.MM.YYYY'))){
-			this.settings.dailyNoteCreationTask = 0;
-			this.settings.dailyNoteCreationDate = window.moment().format('DD.MM.YYYY')
+		if(!isSameDay(window.moment(this.getSettingString('dailyNoteCreationDate'), 'DD.MM.YYYY'))){
+			this.setSettingNumber('dailyNoteCreationTask', 0);
+			this.setSettingString('dailyNoteCreationDate', window.moment().format('DD.MM.YYYY'))
 			await this.saveSettings();
 			console.log(`daily Challenge reseted`)
 			reset = true;
 		}
-		if(!isOneDayBefore(window.moment(this.settings.weeklyNoteCreationDate, 'DD.MM.YYYY')) && !isSameDay(window.moment(this.settings.weeklyNoteCreationDate, 'DD.MM.YYYY'))){
-			const daysPassed = window.moment().diff(window.moment(this.settings.weeklyNoteCreationDate, 'DD.MM.YYYY'), 'days') - 1; //today is still a chance. 
-			this.settings.weeklyNoteCreationTask = 0;
-			this.settings.weeklyNoteCreationDate = window.moment().subtract(1, 'day').format('DD.MM.YYYY')
+		if(!isOneDayBefore(window.moment(this.getSettingString('weeklyNoteCreationDate'), 'DD.MM.YYYY')) && !isSameDay(window.moment(this.getSettingString('weeklyNoteCreationDate'), 'DD.MM.YYYY'))){
+			const daysPassed = window.moment().diff(window.moment(this.getSettingString('weeklyNoteCreationDate'), 'DD.MM.YYYY'), 'days') - 1; //today is still a chance. 
+			this.setSettingNumber('weeklyNoteCreationTask', 0);
+			this.setSettingString('weeklyNoteCreationDate',window.moment().subtract(1, 'day').format('DD.MM.YYYY'))
 			this.decreaseStreakbooster(daysPassed)
 			console.log(`${daysPassed} days passed`)
-			//this.settings.streakboosterDate = window.moment().subtract(1, 'day').format('DD.MM.YYYY')
 			await this.saveSettings();
 			await this.updateStatusBar(this.statusbarGamification)
 			console.log(`weekly Challenge reseted`)
 			reset = true;
 		}
-		if(isOneDayBefore(window.moment(this.settings.weeklyNoteCreationDate, 'DD.MM.YYYY')) && this.settings.weeklyNoteCreationTask == 7){
-			this.settings.weeklyNoteCreationTask = 0;
-			this.settings.weeklyNoteCreationDate = window.moment().subtract(1, 'day').format('DD.MM.YYYY')
+		if(isOneDayBefore(window.moment(this.getSettingString('weeklyNoteCreationDate'), 'DD.MM.YYYY')) && this.getSettingNumber('weeklyNoteCreationTask') == 7){
+			this.setSettingNumber('weeklyNoteCreationTask', 0);
+			this.setSettingString('weeklyNoteCreationDate', window.moment().subtract(1, 'day').format('DD.MM.YYYY'))
 			await this.saveSettings();
 			reset = true;
 		}
 		if (reset){
-			//this.dailyChallengeUpdateProfile(this.settings.avatarPageName, 0)
-			await this.updateAvatarPage(this.settings.avatarPageName);
+			await this.updateAvatarPage(this.getSettingString('avatarPageName'));
 		}
 
 		// deativate boosters
-		if (this.settings.boosterFactorPerpetualProgress == true && isMinutesPassed(window.moment(this.settings.boosterDatePerpetualProgress, 'YYYY-MM-DD HH:mm:ss'),getBoosterRunTimeFromVarName('perpetualProgress'))){
+		if (this.getSettingBoolean('boosterFactorPerpetualProgress') == true && isMinutesPassed(window.moment(this.getSettingString('boosterDatePerpetualProgress'), 'YYYY-MM-DD HH:mm:ss'),getBoosterRunTimeFromVarName('perpetualProgress'))){
 			this.setSettingBoolean('boosterFactorPerpetualProgress',false);
 			console.log('"Perpetual Progress" has ended.')
 		}
-		if (this.settings.boosterFactorStrategicSynapses == true && isMinutesPassed(window.moment(this.settings.boosterDateStrategicSynapses, 'YYYY-MM-DD HH:mm:ss'),getBoosterRunTimeFromVarName('strategicSynapses'))){
+		if (this.getSettingBoolean('boosterFactorStrategicSynapses') == true && isMinutesPassed(window.moment(this.getSettingString('boosterDateStrategicSynapses'), 'YYYY-MM-DD HH:mm:ss'),getBoosterRunTimeFromVarName('strategicSynapses'))){
 			this.setSettingBoolean('boosterFactorStrategicSynapses',false);
 			console.log('"Strategic Synapses" has ended.')
 		}
-		if (this.settings.boosterFactorLinkersLode == true && isMinutesPassed(window.moment(this.settings.boosterDateLinkersLode, 'YYYY-MM-DD HH:mm:ss'),getBoosterRunTimeFromVarName('linkersLode'))){
+		if (this.getSettingBoolean('boosterFactorLinkersLode') == true && isMinutesPassed(window.moment(this.getSettingString('boosterDateLinkersLode'), 'YYYY-MM-DD HH:mm:ss'),getBoosterRunTimeFromVarName('linkersLode'))){
 			this.setSettingBoolean('boosterFactorLinkersLode',false);
 			console.log('"Linkers Lode" has ended.')
 		}
-		if (this.settings.boosterFactorRecursiveReflection == true && isMinutesPassed(window.moment(this.settings.boosterDateRecursiveReflection, 'YYYY-MM-DD HH:mm:ss'),getBoosterRunTimeFromVarName('recursiveReflection'))){
+		if (this.getSettingBoolean('boosterFactorRecursiveReflection') == true && isMinutesPassed(window.moment(this.getSettingString('boosterDateRecursiveReflection'), 'YYYY-MM-DD HH:mm:ss'),getBoosterRunTimeFromVarName('recursiveReflection'))){
 			this.setSettingBoolean('boosterFactorRecursiveReflection',false);
 			console.log('"Recursive Reflection" has ended.')
 		}
-		if (this.settings.boosterFactorSynapticSurge == true && isMinutesPassed(window.moment(this.settings.boosterDateSynapticSurge, 'YYYY-MM-DD HH:mm:ss'),getBoosterRunTimeFromVarName('synapticSurge'))){
+		if (this.getSettingBoolean('boosterFactorSynapticSurge') == true && isMinutesPassed(window.moment(this.getSettingString('boosterDateSynapticSurge'), 'YYYY-MM-DD HH:mm:ss'),getBoosterRunTimeFromVarName('synapticSurge'))){
 			this.setSettingBoolean('boosterFactorSynapticSurge',false);
 			console.log('"Synaptic Surge" has ended.')
 		}
-		if (this.settings.boosterFactorTitleTitan == true && isMinutesPassed(window.moment(this.settings.boosterDateTitleTitan, 'YYYY-MM-DD HH:mm:ss'),getBoosterRunTimeFromVarName('titleTitan'))){
+		if (this.getSettingBoolean('boosterFactorTitleTitan') == true && isMinutesPassed(window.moment(this.getSettingString('boosterDateTitleTitan'), 'YYYY-MM-DD HH:mm:ss'),getBoosterRunTimeFromVarName('titleTitan'))){
 			this.setSettingBoolean('boosterFactorTitleTitan',false);
 			console.log('"Title Titan" has ended.')
 		}
-		if (this.settings.boosterFactorPrecisionPrism == true && isMinutesPassed(window.moment(this.settings.boosterDatePrecisionPrism, 'YYYY-MM-DD HH:mm:ss'),getBoosterRunTimeFromVarName('precisionPrism'))){
+		if (this.getSettingBoolean('boosterFactorPrecisionPrism') == true && isMinutesPassed(window.moment(this.getSettingString('boosterDatePrecisionPrism'), 'YYYY-MM-DD HH:mm:ss'),getBoosterRunTimeFromVarName('precisionPrism'))){
 			this.setSettingBoolean('boosterFactorPrecisionPrism',false);
 			console.log('"Precision Prism" has ended.')
 		}
-		if (this.settings.boosterFactorHyperlinkHarmony == true && isMinutesPassed(window.moment(this.settings.boosterDateHyperlinkHarmony, 'YYYY-MM-DD HH:mm:ss'),getBoosterRunTimeFromVarName('hyperlinkHarmony'))){
+		if (this.getSettingBoolean('boosterFactorHyperlinkHarmony') == true && isMinutesPassed(window.moment(this.getSettingString('boosterDateHyperlinkHarmony'), 'YYYY-MM-DD HH:mm:ss'),getBoosterRunTimeFromVarName('hyperlinkHarmony'))){
 			this.setSettingBoolean('boosterFactorHyperlinkHarmony',false);
 			console.log('"Hyperlink Harmony" has ended.')
 		}
-		if (this.settings.boosterFactorEphemeralEuphoria == true && isMinutesPassed(window.moment(this.settings.boosterDateEphemeralEuphoria, 'YYYY-MM-DD HH:mm:ss'),getBoosterRunTimeFromVarName('ephemeralEuphoria'))){
+		if (this.getSettingBoolean('boosterFactorEphemeralEuphoria') == true && isMinutesPassed(window.moment(this.getSettingString('boosterDateEphemeralEuphoria'), 'YYYY-MM-DD HH:mm:ss'),getBoosterRunTimeFromVarName('ephemeralEuphoria'))){
 			this.setSettingBoolean('boosterFactorEphemeralEuphoria',false);
 			console.log('"Ephemeral Euphoria" has ended.')
 		}
@@ -697,23 +659,22 @@ export default class gamification extends Plugin {
 
 
 	async increaseDailyCreatedNoteCount(){
-		let newDailyNoteCreationTask = this.settings.dailyNoteCreationTask;
+		let newDailyNoteCreationTask = this.getSettingNumber('dailyNoteCreationTask');
         if (newDailyNoteCreationTask < 2){
 			newDailyNoteCreationTask ++;
-			this.settings.dailyNoteCreationTask = newDailyNoteCreationTask;
+			this.setSettingNumber('dailyNoteCreationTask', newDailyNoteCreationTask);
 			await this.saveSettings();
 
 			if(newDailyNoteCreationTask == 1){
 				// update Avatar Page
-				await this.updateAvatarPage(this.settings.avatarPageName);
+				await this.updateAvatarPage(this.getSettingString('avatarPageName'));
 				console.log(`${newDailyNoteCreationTask}/2 Notes created today.`)
 			} else if (newDailyNoteCreationTask == 2) {
 				this.increaseStreakbooster(streakboosterIncreaseDaily)
-				//this.settings.streakboosterDate = window.moment().format('DD.MM.YYYY');
 				await this.saveSettings();
 				await this.updateStatusBar(this.statusbarGamification)
 				await this.giveStatusPoints(pointsForDailyChallenge,'formIncreaseDailyCreatedNoteCount')
-				const message = getRandomMessageTwoNoteChallenge(pointsForDailyChallenge * (this.settings.badgeBoosterFactor + this.settings.streakbooster));
+				const message = getRandomMessageTwoNoteChallenge(pointsForDailyChallenge * (this.getSettingNumber('badgeBoosterFactor') + this.getSettingNumber('streakbooster')));
 				console.log(`daily Challenge reached! ${newDailyNoteCreationTask}/2 created.`)
 				new Notice(message,4000)
 				console.log(message)
@@ -726,25 +687,25 @@ export default class gamification extends Plugin {
 
 
 	async increaseWeeklyCreatedNoteCount(){
-		if(isOneDayBefore(window.moment(this.settings.weeklyNoteCreationDate, 'DD.MM.YYYY'))){
+		if(isOneDayBefore(window.moment(this.getSettingString('weeklyNoteCreationDate'), 'DD.MM.YYYY'))){
 			await this.checkForWeeklyNoteChallengeBelow7();
-		} else if (isSameDay(window.moment(this.settings.weeklyNoteCreationDate, 'DD.MM.YYYY'))){
+		} else if (isSameDay(window.moment(this.getSettingString('weeklyNoteCreationDate'), 'DD.MM.YYYY'))){
 			// do nothing
 			console.log(`daily note creation was rated already today.`)
 		} else {
-			this.settings.weeklyNoteCreationDate = window.moment().format('DD.MM.YYYY')
-			this.settings.weeklyNoteCreationTask = 1;
+			this.setSettingString('weeklyNoteCreationDate', window.moment().format('DD.MM.YYYY'))
+			this.setSettingNumber('weeklyNoteCreationTask', 1);
 			await this.saveSettings();
 		}
 	}
 
 
 	private async checkForWeeklyNoteChallengeBelow7() {
-		let currentWeeklyCreatedNotes = this.settings.weeklyNoteCreationTask;
+		let currentWeeklyCreatedNotes = this.getSettingNumber('weeklyNoteCreationTask');
 		if (currentWeeklyCreatedNotes < 7) {
 			currentWeeklyCreatedNotes++;
-			this.settings.weeklyNoteCreationDate = window.moment().format('DD.MM.YYYY')
-			this.settings.weeklyNoteCreationTask = currentWeeklyCreatedNotes;
+			this.setSettingString('weeklyNoteCreationDate', window.moment().format('DD.MM.YYYY'))
+			this.setSettingNumber('weeklyNoteCreationTask', currentWeeklyCreatedNotes);
 			await this.saveSettings();
 
 			await this.checkForWeeklyNoteChallengeEvaluation(currentWeeklyCreatedNotes);
@@ -755,15 +716,14 @@ export default class gamification extends Plugin {
 	private async checkForWeeklyNoteChallengeEvaluation(newWeeklyNoteCreationTask: number) {
 		if (newWeeklyNoteCreationTask <= 6) {
 			// update Avatar Page
-			await this.updateAvatarPage(this.settings.avatarPageName);
+			await this.updateAvatarPage(this.getSettingString('avatarPageName'));
 			console.log(`${newWeeklyNoteCreationTask}/7 Notes created in a chain.`)
 		} else if (newWeeklyNoteCreationTask == 7) {
 			this.increaseStreakbooster(streakboosterIncreaseWeekly);
-			//this.settings.streakboosterDate = window.moment().format('DD.MM.YYYY');
 			await this.saveSettings();
 			await this.giveStatusPoints(pointsForWeeklyChallenge, 'fromCheckForWeeklyNoteChallengeEvaluation')
 			console.log(`Weekly Challenge reached! ${newWeeklyNoteCreationTask}/7 created in a chain.`)
-			const message = getRandomMessageWeeklyChallenge(pointsForWeeklyChallenge * (this.settings.badgeBoosterFactor + this.settings.streakbooster));
+			const message = getRandomMessageWeeklyChallenge(pointsForWeeklyChallenge * (this.getSettingNumber('badgeBoosterFactor') + this.getSettingNumber('streakbooster')));
 			new Notice(message,4000)
 			console.log(message)
 		} else {
@@ -774,24 +734,18 @@ export default class gamification extends Plugin {
 
 
 	async updateStatusBar(statusbar: HTMLSpanElement){
-		const currentLevel = getLevelForPoints(this.settings.statusPoints)
-		const progressbarPercent = (this.settings.statusPoints - currentLevel.points)/(currentLevel.pointsNext - currentLevel.points)*100;
+		const currentLevel = getLevelForPoints(this.getSettingNumber('statusPoints'))
+		const progressbarPercent = (this.getSettingNumber('statusPoints') - currentLevel.points)/(currentLevel.pointsNext - currentLevel.points)*100;
 		const charNumProgressbar = 10;
 		const barLength = Math.round(progressbarPercent / charNumProgressbar)
-		const boosterFactor = this.settings.streakbooster
-		statusbar.setText(`🎲|lvl: ${this.settings.statusLevel} | ${this.createProgressbar(charNumProgressbar, barLength)}|🚀${boosterFactor}${this.rateBoosterDirection()}`)
+		const boosterFactor = this.getSettingNumber('streakbooster')
+		statusbar.setText(`🎲|lvl: ${this.getSettingNumber('statusLevel')} | ${this.createProgressbar(charNumProgressbar, barLength)}|🚀${boosterFactor}${this.rateBoosterDirection()}`)
 	}
 
 
 	private rateBoosterDirection(){
 		let direction = '⬆️'
-		/*const oneDayBeforeCurrent = window.moment().subtract(1, 'day'); // Calculate one day before current date
-		if(window.moment(this.settings.weeklyNoteCreationDate, 'DD.MM.YYYY').isSame(oneDayBeforeCurrent, 'day')){
-			direction = '⬆️'
-		} else {
-			direction = '⬇️'
-		}*/
-		if(this.settings.streakboosterDate){
+		if(this.getSettingBoolean('streakboosterDate')){
 			direction = '⬆️';
 		} else {
 			direction = '⬇️';
@@ -825,7 +779,7 @@ export default class gamification extends Plugin {
 
 	async giveStatusPoints(pointsToAdd: number, caller: string): Promise<boolean>{
 		let boosterFactor = 1;
-		let streakbooster = this.settings.streakbooster;
+		let streakbooster = this.getSettingNumber('streakbooster');
 		let boosterFactorPerpetualProgress = 0;
 		let boosterFactorStrategicSynapses = 0;
 		let boosterFactorLinkersLode = 0;
@@ -836,65 +790,65 @@ export default class gamification extends Plugin {
 		let boosterFactorHyperlinkHarmony = 0;
 		let boosterFactorEphemeralEuphoria = 0;
 		
-		if (this.settings.badgeBoosterState){
-			boosterFactor = this.settings.badgeBoosterFactor;
+		if (this.getSettingBoolean('badgeBoosterState')){
+			boosterFactor = this.getSettingNumber('badgeBoosterFactor');
 		}
-		if (this.settings.boosterFactorPerpetualProgress){
+		if (this.getSettingBoolean('boosterFactorPerpetualProgress')){
 			boosterFactorPerpetualProgress = 3;
 		}
-		if (this.settings.boosterFactorStrategicSynapses){
+		if (this.getSettingBoolean('boosterFactorStrategicSynapses')){
 			boosterFactorStrategicSynapses = 3;
 		}
-		if (this.settings.boosterFactorLinkersLode){
+		if (this.getSettingBoolean('boosterFactorLinkersLode')){
 			boosterFactorLinkersLode = 10;
 		}
-		if (this.settings.boosterFactorRecursiveReflection && ( caller == 'fromNoteMajurity' || caller == 'fromTitleClass' || caller == 'fromNoteLengthClass' || caller == 'fromInlinkClass' || caller == 'fromOutlinkClass' || caller == 'fromProgressiveTummarizationMaturity')){
+		if (this.getSettingBoolean('boosterFactorRecursiveReflection') && ( caller == 'fromNoteMajurity' || caller == 'fromTitleClass' || caller == 'fromNoteLengthClass' || caller == 'fromInlinkClass' || caller == 'fromOutlinkClass' || caller == 'fromProgressiveTummarizationMaturity')){
 			boosterFactorRecursiveReflection = 5;
 		}
-		if (this.settings.boosterFactorSynapticSurge && (caller == 'fromInlinkClass' || caller == 'fromOutlinkClass')){
+		if (this.getSettingBoolean('boosterFactorSynapticSurge') && (caller == 'fromInlinkClass' || caller == 'fromOutlinkClass')){
 			boosterFactorSynapticSurge = 20;
 		}
-		if (this.settings.boosterFactorTitleTitan && caller == 'fromTitleClass'){
+		if (this.getSettingBoolean('boosterFactorTitleTitan') && caller == 'fromTitleClass'){
 			boosterFactorTitleTitan = 4;
 		}
-		if (this.settings.boosterFactorPrecisionPrism && caller == 'fromNoteLengthClass'){
+		if (this.getSettingBoolean('boosterFactorPrecisionPrism') && caller == 'fromNoteLengthClass'){
 			boosterFactorPrecisionPrism = 4;
 		}
-		if (this.settings.boosterFactorHyperlinkHarmony && (caller == 'fromInlinkClass' || caller == 'fromOutlinkClass')){
+		if (this.getSettingBoolean('boosterFactorHyperlinkHarmony') && (caller == 'fromInlinkClass' || caller == 'fromOutlinkClass')){
 			boosterFactorHyperlinkHarmony = 5;
 		}
-		if (this.settings.boosterFactorEphemeralEuphoria){
+		if (this.getSettingBoolean('boosterFactorEphemeralEuphoria')){
 			boosterFactorEphemeralEuphoria = 80;
 		}
 		
 		pointsToReceived = pointsToAdd * (boosterFactor + streakbooster + boosterFactorPerpetualProgress + boosterFactorStrategicSynapses + boosterFactorLinkersLode + boosterFactorRecursiveReflection + boosterFactorSynapticSurge + boosterFactorTitleTitan + boosterFactorPrecisionPrism + boosterFactorHyperlinkHarmony + boosterFactorEphemeralEuphoria )
-		this.settings.statusPoints = pointsToReceived + this.settings.statusPoints
-		await this.saveData(this.settings)
+		this.setSettingNumber('statusPoints', pointsToReceived + this.getSettingNumber('statusPoints'))
+		//await this.saveData(this.settings)
 
-		return this.updateAvatarPage(this.settings.avatarPageName)
+		return this.updateAvatarPage(this.getSettingString('avatarPageName'))
 	}
 
 	async increaseStreakbooster(increaseValue:number){
-		let newBoosterFakfor = parseFloat((this.settings.streakbooster + increaseValue).toFixed(streakboosterIncreaseWeekly));
+		let newBoosterFakfor = parseFloat((this.getSettingNumber('streakbooster') + increaseValue).toFixed(streakboosterIncreaseWeekly));
 		if(newBoosterFakfor > 80){
 			newBoosterFakfor = 80;
 		}
-		this.settings.streakbooster = newBoosterFakfor;
-		this.settings.streakboosterDate = true;
-		await this.saveData(this.settings)
-		console.log(`streakbooster: ${this.settings.streakbooster}`)
+		this.setSettingNumber('streakbooster', newBoosterFakfor);
+		this.setSettingBoolean('streakboosterDate', true);
+		//await this.saveData(this.settings)
+		console.log(`streakbooster: ${this.getSettingNumber('streakbooster')}`)
 	}
 
 
 	async decreaseStreakbooster(decreaseValue:number){
-		let newBoosterFakfor = parseFloat((this.settings.streakbooster - decreaseValue).toFixed(streakboosterDecrease))
-		this.settings.streakbooster = newBoosterFakfor
+		let newBoosterFakfor = parseFloat((this.getSettingNumber('streakbooster') - decreaseValue).toFixed(streakboosterDecrease))
+		this.setSettingNumber('streakbooster', newBoosterFakfor)
 		if (newBoosterFakfor < 0){
 			newBoosterFakfor = 0
 		}
-		this.settings.streakbooster = newBoosterFakfor
-		this.settings.streakboosterDate = false;
-		await this.saveData(this.settings)
+		this.setSettingNumber('streakbooster', newBoosterFakfor)
+		this.setSettingBoolean('streakboosterDate', false);
+		//await this.saveData(this.settings)
 	}
 
 
@@ -906,7 +860,6 @@ export default class gamification extends Plugin {
 		}
 		const file = existingFile as TFile;
 
-		//console.log(`current statusPoints: ${this.settings.statusPoints}`)
 		const content = await app.vault.read(file);
 		let reference: number | null = null;
 		let reference2: number | null = null;
@@ -946,28 +899,28 @@ export default class gamification extends Plugin {
 			}
 		}
 		// read current Points from settings
-		const newPoints = this.settings.statusPoints
+		const newPoints = this.getSettingNumber('statusPoints')
 
 		const level = getLevelForPoints(newPoints);
-		let nextLevelAt = this.settings.xpForNextLevel;
+		let nextLevelAt = this.getSettingNumber('xpForNextLevel');
 		let receiveBadge = false
-		if (this.settings.statusLevel < level.level){
+		if (this.getSettingNumber('statusLevel') < level.level){
 			// Level Up archived
 			new Notice(`With ${newPoints} points, the current level is ${level.level}.`,5000)
 			// check first if this means a new badge before it gets overwritten
-			receiveBadge = checkIfReceiveABadge(this.settings.statusLevel, level.level)
-			this.settings.statusLevel = level.level;
+			receiveBadge = checkIfReceiveABadge(this.getSettingNumber('statusLevel'), level.level)
+			this.setSettingNumber('statusLevel', level.level);
 			nextLevelAt = level.pointsNext;
-			this.settings.xpForNextLevel = level.pointsNext;
-			await this.saveData(this.settings)
+			this.setSettingNumber('xpForNextLevel', level.pointsNext);
+			//await this.saveData(this.settings)
 		}
 
 		const progressBarEnd = nextLevelAt - newPoints;
 		const newPointsString = '| **Level**  | **' + level.level + '** |\n| Points | ' + newPoints + '    |\n^levelAndPoints\n```chart\ntype: bar\nlabels: [Expririence]\nseries:\n  - title: points reached\n    data: [' + newPoints + ']\n  - title: points to earn to level up\n    data: [' + progressBarEnd + ']\nxMin: ' + level.points + '\nxMax: ' + level.pointsNext + '\ntension: 0.2\nwidth: 40%\nlabelColors: false\nfill: false\nbeginAtZero: false\nbestFit: false\nbestFitTitle: undefined\nbestFitNumber: 0\nstacked: true\nindexAxis: y\nxTitle: "progress"\nlegend: false\n```'
-		const dailyChallenge = '| **daily Notes** | *' + pointsForDailyChallenge * (this.settings.badgeBoosterFactor + this.settings.streakbooster) + 'EP* | **' + this.settings.dailyNoteCreationTask + '/2**   |';
-		const daysLeftInWeeklyChain : number = 7 - this.settings.weeklyNoteCreationTask;
-		const weeklyChallenge = '| **weekly Notes** | *' + pointsForWeeklyChallenge * (this.settings.badgeBoosterFactor + this.settings.streakbooster) + 'EP*     |  **' + this.settings.weeklyNoteCreationTask + '/7**   |\n^weeklyNotesChallenge\n```chart\ntype: bar\nlabels: [days done in a row]\nseries:\n  - title: days to do in a row\n    data: [' + this.settings.weeklyNoteCreationTask + ']\n  - title: points to earn to level up\n    data: [' + daysLeftInWeeklyChain + ']\nxMin: 0\nxMax: 7\ntension: 0.2\nwidth: 40%\nlabelColors: false\nfill: false\nbeginAtZero: false\nbestFit: false\nbestFitTitle: undefined\nbestFitNumber: 0\nstacked: true\nindexAxis: y\nxTitle: "progress"\nlegend: false\n```';
-		const boosterFactor = '| **booster factor** | **' + this.settings.streakbooster + '** |'
+		const dailyChallenge = '| **daily Notes** | *' + pointsForDailyChallenge * (this.getSettingNumber('badgeBoosterFactor') + this.getSettingNumber('streakbooster')) + 'EP* | **' + this.getSettingNumber('dailyNoteCreationTask') + '/2**   |';
+		const daysLeftInWeeklyChain : number = 7 - this.getSettingNumber('weeklyNoteCreationTask');
+		const weeklyChallenge = '| **weekly Notes** | *' + pointsForWeeklyChallenge * (this.getSettingNumber('badgeBoosterFactor') + this.getSettingNumber('streakbooster')) + 'EP*     |  **' + this.getSettingNumber('weeklyNoteCreationTask') + '/7**   |\n^weeklyNotesChallenge\n```chart\ntype: bar\nlabels: [days done in a row]\nseries:\n  - title: days to do in a row\n    data: [' + this.getSettingNumber('weeklyNoteCreationTask') + ']\n  - title: points to earn to level up\n    data: [' + daysLeftInWeeklyChain + ']\nxMin: 0\nxMax: 7\ntension: 0.2\nwidth: 40%\nlabelColors: false\nfill: false\nbeginAtZero: false\nbestFit: false\nbestFitTitle: undefined\nbestFitNumber: 0\nstacked: true\nindexAxis: y\nxTitle: "progress"\nlegend: false\n```';
+		const boosterFactor = '| **booster factor** | **' + this.getSettingNumber('streakbooster') + '** |'
 
 		if (reference != null && reference2 != null && reference3 != null && reference4 != null){
 			start = reference - 2;
@@ -1157,19 +1110,19 @@ export default class gamification extends Plugin {
 		}
 		charStringModified = charStringModified.slice(0,charStringModified.length-2)
 
-		return createChartFormat(yLabel, charStringModified, this.settings.chartReduzierungMonate)
+		return createChartFormat(yLabel, charStringModified, this.getSettingNumber('chartReduzierungMonate'))
 	}
 
 	async decisionIfBadge(newLevel: Promise<boolean>){
 		newLevel.then((result: boolean)=> {
 			if(result){
-				const badge : Badge = getBadgeForLevel(this.settings.statusLevel, false)
+				const badge : Badge = getBadgeForLevel(this.getSettingNumber('statusLevel'), false)
 				new Notice(`You've earned the "${badge.name}" badge. ${badge.description}`,5000)
 				console.log(`You've earned the "${badge.name}" badge. ${badge.description}`)
-				this.giveBadgeInProfile(this.settings.avatarPageName, badge)
-				this.settings.badgeBoosterState = false;
-				this.settings.badgeBoosterFactor = 1;
-				this.saveData(this.settings)
+				this.giveBadgeInProfile(this.getSettingString('avatarPageName'), badge)
+				this.setSettingBoolean('badgeBoosterState', false);
+				this.setSettingNumber('badgeBoosterFactor', 1);
+				//this.saveData(this.settings)
 			}
 		});
 	}
@@ -1177,7 +1130,7 @@ export default class gamification extends Plugin {
 
 	async removeKeysFromFrontmatter() {
 		const { vault } = this.app
-		const fileCountMap = await getFileCountMap(this.app, this.settings.tagsExclude, this.settings.folderExclude);
+		const fileCountMap = await getFileCountMap(this.app, this.getSettingString('tagsExclude'), this.getSettingString('folderExclude'));
 		for (const fileName of fileCountMap.keys()) {
 			const files = vault.getFiles();
 			const file = files.find(file => file.basename === fileName);
@@ -1226,22 +1179,22 @@ export default class gamification extends Plugin {
 
 
 	async boosterForInit(): Promise<number> {
-		const nextBadgeAt = await this.whichLevelNextBadge(this.settings.statusLevel)
+		const nextBadgeAt = await this.whichLevelNextBadge(this.getSettingNumber('statusLevel'))
 		const statusPointsToReach = statusPointsForLevel(nextBadgeAt)
 		//console.log(`statusPointsToReach for next Badge: ${statusPointsToReach}`)
 		// 50 Notes from Level 1 to 5 to get the first badge.
 		// 300 Points in average for a Note.
-		const boosterFactor = Math.round((statusPointsToReach - this.settings.statusPoints)/50/300);
-		this.settings.badgeBoosterFactor = boosterFactor
-		this.settings.badgeBoosterState = true
-		await this.saveData(this.settings)
+		const boosterFactor = Math.round((statusPointsToReach - this.getSettingNumber('statusPoints'))/50/300);
+		this.setSettingNumber('badgeBoosterFactor', boosterFactor)
+		this.setSettingBoolean('badgeBoosterState', true)
+		//await this.saveData(this.settings)
 		//console.log(`boosterFaktor: ${boosterFactor}`)
 		return boosterFactor
 	}
 
 
 	async openAvatarFile() {
-		const existingFile = app.vault.getAbstractFileByPath(`${this.settings.avatarPageName}.md`);
+		const existingFile = app.vault.getAbstractFileByPath(`${this.getSettingString('avatarPageName')}.md`);
 		if (existingFile){
 			const sourcePath = this.app.workspace.getActiveFile()?.path || '';
 			await app.workspace.openLinkText(existingFile.path, sourcePath);
