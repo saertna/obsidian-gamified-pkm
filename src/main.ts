@@ -833,7 +833,7 @@ export default class gamification extends Plugin {
 	}
 
 	async increaseStreakbooster(increaseValue:number){
-		let newBoosterFakfor = parseFloat((this.getSettingNumber('streakbooster') + increaseValue).toFixed(streakboosterIncreaseWeekly));
+		let newBoosterFakfor = parseFloat((this.getSettingNumber('streakbooster') + increaseValue).toFixed(1));
 		if(newBoosterFakfor > 80){
 			newBoosterFakfor = 80;
 		}
@@ -845,7 +845,7 @@ export default class gamification extends Plugin {
 
 
 	async decreaseStreakbooster(decreaseValue:number){
-		let newBoosterFakfor = parseFloat((this.getSettingNumber('streakbooster') - decreaseValue).toFixed(streakboosterDecrease))
+		let newBoosterFakfor = parseFloat((this.getSettingNumber('streakbooster') - decreaseValue * streakboosterDecrease).toFixed(1))
 		this.setSettingNumber('streakbooster', newBoosterFakfor)
 		if (newBoosterFakfor < 0){
 			newBoosterFakfor = 0
