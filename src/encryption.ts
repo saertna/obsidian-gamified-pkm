@@ -24,7 +24,8 @@ export function encryptNumber(number: number) {
 // Function to decrypt an encrypted number
 export function decryptNumber(encryptedNumber: string) {
 	const bytes = CryptoJS.AES.decrypt(encryptedNumber, secretKey);
-	return parseInt(bytes.toString(CryptoJS.enc.Utf8));
+	//return parseInt(bytes.toString(CryptoJS.enc.Utf8));
+	return parseFloat(bytes.toString(CryptoJS.enc.Utf8));
 }
 // Function to encrypt a boolean
 export function encryptBoolean(booleanValue: boolean) {

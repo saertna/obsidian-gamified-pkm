@@ -837,11 +837,14 @@ export default class gamification extends Plugin {
 		if(newBoosterFakfor > 80){
 			newBoosterFakfor = 80;
 		}
+		console.log(`newBoosterFakfor: ${newBoosterFakfor}`)
+		console.log(`old value streakbooster: ${this.getSettingNumber('streakbooster')}`)
 		this.setSettingNumber('streakbooster', newBoosterFakfor);
 		this.setSettingBoolean('streakboosterDate', true);
+		console.log(`new value streakbooster: ${this.getSettingNumber('streakbooster')}`)
 		//await this.saveData(this.settings)
 		console.log(`streakbooster: ${this.getSettingNumber('streakbooster')}`)
-	}
+		}
 
 
 	async decreaseStreakbooster(decreaseValue:number){
