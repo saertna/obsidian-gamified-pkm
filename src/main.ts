@@ -76,22 +76,21 @@ export default class gamification extends Plugin {
     }*/
 
 	getSettingString(key: string) {
-        // Retrieve a specific setting
-		// return this.settings[key];
-		return decryptString(this.settings[key] !== undefined ? this.settings[key].toString() : '');
+        const decryptedValue = this.settings[key] !== undefined ? this.settings[key].toString() : ''
+		console.log(`String: decrypted ${key} is ${decryptedValue}`)
+		return decryptString(decryptedValue);
     }
 
 	getSettingNumber(key: string) {
-        // Retrieve a specific setting
-		// return this.settings[key];
-		//console.log(`key: ${key}`)
-		return decryptNumber(this.settings[key] !== undefined ? this.settings[key].toString() : '');
+        const decryptedValue = this.settings[key] !== undefined ? this.settings[key].toString() : ''
+		console.log(`Number: decrypted ${key} is ${decryptedValue}`)
+		return decryptNumber(decryptedValue);
     }
 
 	getSettingBoolean(key: string) {
-        // Retrieve a specific setting
-		// return this.settings[key];
-		return decryptBoolean(this.settings[key] !== undefined ? this.settings[key].toString() : '');
+        const decryptedValue = this.settings[key] !== undefined ? this.settings[key].toString() : ''
+		console.log(`Boolean: decrypted ${key} is ${decryptedValue}`)
+		return decryptBoolean(decryptedValue);
     }
 
 
@@ -104,9 +103,9 @@ export default class gamification extends Plugin {
 
 	setSettingString(key: string, value: string) {
         // Set a specific setting
-		//console.log(`new value for ${key} is ${value}`)
 		const valueEncrypted = encryptString(value)
         this.settings[key] = valueEncrypted;
+		console.log(`String: new value for ${key} is ${valueEncrypted}`)
         //this.settings[key] = value;
         this.saveSettings();
 	}
@@ -117,7 +116,7 @@ export default class gamification extends Plugin {
 		//console.log(`new value for ${key} is ${value}`)
 		const valueEncrypted = encryptNumber(value)
         this.settings[key] = valueEncrypted;
-        //this.settings[key] = value;
+        console.log(`Number: new value for ${key} is ${valueEncrypted}`)
         this.saveSettings();
     }
 
@@ -126,6 +125,7 @@ export default class gamification extends Plugin {
 		//console.log(`new value for ${key} is ${value}`)
 		const valueEncrypted = encryptBoolean(value)
         this.settings[key] = valueEncrypted;
+		console.log(`Boolean: new value for ${key} is ${valueEncrypted}`)
         this.saveSettings();
 	}
 
