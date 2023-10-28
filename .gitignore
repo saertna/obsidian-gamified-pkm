@@ -22,3 +22,17 @@ data.json
 .DS_Store
 /cp-js2cortex.bat
 data_bkp_231023.json
+*.html
+*.xml
+coverage/lcov.info
+coverage/lcov-report/badges.ts.html
+coverage/lcov-report/constants.ts.html
+coverage/lcov-report/creatmodchartcalculation.ts.html
+coverage/lcov-report/index.html
+coverage/lcov-report/levels.ts.html
+coverage/lcov-report/main.ts.html
+coverage/lcov-report/majuritycalculation.ts.html
+coverage/lcov-report/randomNotificationText.ts.html
+coverage/lcov-report/utils.ts.html
+coverage/clover.xml
+coverage/coverage-final.json

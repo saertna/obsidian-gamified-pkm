@@ -497,6 +497,7 @@ export default class gamification extends Plugin {
 							this.decisionIfBadge(newLevel);
 							detectIfNoteIsFirstTimeRated = true;
 							this.setSettingNumber('counterMajurityCalcInitial',this.getSettingNumber('counterMajurityCalcInitial') + 1)
+							this.acquireIngredients();
 							if(this.getSettingNumber('counterMajurityCalcInitial') == 50){
 								new ModalInformationbox(this.app, `🚀 Introducing Boosters! 🚀Level up faster, you enabled the next stage! Craft Boosters for an accelerated knowledge journey. Click the "test-tube" on the right or type 'Open Booster Palette' to get started! you got one booster as a gift, so try it out!🌟📚🔍`).open();
 							}
