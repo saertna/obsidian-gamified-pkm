@@ -44,13 +44,6 @@ import {
 	rateOutlinks,
 	rateProgressiveSummarization
 } from './majuritycalculation'
-import {
-	createChartFormat,
-	findEarliestModifiedFile,
-	getModificationDates,
-	monthsBetween,
-	replaceChartContent
-} from './creatmodchartcalculation'
 import {Badge, checkIfReceiveABadge, getBadgeForInitLevel, getBadgeForLevel} from './badges'
 import {getLevelForPoints, statusPointsForLevel} from './levels'
 import type {Moment} from 'moment';
@@ -77,19 +70,19 @@ export default class gamification extends Plugin {
 
 	getSettingString(key: string) {
         const decryptedValue = this.settings[key] !== undefined ? this.settings[key].toString() : ''
-		console.log(`String: decrypted ${key} is ${decryptString(decryptedValue)}`)
+		//console.log(`String: decrypted ${key} is ${decryptString(decryptedValue)}`)
 		return decryptString(decryptedValue);
     }
 
 	getSettingNumber(key: string) {
 		const decryptedValue = this.settings[key] !== undefined ? this.settings[key].toString() : ''
-		console.log(`Number: decrypted ${key} is ${decryptNumber(decryptedValue)}`)
+		//console.log(`Number: decrypted ${key} is ${decryptNumber(decryptedValue)}`)
 		return decryptNumber(decryptedValue);
     }
 
 	getSettingBoolean(key: string) {
         const decryptedValue = this.settings[key] !== undefined ? this.settings[key].toString() : ''
-		console.log(`Boolean: decrypted ${key} is ${decryptBoolean(decryptedValue)}`)
+		//console.log(`Boolean: decrypted ${key} is ${decryptBoolean(decryptedValue)}`)
 		return decryptBoolean(decryptedValue);
     }
 
@@ -115,7 +108,7 @@ export default class gamification extends Plugin {
         // Set a specific setting
 		//console.log(`new value for ${key} is ${value}`)
 		const valueEncrypted = encryptNumber(value)
-        console.log(`new value for ${key} is ${value} ⇒ ${valueEncrypted}`)
+        //console.log(`new value for ${key} is ${value} ⇒ ${valueEncrypted}`)
 		this.settings[key] = valueEncrypted;
         //console.log(`Number: new value for ${key} is ${valueEncrypted}`)
         this.saveSettings();
@@ -168,7 +161,12 @@ export default class gamification extends Plugin {
 			this.addRibbonIcon("accessibility", "crafting", async () => {
 
 				//this.acquireIngredients();
-				
+				//this.resetDailyGoals();
+				//this.setSettingString('weeklyNoteCreationDate', window.moment().subtract(1, 'day').format('DD.MM.YYYY'))
+				//this.setSettingString('weeklyNoteCreationDate', window.moment().subtract(1, 'day').format('DD.MM.YYYY'))
+				//this.setSettingString('weeklyNoteCreationDate', window.moment().format('DD.MM.YYYY'))
+				//this.setSettingString('weeklyNoteCreationDate', window.moment().format('DD.MM.YYYY'))
+				//await this.saveSettings();
 			});
 		}
 
@@ -213,8 +211,8 @@ export default class gamification extends Plugin {
 				callback: async () => {
 					const { vault } = this.app;
 					await createAvatarFile(this.app, this.getSettingString('avatarPageName'))
-					const chartString = await this.createChart(vault)
-					await replaceChartContent(this.getSettingString('avatarPageName'), chartString)
+					//const chartString = await this.createChart(vault)
+					//await replaceChartContent(this.getSettingString('avatarPageName'), chartString)
 				},
 			});
 		}
@@ -232,6 +230,7 @@ export default class gamification extends Plugin {
 			});
 		}
 
+		/*
 		// command: update chart in Avatar Page
 		this.addCommand({
 			id: 'update-chart-avatarpage',
@@ -242,7 +241,7 @@ export default class gamification extends Plugin {
 				await replaceChartContent(this.getSettingString('avatarPageName'), chartString)
 			},
 		});
-
+		*/
 
 		// command: rate note maturity
 		this.addCommand({
@@ -286,8 +285,8 @@ export default class gamification extends Plugin {
 
 		const {vault} = this.app;
 		await createAvatarFile(this.app, this.getSettingString('avatarPageName'))
-		const chartString = await this.createChart(vault)
-		await replaceChartContent(this.getSettingString('avatarPageName'), chartString)
+		//const chartString = await this.createChart(vault)
+		//await replaceChartContent(this.getSettingString('avatarPageName'), chartString)
 		await this.openAvatarFile()
 		const fileCountMap: TFile[] = await getFileMap(this.app, this.getSettingString('tagsExclude'), this.getSettingString('folderExclude'));
 		console.log(`fileCountMap loaded. Number of files: ${fileCountMap.length}`);
@@ -606,7 +605,7 @@ export default class gamification extends Plugin {
 		if(!isOneDayBefore(window.moment(this.getSettingString('weeklyNoteCreationDate'), 'DD.MM.YYYY')) && !isSameDay(window.moment(this.getSettingString('weeklyNoteCreationDate'), 'DD.MM.YYYY'))){
 			const daysPassed = window.moment().diff(window.moment(this.getSettingString('weeklyNoteCreationDate'), 'DD.MM.YYYY'), 'days') - 1; //today is still a chance. 
 			this.setSettingNumber('weeklyNoteCreationTask', 0);
-			this.setSettingString('weeklyNoteCreationDate',window.moment().subtract(1, 'day').format('DD.MM.YYYY'))
+			this.setSettingString('weeklyNoteCreationDate', window.moment().subtract(1, 'day').format('DD.MM.YYYY'))
 			this.decreaseStreakbooster(daysPassed)
 			console.log(`${daysPassed} days passed`)
 			await this.saveSettings();
@@ -745,8 +744,6 @@ export default class gamification extends Plugin {
 		const progressbarPercent = (this.getSettingNumber('statusPoints') - currentLevel.points)/(currentLevel.pointsNext - currentLevel.points)*100;
 		const charNumProgressbar = 10;
 		const barLength = Math.round(progressbarPercent / charNumProgressbar)
-		console.log(`als nächstes ist "this.getSettingNumber('streakbooster')" dran.`)
-		console.log(``)
 		const boosterFactor = this.getSettingNumber('streakbooster')
 		statusbar.setText(`🎲|lvl: ${this.getSettingNumber('statusLevel')} | ${this.createProgressbar(charNumProgressbar, barLength)}|🚀${boosterFactor}${this.rateBoosterDirection()}`)
 	}
@@ -1074,7 +1071,7 @@ export default class gamification extends Plugin {
 		}
 	}
 
-
+	/*
 	async createChart(vault: Vault): Promise<string>{
 		const files = vault.getMarkdownFiles();
 		const earliestFile = findEarliestModifiedFile(files)
@@ -1124,6 +1121,7 @@ export default class gamification extends Plugin {
 
 		return createChartFormat(yLabel, charStringModified, this.getSettingNumber('chartReduzierungMonate'))
 	}
+	*/
 
 	async decisionIfBadge(newLevel: Promise<boolean>){
 		newLevel.then((result: boolean)=> {
