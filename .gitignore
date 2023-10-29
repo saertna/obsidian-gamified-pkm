@@ -21,6 +21,7 @@ data.json
 # Exclude macOS Finder (System Explorer) View States
 .DS_Store
 /cp-js2cortex.bat
+ncryption
 data_bkp_231023.json
 *.html
 *.xml
@@ -36,3 +37,7 @@ coverage/lcov-report/randomNotificationText.ts.html
 coverage/lcov-report/utils.ts.html
 coverage/clover.xml
 coverage/coverage-final.json
+coverage/lcov-report/encryption.ts.html
+coverage/lcov-report/ModalBooster.ts.html
+coverage/lcov-report/ModalInformationbox.ts.html
+coverage/lcov-report/MultiSelectModal.ts.html
