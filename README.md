@@ -13,7 +13,9 @@ Hello, fellow learners and knowledge seekers! 📚 If you're as passionate about
 Note: On some machines the .obsidian folder may be hidden. On MacOS you should be able to press Command+Shift+Dot to show the folder in Finder.
 3. Reload Obsidian
 4. If prompted about Safe Mode, you can disable safe mode and enable the plugin.
-5. plugin `dataview` has to be installed an in dataview settings enable `Enable JavaScript Queries` and `Enable Inline JavaScript Queries` to display counting in profile.
+5. plugins needed to be installed
+ -  `dataview`. In dataview settings enable `Enable JavaScript Queries` and `Enable Inline JavaScript Queries` to display counting in profile.
+ -  `obsidian-charts`
 6. in Obsidian hit `CTRL+P` and run command `Initialize gamification ratings`
 
 **Embark on a Motivational Journey!**
