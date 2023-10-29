@@ -88,27 +88,6 @@ legend: false
 | Majurity 0 |\`$=dv.pages().where(p => [0, '0', '0➡️', '0⬇️', '0⬆️'].includes(p.file.frontmatter['note-maturity'])).length\`|
 
 
-\`\`\`chart
-type: bar
-labels: [0, 0, 0]
-series:
-  - title: modified
-    data: [0, 0, 0]
-tension: 0.2
-width: 80 %
-labelColors: false
-fill: false
-beginAtZero: false
-bestFit: false
-bestFitTitle: undefined
-bestFitNumber: 0
-stacked: true
-yTitle: "Number of Notes"
-xTitle: "Months"
-xMin: 0
-\`\`\`
-^ChartMonth
-
 
 ### Badges
 #### achieved
