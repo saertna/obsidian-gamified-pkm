@@ -21,3 +21,7 @@ data.json
 # Exclude macOS Finder (System Explorer) View States
 .DS_Store
 /cp-js2cortex.bat
+coverage/lcov-report/encryption.ts.html
+coverage/lcov-report/ModalBooster.ts.html
+coverage/lcov-report/ModalInformationbox.ts.html
+coverage/lcov-report/MultiSelectModal.ts.html
