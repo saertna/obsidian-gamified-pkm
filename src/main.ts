@@ -77,19 +77,19 @@ export default class gamification extends Plugin {
 
 	getSettingString(key: string) {
         const decryptedValue = this.settings[key] !== undefined ? this.settings[key].toString() : ''
-		//console.log(`String: decrypted ${key} is ${decryptedValue}`)
+		//console.log(`String: decrypted ${key} is ${decryptString(decryptedValue)}`)
 		return decryptString(decryptedValue);
     }
 
 	getSettingNumber(key: string) {
-        const decryptedValue = this.settings[key] !== undefined ? this.settings[key].toString() : ''
-		//console.log(`Number: decrypted ${key} is ${decryptedValue}`)
+		const decryptedValue = this.settings[key] !== undefined ? this.settings[key].toString() : ''
+		//console.log(`Number: decrypted ${key} is ${decryptNumber(decryptedValue)}`)
 		return decryptNumber(decryptedValue);
     }
 
 	getSettingBoolean(key: string) {
         const decryptedValue = this.settings[key] !== undefined ? this.settings[key].toString() : ''
-		//console.log(`Boolean: decrypted ${key} is ${decryptedValue}`)
+		//console.log(`Boolean: decrypted ${key} is ${decryptBoolean(decryptedValue)}`)
 		return decryptBoolean(decryptedValue);
     }
 

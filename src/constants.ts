@@ -13,7 +13,8 @@ export const avatarInitContent =  `# Avatar
 | ------ | --- |
 | Level  | 0    |
 | Points | 0    |
-^levelAndPoints	
+^levelAndPoints
+
 \`\`\`chart
 type: bar
 labels: [Expririence]
@@ -48,7 +49,7 @@ legend: false
 | **daily Notes** | *500EP* | **0/2** |
 ^dailyNotesChallenge
 
-|  |     ||
+| | | |
 | ---- | --- | --- |
 | **weekly Notes** | *2000EP*     |  **0/7**   |
 ^weeklyNotesChallenge
