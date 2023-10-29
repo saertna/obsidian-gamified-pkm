@@ -5,13 +5,16 @@ export const pointsForWeeklyChallenge: number = 2000;
 export const streakboosterDecrease: number = 0.2;
 export const streakboosterIncreaseDaily: number = 0.1;
 export const streakboosterIncreaseWeekly: number = 1;
+export const CryptoJS = require("crypto-js");
+export const secretKey = "2ZU^12y#QmNB5$yEin5^";
 export const avatarInitContent =  `# Avatar
 
 |        |     |
 | ------ | --- |
 | Level  | 0    |
 | Points | 0    |
-^levelAndPoints	
+^levelAndPoints
+
 \`\`\`chart
 type: bar
 labels: [Expririence]
@@ -46,7 +49,7 @@ legend: false
 | **daily Notes** | *500EP* | **0/2** |
 ^dailyNotesChallenge
 
-|  |     ||
+| | | |
 | ---- | --- | --- |
 | **weekly Notes** | *2000EP*     |  **0/7**   |
 ^weeklyNotesChallenge

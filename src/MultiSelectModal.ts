@@ -87,7 +87,7 @@ export class MultiSelectModal extends Modal {
 	updateIncrementStock(increment: string, stock: number) {
 		console.log(`increment "${increment}" new value ${stock}`);
 		this.remainingStock[increment] = stock;
-		this.gamificationInstance.setSetting(this.getIngerementVarNameFromName(increment) || '', stock);
+		this.gamificationInstance.setSettingNumber(this.getIngerementVarNameFromName(increment) || '', stock);
 	}
 
 
@@ -97,26 +97,26 @@ export class MultiSelectModal extends Modal {
 
 	decrementBooster(booster: string, stockIncrease: number) {
 		const stock = this.boosters[booster];
-		const boosterLastUsedDate = this.gamificationInstance.getSetting(this.getBoosterDateFromName(booster));
+		const boosterLastUsedDate = this.gamificationInstance.getSettingString(this.getBoosterDateFromName(booster));
 		if (typeof boosterLastUsedDate === 'string' && boosterLastUsedDate !== null) {
 		const momentDate = window.moment(boosterLastUsedDate, 'YYYY-MM-DD HH:mm:ss');
 		if (stock > 0 && isMinutesPassed(momentDate, this.getBoosterCooldownFromName(booster))) {
 			this.boosters[booster] -= stockIncrease;
-			this.gamificationInstance.setSetting(this.getBoosterVarNameFromName(booster), this.boosters[booster]);
+			this.gamificationInstance.setSettingNumber(this.getBoosterVarNameFromName(booster), this.boosters[booster]);
 			this.gamificationInstance.setSettingBoolean(this.getBoosterSwitchFromName(booster), true);
 			this.gamificationInstance.setSettingString(this.getBoosterDateFromName(booster), window.moment().format('YYYY-MM-DD HH:mm:ss'));
-			const boosterOverallUse = this.gamificationInstance.getSetting('boosterUseCount')
+			const boosterOverallUse = this.gamificationInstance.getSettingNumber('boosterUseCount')
 			if (typeof boosterOverallUse === 'number' && boosterOverallUse !== null) {
 				// Now you can safely assign boosterLastUsedDate to boosterLastUsedDate.
-				this.gamificationInstance.setSetting('boosterUseCount',boosterOverallUse + 1)
+				this.gamificationInstance.setSettingNumber('boosterUseCount',boosterOverallUse + 1)
 			  } else {
 				// Handle the case where boosterLastUsedDate is not a valid string.
 				console.debug(`decrementBooster: "boosterUseCount" could not got read.`)
 			  }
-			const boosterUse = this.gamificationInstance.getSetting(this.getBoosterUseFromName(booster))
+			const boosterUse = this.gamificationInstance.getSettingNumber(this.getBoosterUseFromName(booster))
 			if (typeof boosterUse === 'number' && boosterUse !== null) {
 				// Now you can safely assign boosterLastUsedDate to boosterLastUsedDate.
-				this.gamificationInstance.setSetting(this.getBoosterUseFromName(booster),boosterUse + 1)
+				this.gamificationInstance.setSettingNumber(this.getBoosterUseFromName(booster),boosterUse + 1)
 			  } else {
 				// Handle the case where boosterLastUsedDate is not a valid string.
 				console.debug(`decrementBooster: "${this.getBoosterUseFromName(booster)}" could not got read.`)
@@ -134,19 +134,19 @@ export class MultiSelectModal extends Modal {
 	readBoostersStock() {
 		if (this.gamificationInstance) {
 			this.boosters = {
-				'Temporal Tweaker': this.gamificationInstance.getSetting('temporalTweaker') as number,
-				'Perpetual Progress': this.gamificationInstance.getSetting('perpetualProgress') as number,
-				'Strategic Synapses': this.gamificationInstance.getSetting('strategicSynapses') as number,
-				'Accelerated Acquisition': this.gamificationInstance.getSetting('acceleratedAcquisition') as number,
-				'Linkers Lode': this.gamificationInstance.getSetting('linkersLode') as number,
-				'Effortless Expansion': this.gamificationInstance.getSetting('effortlessExpansion') as number,
-				'Recursive Reflection': this.gamificationInstance.getSetting('recursiveReflection') as number,
-				'Synaptic Surge': this.gamificationInstance.getSetting('synapticSurge') as number,
-				'Inspiration Infusion': this.gamificationInstance.getSetting('inspirationInfusion') as number,
-				'Title Titan': this.gamificationInstance.getSetting('titleTitan') as number,
-				'Precision Prism': this.gamificationInstance.getSetting('precisionPrism') as number,
-				'Hyperlink Harmony': this.gamificationInstance.getSetting('hyperlinkHarmony') as number,
-				'Ephemeral Euphoria': this.gamificationInstance.getSetting('ephemeralEuphoria') as number,
+				'Temporal Tweaker': this.gamificationInstance.getSettingNumber('temporalTweaker') as number,
+				'Perpetual Progress': this.gamificationInstance.getSettingNumber('perpetualProgress') as number,
+				'Strategic Synapses': this.gamificationInstance.getSettingNumber('strategicSynapses') as number,
+				'Accelerated Acquisition': this.gamificationInstance.getSettingNumber('acceleratedAcquisition') as number,
+				'Linkers Lode': this.gamificationInstance.getSettingNumber('linkersLode') as number,
+				'Effortless Expansion': this.gamificationInstance.getSettingNumber('effortlessExpansion') as number,
+				'Recursive Reflection': this.gamificationInstance.getSettingNumber('recursiveReflection') as number,
+				'Synaptic Surge': this.gamificationInstance.getSettingNumber('synapticSurge') as number,
+				'Inspiration Infusion': this.gamificationInstance.getSettingNumber('inspirationInfusion') as number,
+				'Title Titan': this.gamificationInstance.getSettingNumber('titleTitan') as number,
+				'Precision Prism': this.gamificationInstance.getSettingNumber('precisionPrism') as number,
+				'Hyperlink Harmony': this.gamificationInstance.getSettingNumber('hyperlinkHarmony') as number,
+				'Ephemeral Euphoria': this.gamificationInstance.getSettingNumber('ephemeralEuphoria') as number,
 			};
 		}
 	}
@@ -155,14 +155,14 @@ export class MultiSelectModal extends Modal {
 	readIngrementStock() {
 		if (this.gamificationInstance) {
 			this.remainingStock = {
-				'Nexus Node': this.gamificationInstance.getSetting('nexusNode') as number,
-				'Connection Crystal': this.gamificationInstance.getSetting('connectionCrystal') as number,
-				'Mastery Scroll': this.gamificationInstance.getSetting('masteryScroll') as number,
-				'Insight Prism': this.gamificationInstance.getSetting('insightPrism') as number,
-				'Reflective Essence': this.gamificationInstance.getSetting('reflectiveEssence') as number,
-				'Amplification Crystal': this.gamificationInstance.getSetting('amplificationCrystal') as number,
-				'Creative Catalyst': this.gamificationInstance.getSetting('creativeCatalyst') as number,
-				'Precision Lens': this.gamificationInstance.getSetting('precisionLens') as number,
+				'Nexus Node': this.gamificationInstance.getSettingNumber('nexusNode') as number,
+				'Connection Crystal': this.gamificationInstance.getSettingNumber('connectionCrystal') as number,
+				'Mastery Scroll': this.gamificationInstance.getSettingNumber('masteryScroll') as number,
+				'Insight Prism': this.gamificationInstance.getSettingNumber('insightPrism') as number,
+				'Reflective Essence': this.gamificationInstance.getSettingNumber('reflectiveEssence') as number,
+				'Amplification Crystal': this.gamificationInstance.getSettingNumber('amplificationCrystal') as number,
+				'Creative Catalyst': this.gamificationInstance.getSettingNumber('creativeCatalyst') as number,
+				'Precision Lens': this.gamificationInstance.getSettingNumber('precisionLens') as number,
 			};
 		}
 	}
@@ -232,7 +232,7 @@ export class MultiSelectModal extends Modal {
 		const label = document.createElement('div');
 		label.className = `${labelText.replace(' ', '-')}`;
 		const useButton = document.createElement('button');
-		const momentDate = this.gamificationInstance.getSetting(this.getBoosterDateFromName(labelText));
+		const momentDate = this.gamificationInstance.getSettingString(this.getBoosterDateFromName(labelText));
 		if (isMinutesPassed(window.moment(momentDate as string, 'YYYY-MM-DD HH:mm:ss'), this.getBoosterCooldownFromName(labelText)) == false) {
 			console.log(`Booster ${labelText} is still in cooldown for ${window.moment(momentDate as string, 'YYYY-MM-DD HH:mm:ss'), this.getBoosterCooldownFromName(labelText) / 60} hours`);
 			label.innerHTML = `${labelText} : (${stock})`;
@@ -322,7 +322,7 @@ export class MultiSelectModal extends Modal {
 			stockInfo.innerHTML = `${labelText} : (${stock})`;
 		}
 		const buttonUse = document.querySelector(`#use-button-${labelText.replace(' ', '-')}`);
-		const date = this.gamificationInstance.getSetting(this.getBoosterDateFromName(labelText));
+		const date = this.gamificationInstance.getSettingString(this.getBoosterDateFromName(labelText));
 		const momentDate = window.moment(date as string, 'YYYY-MM-DD HH:mm:ss');
 		if (buttonUse && isMinutesPassed(momentDate, this.getBoosterCooldownFromName(labelText)) == false) {
 			buttonUse.setText(`cooldown ${hoursUntilMinutesPassed(momentDate, this.getBoosterCooldownFromName(labelText))} hours`);
@@ -418,7 +418,7 @@ export class MultiSelectModal extends Modal {
 		if(selectedItems.name == 'Ephemeral Euphoria'){
 			if(this.check1000IngredientsAvailableAndBurn()){
 				this.updateBoosterStock(selectedItems.name, 1);
-				this.gamificationInstance.setSetting(this.getBoosterVarNameFromName(selectedItems.name), this.boosters[selectedItems.name]);
+				this.gamificationInstance.setSettingNumber(this.getBoosterVarNameFromName(selectedItems.name), this.boosters[selectedItems.name]);
 				console.log(`craft booster ${selectedItems.name}`);
 			} else {
 				console.log(`not enough ingredients for booster ${selectedItems.name} in stock`);
@@ -428,7 +428,7 @@ export class MultiSelectModal extends Modal {
 			if (this.checkIngredientsAvailability(selectedItems)) {
 				console.log(`craft booster ${selectedItems.name}`);
 				this.updateBoosterStock(selectedItems.name, 1);
-				this.gamificationInstance.setSetting(this.getBoosterVarNameFromName(selectedItems.name), this.boosters[selectedItems.name]);
+				this.gamificationInstance.setSettingNumber(this.getBoosterVarNameFromName(selectedItems.name), this.boosters[selectedItems.name]);
 				this.useIngrediments(selectedItems);
 				//this.updateQuantityDisplay(selectedItems.name)
 				this.updateStockInformation();
