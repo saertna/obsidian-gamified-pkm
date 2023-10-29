@@ -77,19 +77,19 @@ export default class gamification extends Plugin {
 
 	getSettingString(key: string) {
         const decryptedValue = this.settings[key] !== undefined ? this.settings[key].toString() : ''
-		//console.log(`String: decrypted ${key} is ${decryptString(decryptedValue)}`)
+		console.log(`String: decrypted ${key} is ${decryptString(decryptedValue)}`)
 		return decryptString(decryptedValue);
     }
 
 	getSettingNumber(key: string) {
 		const decryptedValue = this.settings[key] !== undefined ? this.settings[key].toString() : ''
-		//console.log(`Number: decrypted ${key} is ${decryptNumber(decryptedValue)}`)
+		console.log(`Number: decrypted ${key} is ${decryptNumber(decryptedValue)}`)
 		return decryptNumber(decryptedValue);
     }
 
 	getSettingBoolean(key: string) {
         const decryptedValue = this.settings[key] !== undefined ? this.settings[key].toString() : ''
-		//console.log(`Boolean: decrypted ${key} is ${decryptBoolean(decryptedValue)}`)
+		console.log(`Boolean: decrypted ${key} is ${decryptBoolean(decryptedValue)}`)
 		return decryptBoolean(decryptedValue);
     }
 
@@ -115,11 +115,13 @@ export default class gamification extends Plugin {
         // Set a specific setting
 		//console.log(`new value for ${key} is ${value}`)
 		const valueEncrypted = encryptNumber(value)
-        this.settings[key] = valueEncrypted;
+        console.log(`new value for ${key} is ${value} ⇒ ${valueEncrypted}`)
+		this.settings[key] = valueEncrypted;
         //console.log(`Number: new value for ${key} is ${valueEncrypted}`)
         this.saveSettings();
     }
 
+		
 	setSettingBoolean(key: string, value: boolean) {
         // Set a specific setting
 		//console.log(`new value for ${key} is ${value}`)
@@ -743,6 +745,8 @@ export default class gamification extends Plugin {
 		const progressbarPercent = (this.getSettingNumber('statusPoints') - currentLevel.points)/(currentLevel.pointsNext - currentLevel.points)*100;
 		const charNumProgressbar = 10;
 		const barLength = Math.round(progressbarPercent / charNumProgressbar)
+		console.log(`als nächstes ist "this.getSettingNumber('streakbooster')" dran.`)
+		console.log(``)
 		const boosterFactor = this.getSettingNumber('streakbooster')
 		statusbar.setText(`🎲|lvl: ${this.getSettingNumber('statusLevel')} | ${this.createProgressbar(charNumProgressbar, barLength)}|🚀${boosterFactor}${this.rateBoosterDirection()}`)
 	}

@@ -90,85 +90,85 @@ export interface DynamicSettings {
 }
 
 export interface ISettings extends DynamicSettings{
-  enableInitCommand: boolean;
-  bindEnter: boolean;
-  bindTab: boolean;
+  enableInitCommand: string;
+  bindEnter: string;
+  bindTab: string;
   avatarPageName: string;
   tagsExclude: string;
   folderExclude: string;
   progressiveSumLayer2: string;
   progressiveSumLayer3: string;
-  numAllFiles: number;
-  numAllFilesCount: number;
-  chartReduzierungMonate: number;
-  statusPoints: number;
-  statusLevel: number;
-  xpForNextLevel: number;
+  numAllFiles: string;
+  numAllFilesCount: string;
+  chartReduzierungMonate: string;
+  statusPoints: string;
+  statusLevel: string;
+  xpForNextLevel: string;
   gamificationStartDate: string;
-  badgeBoosterState: boolean;
-  badgeBoosterFactor: number;
-  debug: boolean;
-  dailyNoteCreationTask: number;
+  badgeBoosterState: string;
+  badgeBoosterFactor: string;
+  debug: string;
+  dailyNoteCreationTask: string;
   dailyNoteCreationDate: string;
-  weeklyNoteCreationTask: number;
+  weeklyNoteCreationTask: string;
   weeklyNoteCreationDate: string;
-  streakbooster: number;
-  streakboosterDate: boolean;
-  nexusNode: number;
-  connectionCrystal: number;
-  masteryScroll: number;
-  insightPrism: number;
-  reflectiveEssence: number;
-  amplificationCrystal: number;
-  creativeCatalyst: number;
-  precisionLens: number;
-  temporalTweaker: number;
-  perpetualProgress: number;
-  strategicSynapses: number;
-  acceleratedAcquisition: number;
-  linkersLode: number;
-  effortlessExpansion: number;
-  recursiveReflection: number;
-  synapticSurge: number;
-  inspirationInfusion: number;
-  titleTitan: number;
-  precisionPrism: number;
-  hyperlinkHarmony: number;
-  ephemeralEuphoria: number;
-  boosterFactorPerpetualProgress: boolean;
+  streakbooster: string;
+  streakboosterDate: string;
+  nexusNode: string;
+  connectionCrystal: string;
+  masteryScroll: string;
+  insightPrism: string;
+  reflectiveEssence: string;
+  amplificationCrystal: string;
+  creativeCatalyst: string;
+  precisionLens: string;
+  temporalTweaker: string;
+  perpetualProgress: string;
+  strategicSynapses: string;
+  acceleratedAcquisition: string;
+  linkersLode: string;
+  effortlessExpansion: string;
+  recursiveReflection: string;
+  synapticSurge: string;
+  inspirationInfusion: string;
+  titleTitan: string;
+  precisionPrism: string;
+  hyperlinkHarmony: string;
+  ephemeralEuphoria: string;
+  boosterFactorPerpetualProgress: string;
   boosterDatePerpetualProgress: string
-  boosterFactorStrategicSynapses: boolean;
+  boosterFactorStrategicSynapses: string;
   boosterDateStrategicSynapses: string;
-  boosterFactorLinkersLode: boolean;
+  boosterFactorLinkersLode: string;
   boosterDateLinkersLode: string;
-  boosterFactorRecursiveReflection: boolean;
+  boosterFactorRecursiveReflection: string;
   boosterDateRecursiveReflection: string;
-  boosterFactorSynapticSurge: boolean;
+  boosterFactorSynapticSurge: string;
   boosterDateSynapticSurge: string;
-  boosterFactorTitleTitan: boolean;
+  boosterFactorTitleTitan: string;
   boosterDateTitleTitan: string
-  boosterFactorPrecisionPrism: boolean;
+  boosterFactorPrecisionPrism: string;
   boosterDatePrecisionPrism: string
-  boosterFactorHyperlinkHarmony: boolean;
+  boosterFactorHyperlinkHarmony: string;
   boosterDateHyperlinkHarmony: string;
-  boosterFactorEphemeralEuphoria: boolean;
+  boosterFactorEphemeralEuphoria: string;
   boosterDateEphemeralEuphoria: string;
-  boosterUseCount: number;
-  boosterUseCountTemporalTweaker: number;
-  boosterUseCountPerpetualProgress: number;
-  boosterUseCountStrategicSynapses: number;
-  boosterUseCountAcceleratedAcquisition: number;
-  boosterUseCountLinkersLode: number;
-  boosterUseCountEffortlessExpansion: number;
-  boosterUseCountrEcursiveReflection: number;
-  boosterUseCountSynapticSurge: number;
-  boosterUseCountInspirationInfusion: number;
-  boosterUseCountTitleTitan: number;
-  boosterUseCountPrecisionPrism: number;
-  boosterUseCountHyperlinkHarmony: number;
-  boosterUseCountEphemeralEuphoria: number;
-  counterMajurityCalc: number;
-  counterMajurityCalcInitial: number;
+  boosterUseCount: string;
+  boosterUseCountTemporalTweaker: string;
+  boosterUseCountPerpetualProgress: string;
+  boosterUseCountStrategicSynapses: string;
+  boosterUseCountAcceleratedAcquisition: string;
+  boosterUseCountLinkersLode: string;
+  boosterUseCountEffortlessExpansion: string;
+  boosterUseCountrEcursiveReflection: string;
+  boosterUseCountSynapticSurge: string;
+  boosterUseCountInspirationInfusion: string;
+  boosterUseCountTitleTitan: string;
+  boosterUseCountPrecisionPrism: string;
+  boosterUseCountHyperlinkHarmony: string;
+  boosterUseCountEphemeralEuphoria: string;
+  counterMajurityCalc: string;
+  counterMajurityCalcInitial: string;
   //[key: string]: number | string | boolean | MomentInput;
 }
 
@@ -177,85 +177,85 @@ export class GamificationPluginSettings extends PluginSettingTab {
 	private readonly plugin: gamification;
   public settings: ISettings;
   
-  public enableInitCommand: boolean;
-  public bindEnter: boolean;
-  public bindTab: boolean;
+  public enableInitCommand: string;
+  public bindEnter: string;
+  public bindTab: string;
   public avatarPageName: string;
   public tagsExclude: string;
   public folderExclude: string;
   public progressiveSumLayer2: string;
   public progressiveSumLayer3: string;
-  public numAllFiles: number;
-  public numAllFilesCount: number;
-  public chartReduzierungMonate: number;
-  public statusPoints: number;
-  public statusLevel: number;
-  public xpForNextLevel: number;
+  public numAllFiles: string;
+  public numAllFilesCount: string;
+  public chartReduzierungMonate: string;
+  public statusPoints: string;
+  public statusLevel: string;
+  public xpForNextLevel: string;
   public gamificationStartDate: string;
-  public badgeBoosterState: boolean;
-  public badgeBoosterFactor: number;
-  public debug: boolean;
-  public dailyNoteCreationTask: number;
+  public badgeBoosterState: string;
+  public badgeBoosterFactor: string;
+  public debug: string;
+  public dailyNoteCreationTask: string;
   public dailyNoteCreationDate: string;
-  public weeklyNoteCreationTask: number;
+  public weeklyNoteCreationTask: string;
   public weeklyNoteCreationDate: string;
-  public streakbooster: number;
-  public streakboosterDate: boolean;
-  public nexusNode: number;
-  public connectionCrystal: number;
-  public masteryScroll: number;
-  public insightPrism: number;
-  public reflectiveEssence: number;
-  public amplificationCrystal: number;
-  public creativeCatalyst: number;
-  public precisionLens: number;
-  public temporalTweaker: number;
-  public perpetualProgress: number;
-  public strategicSynapses: number;
-  public acceleratedAcquisition: number;
-  public linkersLode: number;
-  public effortlessExpansion: number;
-  public recursiveReflection: number;
-  public synapticSurge: number;
-  public inspirationInfusion: number;
-  public titleTitan: number;
-  public precisionPrism: number;
-  public hyperlinkHarmony: number;
-  public ephemeralEuphoria: number;
-  public boosterFactorPerpetualProgress: boolean;
+  public streakbooster: string;
+  public streakboosterDate: string;
+  public nexusNode: string;
+  public connectionCrystal: string;
+  public masteryScroll: string;
+  public insightPrism: string;
+  public reflectiveEssence: string;
+  public amplificationCrystal: string;
+  public creativeCatalyst: string;
+  public precisionLens: string;
+  public temporalTweaker: string;
+  public perpetualProgress: string;
+  public strategicSynapses: string;
+  public acceleratedAcquisition: string;
+  public linkersLode: string;
+  public effortlessExpansion: string;
+  public recursiveReflection: string;
+  public synapticSurge: string;
+  public inspirationInfusion: string;
+  public titleTitan: string;
+  public precisionPrism: string;
+  public hyperlinkHarmony: string;
+  public ephemeralEuphoria: string;
+  public boosterFactorPerpetualProgress: string;
   public boosterDatePerpetualProgress: string
-  public boosterFactorStrategicSynapses: boolean;
+  public boosterFactorStrategicSynapses: string;
   public boosterDateStrategicSynapses: string
-  public boosterFactorLinkersLode: boolean;
+  public boosterFactorLinkersLode: string;
   public boosterDateLinkersLode: string
-  public boosterFactorRecursiveReflection: boolean;
+  public boosterFactorRecursiveReflection: string;
   public boosterDateRecursiveReflection: string
-  public boosterFactorSynapticSurge: boolean;
+  public boosterFactorSynapticSurge: string;
   public boosterDateSynapticSurge: string
-  public boosterFactorTitleTitan: boolean;
+  public boosterFactorTitleTitan: string;
   public boosterDateTitleTitan: string
-  public boosterFactorPrecisionPrism: boolean;
+  public boosterFactorPrecisionPrism: string;
   public boosterDatePrecisionPrism: string
-  public boosterFactorHyperlinkHarmony: boolean;
+  public boosterFactorHyperlinkHarmony: string;
   public boosterDateHyperlinkHarmony: string;
-  public boosterFactorEphemeralEuphoria: boolean;
+  public boosterFactorEphemeralEuphoria: string;
   public boosterDateEphemeralEuphoria: string;
-  public boosterUseCount: number;
-  public boosterUseCountTemporalTweaker: number;
-  public boosterUseCountPerpetualProgress: number;
-  public boosterUseCountStrategicSynapses: number;
-  public boosterUseCountAcceleratedAcquisition: number;
-  public boosterUseCountLinkersLode: number;
-  public boosterUseCountEffortlessExpansion: number;
-  public boosterUseCountrEcursiveReflection: number;
-  public boosterUseCountSynapticSurge: number;
-  public boosterUseCountInspirationInfusion: number;
-  public boosterUseCountTitleTitan: number;
-  public boosterUseCountPrecisionPrism: number;
-  public boosterUseCountHyperlinkHarmony: number;
-  public boosterUseCountEphemeralEuphoria: number;
-  public counterMajurityCalc: number;
-  public counterMajurityCalcInitial: number;
+  public boosterUseCount: string;
+  public boosterUseCountTemporalTweaker: string;
+  public boosterUseCountPerpetualProgress: string;
+  public boosterUseCountStrategicSynapses: string;
+  public boosterUseCountAcceleratedAcquisition: string;
+  public boosterUseCountLinkersLode: string;
+  public boosterUseCountEffortlessExpansion: string;
+  public boosterUseCountrEcursiveReflection: string;
+  public boosterUseCountSynapticSurge: string;
+  public boosterUseCountInspirationInfusion: string;
+  public boosterUseCountTitleTitan: string;
+  public boosterUseCountPrecisionPrism: string;
+  public boosterUseCountHyperlinkHarmony: string;
+  public boosterUseCountEphemeralEuphoria: string;
+  public counterMajurityCalc: string;
+  public counterMajurityCalcInitial: string;
 
 	constructor(app: App, plugin: gamification) {
 	  super(app, plugin);
@@ -307,9 +307,10 @@ export class GamificationPluginSettings extends PluginSettingTab {
 			.setDesc('enter tags without # and separate with ", ".\nInclude nested tags.')
 			.addText(text => text
 				.setPlaceholder('Enter your tag1, tag2/subtag, …')
-				.setValue(this.plugin.settings.tagsExclude)
+				//.setValue(this.plugin.settings.tagsExclude)
+        .setValue(decryptString(this.plugin.settings.tagsExclude))
 				.onChange(async (value) => {
-					this.plugin.settings.tagsExclude = value;
+					this.plugin.settings.tagsExclude = encryptString(value);
 					await this.plugin.saveSettings();
 				}));
 
@@ -319,10 +320,11 @@ export class GamificationPluginSettings extends PluginSettingTab {
 			.setDesc('enter folder whichs content shall be ignored. Separate with ", ".')
 			.addText(text => text
 				.setPlaceholder('Enter your folder1, folder2, …')
-				.setValue(this.plugin.settings.folderExclude)
+				//.setValue(this.plugin.settings.folderExclude)
+        .setValue(decryptString(this.plugin.settings.folderExclude))
 				.onChange(async (value) => {
 					// console.log('folder to exclude: ' + value);
-					this.plugin.settings.folderExclude = value;
+					this.plugin.settings.folderExclude = encryptString(value);
 					await this.plugin.saveSettings();
 				}));
 
@@ -331,10 +333,11 @@ export class GamificationPluginSettings extends PluginSettingTab {
 			.setDesc('you can change here the name of your profile page if you like.')
 			.addText(text => text
 					.setPlaceholder('name')
-					.setValue(this.plugin.settings.avatarPageName)
+					//.setValue(this.plugin.settings.avatarPageName)
+          .setValue(decryptString(this.plugin.settings.avatarPageName))
 					.onChange(async (value) => {
 						// console.log('folder to exclude: ' + value);
-						this.plugin.settings.avatarPageName = value;
+						this.plugin.settings.avatarPageName = encryptString(value);
 						await this.plugin.saveSettings();
 				}));
 				
@@ -344,25 +347,26 @@ export class GamificationPluginSettings extends PluginSettingTab {
 			.setDesc('you can remove the init command from command prompt by switching off.\nrestart needed.')
 			.addToggle((toggle) => 
 				toggle
-          		.setValue(this.plugin.settings.enableInitCommand)
+          		.setValue(decryptBoolean(this.plugin.settings.enableInitCommand))
         			.onChange((value) => {
-            			this.plugin.settings.enableInitCommand = value;
+            			this.plugin.settings.enableInitCommand = encryptBoolean(value);
             			this.plugin.saveData(this.plugin.settings);
           			}),
 			);
 
-		
+		/*
 		new Setting(containerEl)
 			.setName('limit the visible month in the chart on your avatar page: ' + this.plugin.settings.avatarPageName)
 			.setDesc('if 0, all month will be shown. Enter a number how many month shall be shown.')
 			.addText(text => text
 					.setPlaceholder('Number of Month to show')
-					.setValue(this.plugin.settings.chartReduzierungMonate.toString())
+					//.setValue(decryptNumber(this.plugin.settings.chartReduzierungMonate).toString())
+          .setValue("0")
 					.onChange(async (value) => {
-						this.plugin.settings.chartReduzierungMonate = parseInt(value);
+						this.plugin.settings.chartReduzierungMonate = encryptNumber(parseInt(value));
 						await this.plugin.saveSettings();
 				}));
-
+    */
   
 
 		new Setting(containerEl)
@@ -370,18 +374,18 @@ export class GamificationPluginSettings extends PluginSettingTab {
 			.setDesc('you can change which formatting you use for Layer 2 and 3.')
 			.addText(text => text
 					.setPlaceholder('Layer 2 is usually **')
-					.setValue(this.plugin.settings.progressiveSumLayer2)
+					.setValue(decryptString(this.plugin.settings.progressiveSumLayer2))
 					.onChange(async (value) => {
 						// console.log('folder to exclude: ' + value);
-						this.plugin.settings.progressiveSumLayer2 = value;
+						this.plugin.settings.progressiveSumLayer2 = encryptString(value);
 						await this.plugin.saveSettings();
 				}))
 			.addText(text => text
 					.setPlaceholder('Layer 3 is usually ==')
-					.setValue(this.plugin.settings.progressiveSumLayer3)
+					.setValue(decryptString(this.plugin.settings.progressiveSumLayer3))
 					.onChange(async (value) => {
 						// console.log('folder to exclude: ' + value);
-						this.plugin.settings.progressiveSumLayer3 = value;
+						this.plugin.settings.progressiveSumLayer3 = encryptString(value);
 						await this.plugin.saveSettings();
 			}));
 
