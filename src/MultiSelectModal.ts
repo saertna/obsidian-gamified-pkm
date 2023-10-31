@@ -175,6 +175,7 @@ export class MultiSelectModal extends Modal {
 
 
 	private createCraftingLayout() {
+		this.readIngrementStock();
 		const container = document.createElement('div');
 		container.className = 'modal-crafting-container';
 
@@ -309,7 +310,8 @@ export class MultiSelectModal extends Modal {
 	private useBoosterItem(labelText: string) {
 		console.log(`use Booster ${labelText}`);
 		if(labelText=='Fortune Infusion'){
-			console.log(`acquireIngredients();`)
+			//console.log(`acquireIngredients();`)
+			this.gamificationInstance.acquireIngredients(1,1,10)
 		}
 		/*const stock = this.boosters[labelText];
 		if (stock > 0) {
