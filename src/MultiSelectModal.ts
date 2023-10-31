@@ -7,7 +7,7 @@ import {
 	listOfUseableIngredientsToBeShown
 } from './constants';
 import { ModalInformationbox } from 'ModalInformationbox';
-import gamification, { isMinutesPassed, hoursUntilMinutesPassed } from 'main';
+import gamification, { isMinutesPassed, hoursUntilMinutesPassed} from 'main';
 
 
 
@@ -42,6 +42,11 @@ export class MultiSelectModal extends Modal {
 					contentEl.appendChild(listItem);
 				}
 			});
+			const fortuneInfusionBooster = boosterRecipes.find(entry => entry.varname === 'fortuneInfusion');
+			if (fortuneInfusionBooster){
+				const listItem = this.createItemContainer(fortuneInfusionBooster.name);
+				contentEl.appendChild(listItem);
+			}
 		} else {
 			const listItem = this.createItemContainer("");
 			contentEl.appendChild(listItem);
@@ -147,6 +152,7 @@ export class MultiSelectModal extends Modal {
 				'Precision Prism': this.gamificationInstance.getSettingNumber('precisionPrism') as number,
 				'Hyperlink Harmony': this.gamificationInstance.getSettingNumber('hyperlinkHarmony') as number,
 				'Ephemeral Euphoria': this.gamificationInstance.getSettingNumber('ephemeralEuphoria') as number,
+				'Fortune Infusion': 1,
 			};
 		}
 	}
@@ -302,6 +308,9 @@ export class MultiSelectModal extends Modal {
 
 	private useBoosterItem(labelText: string) {
 		console.log(`use Booster ${labelText}`);
+		if(labelText=='Fortune Infusion'){
+			console.log(`acquireIngredients();`)
+		}
 		/*const stock = this.boosters[labelText];
 		if (stock > 0) {
 			//this.selectedItems.push(labelText);
@@ -424,6 +433,8 @@ export class MultiSelectModal extends Modal {
 				console.log(`not enough ingredients for booster ${selectedItems.name} in stock`);
 				new ModalInformationbox(this.app, `Not enough ingrediments available for '${selectedItems.name}'. Craft more Notes to collect new ingrediments.`).open();
 			}
+		} else if(selectedItems.name == 'Fortune Infusion'){
+			
 		} else {
 			if (this.checkIngredientsAvailability(selectedItems)) {
 				console.log(`craft booster ${selectedItems.name}`);

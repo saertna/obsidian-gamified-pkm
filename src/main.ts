@@ -167,6 +167,7 @@ export default class gamification extends Plugin {
 				//this.setSettingString('weeklyNoteCreationDate', window.moment().format('DD.MM.YYYY'))
 				//this.setSettingString('weeklyNoteCreationDate', window.moment().format('DD.MM.YYYY'))
 				//await this.saveSettings();
+				new ModalBooster(this.app, ` `, this).open();
 			});
 		}
 
@@ -498,7 +499,7 @@ export default class gamification extends Plugin {
 							this.decisionIfBadge(newLevel);
 							detectIfNoteIsFirstTimeRated = true;
 							this.setSettingNumber('counterMajurityCalcInitial',this.getSettingNumber('counterMajurityCalcInitial') + 1)
-							this.acquireIngredients();
+							this.acquireIngredients(chanceToEarnIngredient,1,3);
 							if(this.getSettingNumber('counterMajurityCalcInitial') == 50){
 								new ModalInformationbox(this.app, `🚀 Introducing Boosters! 🚀Level up faster, you enabled the next stage! Craft Boosters for an accelerated knowledge journey. Click the "test-tube" on the right or type 'Open Booster Palette' to get started! you got one booster as a gift, so try it out!🌟📚🔍`).open();
 							}
@@ -1218,10 +1219,10 @@ export default class gamification extends Plugin {
 		return Math.floor(Math.random() * (max - min + 1)) + min;
 	  }
 
-	async acquireIngredients() {
+	async acquireIngredients(chance:number, min:number, max:number) {
 		let earnedIngredientToShow = [];
-		if (Math.random() < chanceToEarnIngredient) {
-			const randomAmount = this.getRandomInt(1,3);
+		if (Math.random() < chance) {
+			const randomAmount = this.getRandomInt(min,max);
 			for (let i=1;i<=randomAmount;i++){
 				const randomIngredientIndex = this.getRandomInt(0, listOfUseableIngredientsToBeShown.length-1);
 				const earnedIngredient = elements[randomIngredientIndex];
