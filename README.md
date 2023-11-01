@@ -9,8 +9,9 @@ Hello, fellow learners and knowledge seekers! 📚 If you're as passionate about
 
 ## Manual installation
 1. Download the latest release 🔗 **Plugin Download:** [Obsidian Gamification Plugin](https://github.com/saertna/obsidian-gamified-pkm/tree/main)
-2. Extract the obsidian-day-planner folder from the zip to your vault's plugins folder: <vault>/.obsidian/plugins/
-Note: On some machines the .obsidian folder may be hidden. On MacOS you should be able to press Command+Shift+Dot to show the folder in Finder.
+2. Extract the obsidian-gamified-pkm folder from the zip to your vault's plugins folder: <vault>/.obsidian/plugins/
+ - Note: On some machines the .obsidian folder may be hidden. On MacOS you should be able to press Command+Shift+Dot to show the folder in Finder.
+ - Note: the files `main.js` and `manifest.json` are the files which you need in this folder.
 3. Reload Obsidian
 4. If prompted about Safe Mode, you can disable safe mode and enable the plugin.
 5. plugins needed to be installed
