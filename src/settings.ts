@@ -360,20 +360,18 @@ export class GamificationPluginSettings extends PluginSettingTab {
           			}),
 			);
 
-		/*
-		new Setting(containerEl)
-			.setName('limit the visible month in the chart on your avatar page: ' + this.plugin.settings.avatarPageName)
-			.setDesc('if 0, all month will be shown. Enter a number how many month shall be shown.')
-			.addText(text => text
-					.setPlaceholder('Number of Month to show')
-					//.setValue(decryptNumber(this.plugin.settings.chartReduzierungMonate).toString())
-          .setValue("0")
-					.onChange(async (value) => {
-						this.plugin.settings.chartReduzierungMonate = encryptNumber(parseInt(value));
-						await this.plugin.saveSettings();
-				}));
-    */
   
+    new Setting(containerEl)
+			.setName('Delay Settings at startup')
+			.setDesc('Enter in seconds to delay the load time. e.g. when GIT pull is performed before and settings get merge conflicts. Without GIT usage, keep it to 0.')
+			.addText(text => text
+					.setPlaceholder('0')
+					.setValue(decryptNumber(this.plugin.settings.delayLoadTime).toString())
+          //.setValue("0")
+					.onChange(async (value) => {
+						this.plugin.settings.delayLoadTime = encryptNumber(parseInt(value));
+						await this.plugin.saveSettings();
+		}));
 
 		new Setting(containerEl)
 			.setName('Progressive Summarization')

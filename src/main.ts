@@ -122,20 +122,22 @@ export default class gamification extends Plugin {
 		this.addSettingTab(new GamificationPluginSettings(this.app, this));
 
 
-		
+		await this.loadSettings();
+
 		// take care to reset when opened on a new day, don't wait for trigger
 		setTimeout(async () => {
 			// Code that you want to execute after the delay
 			await this.loadSettings();
 			await this.resetDailyGoals()
-		}, 2000); // 2000 milliseconds = 2 seconds
+			await this.updateStatusBar(this.statusbarGamification)
+		}, this.getSettingNumber('delayLoadTime')*1000); // 2000 milliseconds = 2 seconds
 
 
 		// to set timer for reset daily and weekly goals
 		this.timerInterval = 30 * 60 * 1000; // minutes x seconds x milliseconds
 		this.timerId = window.setInterval(this.resetDailyGoals.bind(this), this.timerInterval);
 
-		await this.updateStatusBar(this.statusbarGamification)
+		
 
 
 		if (this.getSettingBoolean('debug')){
