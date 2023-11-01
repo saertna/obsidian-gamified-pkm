@@ -728,6 +728,7 @@ export default class gamification extends Plugin {
 		} else if (newWeeklyNoteCreationTask == 7) {
 			this.increaseStreakbooster(streakboosterIncreaseWeekly);
 			await this.saveSettings();
+			await this.updateStatusBar(this.statusbarGamification)
 			await this.giveStatusPoints(pointsForWeeklyChallenge, 'fromCheckForWeeklyNoteChallengeEvaluation')
 			console.log(`Weekly Challenge reached! ${newWeeklyNoteCreationTask}/7 created in a chain.`)
 			const message = getRandomMessageWeeklyChallenge(pointsForWeeklyChallenge * (this.getSettingNumber('badgeBoosterFactor') + this.getSettingNumber('streakbooster')));
@@ -751,7 +752,10 @@ export default class gamification extends Plugin {
 
 
 	private rateBoosterDirection(){
-		let direction = '⬆️'
+		let direction = '↕️'
+		if(this.getSettingNumber('dailyNoteCreationTask')==1){
+			direction = '➡️';
+		}
 		if(this.getSettingBoolean('streakboosterDate')){
 			direction = '⬆️';
 		} else {
@@ -841,12 +845,12 @@ export default class gamification extends Plugin {
 			newBoosterFakfor = 80;
 		}
 		console.log(`newBoosterFakfor: ${newBoosterFakfor}`)
-		console.log(`old value streakbooster: ${this.getSettingNumber('streakbooster')}`)
+		//console.log(`old value streakbooster: ${this.getSettingNumber('streakbooster')}`)
 		this.setSettingNumber('streakbooster', newBoosterFakfor);
 		this.setSettingBoolean('streakboosterDate', true);
-		console.log(`new value streakbooster: ${this.getSettingNumber('streakbooster')}`)
+		//console.log(`new value streakbooster: ${this.getSettingNumber('streakbooster')}`)
 		//await this.saveData(this.settings)
-		console.log(`streakbooster: ${this.getSettingNumber('streakbooster')}`)
+		//console.log(`streakbooster: ${this.getSettingNumber('streakbooster')}`)
 		}
 
 
