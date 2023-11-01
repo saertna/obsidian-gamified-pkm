@@ -312,6 +312,32 @@ export class MultiSelectModal extends Modal {
 		if(labelText=='Fortune Infusion'){
 			//console.log(`acquireIngredients();`)
 			this.gamificationInstance.acquireIngredients(1,1,10)
+		} else if (labelText=='Temporal Tweaker'){
+
+		} else if (labelText=='Perpetual Progress'){
+
+		} else if (labelText=='Strategic Synapses'){
+
+		} else if (labelText=='Accelerated Acquisition'){
+
+		} else if (labelText=='Linkers Lode'){
+
+		} else if (labelText=='Effortless Expansion'){
+
+		} else if (labelText=='Recursive Reflection'){
+
+		} else if (labelText=='Synaptic Surge'){
+
+		} else if (labelText=='Inspiration Infusion'){
+
+		} else if (labelText=='Title Titan'){
+
+		} else if (labelText=='Precision Prism'){
+
+		} else if (labelText=='Hyperlink Harmony'){
+
+		} else if (labelText=='Ephemeral Euphoria'){
+
 		}
 		/*const stock = this.boosters[labelText];
 		if (stock > 0) {
