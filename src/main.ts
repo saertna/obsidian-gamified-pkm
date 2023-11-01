@@ -997,7 +997,7 @@ export default class gamification extends Plugin {
 			const newLines = [...lines.slice(0, start), badgeString, ...lines.slice(end)];
 			const newLines2 = [...newLines.slice(0, start2), ...newLines.slice(end2)]
 			await app.vault.modify(file, newLines2.join("\n"));
-			console.log(`badgeString: ${badgeString}`)
+			//console.log(`badgeString: ${badgeString}`)
 		}
 	}
 
