@@ -312,7 +312,34 @@ export class MultiSelectModal extends Modal {
 		if(labelText=='Fortune Infusion'){
 			//console.log(`acquireIngredients();`)
 			this.gamificationInstance.acquireIngredients(1,1,10)
+		} else if (labelText=='Temporal Tweaker'){
+			
+		} else if (labelText=='Perpetual Progress'){
+			this.gamificationInstance.setSettingBoolean('boosterFactorPerpetualProgress', true)
+		} else if (labelText=='Strategic Synapses'){
+			this.gamificationInstance.setSettingBoolean('boosterFactorStrategicSynapses', true)
+		} else if (labelText=='Accelerated Acquisition'){
+
+		} else if (labelText=='Linkers Lode'){
+			this.gamificationInstance.setSettingBoolean('boosterFactorLinkersLode', true)
+		} else if (labelText=='Effortless Expansion'){
+
+		} else if (labelText=='Recursive Reflection'){
+			this.gamificationInstance.setSettingBoolean('boosterFactorRecursiveReflection', true)
+		} else if (labelText=='Synaptic Surge'){
+			this.gamificationInstance.setSettingBoolean('boosterFactorSynapticSurge', true)
+		} else if (labelText=='Inspiration Infusion'){
+
+		} else if (labelText=='Title Titan'){
+			this.gamificationInstance.setSettingBoolean('boosterFactorTitleTitan', true)
+		} else if (labelText=='Precision Prism'){
+			this.gamificationInstance.setSettingBoolean('boosterFactorPrecisionPrism', true)
+		} else if (labelText=='Hyperlink Harmony'){
+			this.gamificationInstance.setSettingBoolean('boosterFactorHyperlinkHarmony', true)
+		} else if (labelText=='Ephemeral Euphoria'){
+			this.gamificationInstance.setSettingBoolean('boosterFactorEphemeralEuphoria', true)
 		}
+		
 		/*const stock = this.boosters[labelText];
 		if (stock > 0) {
 			//this.selectedItems.push(labelText);
