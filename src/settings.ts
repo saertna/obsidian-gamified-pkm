@@ -86,7 +86,8 @@ export const defaultSettings: Partial<ISettings> = {
   boosterUseCountEphemeralEuphoria: "U2FsdGVkX191hJANYr8JHI1bn1YRrJfBh0cQ0vgkKRM=",
   boosterUseCountFortuneInfusion: "U2FsdGVkX191hJANYr8JHI1bn1YRrJfBh0cQ0vgkKRM=",
   counterMajurityCalc: "U2FsdGVkX19TLndonGY4Y8vHuZFfLJ5gZ2t/CLprh0o=",
-  counterMajurityCalcInitial: "U2FsdGVkX1+2Qii8qhFSqrNqmKR1Wh6saEjYbwPdi8Q="
+  counterMajurityCalcInitial: "U2FsdGVkX1+2Qii8qhFSqrNqmKR1Wh6saEjYbwPdi8Q=",
+  delayLoadTime: "U2FsdGVkX19TLndonGY4Y8vHuZFfLJ5gZ2t/CLprh0o="
 };
 
 export interface DynamicSettings {
@@ -173,6 +174,7 @@ export interface ISettings extends DynamicSettings{
   boosterUseCountEphemeralEuphoria: string;
   counterMajurityCalc: string;
   counterMajurityCalcInitial: string;
+  delayLoadTime: string
   //[key: string]: number | string | boolean | MomentInput;
 }
 
@@ -180,7 +182,6 @@ export interface ISettings extends DynamicSettings{
 export class GamificationPluginSettings extends PluginSettingTab {
 	private readonly plugin: gamification;
   public settings: ISettings;
-  
   public enableInitCommand: string;
   public bindEnter: string;
   public bindTab: string;
@@ -260,6 +261,7 @@ export class GamificationPluginSettings extends PluginSettingTab {
   public boosterUseCountEphemeralEuphoria: string;
   public counterMajurityCalc: string;
   public counterMajurityCalcInitial: string;
+  public delayLoadTime: string;
 
 	constructor(app: App, plugin: gamification) {
 	  super(app, plugin);
@@ -358,20 +360,18 @@ export class GamificationPluginSettings extends PluginSettingTab {
           			}),
 			);
 
-		/*
-		new Setting(containerEl)
-			.setName('limit the visible month in the chart on your avatar page: ' + this.plugin.settings.avatarPageName)
-			.setDesc('if 0, all month will be shown. Enter a number how many month shall be shown.')
-			.addText(text => text
-					.setPlaceholder('Number of Month to show')
-					//.setValue(decryptNumber(this.plugin.settings.chartReduzierungMonate).toString())
-          .setValue("0")
-					.onChange(async (value) => {
-						this.plugin.settings.chartReduzierungMonate = encryptNumber(parseInt(value));
-						await this.plugin.saveSettings();
-				}));
-    */
   
+    new Setting(containerEl)
+			.setName('Delay Settings at startup')
+			.setDesc('Enter in seconds to delay the load time. e.g. when GIT pull is performed before and settings get merge conflicts. Without GIT usage, keep it to 0.')
+			.addText(text => text
+					.setPlaceholder('0')
+					.setValue(decryptNumber(this.plugin.settings.delayLoadTime).toString())
+          //.setValue("0")
+					.onChange(async (value) => {
+						this.plugin.settings.delayLoadTime = encryptNumber(parseInt(value));
+						await this.plugin.saveSettings();
+		}));
 
 		new Setting(containerEl)
 			.setName('Progressive Summarization')
