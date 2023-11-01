@@ -21,7 +21,6 @@ import {
 	pointsNoteMajurity,
 	pointsForDailyChallenge,
 	pointsForWeeklyChallenge,
-	incrediments,
 	elements,
 	boosterRecipes,
 	streakboosterDecrease,
@@ -62,12 +61,6 @@ export default class gamification extends Plugin {
 	public settings: ISettings;
 
 
-	/*getSetting(key: string) {
-        // Retrieve a specific setting
-		// return this.settings[key];
-		return this.settings[key] !== undefined ? this.settings[key] : null;
-    }*/
-
 	getSettingString(key: string) {
         const decryptedValue = this.settings[key] !== undefined ? this.settings[key].toString() : ''
 		//console.log(`String: decrypted ${key} is ${decryptString(decryptedValue)}`)
@@ -86,13 +79,6 @@ export default class gamification extends Plugin {
 		return decryptBoolean(decryptedValue);
     }
 
-
-    /*setSetting(key: string, value: number) {
-        // Set a specific setting
-		//console.log(`new value for ${key} is ${value}`)
-        this.settings[key] = value;
-        this.saveSettings();
-    }*/
 
 	setSettingString(key: string, value: string) {
         // Set a specific setting
@@ -132,23 +118,18 @@ export default class gamification extends Plugin {
 		console.log('obsidian-pkm-gamification loaded!');
 		//this.settings = defaultSettings;
 
-		
-		
-  
-
-		await this.loadSettings();
-		
-
+	 
 		this.addSettingTab(new GamificationPluginSettings(this.app, this));
 
 
-		/*
+		
 		// take care to reset when opened on a new day, don't wait for trigger
 		setTimeout(async () => {
 			// Code that you want to execute after the delay
+			await this.loadSettings();
 			await this.resetDailyGoals()
 		}, 2000); // 2000 milliseconds = 2 seconds
-*/
+
 
 		// to set timer for reset daily and weekly goals
 		this.timerInterval = 30 * 60 * 1000; // minutes x seconds x milliseconds
@@ -231,19 +212,7 @@ export default class gamification extends Plugin {
 			});
 		}
 
-		/*
-		// command: update chart in Avatar Page
-		this.addCommand({
-			id: 'update-chart-avatarpage',
-			name: 'update chart on profile page',
-			callback: async () => {
-				const { vault } = app;
-				const chartString = await this.createChart(vault)
-				await replaceChartContent(this.getSettingString('avatarPageName'), chartString)
-			},
-		});
-		*/
-
+		
 		// command: rate note maturity
 		this.addCommand({
 			id: 'rate-note-maturity',
