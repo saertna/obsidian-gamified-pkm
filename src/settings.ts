@@ -47,6 +47,7 @@ export const defaultSettings: Partial<ISettings> = {
   precisionPrism: "U2FsdGVkX1+72YwT/XdQzbpOLwA9ltJY8a+3GWB+IkQ=",
   hyperlinkHarmony: "U2FsdGVkX191lYd3kaeLOKdWTo9GllDL25tN36zPYxE=",
   ephemeralEuphoria: "U2FsdGVkX1+ijNputHqHW5gK0frfmswGx7EUdaHxjnk=",
+  fortuneInfusion: "U2FsdGVkX1+ijNputHqHW5gK0frfmswGx7EUdaHxjnk=",
   boosterFactorPerpetualProgress: "U2FsdGVkX19/Fss2X+hd+w6ZmI5yNJcuUWA+ImrOGmg=",
   boosterDatePerpetualProgress: "U2FsdGVkX1+RQltOMLx9axaYLmqyGEU9q2EJ6aFkRyvnCWTShMLGhyFmYzT35BaY",
   boosterFactorStrategicSynapses: "U2FsdGVkX18575mGIVSjGk/qJposIrfRUy+v/Cs8dK0=",
@@ -65,6 +66,8 @@ export const defaultSettings: Partial<ISettings> = {
   boosterDateHyperlinkHarmony: "U2FsdGVkX1+qUnz6LN+9w8gDvpVPPOmgy3BNAOa/mm1OwjUaVX05LqorO2wrXLho",
   boosterFactorEphemeralEuphoria: "U2FsdGVkX1+pxM+VURwTAj8eAAGOsb2ERuh1Lh7ZLnE=",
   boosterDateEphemeralEuphoria: "U2FsdGVkX19pJpw2a3f0SvfpjfUS7z9MlPAuqASwQFJBLjWjyHUj5qYGfN6rb/SY",
+  boosterFactorFortuneInfusion: "U2FsdGVkX1+pxM+VURwTAj8eAAGOsb2ERuh1Lh7ZLnE=",
+  boosterDateFortuneInfusion: "U2FsdGVkX19pJpw2a3f0SvfpjfUS7z9MlPAuqASwQFJBLjWjyHUj5qYGfN6rb/SY",
   streakbooster: "U2FsdGVkX1/lU8z1269GCh/eAbXcmvMeI8MyfL7nzEI=",
   streakboosterDate: "U2FsdGVkX1+DBUBmrzXuSiZlRp1jO9/UJv8sTTfeSNI=",
   boosterUseCount: "U2FsdGVkX1/VWmniuhXR6FAx6PTBe9NS+tCv9XbK32Q=",
@@ -81,6 +84,7 @@ export const defaultSettings: Partial<ISettings> = {
   boosterUseCountPrecisionPrism: "U2FsdGVkX18/kncuSG4klFZ6LpDHkp80wmp2U0knrr4=",
   boosterUseCountHyperlinkHarmony: "U2FsdGVkX1+R4fU/oDIdb34kCIedxc4165PX3oOnCLc=",
   boosterUseCountEphemeralEuphoria: "U2FsdGVkX191hJANYr8JHI1bn1YRrJfBh0cQ0vgkKRM=",
+  boosterUseCountFortuneInfusion: "U2FsdGVkX191hJANYr8JHI1bn1YRrJfBh0cQ0vgkKRM=",
   counterMajurityCalc: "U2FsdGVkX19TLndonGY4Y8vHuZFfLJ5gZ2t/CLprh0o=",
   counterMajurityCalcInitial: "U2FsdGVkX1+2Qii8qhFSqrNqmKR1Wh6saEjYbwPdi8Q="
 };
