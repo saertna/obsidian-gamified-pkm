@@ -9,12 +9,11 @@ export const CryptoJS = require("crypto-js");
 export const secretKey = "2ZU^12y#QmNB5$yEin5^";
 export const avatarInitContent =  `# Avatar
 
-|        |     |
-| ------ | --- |
-| Level  | 0    |
+|           |         | 
+| --------- | ------- |
+| **Level**  | **1** |
 | Points | 0    |
 ^levelAndPoints
-
 \`\`\`chart
 type: bar
 labels: [Expririence]
@@ -39,28 +38,27 @@ xTitle: "progress"
 legend: false
 \`\`\`
 
-|                    |       |
-| ------------------ | ----- |
+|                  |       |
+| ---------------- | ----- |
 | **booster factor** | **0** |
 ^boosterFactor
 
-|             |     |       |
-| ----------- | --- | ----- |
-| **daily Notes** | *500EP* | **0/2** |
+|                 |         |         | 
+| --------------- | ------- | ------- |
+| **daily Notes** | *500EP* | **0/2**   |
 ^dailyNotesChallenge
 
-| | | |
-| ---- | --- | --- |
+|                  |          |         | 
+| ---------------- | -------- | ------- |
 | **weekly Notes** | *2000EP*     |  **0/7**   |
 ^weeklyNotesChallenge
-
 \`\`\`chart
 type: bar
-labels: [Notes]
+labels: [days done in a row]
 series:
-  - title: days done in a row
-    data: [0]
   - title: days to do in a row
+    data: [0]
+  - title: points to earn to level up
     data: [7]
 xMin: 0
 xMax: 7
@@ -74,7 +72,7 @@ bestFitTitle: undefined
 bestFitNumber: 0
 stacked: true
 indexAxis: y
-xTitle: "days"
+xTitle: "progress"
 legend: false
 \`\`\`
 
