@@ -150,7 +150,8 @@ export default class gamification extends Plugin {
 				//this.setSettingString('weeklyNoteCreationDate', window.moment().format('DD.MM.YYYY'))
 				//this.setSettingString('weeklyNoteCreationDate', window.moment().format('DD.MM.YYYY'))
 				//await this.saveSettings();
-				new ModalBooster(this.app, ` `, this).open();
+				//new ModalBooster(this.app, ` `, this).open();
+				this.updateAvatarPage(this.getSettingString('avatarPageName'))
 			});
 		}
 
@@ -846,25 +847,25 @@ export default class gamification extends Plugin {
 		const file = existingFile as TFile;
 
 		const content = await app.vault.read(file);
-		let reference: number | null = null;
+		let levelAndPointsReference: number | null = null;
 		let reference2: number | null = null;
 		let reference3: number | null = null;
 		let reference4: number | null = null;
-		let end: number | null = null;
-		let start: number | null = null;
-		let end2: number | null = null;
-		let start2: number | null = null;
-		let end3: number | null = null;
-		let start3: number | null = null;
-		let end4: number | null = null;
-		let start4: number | null = null;
+		let levelAndPointsEnd: number | null = null;
+		let levelAndPointsStart: number | null = null;
+		let dailyNotesChallengeEnd2: number | null = null;
+		let dailyNotesChallengeStart2: number | null = null;
+		let weeklyNotesChallengeEnd3: number | null = null;
+		let weeklyNotesChallengeStart3: number | null = null;
+		let boosterFactorEnd4: number | null = null;
+		let boosterFactorStart4: number | null = null;
 
 		const lines = content.split("\n");
 		for (let i = 0; i < lines.length; i++) {
 			const line = lines[i].trim();
 			if (line === "^levelAndPoints") {
-				if (reference === null) {
-					reference = i;
+				if (levelAndPointsReference === null) {
+					levelAndPointsReference = i;
 				}
 			}
 			if (line === "^dailyNotesChallenge") {
@@ -913,20 +914,20 @@ export default class gamification extends Plugin {
 		
 		const boosterFactor = '| **booster factor** | **' + this.getSettingNumber('streakbooster') + '** |'
 
-		if (reference != null && reference2 != null && reference3 != null && reference4 != null){
-			start = reference - 2;
-			end = reference + 24;
-			start2 = reference2 - 1 - 25; // no idea why offset 25 is needed
-			end2 = reference2 - 25; // no idea why offset 25 is needed
-			start3 = reference3 - 1 -25; // no idea why offset 25 is needed
-			end3 = reference3 + 24 -25; // no idea why offset 25 is needed
-			start4 = reference4 - 1 - 25; // no idea why offset 25 is needed
-			end4 = reference4 - 25 ; // no idea why offset 25 is needed
+		if (levelAndPointsReference != null && reference2 != null && reference3 != null && reference4 != null){
+			levelAndPointsStart = levelAndPointsReference - 2;
+			levelAndPointsEnd = levelAndPointsReference + 24;
+			dailyNotesChallengeStart2 = reference2 - 1 - 25; // no idea why offset 25 is needed
+			dailyNotesChallengeEnd2 = reference2 - 25; // no idea why offset 25 is needed
+			weeklyNotesChallengeStart3 = reference3 - 1 -25; // no idea why offset 25 is needed
+			weeklyNotesChallengeEnd3 = reference3 + 24 -25; // no idea why offset 25 is needed
+			boosterFactorStart4 = reference4 - 1 - 25; // no idea why offset 25 is needed
+			boosterFactorEnd4 = reference4 - 25 ; // no idea why offset 25 is needed
 
-			const newLines = [...lines.slice(0, start), newPointsString, ...lines.slice(end)];
-			const newLines2 = [...newLines.slice(0, start2), dailyChallenge, ...newLines.slice(end2)];
-			const newLines3 = [...newLines2.slice(0, start3), weeklyChallenge, ...newLines2.slice(end3)];
-			const newLines4 = [...newLines3.slice(0, start4), boosterFactor, ...newLines3.slice(end4)];
+			const newLines = [...lines.slice(0, levelAndPointsStart), newPointsString, ...lines.slice(levelAndPointsEnd)];
+			const newLines2 = [...newLines.slice(0, dailyNotesChallengeStart2), dailyChallenge, ...newLines.slice(dailyNotesChallengeEnd2)];
+			const newLines3 = [...newLines2.slice(0, weeklyNotesChallengeStart3), weeklyChallenge, ...newLines2.slice(weeklyNotesChallengeEnd3)];
+			const newLines4 = [...newLines3.slice(0, boosterFactorStart4), boosterFactor, ...newLines3.slice(boosterFactorEnd4)];
 			await app.vault.modify(file, newLines4.join("\n"));
 		}
 		return receiveBadge
