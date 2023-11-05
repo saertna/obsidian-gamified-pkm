@@ -150,8 +150,8 @@ export default class gamification extends Plugin {
 				//this.setSettingString('weeklyNoteCreationDate', window.moment().format('DD.MM.YYYY'))
 				//this.setSettingString('weeklyNoteCreationDate', window.moment().format('DD.MM.YYYY'))
 				//await this.saveSettings();
-				//new ModalBooster(this.app, ` `, this).open();
-				this.updateAvatarPage(this.getSettingString('avatarPageName'))
+				new ModalBooster(this.app, ` `, this).open();
+				//this.updateAvatarPage(this.getSettingString('avatarPageName'))
 			});
 		}
 
@@ -727,10 +727,9 @@ export default class gamification extends Plugin {
 		let direction = '↕️'
 		if(this.getSettingNumber('dailyNoteCreationTask')==1){
 			direction = '➡️';
-		}
-		if(this.getSettingBoolean('streakboosterDate')){
+		} else if(this.getSettingBoolean('streakboosterDate')){
 			direction = '⬆️';
-		} else {
+		} else if(!this.getSettingBoolean('streakboosterDate')){
 			direction = '⬇️';
 		}
 		return direction
@@ -1300,7 +1299,7 @@ function isOneDayBefore(inputDate: Moment): boolean {
 
 export function isMinutesPassed(inputDate: Moment, minutesPassed: number): boolean {
     const minutesAgo = window.moment().subtract(minutesPassed, 'minutes'); // Calculate time 'minutesPassed' minutes ago
-    return inputDate.isSameOrBefore(minutesAgo);
+	return inputDate.isSameOrBefore(minutesAgo);
 }
 
 

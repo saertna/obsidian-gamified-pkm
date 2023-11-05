@@ -359,11 +359,16 @@ export class MultiSelectModal extends Modal {
 			stockInfo.innerHTML = ''; // Clear the current content
 			stockInfo.innerHTML = `${labelText} : (${stock})`;
 		}
-		const buttonUse = document.querySelector(`#use-button-${labelText.replace(' ', '-')}`);
-		const date = this.gamificationInstance.getSettingString(this.getBoosterDateFromName(labelText));
-		const momentDate = window.moment(date as string, 'YYYY-MM-DD HH:mm:ss');
-		if (buttonUse && isMinutesPassed(momentDate, this.getBoosterCooldownFromName(labelText)) == false) {
-			buttonUse.setText(`cooldown ${hoursUntilMinutesPassed(momentDate, this.getBoosterCooldownFromName(labelText))} hours`);
+		const buttonUse: HTMLButtonElement | null = document.querySelector(`#use-button-${labelText.replace(' ', '-')}`);
+		if (buttonUse !== null) {
+			const date = this.gamificationInstance.getSettingString(this.getBoosterDateFromName(labelText));
+			const momentDate = window.moment(this.gamificationInstance.getSettingString(this.getBoosterDateFromName(labelText)), 'YYYY-MM-DD HH:mm:ss');
+			if (isMinutesPassed(momentDate, this.getBoosterCooldownFromName(labelText)) == false) {
+				buttonUse.setText(`cooldown ${hoursUntilMinutesPassed(momentDate, this.getBoosterCooldownFromName(labelText))} hours`);
+				buttonUse.onclick = () => {
+					new ModalInformationbox(this.app, `${labelText} is for ${hoursUntilMinutesPassed(momentDate, this.getBoosterCooldownFromName(labelText))} hours in cooldown and can only then be used again.`).open();
+				}
+			}
 		}
 	}
 
