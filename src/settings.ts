@@ -87,7 +87,8 @@ export const defaultSettings: Partial<ISettings> = {
   boosterUseCountFortuneInfusion: "U2FsdGVkX191hJANYr8JHI1bn1YRrJfBh0cQ0vgkKRM=",
   counterMajurityCalc: "U2FsdGVkX19TLndonGY4Y8vHuZFfLJ5gZ2t/CLprh0o=",
   counterMajurityCalcInitial: "U2FsdGVkX1+2Qii8qhFSqrNqmKR1Wh6saEjYbwPdi8Q=",
-  delayLoadTime: "U2FsdGVkX19TLndonGY4Y8vHuZFfLJ5gZ2t/CLprh0o="
+  delayLoadTime: "U2FsdGVkX19TLndonGY4Y8vHuZFfLJ5gZ2t/CLprh0o=",
+  receivedBadges: ""
 };
 
 export interface DynamicSettings {
@@ -175,6 +176,7 @@ export interface ISettings extends DynamicSettings{
   counterMajurityCalc: string;
   counterMajurityCalcInitial: string;
   delayLoadTime: string
+  receivedBadges: string
   //[key: string]: number | string | boolean | MomentInput;
 }
 
@@ -262,6 +264,7 @@ export class GamificationPluginSettings extends PluginSettingTab {
   public counterMajurityCalc: string;
   public counterMajurityCalcInitial: string;
   public delayLoadTime: string;
+  public receivedBadges: string;
 
 	constructor(app: App, plugin: gamification) {
 	  super(app, plugin);
