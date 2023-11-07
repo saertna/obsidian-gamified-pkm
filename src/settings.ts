@@ -88,6 +88,7 @@ export const defaultSettings: Partial<ISettings> = {
   counterMajurityCalc: "U2FsdGVkX19TLndonGY4Y8vHuZFfLJ5gZ2t/CLprh0o=",
   counterMajurityCalcInitial: "U2FsdGVkX1+2Qii8qhFSqrNqmKR1Wh6saEjYbwPdi8Q=",
   delayLoadTime: "U2FsdGVkX19TLndonGY4Y8vHuZFfLJ5gZ2t/CLprh0o=",
+  timeShowNotice: "U2FsdGVkX190u8cOsylOs1cQ8MeZFq+i+Wv4ox6qq0k=",
   receivedBadges: ""
 };
 
@@ -175,7 +176,8 @@ export interface ISettings extends DynamicSettings{
   boosterUseCountEphemeralEuphoria: string;
   counterMajurityCalc: string;
   counterMajurityCalcInitial: string;
-  delayLoadTime: string
+  delayLoadTime: string;
+  timeShowNotice: string;
   receivedBadges: string
   //[key: string]: number | string | boolean | MomentInput;
 }
@@ -264,6 +266,7 @@ export class GamificationPluginSettings extends PluginSettingTab {
   public counterMajurityCalc: string;
   public counterMajurityCalcInitial: string;
   public delayLoadTime: string;
+  public timeShowNotice: string;
   public receivedBadges: string;
 
 	constructor(app: App, plugin: gamification) {
@@ -373,6 +376,17 @@ export class GamificationPluginSettings extends PluginSettingTab {
           //.setValue("0")
 					.onChange(async (value) => {
 						this.plugin.settings.delayLoadTime = encryptNumber(parseInt(value));
+						await this.plugin.saveSettings();
+		}));
+
+    new Setting(containerEl)
+			.setName('Time how long Notices are shown')
+			.setDesc('Enter in seconds. 4 seconds or more is a good value')
+			.addText(text => text
+					.setPlaceholder('4')
+					.setValue(decryptNumber(this.plugin.settings.timeShowNotice).toString())
+          .onChange(async (value) => {
+						this.plugin.settings.timeShowNotice = encryptNumber(parseInt(value));
 						await this.plugin.saveSettings();
 		}));
 

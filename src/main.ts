@@ -377,13 +377,13 @@ export default class gamification extends Plugin {
 			} catch (e) {
 				if (e?.name === 'YAMLParseError') {
 					const errorMessage = `Update majuritys failed Malformed frontamtter on this file : ${file.path} ${e.message}`;
-					new Notice(errorMessage, 4000);
+					new Notice(errorMessage, this.getSettingNumber('timeShowNotice') * 1000);
 					console.error(errorMessage);
 				}
 			}
 		}
 		if (pointsReceived > 0) {
-			new Notice(`${pointsReceived} Points received`,4000)
+			new Notice(`${pointsReceived} Points received`,this.getSettingNumber('timeShowNotice') * 1000)
 			console.log(`${pointsReceived} Points received`)
 		}
 
@@ -392,7 +392,7 @@ export default class gamification extends Plugin {
 		setTimeout(async () => {
 			// Code that you want to execute after the delay
 			const initBadge: Badge = getBadgeForInitLevel(this.getSettingNumber('statusLevel'));
-			new Notice(`You've earned the "${initBadge.name}" badge. ${initBadge.description}`,5000)
+			new Notice(`You've earned the "${initBadge.name}" badge. ${initBadge.description}`,this.getSettingNumber('timeShowNotice') * 1000 * 1.2)
 			console.log(`You earned ${initBadge.name} - ${initBadge.description}`)
 			await this.giveInitBadgeInProfile(this.getSettingString('avatarPageName'), initBadge);
 			await this.removeBadgesWhenInitLevelHigher(this.getSettingString('avatarPageName'), this.getSettingNumber('statusLevel'))
@@ -557,7 +557,7 @@ export default class gamification extends Plugin {
 						//console.log(`pointsReceived: ${pointsReceived}`)
 						if (pointsReceived > 0){
 							const messagePoints = getRandomMessagePoints(pointsReceived);
-							new Notice(messagePoints,4000)
+							new Notice(messagePoints,this.getSettingNumber('timeShowNotice') * 1000)
 							console.log(messagePoints)
 						}
 
@@ -567,7 +567,7 @@ export default class gamification extends Plugin {
 			} catch (e) {
 				if (e?.name === 'YAMLParseError') {
 					const errorMessage = `Update majuritys failed Malformed frontamtter on this file : ${file.path} ${e.message}`;
-					new Notice(errorMessage, 4000);
+					new Notice(errorMessage, this.getSettingNumber('timeShowNotice') * 1000);
 					console.error(errorMessage);
 				}
 			}
@@ -673,7 +673,7 @@ export default class gamification extends Plugin {
 				await this.giveStatusPoints(pointsForDailyChallenge,'formIncreaseDailyCreatedNoteCount')
 				const message = getRandomMessageTwoNoteChallenge(pointsForDailyChallenge * (this.getSettingNumber('badgeBoosterFactor') + this.getSettingNumber('streakbooster')));
 				console.log(`daily Challenge reached! ${newDailyNoteCreationTask}/2 created.`)
-				new Notice(message,4000)
+				new Notice(message,this.getSettingNumber('timeShowNotice') * 1000)
 				console.log(message)
 			} else {
 				// nothing else to do here
@@ -722,7 +722,7 @@ export default class gamification extends Plugin {
 			await this.giveStatusPoints(pointsForWeeklyChallenge, 'fromCheckForWeeklyNoteChallengeEvaluation')
 			console.log(`Weekly Challenge reached! ${newWeeklyNoteCreationTask}/7 created in a chain.`)
 			const message = getRandomMessageWeeklyChallenge(pointsForWeeklyChallenge * (this.getSettingNumber('badgeBoosterFactor') + this.getSettingNumber('streakbooster')));
-			new Notice(message,4000)
+			new Notice(message,this.getSettingNumber('timeShowNotice') * 1000)
 			console.log(message)
 		} else {
 			// nothing else to do here
@@ -909,7 +909,7 @@ export default class gamification extends Plugin {
 		let receiveBadge = false
 		if (this.getSettingNumber('statusLevel') < level.level){
 			// Level Up archived
-			new Notice(`With ${newPoints} points, the current level is ${level.level}.`,5000)
+			new Notice(`With ${newPoints} points, the current level is ${level.level}.`,this.getSettingNumber('timeShowNotice') * 1000 * 1.2)
 			// check first if this means a new badge before it gets overwritten
 			receiveBadge = checkIfReceiveABadge(this.getSettingNumber('statusLevel'), level.level)
 			this.setSettingNumber('statusLevel', level.level);
@@ -1127,7 +1127,7 @@ export default class gamification extends Plugin {
 		newLevel.then((result: boolean)=> {
 			if(result){
 				const badge : Badge = getBadgeForLevel(this.getSettingNumber('statusLevel'), false)
-				new Notice(`You've earned the "${badge.name}" badge. ${badge.description}`,5000)
+				new Notice(`You've earned the "${badge.name}" badge. ${badge.description}`,this.getSettingNumber('timeShowNotice') * 1000 * 1.2)
 				console.log(`You've earned the "${badge.name}" badge. ${badge.description}`)
 				this.giveBadgeInProfile(this.getSettingString('avatarPageName'), badge)
 				this.setSettingBoolean('badgeBoosterState', false);
@@ -1161,7 +1161,7 @@ export default class gamification extends Plugin {
 			} catch (e) {
 				if (e?.name === 'YAMLParseError') {
 					const errorMessage = `Update majuritys failed Malformed frontamtter ${e.message}`;
-					new Notice(errorMessage, 4000);
+					new Notice(errorMessage, this.getSettingNumber('timeShowNotice') * 1000);
 					console.error(errorMessage);
 				}
 			}
@@ -1238,7 +1238,7 @@ export default class gamification extends Plugin {
 				}
 			}
 			console.log(`You earned: ${concatenateStrings(earnedIngredientToShow)}`);
-			new Notice(`You earned ${concatenateStrings(earnedIngredientToShow)}`,3000)
+			new Notice(`You earned ${concatenateStrings(earnedIngredientToShow)}`,this.getSettingNumber('timeShowNotice') * 1000)
 		} else {
 			console.log('You did not earn an ingredient this time.');
 		}
