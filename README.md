@@ -8,7 +8,7 @@ Hello, fellow learners and knowledge seekers! 📚 If you're as passionate about
 
 
 ## Manual installation
-1. Download the latest release 🔗 **Plugin Download:** [Obsidian Gamification Plugin](https://github.com/saertna/obsidian-gamified-pkm/releases/tag/0.0.8-beta.2)
+1. Download the latest release 🔗 **Plugin Download:** [Obsidian Gamification Plugin](https://github.com/saertna/obsidian-gamified-pkm/releases/tag/0.0.8)
 2. Extract the obsidian-gamified-pkm folder from the zip to your vault's plugins folder: <vault>/.obsidian/plugins/
  - Note: On some machines the .obsidian folder may be hidden. On MacOS you should be able to press Command+Shift+Dot to show the folder in Finder.
  - Note: the files `main.js` and `manifest.json` are the files which you need in this folder.
@@ -18,6 +18,7 @@ Hello, fellow learners and knowledge seekers! 📚 If you're as passionate about
  -  `dataview`. In dataview settings enable `Enable JavaScript Queries` and `Enable Inline JavaScript Queries` to display counting in profile.
  -  `obsidian-charts`
 6. in Obsidian hit `CTRL+P` and run command `Initialize gamification ratings`
+7. create and improve notes and rate again to increase points
 
 **Embark on a Motivational Journey!**
 
