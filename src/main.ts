@@ -150,8 +150,26 @@ export default class gamification extends Plugin {
 				//this.setSettingString('weeklyNoteCreationDate', window.moment().format('DD.MM.YYYY'))
 				//this.setSettingString('weeklyNoteCreationDate', window.moment().format('DD.MM.YYYY'))
 				//await this.saveSettings();
-				new ModalBooster(this.app, ` `, this).open();
+				
+				//new ModalBooster(this.app, ` `, this).open();
+				
 				//this.updateAvatarPage(this.getSettingString('avatarPageName'))
+
+
+				// Example CSV string
+				/*const csvString = "Brainiac Trailblazer,2023-09-07,20\nSavvy Scholar,2023-08-15,15";
+
+				// Parse the CSV string
+				const badgeDict = parseBadgeCSV(csvString);
+
+				// Access badge information
+				//console.log(badgeDict["Brainiac Trailblazer"]);
+				for (const badgeName in badgeDict) {
+					if (badgeDict.hasOwnProperty(badgeName)) {
+						const badgeInfo = badgeDict[badgeName];
+						console.log(`Badge: ${badgeName}, Date: ${badgeInfo.date}, Level: ${badgeInfo.level}`);
+					}
+				}*/
 			});
 		}
 
@@ -1364,6 +1382,20 @@ function rateDirectionForStatusPoints(ratingCurrent: string, ratingNew: number):
 	return ratingFaktor
 }
 
+
+
+function parseBadgeCSV(csvString: string): Record<string, { date: string, level: number }> {
+    const badgeDict: Record<string, { date: string, level: number }> = {};
+    const rows = csvString.split('\n');
+    for (const row of rows) {
+        const [badgeName, dateReceived, level] = row.split(',');
+
+        if (badgeName && dateReceived && level) {
+            badgeDict[badgeName] = { date: dateReceived, level: parseInt(level, 10) };
+        }
+    }
+    return badgeDict;
+}
 
 
   
