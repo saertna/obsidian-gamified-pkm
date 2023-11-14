@@ -43,7 +43,7 @@ import {
 	rateOutlinks,
 	rateProgressiveSummarization
 } from './majuritycalculation'
-import {Badge, checkIfReceiveABadge, getBadgeForInitLevel, getBadgeForLevel} from './badges'
+import {Badge, checkIfReceiveABadge, getBadgeForInitLevel, getBadgeForLevel , getBadgeDetails } from './badges'
 import {getLevelForPoints, statusPointsForLevel} from './levels'
 import type {Moment} from 'moment';
 import { getRandomMessageWeeklyChallenge, getRandomMessageTwoNoteChallenge , getRandomMessagePoints } from './randomNotificationText'
@@ -157,7 +157,7 @@ export default class gamification extends Plugin {
 
 
 				// Example CSV string
-				const csvString = "Brainiac Trailblazer,2023-09-07,20\nSavvy Scholar,2023-08-15,15";
+				const csvString = "Brainiac Trailblazer,2023-09-07,20\nSavvy Scholar,2023-08-15,15\nScribe of the Ancients,2023-07-1,10";
 
 				// Parse the CSV string
 				const badgeDict = parseBadgeCSV(csvString);
@@ -167,11 +167,13 @@ export default class gamification extends Plugin {
 				for (const badgeName in badgeDict) {
 					if (badgeDict.hasOwnProperty(badgeName)) {
 						const badgeInfo = badgeDict[badgeName];
-						console.log(`Badge: ${badgeName}, Date: ${badgeInfo.date}, Level: ${badgeInfo.level}`);
+						const badgeDetails = getBadgeDetails(badgeName)
+						console.log(`Badge: ${badgeName}, Date: ${badgeInfo.date}, Level: ${badgeInfo.level}, Description: ${badgeDetails.name}`);
 					}
 				}
 			});
 		}
+
 
 		if(this.getSettingNumber('counterMajurityCalcInitial') >= 50){
 			this.addRibbonIcon("test-tube-2", "Boosters", async () => {
