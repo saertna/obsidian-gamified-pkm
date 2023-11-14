@@ -78,12 +78,12 @@ legend: false
 
 | Level | Count |
 | :---: | :---: |
-| Majurity 5 |\`$=dv.pages().where(p => [5, '5', '5➡️', '5⬇️', '5⬆️'].includes(p.file.frontmatter['note-maturity'])).length\`|
-| Majurity 4 |\`$=dv.pages().where(p => [4, '4', '4➡️', '4⬇️', '4⬆️'].includes(p.file.frontmatter['note-maturity'])).length\`|
-| Majurity 3 |\`$=dv.pages().where(p => [3, '3', '3➡️', '3⬇️', '3⬆️'].includes(p.file.frontmatter['note-maturity'])).length\`|
-| Majurity 2 |\`$=dv.pages().where(p => [2, '2', '2➡️', '2⬇️', '2⬆️'].includes(p.file.frontmatter['note-maturity'])).length\`|
-| Majurity 1 |\`$=dv.pages().where(p => [1, '1', '1➡️', '1⬇️', '1⬆️'].includes(p.file.frontmatter['note-maturity'])).length\`|
-| Majurity 0 |\`$=dv.pages().where(p => [0, '0', '0➡️', '0⬇️', '0⬆️'].includes(p.file.frontmatter['note-maturity'])).length\`|
+| Maturity 5 |\`$=dv.pages().where(p => [5, '5', '5➡️', '5⬇️', '5⬆️'].includes(p.file.frontmatter['note-maturity'])).length\`|
+| Maturity 4 |\`$=dv.pages().where(p => [4, '4', '4➡️', '4⬇️', '4⬆️'].includes(p.file.frontmatter['note-maturity'])).length\`|
+| Maturity 3 |\`$=dv.pages().where(p => [3, '3', '3➡️', '3⬇️', '3⬆️'].includes(p.file.frontmatter['note-maturity'])).length\`|
+| Maturity 2 |\`$=dv.pages().where(p => [2, '2', '2➡️', '2⬇️', '2⬆️'].includes(p.file.frontmatter['note-maturity'])).length\`|
+| Maturity 1 |\`$=dv.pages().where(p => [1, '1', '1➡️', '1⬇️', '1⬆️'].includes(p.file.frontmatter['note-maturity'])).length\`|
+| Maturity 0 |\`$=dv.pages().where(p => [0, '0', '0➡️', '0⬇️', '0⬆️'].includes(p.file.frontmatter['note-maturity'])).length\`|
 
 
 
@@ -172,18 +172,18 @@ export const incredimentsDataName = [
 ];
 
 export const craftingItems = [
-  { name: 'Temporal Tweaker', incredients: ['2xS1', '1xS6'] },
-  { name: 'Perpetual Progress', incredients: ['2xS2', '1xS4'] },
-  { name: 'Strategic Synapses', incredients: ['3xS1', '2xS2'] },
-  { name: 'Accelerated Acquisition', incredients: ['1xS3', '2xS4'] },
-  { name: 'Linkers Lode', incredients: ['3xS2', '1xS1'] },
-  { name: 'Effortless Expansion', incredients: ['2xS3', '1xS6'] },
-  { name: 'Recursive Reflection', incredients: ['2xS4', '1xS5'] },
-  { name: 'Synaptic Surge', incredients: ['2xS2', '1xS1'] },
-  { name: 'Inspiration Infusion', incredients: ['2xS7', '1xS1'] },
-  { name: 'Title Titan', incredients: ['2xS8', '1xS7'] },
-  { name: 'Precision Prism', incredients: ['2xS8', '1xS2'] },
-  { name: 'Hyperlink Harmony', incredients: ['2xS2', '1xS6'] },
+  { name: 'Temporal Tweaker', incredients: ['20xS1', '10xS6'] },
+  { name: 'Perpetual Progress', incredients: ['20xS2', '10xS4'] },
+  { name: 'Strategic Synapses', incredients: ['30xS1', '20xS2'] },
+  { name: 'Accelerated Acquisition', incredients: ['10xS3', '20xS4'] },
+  { name: 'Linkers Lode', incredients: ['30xS2', '10xS1'] },
+  { name: 'Effortless Expansion', incredients: ['20xS3', '10xS6'] },
+  { name: 'Recursive Reflection', incredients: ['20xS4', '10xS5'] },
+  { name: 'Synaptic Surge', incredients: ['20xS2', '10xS1'] },
+  { name: 'Inspiration Infusion', incredients: ['20xS7', '10xS1'] },
+  { name: 'Title Titan', incredients: ['20xS8', '10xS7'] },
+  { name: 'Precision Prism', incredients: ['20xS8', '10xS2'] },
+  { name: 'Hyperlink Harmony', incredients: ['20xS2', '10xS6'] },
 ];
 
 export const listOfUseableBoostersToBeShown = ['Perpetual Progress', 'Title Titan', 'Precision Prism']
