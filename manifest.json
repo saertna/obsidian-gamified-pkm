@@ -1,7 +1,7 @@
 {
 	"id": "obsidian-gamified-pkm",
 	"name": "Gamificate your PKM",
-	"version": "0.0.8",
+	"version": "0.0.81",
 	"minAppVersion": "0.15.0",
 	"description": "This plugin gamifies your personal knowledge management (PKM) to bring fun and drive into your PKM",
 	"author": "Andreas Trebing",
