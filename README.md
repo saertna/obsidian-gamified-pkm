@@ -22,6 +22,28 @@ Hello, fellow learners and knowledge seekers! 📚 If you're as passionate about
 
 **Embark on a Motivational Journey!**
 
+### Additional config informations
+
+In some cases the same vault is used vor other activities as well an the knowledge management shall stay separated. Then you can exclude #tags and/or folders, which shall not be used when initialized. By default the folder 'Excalidraw' is entered. You can ignore this setting if you want to use all files in you vault for you pkm.
+![Settings for exclude TAGs and folders](https://github.com/obsidian-gamified-pkm/obsidian-gamified-pkm/raw/gh-pages/docs/images/SettingsExcludeTagsFolders.png)
+
+## Getting Started
+
+### initialise game
+
+When not already done during installation, hit `CTRL+P` and run command `Initialize gamification ratings`. This command will create you profile, rate you existing notes and give you a starting level. On the profile you can get informations to you current level, points, badges and see the distribution of you note maturitys. 
+
+![Gamification Initialization Command](https://github.com/obsidian-gamified-pkm/obsidian-gamified-pkm/raw/gh-pages/docs/images/GamificationInitializationCommand.png)
+
+### next steps
+
+create a new note and use the plant-icon on the side or `CTRL+P` and ran command `Rate note maturity`.
+![Rate Note First Time](https://github.com/obsidian-gamified-pkm/obsidian-gamified-pkm/raw/gh-pages/docs/images/RateNoteFirstTime.png)
+
+work on an existing note, improve you thougts, you title, link it to other fitting notes and run `CTRL+P` and ran command `Rate note maturity`, or use the plant-icon.
+![Rate again after improving](https://github.com/obsidian-gamified-pkm/obsidian-gamified-pkm/raw/gh-pages/docs/images/RateAfterImprovement.png)
+
+
 ## Hey there! 👋 
 Imagine transforming your knowledge management into an adventure where every step forward is a celebration. Introducing the Obsidian Gamification Plugin – a tool designed to harness the motivating power of game techniques and apply it to our pursuit of knowledge.
 
