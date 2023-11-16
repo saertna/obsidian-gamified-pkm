@@ -68,3 +68,24 @@ If you resonate with the idea of infusing motivational game techniques into pers
 Thank you for being a part of this movement to revolutionize our approach to knowledge management. Let's harness the power of motivation and level up our learning journey together! 🌐🌱
 
 
+## Roadmap
+Upcoming developments are in store for the Gamification Plugin! Here's a glimpse into the future:
+
+- further metrics to generate points
+	- points for index/MOC creation & quality levels
+	- points for chain of thoughts
+- overview in sidebar for game elements
+	- challenge status
+	- active boosters
+	- crafted boosters
+	- ingredients overview
+- boosters
+	- icons and full names for ingredients to craft
+	- icons for booster potions
+	- additional boosters
+- badges
+	- link to open-badges
+	- add further badges for achievements
+- implement check if update of plugin is available
+- new challenges
+- Quests to follow and fulfill
