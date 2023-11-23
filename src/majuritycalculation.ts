@@ -293,7 +293,7 @@ export function getNumberOfOutlinks(activeFile: TFile): number {
 	if (!activeFile) {
 		return 0;
 	}
-	const inlinks = app.metadataCache.getFileCache(activeFile)?.links;
+	const inlinks = this.app.metadataCache.getFileCache(activeFile)?.links;
 	return inlinks ? Object.keys(inlinks).length : 0;
 }
 
