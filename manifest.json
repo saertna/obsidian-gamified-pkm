@@ -7,6 +7,6 @@
 	"author": "Andreas Trebing",
 	"authorUrl": "",
 	"fundingUrl": "https://ko-fi.com/andreastrebing",
-	"isDesktopOnly": false,
+	"isDesktopOnly": true,
 	"styles": ["styles.css"]
 }
