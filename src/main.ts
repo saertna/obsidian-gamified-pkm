@@ -170,6 +170,7 @@ export default class gamification extends Plugin {
 						console.log(`Badge: ${badgeName}, Date: ${badgeInfo.date}, Level: ${badgeInfo.level}`);
 					}
 				}*/
+				this.openAvatarFile();
 			});
 		}
 
@@ -1204,10 +1205,10 @@ export default class gamification extends Plugin {
 
 
 	async openAvatarFile() {
-		const existingFile = app.vault.getAbstractFileByPath(`${this.getSettingString('avatarPageName')}.md`);
+		const existingFile = this.app.vault.getAbstractFileByPath(`${this.getSettingString('avatarPageName')}.md`);
 		if (existingFile){
 			const sourcePath = this.app.workspace.getActiveFile()?.path || '';
-			await app.workspace.openLinkText(existingFile.path, sourcePath);
+			await this.app.workspace.openLinkText(existingFile.path, sourcePath);
 		} else {
 			console.log("File not found or unable to open.");
 		}
