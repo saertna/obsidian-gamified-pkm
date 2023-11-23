@@ -287,7 +287,7 @@ export default class gamification extends Plugin {
 
 		for (const fileName of fileCountMap) {
 			const file = fileName
-			const fileContents = await app.vault.read(file);
+			const fileContents = await this.app.vault.read(file);
 			const activeView = this.app.workspace.getActiveViewOfType(MarkdownView);
 			if (activeView && activeView.file && activeView.file.path === file.path) {
 				console.warn(`File ${file.path} is currently open. Skipping.`);
@@ -857,14 +857,14 @@ export default class gamification extends Plugin {
 
 
 	async updateAvatarPage(avatarPageName: string): Promise<boolean>{
-		const existingFile = app.vault.getAbstractFileByPath(`${avatarPageName}.md`);
+		const existingFile = this.app.vault.getAbstractFileByPath(`${avatarPageName}.md`);
 		if (existingFile == null) {
 			console.log(`File ${avatarPageName}.md does not exist`);
 			return false;
 		}
 		const file = existingFile as TFile;
 
-		const content = await app.vault.read(file);
+		const content = await this.app.vault.read(file);
 		let levelAndPointsReference: number | null = null;
 		let reference2: number | null = null;
 		let reference3: number | null = null;
@@ -946,21 +946,21 @@ export default class gamification extends Plugin {
 			const newLines2 = [...newLines.slice(0, dailyNotesChallengeStart2), dailyChallenge, ...newLines.slice(dailyNotesChallengeEnd2)];
 			const newLines3 = [...newLines2.slice(0, weeklyNotesChallengeStart3), weeklyChallenge, ...newLines2.slice(weeklyNotesChallengeEnd3)];
 			const newLines4 = [...newLines3.slice(0, boosterFactorStart4), boosterFactor, ...newLines3.slice(boosterFactorEnd4)];
-			await app.vault.modify(file, newLines4.join("\n"));
+			await this.app.vault.modify(file, newLines4.join("\n"));
 		}
 		return receiveBadge
 	}
 
 
 	async giveBadgeInProfile(avatarPageName: string, badge: Badge){
-		const existingFile = app.vault.getAbstractFileByPath(`${avatarPageName}.md`);
+		const existingFile = this.app.vault.getAbstractFileByPath(`${avatarPageName}.md`);
 		if (existingFile == null) {
 			console.log(`File ${avatarPageName}.md does not exist`);
 			return;
 		}
 		const file = existingFile as TFile;
 
-		const content = await app.vault.read(file);
+		const content = await this.app.vault.read(file);
 		let reference: number | null = null;
 		let reference2: number | null = null;
 		let end: number | null = null;
@@ -992,21 +992,21 @@ export default class gamification extends Plugin {
 			const badgeString = "**" + badge.name + "** " + badge.level + "\n> " + badge.description + " - *" + window.moment().format('D.M.YY') + "*\n"
 			const newLines = [...lines.slice(0, start), badgeString, ...lines.slice(end)];
 			const newLines2 = [...newLines.slice(0, start2), ...newLines.slice(end2)]
-			await app.vault.modify(file, newLines2.join("\n"));
+			await this.app.vault.modify(file, newLines2.join("\n"));
 			//console.log(`badgeString: ${badgeString}`)
 		}
 	}
 
 
 	async giveInitBadgeInProfile(avatarPageName: string, badge: Badge){
-		const existingFile = app.vault.getAbstractFileByPath(`${avatarPageName}.md`);
+		const existingFile = this.app.vault.getAbstractFileByPath(`${avatarPageName}.md`);
 		if (existingFile == null) {
 			console.log(`File ${avatarPageName}.md does not exist`);
 			return;
 		}
 		const file = existingFile as TFile;
 
-		const content = await app.vault.read(file);
+		const content = await this.app.vault.read(file);
 		let reference: number | null = null;
 		let end: number | null = null;
 		let start: number | null = null;
@@ -1026,21 +1026,21 @@ export default class gamification extends Plugin {
 
 			const badgeString = "**" + badge.name + "**\n> " + badge.description + " - *" + window.moment().format('D.M.YY') + "*\n"
 			const newLines = [...lines.slice(0, start), badgeString, ...lines.slice(end)];
-			await app.vault.modify(file, newLines.join("\n"));
+			await this.app.vault.modify(file, newLines.join("\n"));
 			console.log(`badgeString: ${badgeString}`)
 		}
 	}
 
 
 	async removeBadgesWhenInitLevelHigher(avatarPageName: string, level: number){
-		const existingFile = app.vault.getAbstractFileByPath(`${avatarPageName}.md`);
+		const existingFile = this.app.vault.getAbstractFileByPath(`${avatarPageName}.md`);
 		if (existingFile == null) {
 			console.log(`File ${avatarPageName}.md does not exist`);
 			return;
 		}
 		const file = existingFile as TFile;
 
-		const content = await app.vault.read(file);
+		const content = await this.app.vault.read(file);
 		let reference: number | null = null;
 		let reference2: number | null = null;
 
@@ -1068,7 +1068,7 @@ export default class gamification extends Plugin {
 		}
 		if (reference != null && reference2 != null){
 			const newLines = [...lines.slice(0, reference + 1), ...lines.slice(reference2)];
-			await app.vault.modify(file, newLines.join("\n"));
+			await this.app.vault.modify(file, newLines.join("\n"));
 		}
 	}
 
