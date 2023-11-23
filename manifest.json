@@ -5,7 +5,7 @@
 	"minAppVersion": "0.15.0",
 	"description": "This plugin gamifies your personal knowledge management (PKM) to bring fun and drive into your PKM",
 	"author": "Andreas Trebing",
-	"authorUrl": "",
+	"authorUrl": "https://github.com/saertna",
 	"fundingUrl": "https://ko-fi.com/andreastrebing",
 	"isDesktopOnly": true,
 	"styles": ["styles.css"]
