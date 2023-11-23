@@ -1337,13 +1337,13 @@ export function hoursUntilMinutesPassed(inputDate: Moment, minutesToPass: number
 
 async function createAvatarFile(app: App, fileName: string): Promise<void> {
 
-	const existingFile = app.vault.getAbstractFileByPath(`${fileName}.md`);
+	const existingFile = this.app.vault.getAbstractFileByPath(`${fileName}.md`);
 	if (existingFile instanceof TFile) {
 		console.log(`File ${fileName}.md already exists`);
 		return;
 	}
 	// Create the file in the root of the vault
-	await app.vault.create(`${fileName}.md`, avatarInitContent);
+	await this.app.vault.create(`${fileName}.md`, avatarInitContent);
 
 }
 
