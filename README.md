@@ -71,7 +71,7 @@ work on an existing note, improve you thougts, you title, link it to other fitti
 ![Rate again after improving](/docs/images/RateAfterImprovement.png)
 
 ## More information and Help
-You can use the Discussion Area here at GitHub to raise issues, speak about ideas and ask questions
+You can use the Discussion Area here at GitHub to speak about issues, ideas and ask questions. For issues, use the issues area to raise them.
 
 ## Roadmap
 Upcoming developments are in store for the Gamification Plugin! Here's a glimpse into the future:
