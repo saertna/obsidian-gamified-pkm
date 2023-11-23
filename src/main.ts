@@ -12,7 +12,7 @@ style.textContent = `
 `;
 
 document.head.append(style);
-import {App, MarkdownView, Notice, Plugin, TFile, Vault} from 'obsidian';
+import {App, MarkdownView, Notice, Plugin, TFile, Vault, WorkspaceLeaf, ItemView } from 'obsidian';
 import {defaultSettings, ISettings, GamificationPluginSettings} from './settings';
 import format from 'date-fns/format';
 import {
@@ -50,6 +50,7 @@ import { getRandomMessageWeeklyChallenge, getRandomMessageTwoNoteChallenge , get
 import { ModalInformationbox } from 'ModalInformationbox';
 import { ModalBooster } from 'ModalBooster';
 import { encryptValue, encryptString, decryptString, encryptNumber, decryptNumber, encryptBoolean, decryptBoolean } from 'encryption';
+import { ExampleView, VIEW_TYPE_EXAMPLE } from "./view";
 
 let pointsToReceived: number = 0;  
 export default class gamification extends Plugin {
@@ -137,7 +138,21 @@ export default class gamification extends Plugin {
 		this.timerInterval = 30 * 60 * 1000; // minutes x seconds x milliseconds
 		this.timerId = window.setInterval(this.resetDailyGoals.bind(this), this.timerInterval);
 
-		
+		this.registerView(
+			VIEW_TYPE_EXAMPLE,
+			(leaf) => new ExampleView(leaf)
+		  );
+	  
+		  this.addRibbonIcon("target", "gamification side overview", () => {
+			this.activateView();
+		  });
+		  this.addCommand({
+			id: 'overview',
+			name: 'open gamification side overview',
+			callback: async () => {
+				this.activateView();
+			},
+		});
 
 
 		if (this.getSettingBoolean('debug')){
@@ -255,6 +270,25 @@ export default class gamification extends Plugin {
 
 	}
 
+	async activateView() {
+		let { workspace }  = this.app;
+	
+		let leaf: WorkspaceLeaf | null = null;
+		let leaves = workspace.getLeavesOfType(VIEW_TYPE_EXAMPLE);
+	
+		if (leaves.length > 0) {
+			// A leaf with our view already exists, use that
+			leaf = leaves[0];
+		} else {
+			// Our view could not be found in the workspace, create a new leaf
+			// in the right sidebar for it
+			let leaf = workspace.getRightLeaf(false);
+			await leaf.setViewState({ type: VIEW_TYPE_EXAMPLE, active: true });
+		}
+	
+		// "Reveal" the leaf in case it is in a collapsed sidebar
+		//workspace.revealLeaf(leaf);
+	  }
 
     private async resetGame() {
         await this.removeKeysFromFrontmatter();
