@@ -239,9 +239,16 @@ export default class gamification extends Plugin {
 		this.addCommand({
 			id: 'rate-note-maturity',
 			name: 'Rate note majurity',
-			callback: async () => {
-				await this.calculateNoteMajurity();
-			},
+			checkCallback: (checking: boolean) => {
+				const view = this.app.workspace.getActiveViewOfType(MarkdownView);
+				if (view) {
+					if (!checking) {
+						this.calculateNoteMajurity();
+					}
+					return true;
+				}
+				return false;
+			}
 		});
 
 
@@ -249,9 +256,16 @@ export default class gamification extends Plugin {
 		this.addCommand({
 			id: 'change-progressive-formatting',
 			name: 'toggle progressive summarization formatting',
-			callback: async () => {
-				await replaceFormatStrings(this.getSettingString('progressiveSumLayer2'), this.getSettingString('progressiveSumLayer3'));
-			},
+			checkCallback: (checking: boolean) => {
+				const view = this.app.workspace.getActiveViewOfType(MarkdownView);
+				if (view) {
+					if (!checking) {
+						replaceFormatStrings(this.getSettingString('progressiveSumLayer2'), this.getSettingString('progressiveSumLayer3'));
+					}
+					return true;
+				}
+				return false;
+			}
 		});
 
 	}
