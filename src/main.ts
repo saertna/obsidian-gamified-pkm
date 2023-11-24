@@ -842,7 +842,15 @@ export default class gamification extends Plugin {
 		this.setSettingNumber('statusPoints', pointsToReceived + this.getSettingNumber('statusPoints'))
 		//await this.saveData(this.settings)
 
-		return this.updateAvatarPage(this.getSettingString('avatarPageName'))
+
+		const questionToReceiveBadge: boolean | null = await this.updateAvatarPage(this.getSettingString('avatarPageName'));
+
+		if (questionToReceiveBadge !== null) {
+			return questionToReceiveBadge;
+		} else {
+			return false;
+		}
+
 	}
 
 	async increaseStreakbooster(increaseValue:number){
@@ -1164,30 +1172,34 @@ export default class gamification extends Plugin {
 	async removeKeysFromFrontmatter() {
 		const { vault } = this.app
 		const fileCountMap = await getFileCountMap(this.app, this.getSettingString('tagsExclude'), this.getSettingString('folderExclude'));
-		for (const fileName of fileCountMap.keys()) {
-			const files = vault.getFiles();
-			const file = files.find(file => file.basename === fileName);
-			if (!file) {
-				console.warn(`File ${fileName} not found.`);
-				continue;
-			}
-			console.log(`Processing file ${fileName}`);
-			try {
-				await this.app.fileManager.processFrontMatter(file, (frontmatter) => {
-					delete frontmatter['title-class']
-					delete frontmatter['note-length-class']
-					delete frontmatter['inlink-class']
-					delete frontmatter['outlink-class']
-					delete frontmatter['progressive-summarization-maturity']
-					delete frontmatter['note-maturity']
-				});
-			} catch (e) {
-				if (e?.name === 'YAMLParseError') {
-					const errorMessage = `Update majuritys failed Malformed frontamtter ${e.message}`;
-					new Notice(errorMessage, this.getSettingNumber('timeShowNotice') * 1000);
-					console.error(errorMessage);
+		if (fileCountMap != null){
+			for (const fileName of fileCountMap.keys()) {
+				const files = vault.getFiles();
+				const file = files.find(file => file.basename === fileName);
+				if (!file) {
+					console.warn(`File ${fileName} not found.`);
+					continue;
+				}
+				console.log(`Processing file ${fileName}`);
+				try {
+					await this.app.fileManager.processFrontMatter(file, (frontmatter) => {
+						delete frontmatter['title-class']
+						delete frontmatter['note-length-class']
+						delete frontmatter['inlink-class']
+						delete frontmatter['outlink-class']
+						delete frontmatter['progressive-summarization-maturity']
+						delete frontmatter['note-maturity']
+					});
+				} catch (e) {
+					if (e?.name === 'YAMLParseError') {
+						const errorMessage = `Update majuritys failed Malformed frontamtter ${e.message}`;
+						new Notice(errorMessage, this.getSettingNumber('timeShowNotice') * 1000);
+						console.error(errorMessage);
+					}
 				}
 			}
+		} else {
+			console.log(`No files in vault found to remove frontmatter keys from`)
 		}
 	}
 

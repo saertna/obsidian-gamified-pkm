@@ -404,56 +404,61 @@ export function count_inlinks(file: TFile): number {
 }
 
 
-export const getFileCountMap = async (app: App, excludeTag: string, excludeFolder: string): Promise<Map<string, number>> => {
+export const getFileCountMap = async (app: App, excludeTag: string, excludeFolder: string): Promise<Map<string, number> | null> => {
 
-    const { vault } = app;
+	try {
+		const { vault } = app;
 
-	
-	// files with this #tags in to ignore
-	let excludedSubstrings : string[] = []
-	if (excludeTag == undefined) {
-		excludedSubstrings = []
-	} else {
-		excludedSubstrings = excludeTag.split(', ');
-	}
-	
-
-	// folders to ignore .md-files in
-	let excludedFolders : string[] = []
-	if (excludeFolder == undefined) {
-		excludedFolders = []
-	} else {
-		excludedFolders = excludeFolder.split(', ');
-	}
-	excludedFolders.push('.obsidian', '.trash'); // hardcode the basic folders
-	
-    const fileCountMap = new Map<string, number>();
-
-    const files = await vault.getMarkdownFiles();
-
-    for (const file of files) {
-
-		const fileName = file.basename;
-
-        const currentCount = fileCountMap.get(fileName) || 0;
-
-        fileCountMap.set(fileName, currentCount + 1);
-
-		const fileContents = await app.vault.read(file);
-
-        if (!excludedSubstrings.some(substring => fileContents.includes(substring)) && 
-            !excludedFolders.some(folder => file.path.includes(folder))) {
-
-            const fileName = file.basename;
-
-            const currentCount = fileCountMap.get(fileName) || 0;
-
-            fileCountMap.set(fileName, currentCount + 1);
-        }
+		// files with this #tags in to ignore
+		let excludedSubstrings : string[] = []
+		if (excludeTag == undefined) {
+			excludedSubstrings = []
+		} else {
+			excludedSubstrings = excludeTag.split(', ');
+		}
 		
-    }
 
-    return fileCountMap;
+		// folders to ignore .md-files in
+		let excludedFolders : string[] = []
+		if (excludeFolder == undefined) {
+			excludedFolders = []
+		} else {
+			excludedFolders = excludeFolder.split(', ');
+		}
+		excludedFolders.push('.obsidian', '.trash'); // hardcode the basic folders
+		
+		const fileCountMap = new Map<string, number>();
+
+		const files = await vault.getMarkdownFiles();
+
+		for (const file of files) {
+
+			const fileName = file.basename;
+
+			const currentCount = fileCountMap.get(fileName) || 0;
+
+			fileCountMap.set(fileName, currentCount + 1);
+
+			const fileContents = await app.vault.read(file);
+
+			if (!excludedSubstrings.some(substring => fileContents.includes(substring)) && 
+				!excludedFolders.some(folder => file.path.includes(folder))) {
+
+				const fileName = file.basename;
+
+				const currentCount = fileCountMap.get(fileName) || 0;
+
+				fileCountMap.set(fileName, currentCount + 1);
+			}
+			
+		}
+
+		return fileCountMap;
+	}
+	catch (e) {
+		console.log(e);
+		return null
+	}
 };
 
 
