@@ -872,99 +872,105 @@ export default class gamification extends Plugin {
 	}
 
 
-	async updateAvatarPage(avatarPageName: string): Promise<boolean>{
-		const existingFile = this.app.vault.getAbstractFileByPath(`${avatarPageName}.md`);
-		if (existingFile == null) {
-			console.log(`File ${avatarPageName}.md does not exist`);
-			return false;
-		}
-		const file = existingFile as TFile;
+	async updateAvatarPage(avatarPageName: string): Promise<boolean | null>{
+		try {
+			const existingFile = this.app.vault.getAbstractFileByPath(`${avatarPageName}.md`);
+			if (existingFile == null) {
+				console.log(`File ${avatarPageName}.md does not exist`);
+				return false;
+			}
+			const file = existingFile as TFile;
 
-		const content = await this.app.vault.read(file);
-		let levelAndPointsReference: number | null = null;
-		let reference2: number | null = null;
-		let reference3: number | null = null;
-		let reference4: number | null = null;
-		let levelAndPointsEnd: number | null = null;
-		let levelAndPointsStart: number | null = null;
-		let dailyNotesChallengeEnd2: number | null = null;
-		let dailyNotesChallengeStart2: number | null = null;
-		let weeklyNotesChallengeEnd3: number | null = null;
-		let weeklyNotesChallengeStart3: number | null = null;
-		let boosterFactorEnd4: number | null = null;
-		let boosterFactorStart4: number | null = null;
+			const content = await this.app.vault.read(file);
+			let levelAndPointsReference: number | null = null;
+			let reference2: number | null = null;
+			let reference3: number | null = null;
+			let reference4: number | null = null;
+			let levelAndPointsEnd: number | null = null;
+			let levelAndPointsStart: number | null = null;
+			let dailyNotesChallengeEnd2: number | null = null;
+			let dailyNotesChallengeStart2: number | null = null;
+			let weeklyNotesChallengeEnd3: number | null = null;
+			let weeklyNotesChallengeStart3: number | null = null;
+			let boosterFactorEnd4: number | null = null;
+			let boosterFactorStart4: number | null = null;
 
-		const lines = content.split("\n");
-		for (let i = 0; i < lines.length; i++) {
-			const line = lines[i].trim();
-			if (line === "^levelAndPoints") {
-				if (levelAndPointsReference === null) {
-					levelAndPointsReference = i;
+			const lines = content.split("\n");
+			for (let i = 0; i < lines.length; i++) {
+				const line = lines[i].trim();
+				if (line === "^levelAndPoints") {
+					if (levelAndPointsReference === null) {
+						levelAndPointsReference = i;
+					}
+				}
+				if (line === "^dailyNotesChallenge") {
+					if (reference2 === null) {
+						reference2 = i;
+					}
+				}
+				if (line === "^weeklyNotesChallenge") {
+					if (reference3 === null) {
+						reference3 = i;
+					}
+				}
+				if (line === "^boosterFactor") {
+					if (reference4 === null) {
+						reference4 = i;
+					}
 				}
 			}
-			if (line === "^dailyNotesChallenge") {
-				if (reference2 === null) {
-					reference2 = i;
-				}
+			// read current Points from settings
+			const newPoints = this.getSettingNumber('statusPoints')
+
+			const level = getLevelForPoints(newPoints);
+			let nextLevelAt = this.getSettingNumber('xpForNextLevel');
+			let receiveBadge = false
+			if (this.getSettingNumber('statusLevel') < level.level){
+				// Level Up archived
+				new Notice(`With ${newPoints} points, the current level is ${level.level}.`,this.getSettingNumber('timeShowNotice') * 1000 * 1.2)
+				// check first if this means a new badge before it gets overwritten
+				receiveBadge = checkIfReceiveABadge(this.getSettingNumber('statusLevel'), level.level)
+				this.setSettingNumber('statusLevel', level.level);
+				nextLevelAt = level.pointsNext;
+				this.setSettingNumber('xpForNextLevel', level.pointsNext);
+				//await this.saveData(this.settings)
 			}
-			if (line === "^weeklyNotesChallenge") {
-				if (reference3 === null) {
-					reference3 = i;
-				}
+
+			const progressBarEnd = nextLevelAt - newPoints;
+			const newPointsString = '| **Level**  | **' + level.level + '** |\n| Points | ' + newPoints + '    |\n^levelAndPoints\n```chart\ntype: bar\nlabels: [Expririence]\nseries:\n  - title: points reached\n    data: [' + newPoints + ']\n  - title: points to earn to level up\n    data: [' + progressBarEnd + ']\nxMin: ' + level.points + '\nxMax: ' + level.pointsNext + '\ntension: 0.2\nwidth: 40%\nlabelColors: false\nfill: false\nbeginAtZero: false\nbestFit: false\nbestFitTitle: undefined\nbestFitNumber: 0\nstacked: true\nindexAxis: y\nxTitle: "progress"\nlegend: false\n```'
+			const dailyChallenge = '| **daily Notes** | *' + pointsForDailyChallenge * (this.getSettingNumber('badgeBoosterFactor') + this.getSettingNumber('streakbooster')) + 'EP* | **' + this.getSettingNumber('dailyNoteCreationTask') + '/2**   |';
+			const daysLeftInWeeklyChain : number = 7 - this.getSettingNumber('weeklyNoteCreationTask');
+			let weeklyChallenge = ''
+			if(isSameDay(window.moment(this.getSettingString('weeklyNoteCreationDate'), 'DD.MM.YYYY'))){
+				weeklyChallenge = '| **weekly Notes** | *' + pointsForWeeklyChallenge * (this.getSettingNumber('badgeBoosterFactor') + this.getSettingNumber('streakbooster')) + 'EP*     |  **' + this.getSettingNumber('weeklyNoteCreationTask') + '✔️/7**   |\n^weeklyNotesChallenge\n```chart\ntype: bar\nlabels: [days done in a row]\nseries:\n  - title: days to do in a row\n    data: [' + this.getSettingNumber('weeklyNoteCreationTask') + ']\n  - title: points to earn to level up\n    data: [' + daysLeftInWeeklyChain + ']\nxMin: 0\nxMax: 7\ntension: 0.2\nwidth: 40%\nlabelColors: false\nfill: false\nbeginAtZero: false\nbestFit: false\nbestFitTitle: undefined\nbestFitNumber: 0\nstacked: true\nindexAxis: y\nxTitle: "progress"\nlegend: false\n```';
+			} else {
+				weeklyChallenge = '| **weekly Notes** | *' + pointsForWeeklyChallenge * (this.getSettingNumber('badgeBoosterFactor') + this.getSettingNumber('streakbooster')) + 'EP*     |  **' + this.getSettingNumber('weeklyNoteCreationTask') + '/7**   |\n^weeklyNotesChallenge\n```chart\ntype: bar\nlabels: [days done in a row]\nseries:\n  - title: days to do in a row\n    data: [' + this.getSettingNumber('weeklyNoteCreationTask') + ']\n  - title: points to earn to level up\n    data: [' + daysLeftInWeeklyChain + ']\nxMin: 0\nxMax: 7\ntension: 0.2\nwidth: 40%\nlabelColors: false\nfill: false\nbeginAtZero: false\nbestFit: false\nbestFitTitle: undefined\nbestFitNumber: 0\nstacked: true\nindexAxis: y\nxTitle: "progress"\nlegend: false\n```';
 			}
-			if (line === "^boosterFactor") {
-				if (reference4 === null) {
-					reference4 = i;
-				}
+			
+			const boosterFactor = '| **booster factor** | **' + this.getSettingNumber('streakbooster') + '** |'
+
+			if (levelAndPointsReference != null && reference2 != null && reference3 != null && reference4 != null){
+				levelAndPointsStart = levelAndPointsReference - 2;
+				levelAndPointsEnd = levelAndPointsReference + 24;
+				dailyNotesChallengeStart2 = reference2 - 1 - 25; // no idea why offset 25 is needed
+				dailyNotesChallengeEnd2 = reference2 - 25; // no idea why offset 25 is needed
+				weeklyNotesChallengeStart3 = reference3 - 1 -25; // no idea why offset 25 is needed
+				weeklyNotesChallengeEnd3 = reference3 + 24 -25; // no idea why offset 25 is needed
+				boosterFactorStart4 = reference4 - 1 - 25; // no idea why offset 25 is needed
+				boosterFactorEnd4 = reference4 - 25 ; // no idea why offset 25 is needed
+
+				const newLines = [...lines.slice(0, levelAndPointsStart), newPointsString, ...lines.slice(levelAndPointsEnd)];
+				const newLines2 = [...newLines.slice(0, dailyNotesChallengeStart2), dailyChallenge, ...newLines.slice(dailyNotesChallengeEnd2)];
+				const newLines3 = [...newLines2.slice(0, weeklyNotesChallengeStart3), weeklyChallenge, ...newLines2.slice(weeklyNotesChallengeEnd3)];
+				const newLines4 = [...newLines3.slice(0, boosterFactorStart4), boosterFactor, ...newLines3.slice(boosterFactorEnd4)];
+				await this.app.vault.modify(file, newLines4.join("\n"));
 			}
+			return receiveBadge
 		}
-		// read current Points from settings
-		const newPoints = this.getSettingNumber('statusPoints')
-
-		const level = getLevelForPoints(newPoints);
-		let nextLevelAt = this.getSettingNumber('xpForNextLevel');
-		let receiveBadge = false
-		if (this.getSettingNumber('statusLevel') < level.level){
-			// Level Up archived
-			new Notice(`With ${newPoints} points, the current level is ${level.level}.`,this.getSettingNumber('timeShowNotice') * 1000 * 1.2)
-			// check first if this means a new badge before it gets overwritten
-			receiveBadge = checkIfReceiveABadge(this.getSettingNumber('statusLevel'), level.level)
-			this.setSettingNumber('statusLevel', level.level);
-			nextLevelAt = level.pointsNext;
-			this.setSettingNumber('xpForNextLevel', level.pointsNext);
-			//await this.saveData(this.settings)
+		catch (e) {
+			console.log(e);
+			return null;
 		}
-
-		const progressBarEnd = nextLevelAt - newPoints;
-		const newPointsString = '| **Level**  | **' + level.level + '** |\n| Points | ' + newPoints + '    |\n^levelAndPoints\n```chart\ntype: bar\nlabels: [Expririence]\nseries:\n  - title: points reached\n    data: [' + newPoints + ']\n  - title: points to earn to level up\n    data: [' + progressBarEnd + ']\nxMin: ' + level.points + '\nxMax: ' + level.pointsNext + '\ntension: 0.2\nwidth: 40%\nlabelColors: false\nfill: false\nbeginAtZero: false\nbestFit: false\nbestFitTitle: undefined\nbestFitNumber: 0\nstacked: true\nindexAxis: y\nxTitle: "progress"\nlegend: false\n```'
-		const dailyChallenge = '| **daily Notes** | *' + pointsForDailyChallenge * (this.getSettingNumber('badgeBoosterFactor') + this.getSettingNumber('streakbooster')) + 'EP* | **' + this.getSettingNumber('dailyNoteCreationTask') + '/2**   |';
-		const daysLeftInWeeklyChain : number = 7 - this.getSettingNumber('weeklyNoteCreationTask');
-		let weeklyChallenge = ''
-		if(isSameDay(window.moment(this.getSettingString('weeklyNoteCreationDate'), 'DD.MM.YYYY'))){
-			weeklyChallenge = '| **weekly Notes** | *' + pointsForWeeklyChallenge * (this.getSettingNumber('badgeBoosterFactor') + this.getSettingNumber('streakbooster')) + 'EP*     |  **' + this.getSettingNumber('weeklyNoteCreationTask') + '✔️/7**   |\n^weeklyNotesChallenge\n```chart\ntype: bar\nlabels: [days done in a row]\nseries:\n  - title: days to do in a row\n    data: [' + this.getSettingNumber('weeklyNoteCreationTask') + ']\n  - title: points to earn to level up\n    data: [' + daysLeftInWeeklyChain + ']\nxMin: 0\nxMax: 7\ntension: 0.2\nwidth: 40%\nlabelColors: false\nfill: false\nbeginAtZero: false\nbestFit: false\nbestFitTitle: undefined\nbestFitNumber: 0\nstacked: true\nindexAxis: y\nxTitle: "progress"\nlegend: false\n```';
-		} else {
-			weeklyChallenge = '| **weekly Notes** | *' + pointsForWeeklyChallenge * (this.getSettingNumber('badgeBoosterFactor') + this.getSettingNumber('streakbooster')) + 'EP*     |  **' + this.getSettingNumber('weeklyNoteCreationTask') + '/7**   |\n^weeklyNotesChallenge\n```chart\ntype: bar\nlabels: [days done in a row]\nseries:\n  - title: days to do in a row\n    data: [' + this.getSettingNumber('weeklyNoteCreationTask') + ']\n  - title: points to earn to level up\n    data: [' + daysLeftInWeeklyChain + ']\nxMin: 0\nxMax: 7\ntension: 0.2\nwidth: 40%\nlabelColors: false\nfill: false\nbeginAtZero: false\nbestFit: false\nbestFitTitle: undefined\nbestFitNumber: 0\nstacked: true\nindexAxis: y\nxTitle: "progress"\nlegend: false\n```';
-		}
-		
-		const boosterFactor = '| **booster factor** | **' + this.getSettingNumber('streakbooster') + '** |'
-
-		if (levelAndPointsReference != null && reference2 != null && reference3 != null && reference4 != null){
-			levelAndPointsStart = levelAndPointsReference - 2;
-			levelAndPointsEnd = levelAndPointsReference + 24;
-			dailyNotesChallengeStart2 = reference2 - 1 - 25; // no idea why offset 25 is needed
-			dailyNotesChallengeEnd2 = reference2 - 25; // no idea why offset 25 is needed
-			weeklyNotesChallengeStart3 = reference3 - 1 -25; // no idea why offset 25 is needed
-			weeklyNotesChallengeEnd3 = reference3 + 24 -25; // no idea why offset 25 is needed
-			boosterFactorStart4 = reference4 - 1 - 25; // no idea why offset 25 is needed
-			boosterFactorEnd4 = reference4 - 25 ; // no idea why offset 25 is needed
-
-			const newLines = [...lines.slice(0, levelAndPointsStart), newPointsString, ...lines.slice(levelAndPointsEnd)];
-			const newLines2 = [...newLines.slice(0, dailyNotesChallengeStart2), dailyChallenge, ...newLines.slice(dailyNotesChallengeEnd2)];
-			const newLines3 = [...newLines2.slice(0, weeklyNotesChallengeStart3), weeklyChallenge, ...newLines2.slice(weeklyNotesChallengeEnd3)];
-			const newLines4 = [...newLines3.slice(0, boosterFactorStart4), boosterFactor, ...newLines3.slice(boosterFactorEnd4)];
-			await this.app.vault.modify(file, newLines4.join("\n"));
-		}
-		return receiveBadge
 	}
 
 
@@ -1367,7 +1373,7 @@ export function hoursUntilMinutesPassed(inputDate: Moment, minutesToPass: number
 }
 
 
-async function createAvatarFile(app: App, fileName: string): Promise<void> {
+async function createAvatarFile(app: App, fileName: string) {
 
 	const existingFile = this.app.vault.getAbstractFileByPath(`${fileName}.md`);
 	if (existingFile instanceof TFile) {
