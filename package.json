@@ -1,7 +1,7 @@
 {
 	"name": "obsidian-gamified-pkm",
-	"version": "0.0.7",
-	"description": "This plugin gamifies your personal knowledge management (PKM) to bring fun and drive into your PKM",
+	"version": "0.0.82",
+	"description": "Enhance your Personal Knowledge Management with gamification elements. Boost motivation and achieve growth as you engage with your PKM.",
 	"main": "main.js",
 	"scripts": {
 		"dev": "node esbuild.config.mjs",

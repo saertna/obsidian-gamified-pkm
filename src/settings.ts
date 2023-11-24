@@ -291,7 +291,7 @@ export class GamificationPluginSettings extends PluginSettingTab {
   
 	public display(): void {
 		const { containerEl } = this;
-		containerEl.addClass("excalidraw-settings");
+		containerEl.addClass("gamification-settings");
 		this.containerEl.empty();
 
 		const coffeeDiv = containerEl.createDiv("coffee");
@@ -309,8 +309,8 @@ export class GamificationPluginSettings extends PluginSettingTab {
 		//const { containerEl } = this;
 		//containerEl.empty();
   
-		containerEl.createEl('h2', { text: 'Gamify your PKM - Settings' });
-		console.log('settings called')
+		containerEl.createEl('h2', { text: 'General' });
+		console.debug('settings called')
 		new Setting(containerEl)
 			.setName('#tags to ignore')
 			.setDesc('enter tags without # and separate with ", ".\nInclude nested tags.')
@@ -325,7 +325,7 @@ export class GamificationPluginSettings extends PluginSettingTab {
 
 				
 		new Setting(containerEl)
-			.setName('folder to ignore')
+			.setName('Folder to ignore')
 			.setDesc('enter folder whichs content shall be ignored. Separate with ", ".')
 			.addText(text => text
 				.setPlaceholder('Enter your folder1, folder2, …')
@@ -338,7 +338,7 @@ export class GamificationPluginSettings extends PluginSettingTab {
 				}));
 
 		new Setting(containerEl)
-			.setName('Profile Page Name')
+			.setName('Profile page name')
 			.setDesc('you can change here the name of your profile page if you like.')
 			.addText(text => text
 					.setPlaceholder('name')
@@ -350,9 +350,9 @@ export class GamificationPluginSettings extends PluginSettingTab {
 						await this.plugin.saveSettings();
 				}));
 				
-    containerEl.createEl('h2', { text: 'Other Settings' });
+    containerEl.createEl('h2', { text: 'Other' });
 		new Setting(containerEl)
-			.setName('Disable Init Command')
+			.setName('Disable init command')
 			.setDesc('you can remove the init command from command prompt by switching off.\nrestart needed.')
 			.addToggle((toggle) => 
 				toggle
@@ -365,7 +365,7 @@ export class GamificationPluginSettings extends PluginSettingTab {
 
   
     new Setting(containerEl)
-			.setName('Delay Settings at startup')
+			.setName('Delay load settings at startup')
 			.setDesc('Enter in seconds to delay the load time. e.g. when GIT pull is performed before and settings get merge conflicts. Without GIT usage, keep it to 0.')
 			.addText(text => text
 					.setPlaceholder('0')
@@ -377,7 +377,7 @@ export class GamificationPluginSettings extends PluginSettingTab {
 		}));
 
     new Setting(containerEl)
-			.setName('Time how long Notices are shown')
+			.setName('Time how long notices are shown')
 			.setDesc('Enter in seconds. 4 seconds or more is a good value')
 			.addText(text => text
 					.setPlaceholder('4')

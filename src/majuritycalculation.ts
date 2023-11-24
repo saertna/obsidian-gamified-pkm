@@ -293,7 +293,7 @@ export function getNumberOfOutlinks(activeFile: TFile): number {
 	if (!activeFile) {
 		return 0;
 	}
-	const inlinks = app.metadataCache.getFileCache(activeFile)?.links;
+	const inlinks = this.app.metadataCache.getFileCache(activeFile)?.links;
 	return inlinks ? Object.keys(inlinks).length : 0;
 }
 
@@ -404,91 +404,101 @@ export function count_inlinks(file: TFile): number {
 }
 
 
-export const getFileCountMap = async (app: App, excludeTag: string, excludeFolder: string): Promise<Map<string, number>> => {
+export const getFileCountMap = async (app: App, excludeTag: string, excludeFolder: string): Promise<Map<string, number> | null> => {
 
-    const { vault } = app;
+	try {
+		const { vault } = app;
 
-	
-	// files with this #tags in to ignore
-	let excludedSubstrings : string[] = []
-	if (excludeTag == undefined) {
-		excludedSubstrings = []
-	} else {
-		excludedSubstrings = excludeTag.split(', ');
-	}
-	
-
-	// folders to ignore .md-files in
-	let excludedFolders : string[] = []
-	if (excludeFolder == undefined) {
-		excludedFolders = []
-	} else {
-		excludedFolders = excludeFolder.split(', ');
-	}
-	excludedFolders.push('.obsidian', '.trash'); // hardcode the basic folders
-	
-    const fileCountMap = new Map<string, number>();
-
-    const files = await vault.getMarkdownFiles();
-
-    for (const file of files) {
-
-		const fileName = file.basename;
-
-        const currentCount = fileCountMap.get(fileName) || 0;
-
-        fileCountMap.set(fileName, currentCount + 1);
-
-		const fileContents = await app.vault.read(file);
-
-        if (!excludedSubstrings.some(substring => fileContents.includes(substring)) && 
-            !excludedFolders.some(folder => file.path.includes(folder))) {
-
-            const fileName = file.basename;
-
-            const currentCount = fileCountMap.get(fileName) || 0;
-
-            fileCountMap.set(fileName, currentCount + 1);
-        }
+		// files with this #tags in to ignore
+		let excludedSubstrings : string[] = []
+		if (excludeTag == undefined) {
+			excludedSubstrings = []
+		} else {
+			excludedSubstrings = excludeTag.split(', ');
+		}
 		
-    }
 
-    return fileCountMap;
+		// folders to ignore .md-files in
+		let excludedFolders : string[] = []
+		if (excludeFolder == undefined) {
+			excludedFolders = []
+		} else {
+			excludedFolders = excludeFolder.split(', ');
+		}
+		excludedFolders.push('.obsidian', '.trash'); // hardcode the basic folders
+		
+		const fileCountMap = new Map<string, number>();
+
+		const files = await vault.getMarkdownFiles();
+
+		for (const file of files) {
+
+			const fileName = file.basename;
+
+			const currentCount = fileCountMap.get(fileName) || 0;
+
+			fileCountMap.set(fileName, currentCount + 1);
+
+			const fileContents = await app.vault.read(file);
+
+			if (!excludedSubstrings.some(substring => fileContents.includes(substring)) && 
+				!excludedFolders.some(folder => file.path.includes(folder))) {
+
+				const fileName = file.basename;
+
+				const currentCount = fileCountMap.get(fileName) || 0;
+
+				fileCountMap.set(fileName, currentCount + 1);
+			}
+			
+		}
+
+		return fileCountMap;
+	}
+	catch (e) {
+		console.log(e);
+		return null
+	}
 };
 
 
-export const getFileMap = async (app: App, excludeTag: string, excludeFolder: string): Promise<TFile[]> => {
+export const getFileMap = async (app: App, excludeTag: string, excludeFolder: string): Promise<TFile[] | null > => {
+	try {
+		const { vault } = app;
 
-    const { vault } = app;
+		// files with this #tags in to ignore
+		let excludedSubstrings : string[] = []
+		if (excludeTag == undefined) {
+			excludedSubstrings = []
+		} else {
+			excludedSubstrings = excludeTag.split(', ');
+		}
+		//console.log(`excludedSubstrings: ${excludedSubstrings}`)
+		// folders to ignore .md-files in
+		let excludedFolders : string[] = []
+		if (excludeFolder == undefined) {
+			excludedFolders = []
+		} else {
+			excludedFolders = excludeFolder.split(', ');
+		}
+		excludedFolders.push('.obsidian', '.trash'); // hardcode the basic folders
+		//console.log(`excludedFolders: ${excludedFolders}`)	
+		let fileArray: TFile[] = [];
+		const files = await vault.getMarkdownFiles();
+		for (const file of files) {
 
-	// files with this #tags in to ignore
-	let excludedSubstrings : string[] = []
-	if (excludeTag == undefined) {
-		excludedSubstrings = []
-	} else {
-		excludedSubstrings = excludeTag.split(', ');
+			const fileContents = await app.vault.read(file);
+			//console.log(`file.path: ${file.path}`)
+			if ((!excludedSubstrings.some(substring => fileContents.includes(substring)) || excludeTag.length === 0) && 
+				!excludedFolders.some(folder => file.path.includes(folder))) {
+				//console.log(`file ${file} get's added.`)
+				fileArray.push(file)
+			}
+		}
+		return fileArray;
 	}
-	//console.log(`excludedSubstrings: ${excludedSubstrings}`)
-	// folders to ignore .md-files in
-	let excludedFolders : string[] = []
-	if (excludeFolder == undefined) {
-		excludedFolders = []
-	} else {
-		excludedFolders = excludeFolder.split(', ');
+	catch (e){
+		console.log(e);
+		return null;
 	}
-	excludedFolders.push('.obsidian', '.trash'); // hardcode the basic folders
-	//console.log(`excludedFolders: ${excludedFolders}`)	
-    let fileArray: TFile[] = [];
-    const files = await vault.getMarkdownFiles();
-    for (const file of files) {
-
-        const fileContents = await app.vault.read(file);
-		//console.log(`file.path: ${file.path}`)
-		if ((!excludedSubstrings.some(substring => fileContents.includes(substring)) || excludeTag.length === 0) && 
-            !excludedFolders.some(folder => file.path.includes(folder))) {
-			//console.log(`file ${file} get's added.`)
-			fileArray.push(file)
-        }
-    }
-    return fileArray;
 };

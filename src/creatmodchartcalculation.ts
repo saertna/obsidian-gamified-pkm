@@ -80,14 +80,14 @@ export function createChartFormat(y_axis: string, countsStringMod: string, chart
 
   
 export async function replaceChartContent (avatarPageName: string, newContent: string) {
-	const existingFile = app.vault.getAbstractFileByPath(`${avatarPageName}.md`);
+	const existingFile = this.app.vault.getAbstractFileByPath(`${avatarPageName}.md`);
 	if (existingFile == null) {
 		console.log(`File ${avatarPageName}.md does not exist`);
 		return;
 		}
 	const file = existingFile as TFile;
 
-	const content = await app.vault.read(file);
+	const content = await this.app.vault.read(file);
 	let reference: number | null = null;
 	let end: number | null = null;
 	let start: number | null = null;
@@ -105,7 +105,7 @@ export async function replaceChartContent (avatarPageName: string, newContent: s
 		end = reference;
 		start = reference - 19;
 		const newLines = [...lines.slice(0, start), newContent, ...lines.slice(end)];
-		await app.vault.modify(file, newLines.join("\n"));
+		await this.app.vault.modify(file, newLines.join("\n"));
 	}
 }
 
