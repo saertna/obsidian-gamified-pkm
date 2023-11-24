@@ -170,7 +170,9 @@ export default class gamification extends Plugin {
 						console.log(`Badge: ${badgeName}, Date: ${badgeInfo.date}, Level: ${badgeInfo.level}`);
 					}
 				}*/
-				this.openAvatarFile();
+				//this.openAvatarFile();
+				const badgeTemp = await this.whichLevelNextBadge(17)
+				new Notice(`${badgeTemp}`)
 			});
 		}
 
@@ -1184,37 +1186,53 @@ export default class gamification extends Plugin {
 	}
 
 
-	async whichLevelNextBadge(currentLevel: number): Promise<number>{
-		let nextBadgeLevel = 0
-		for (let i = currentLevel; i < 110; i++){
-			const badge : Badge = getBadgeForLevel(i, true)
-			// Regular expression to match the level number
-			const levelRegex = /level (\d+)/;
-			// Extract the level number using the regular expression
-			const match = badge.level.match(levelRegex);
-			if(match){
-				const levelNumber = parseInt(match[1], 10); // Convert the matched number to an integer
-				if (levelNumber > currentLevel && nextBadgeLevel == 0 ) {
-					nextBadgeLevel = levelNumber;
+	async whichLevelNextBadge(currentLevel: number): Promise<number | null> {
+		try {
+			let nextBadgeLevel = 0
+			for (let i = currentLevel; i < 110; i++){
+				const badge : Badge = getBadgeForLevel(i, true)
+				// Regular expression to match the level number
+				const levelRegex = /level (\d+)/;
+				// Extract the level number using the regular expression
+				const match = badge.level.match(levelRegex);
+				if(match){
+					const levelNumber = parseInt(match[1], 10); // Convert the matched number to an integer
+					if (levelNumber > currentLevel && nextBadgeLevel == 0 ) {
+						nextBadgeLevel = levelNumber;
+					}
 				}
 			}
+			return nextBadgeLevel
 		}
-		return nextBadgeLevel
+		catch (e) {
+			console.log(e)
+			return null;
+		}
 	}
 
 
-	async boosterForInit(): Promise<number> {
-		const nextBadgeAt = await this.whichLevelNextBadge(this.getSettingNumber('statusLevel'))
-		const statusPointsToReach = statusPointsForLevel(nextBadgeAt)
-		//console.log(`statusPointsToReach for next Badge: ${statusPointsToReach}`)
-		// 50 Notes from Level 1 to 5 to get the first badge.
-		// 300 Points in average for a Note.
-		const boosterFactor = Math.round((statusPointsToReach - this.getSettingNumber('statusPoints'))/50/300);
-		this.setSettingNumber('badgeBoosterFactor', boosterFactor)
-		this.setSettingBoolean('badgeBoosterState', true)
-		//await this.saveData(this.settings)
-		//console.log(`boosterFaktor: ${boosterFactor}`)
-		return boosterFactor
+	async boosterForInit(): Promise<number | null> {
+		try {
+			const nextBadgeAt = await this.whichLevelNextBadge(this.getSettingNumber('statusLevel'))
+			if (nextBadgeAt != null){
+				const statusPointsToReach = statusPointsForLevel(nextBadgeAt)
+				//console.log(`statusPointsToReach for next Badge: ${statusPointsToReach}`)
+				// 50 Notes from Level 1 to 5 to get the first badge.
+				// 300 Points in average for a Note.
+				const boosterFactor = Math.round((statusPointsToReach - this.getSettingNumber('statusPoints'))/50/300);
+				this.setSettingNumber('badgeBoosterFactor', boosterFactor)
+				this.setSettingBoolean('badgeBoosterState', true)
+				//await this.saveData(this.settings)
+				//console.log(`boosterFaktor: ${boosterFactor}`)
+				return boosterFactor
+			} else {
+				return 0
+			}
+		}
+		catch (e) {
+			console.log(e);
+			return null;
+		}
 	}
 
 
