@@ -296,128 +296,130 @@ export default class gamification extends Plugin {
 		//const chartString = await this.createChart(vault)
 		//await replaceChartContent(this.getSettingString('avatarPageName'), chartString)
 		await this.openAvatarFile()
-		const fileCountMap: TFile[] = await getFileMap(this.app, this.getSettingString('tagsExclude'), this.getSettingString('folderExclude'));
-		console.log(`fileCountMap loaded. Number of files: ${fileCountMap.length}`);
+		const fileCountMap: TFile[] | null = await getFileMap(this.app, this.getSettingString('tagsExclude'), this.getSettingString('folderExclude'));
+		if (fileCountMap !== null) {
+			console.debug(`fileCountMap loaded. Number of files: ${fileCountMap.length}`);
 
-		let pointsReceived = 0; // to have one message at the end how many points received
+			let pointsReceived = 0; // to have one message at the end how many points received
 
-		for (const fileName of fileCountMap) {
-			const file = fileName
-			const fileContents = await this.app.vault.read(file);
-			const activeView = this.app.workspace.getActiveViewOfType(MarkdownView);
-			if (activeView && activeView.file && activeView.file.path === file.path) {
-				console.warn(`File ${file.path} is currently open. Skipping.`);
-				continue;
-			}
-			//console.log(`fileName.basename: ${fileName.basename}`)
-			const fileLength = countCharactersInActiveFile(fileContents, fileName.basename);
-			const rateFileLength = rateNoteLength(fileLength);
-			const {
-				charCount,
-				highlightedCount,
-				boldCount
-			} = countLayer2AndLayer3Characters(fileContents, fileName.basename, this.getSettingString('progressiveSumLayer2'), this.getSettingString('progressiveSumLayer3'));
-			const rateProgressiveSum: number = rateProgressiveSummarization(charCount, highlightedCount, boldCount);
-			const fileNameRate = rateLengthFilename(file.name);
-			const inlinkNumber = count_inlinks(file);
-			const inlinkClass = rateInlinks(inlinkNumber)//, fileCountMap.size);
-			const rateOut = rateOutlinks(getNumberOfOutlinks(file));
-			const noteMajurity = rateLevelOfMaturity(rateFileLength, fileNameRate, inlinkClass, rateOut, rateProgressiveSum);
+			for (const fileName of fileCountMap) {
+				const file = fileName
+				const fileContents = await this.app.vault.read(file);
+				const activeView = this.app.workspace.getActiveViewOfType(MarkdownView);
+				if (activeView && activeView.file && activeView.file.path === file.path) {
+					console.warn(`File ${file.path} is currently open. Skipping.`);
+					continue;
+				}
+				//console.log(`fileName.basename: ${fileName.basename}`)
+				const fileLength = countCharactersInActiveFile(fileContents, fileName.basename);
+				const rateFileLength = rateNoteLength(fileLength);
+				const {
+					charCount,
+					highlightedCount,
+					boldCount
+				} = countLayer2AndLayer3Characters(fileContents, fileName.basename, this.getSettingString('progressiveSumLayer2'), this.getSettingString('progressiveSumLayer3'));
+				const rateProgressiveSum: number = rateProgressiveSummarization(charCount, highlightedCount, boldCount);
+				const fileNameRate = rateLengthFilename(file.name);
+				const inlinkNumber = count_inlinks(file);
+				const inlinkClass = rateInlinks(inlinkNumber)//, fileCountMap.size);
+				const rateOut = rateOutlinks(getNumberOfOutlinks(file));
+				const noteMajurity = rateLevelOfMaturity(rateFileLength, fileNameRate, inlinkClass, rateOut, rateProgressiveSum);
 
 
-			console.log(`Processing file ${fileName.basename} in path ${fileName.path}`);
+				console.debug(`Processing file ${fileName.basename} in path ${fileName.path}`);
 
-			try {
-				await this.app.fileManager.processFrontMatter(file, (frontmatter) => {
-					if (rateDirectionForStatusPoints(frontmatter['note-maturity'], noteMajurity) >= 1) {
-						//pointsReceived += pointsNoteMajurity * rateDirectionForStatusPoints(frontmatter['note-maturity'], noteMajurity)
-						this.giveStatusPoints(pointsNoteMajurity * rateDirectionForStatusPoints("frontmatter['note-maturity']", noteMajurity),'fromNoteMajurity')
-						pointsReceived += pointsToReceived;
-					} else if (!('note-maturity' in frontmatter)) {
-						//pointsReceived += pointsNoteMajurity * rateDirectionForStatusPoints("0", noteMajurity)
-						this.giveStatusPoints(pointsNoteMajurity * rateDirectionForStatusPoints("0", noteMajurity),'fromNoteMajurityFirstTime')
-						pointsReceived += pointsToReceived;
+				try {
+					await this.app.fileManager.processFrontMatter(file, (frontmatter) => {
+						if (rateDirectionForStatusPoints(frontmatter['note-maturity'], noteMajurity) >= 1) {
+							//pointsReceived += pointsNoteMajurity * rateDirectionForStatusPoints(frontmatter['note-maturity'], noteMajurity)
+							this.giveStatusPoints(pointsNoteMajurity * rateDirectionForStatusPoints("frontmatter['note-maturity']", noteMajurity),'fromNoteMajurity')
+							pointsReceived += pointsToReceived;
+						} else if (!('note-maturity' in frontmatter)) {
+							//pointsReceived += pointsNoteMajurity * rateDirectionForStatusPoints("0", noteMajurity)
+							this.giveStatusPoints(pointsNoteMajurity * rateDirectionForStatusPoints("0", noteMajurity),'fromNoteMajurityFirstTime')
+							pointsReceived += pointsToReceived;
+						}
+
+						if (rateDirectionForStatusPoints(frontmatter['title-class'], fileNameRate) >= 1 && 'title-class' in frontmatter) {
+							//pointsReceived += pointsMajurity * rateDirectionForStatusPoints(frontmatter['title-class'], fileNameRate)
+							this.giveStatusPoints(pointsMajurity * rateDirectionForStatusPoints(frontmatter['title-class'], fileNameRate),'fromTitleClass')
+							pointsReceived += pointsToReceived;
+						} else if (!('title-class' in frontmatter)) {
+							//pointsReceived += pointsMajurity * rateDirectionForStatusPoints("0", fileNameRate)
+							this.giveStatusPoints(pointsMajurity * rateDirectionForStatusPoints("0", fileNameRate),'fromTitleClassFirstTime')
+							pointsReceived += pointsToReceived;
+						}
+
+						if (rateDirectionForStatusPoints(frontmatter['note-length-class'], rateFileLength) >= 1) {
+							//pointsReceived += pointsMajurity * rateDirectionForStatusPoints(frontmatter['note-length-class'], rateFileLength)
+							this.giveStatusPoints(pointsMajurity * rateDirectionForStatusPoints(frontmatter['note-length-class'], rateFileLength),'fromNoteLengthClass')
+							pointsReceived += pointsToReceived;
+						} else if (!('note-length-class' in frontmatter)) {
+							//pointsReceived += pointsMajurity * rateDirectionForStatusPoints("0", rateFileLength)
+							this.giveStatusPoints(pointsMajurity * rateDirectionForStatusPoints("0", rateFileLength),'fromNoteLengthClassFirstTime')
+							pointsReceived += pointsToReceived;
+						}
+
+						if (rateDirectionForStatusPoints(frontmatter['inlink-class'], inlinkClass) >= 1) {
+							//pointsReceived += pointsMajurity * rateDirectionForStatusPoints(frontmatter['inlink-class'], inlinkClass)
+							this.giveStatusPoints(pointsMajurity * rateDirectionForStatusPoints(frontmatter['inlink-class'], inlinkClass),'fromInlinkClass')
+							pointsReceived += pointsToReceived;
+						} else if (!('inlink-class' in frontmatter)) {
+							//pointsReceived += pointsMajurity * rateDirectionForStatusPoints("0", inlinkClass)
+							this.giveStatusPoints(pointsMajurity * rateDirectionForStatusPoints("0", inlinkClass),'fromInlinkClassFirstTime')
+							pointsReceived += pointsToReceived;
+						}
+
+						if (rateDirectionForStatusPoints(frontmatter['outlink-class'], rateOut) >= 1) {
+							//pointsReceived += pointsMajurity * rateDirectionForStatusPoints(frontmatter['outlink-class'], rateOut)
+							this.giveStatusPoints(pointsMajurity * rateDirectionForStatusPoints(frontmatter['outlink-class'], rateOut),'fromOutlinkClass')
+							pointsReceived += pointsToReceived;
+						} else if (!('outlink-class' in frontmatter)) {
+							//pointsReceived += pointsMajurity * rateDirectionForStatusPoints("0", rateOut)
+							this.giveStatusPoints(pointsMajurity * rateDirectionForStatusPoints("0", rateOut),'fromOutlinkClassFirstTime')
+							pointsReceived += pointsToReceived;
+						}
+
+						if (rateDirectionForStatusPoints(frontmatter['progressive-summarization-maturity'], rateProgressiveSum) >= 1) {
+							//pointsReceived += pointsMajurity * rateDirectionForStatusPoints(frontmatter['progressive-summarization-maturity'], rateProgressiveSum)
+							this.giveStatusPoints(pointsMajurity * rateDirectionForStatusPoints(frontmatter['progressive-summarization-maturity'], rateProgressiveSum),'fromProgressiveTummarizationMaturity')
+							pointsReceived += pointsToReceived;
+						} else if (!('progressive-summarization-maturity' in frontmatter)) {
+							//pointsReceived += pointsMajurity * rateDirectionForStatusPoints(frontmatter['progressive-summarization-maturity'], rateProgressiveSum)
+							this.giveStatusPoints(pointsMajurity * rateDirectionForStatusPoints("0", rateProgressiveSum),'fromProgressiveTummarizationMaturityFirstTime')
+							pointsReceived += pointsToReceived;
+						}
+
+						this.writeFrontmatter(frontmatter, fileNameRate, rateFileLength, inlinkClass, rateOut, rateProgressiveSum, noteMajurity);
+					});
+				} catch (e) {
+					if (e?.name === 'YAMLParseError') {
+						const errorMessage = `Update majuritys failed Malformed frontamtter on this file : ${file.path} ${e.message}`;
+						new Notice(errorMessage, this.getSettingNumber('timeShowNotice') * 1000);
+						console.error(errorMessage);
 					}
-
-					if (rateDirectionForStatusPoints(frontmatter['title-class'], fileNameRate) >= 1 && 'title-class' in frontmatter) {
-						//pointsReceived += pointsMajurity * rateDirectionForStatusPoints(frontmatter['title-class'], fileNameRate)
-						this.giveStatusPoints(pointsMajurity * rateDirectionForStatusPoints(frontmatter['title-class'], fileNameRate),'fromTitleClass')
-						pointsReceived += pointsToReceived;
-					} else if (!('title-class' in frontmatter)) {
-						//pointsReceived += pointsMajurity * rateDirectionForStatusPoints("0", fileNameRate)
-						this.giveStatusPoints(pointsMajurity * rateDirectionForStatusPoints("0", fileNameRate),'fromTitleClassFirstTime')
-						pointsReceived += pointsToReceived;
-					}
-
-					if (rateDirectionForStatusPoints(frontmatter['note-length-class'], rateFileLength) >= 1) {
-						//pointsReceived += pointsMajurity * rateDirectionForStatusPoints(frontmatter['note-length-class'], rateFileLength)
-						this.giveStatusPoints(pointsMajurity * rateDirectionForStatusPoints(frontmatter['note-length-class'], rateFileLength),'fromNoteLengthClass')
-						pointsReceived += pointsToReceived;
-					} else if (!('note-length-class' in frontmatter)) {
-						//pointsReceived += pointsMajurity * rateDirectionForStatusPoints("0", rateFileLength)
-						this.giveStatusPoints(pointsMajurity * rateDirectionForStatusPoints("0", rateFileLength),'fromNoteLengthClassFirstTime')
-						pointsReceived += pointsToReceived;
-					}
-
-					if (rateDirectionForStatusPoints(frontmatter['inlink-class'], inlinkClass) >= 1) {
-						//pointsReceived += pointsMajurity * rateDirectionForStatusPoints(frontmatter['inlink-class'], inlinkClass)
-						this.giveStatusPoints(pointsMajurity * rateDirectionForStatusPoints(frontmatter['inlink-class'], inlinkClass),'fromInlinkClass')
-						pointsReceived += pointsToReceived;
-					} else if (!('inlink-class' in frontmatter)) {
-						//pointsReceived += pointsMajurity * rateDirectionForStatusPoints("0", inlinkClass)
-						this.giveStatusPoints(pointsMajurity * rateDirectionForStatusPoints("0", inlinkClass),'fromInlinkClassFirstTime')
-						pointsReceived += pointsToReceived;
-					}
-
-					if (rateDirectionForStatusPoints(frontmatter['outlink-class'], rateOut) >= 1) {
-						//pointsReceived += pointsMajurity * rateDirectionForStatusPoints(frontmatter['outlink-class'], rateOut)
-						this.giveStatusPoints(pointsMajurity * rateDirectionForStatusPoints(frontmatter['outlink-class'], rateOut),'fromOutlinkClass')
-						pointsReceived += pointsToReceived;
-					} else if (!('outlink-class' in frontmatter)) {
-						//pointsReceived += pointsMajurity * rateDirectionForStatusPoints("0", rateOut)
-						this.giveStatusPoints(pointsMajurity * rateDirectionForStatusPoints("0", rateOut),'fromOutlinkClassFirstTime')
-						pointsReceived += pointsToReceived;
-					}
-
-					if (rateDirectionForStatusPoints(frontmatter['progressive-summarization-maturity'], rateProgressiveSum) >= 1) {
-						//pointsReceived += pointsMajurity * rateDirectionForStatusPoints(frontmatter['progressive-summarization-maturity'], rateProgressiveSum)
-						this.giveStatusPoints(pointsMajurity * rateDirectionForStatusPoints(frontmatter['progressive-summarization-maturity'], rateProgressiveSum),'fromProgressiveTummarizationMaturity')
-						pointsReceived += pointsToReceived;
-					} else if (!('progressive-summarization-maturity' in frontmatter)) {
-						//pointsReceived += pointsMajurity * rateDirectionForStatusPoints(frontmatter['progressive-summarization-maturity'], rateProgressiveSum)
-						this.giveStatusPoints(pointsMajurity * rateDirectionForStatusPoints("0", rateProgressiveSum),'fromProgressiveTummarizationMaturityFirstTime')
-						pointsReceived += pointsToReceived;
-					}
-
-					this.writeFrontmatter(frontmatter, fileNameRate, rateFileLength, inlinkClass, rateOut, rateProgressiveSum, noteMajurity);
-				});
-			} catch (e) {
-				if (e?.name === 'YAMLParseError') {
-					const errorMessage = `Update majuritys failed Malformed frontamtter on this file : ${file.path} ${e.message}`;
-					new Notice(errorMessage, this.getSettingNumber('timeShowNotice') * 1000);
-					console.error(errorMessage);
 				}
 			}
+			if (pointsReceived > 0) {
+				new Notice(`${pointsReceived} Points received`,this.getSettingNumber('timeShowNotice') * 1000)
+				console.log(`${pointsReceived} Points received`)
+			}
+
+
+			// Inside your function where you want to introduce a delay
+			setTimeout(async () => {
+				// Code that you want to execute after the delay
+				const initBadge: Badge = getBadgeForInitLevel(this.getSettingNumber('statusLevel'));
+				new Notice(`You've earned the "${initBadge.name}" badge. ${initBadge.description}`,this.getSettingNumber('timeShowNotice') * 1000 * 1.2)
+				console.log(`You earned ${initBadge.name} - ${initBadge.description}`)
+				await this.giveInitBadgeInProfile(this.getSettingString('avatarPageName'), initBadge);
+				await this.removeBadgesWhenInitLevelHigher(this.getSettingString('avatarPageName'), this.getSettingNumber('statusLevel'))
+				await this.boosterForInit()
+				await this.updateStatusBar(statusbarGamification)
+			}, 2000); // 2000 milliseconds = 2 seconds
+
+			new ModalInformationbox(this.app, `Finallized gamification initialistation!\nCongratulation, you earned ${pointsReceived} Points!\n\nCheck the Profile Page: "${this.getSettingString('avatarPageName')}.md"\n\nYou received an initialisation Booster aktiv for your first level ups. Game on!`).open();
 		}
-		if (pointsReceived > 0) {
-			new Notice(`${pointsReceived} Points received`,this.getSettingNumber('timeShowNotice') * 1000)
-			console.log(`${pointsReceived} Points received`)
-		}
-
-
-		// Inside your function where you want to introduce a delay
-		setTimeout(async () => {
-			// Code that you want to execute after the delay
-			const initBadge: Badge = getBadgeForInitLevel(this.getSettingNumber('statusLevel'));
-			new Notice(`You've earned the "${initBadge.name}" badge. ${initBadge.description}`,this.getSettingNumber('timeShowNotice') * 1000 * 1.2)
-			console.log(`You earned ${initBadge.name} - ${initBadge.description}`)
-			await this.giveInitBadgeInProfile(this.getSettingString('avatarPageName'), initBadge);
-			await this.removeBadgesWhenInitLevelHigher(this.getSettingString('avatarPageName'), this.getSettingNumber('statusLevel'))
-			await this.boosterForInit()
-			await this.updateStatusBar(statusbarGamification)
-		}, 2000); // 2000 milliseconds = 2 seconds
-
-		new ModalInformationbox(this.app, `Finallized gamification initialistation!\nCongratulation, you earned ${pointsReceived} Points!\n\nCheck the Profile Page: "${this.getSettingString('avatarPageName')}.md"\n\nYou received an initialisation Booster aktiv for your first level ups. Game on!`).open();
 	}
 
 

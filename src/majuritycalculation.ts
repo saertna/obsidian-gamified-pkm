@@ -462,38 +462,43 @@ export const getFileCountMap = async (app: App, excludeTag: string, excludeFolde
 };
 
 
-export const getFileMap = async (app: App, excludeTag: string, excludeFolder: string): Promise<TFile[]> => {
+export const getFileMap = async (app: App, excludeTag: string, excludeFolder: string): Promise<TFile[] | null > => {
+	try {
+		const { vault } = app;
 
-    const { vault } = app;
+		// files with this #tags in to ignore
+		let excludedSubstrings : string[] = []
+		if (excludeTag == undefined) {
+			excludedSubstrings = []
+		} else {
+			excludedSubstrings = excludeTag.split(', ');
+		}
+		//console.log(`excludedSubstrings: ${excludedSubstrings}`)
+		// folders to ignore .md-files in
+		let excludedFolders : string[] = []
+		if (excludeFolder == undefined) {
+			excludedFolders = []
+		} else {
+			excludedFolders = excludeFolder.split(', ');
+		}
+		excludedFolders.push('.obsidian', '.trash'); // hardcode the basic folders
+		//console.log(`excludedFolders: ${excludedFolders}`)	
+		let fileArray: TFile[] = [];
+		const files = await vault.getMarkdownFiles();
+		for (const file of files) {
 
-	// files with this #tags in to ignore
-	let excludedSubstrings : string[] = []
-	if (excludeTag == undefined) {
-		excludedSubstrings = []
-	} else {
-		excludedSubstrings = excludeTag.split(', ');
+			const fileContents = await app.vault.read(file);
+			//console.log(`file.path: ${file.path}`)
+			if ((!excludedSubstrings.some(substring => fileContents.includes(substring)) || excludeTag.length === 0) && 
+				!excludedFolders.some(folder => file.path.includes(folder))) {
+				//console.log(`file ${file} get's added.`)
+				fileArray.push(file)
+			}
+		}
+		return fileArray;
 	}
-	//console.log(`excludedSubstrings: ${excludedSubstrings}`)
-	// folders to ignore .md-files in
-	let excludedFolders : string[] = []
-	if (excludeFolder == undefined) {
-		excludedFolders = []
-	} else {
-		excludedFolders = excludeFolder.split(', ');
+	catch (e){
+		console.log(e);
+		return null;
 	}
-	excludedFolders.push('.obsidian', '.trash'); // hardcode the basic folders
-	//console.log(`excludedFolders: ${excludedFolders}`)	
-    let fileArray: TFile[] = [];
-    const files = await vault.getMarkdownFiles();
-    for (const file of files) {
-
-        const fileContents = await app.vault.read(file);
-		//console.log(`file.path: ${file.path}`)
-		if ((!excludedSubstrings.some(substring => fileContents.includes(substring)) || excludeTag.length === 0) && 
-            !excludedFolders.some(folder => file.path.includes(folder))) {
-			//console.log(`file ${file} get's added.`)
-			fileArray.push(file)
-        }
-    }
-    return fileArray;
 };
