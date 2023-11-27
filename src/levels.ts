@@ -146,5 +146,5 @@ export interface LevelData {
 /*
 const points = 5500;
 const level = getLevelForPoints(points);
-console.log(`With ${points} points, the current level is ${level}.`);
+console.debug(`With ${points} points, the current level is ${level}.`);
 */

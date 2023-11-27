@@ -49,19 +49,19 @@ export default class gamification extends Plugin {
 
 	getSettingString(key: string) {
         const decryptedValue = this.settings[key] !== undefined ? this.settings[key].toString() : ''
-		//console.log(`String: decrypted ${key} is ${decryptString(decryptedValue)}`)
+		//console.debug(`String: decrypted ${key} is ${decryptString(decryptedValue)}`)
 		return decryptString(decryptedValue);
     }
 
 	getSettingNumber(key: string) {
 		const decryptedValue = this.settings[key] !== undefined ? this.settings[key].toString() : ''
-		//console.log(`Number: decrypted ${key} is ${decryptNumber(decryptedValue)}`)
+		//console.debug(`Number: decrypted ${key} is ${decryptNumber(decryptedValue)}`)
 		return decryptNumber(decryptedValue);
     }
 
 	getSettingBoolean(key: string) {
         const decryptedValue = this.settings[key] !== undefined ? this.settings[key].toString() : ''
-		//console.log(`Boolean: decrypted ${key} is ${decryptBoolean(decryptedValue)}`)
+		//console.debug(`Boolean: decrypted ${key} is ${decryptBoolean(decryptedValue)}`)
 		return decryptBoolean(decryptedValue);
     }
 
@@ -70,7 +70,7 @@ export default class gamification extends Plugin {
         // Set a specific setting
 		const valueEncrypted = encryptString(value)
         this.settings[key] = valueEncrypted;
-		//console.log(`String: new value for ${key} is ${valueEncrypted}`)
+		//console.debug(`String: new value for ${key} is ${valueEncrypted}`)
         //this.settings[key] = value;
         this.saveSettings();
 	}
@@ -78,21 +78,21 @@ export default class gamification extends Plugin {
 
 	setSettingNumber(key: string, value: number) {
         // Set a specific setting
-		//console.log(`new value for ${key} is ${value}`)
+		//console.debug(`new value for ${key} is ${value}`)
 		const valueEncrypted = encryptNumber(value)
-        //console.log(`new value for ${key} is ${value} ⇒ ${valueEncrypted}`)
+        //console.debug(`new value for ${key} is ${value} ⇒ ${valueEncrypted}`)
 		this.settings[key] = valueEncrypted;
-        //console.log(`Number: new value for ${key} is ${valueEncrypted}`)
+        //console.debug(`Number: new value for ${key} is ${valueEncrypted}`)
         this.saveSettings();
     }
 
 		
 	setSettingBoolean(key: string, value: boolean) {
         // Set a specific setting
-		//console.log(`new value for ${key} is ${value}`)
+		//console.debug(`new value for ${key} is ${value}`)
 		const valueEncrypted = encryptBoolean(value)
         this.settings[key] = valueEncrypted;
-		//console.log(`Boolean: new value for ${key} is ${valueEncrypted}`)
+		//console.debug(`Boolean: new value for ${key} is ${valueEncrypted}`)
         this.saveSettings();
 	}
 
@@ -149,11 +149,11 @@ export default class gamification extends Plugin {
 				const badgeDict = parseBadgeCSV(csvString);
 
 				// Access badge information
-				//console.log(badgeDict["Brainiac Trailblazer"]);
+				//console.debug(badgeDict["Brainiac Trailblazer"]);
 				for (const badgeName in badgeDict) {
 					if (badgeDict.hasOwnProperty(badgeName)) {
 						const badgeInfo = badgeDict[badgeName];
-						console.log(`Badge: ${badgeName}, Date: ${badgeInfo.date}, Level: ${badgeInfo.level}`);
+						console.debug(`Badge: ${badgeName}, Date: ${badgeInfo.date}, Level: ${badgeInfo.level}`);
 					}
 				}*/
 				//this.openAvatarFile();
@@ -296,7 +296,7 @@ export default class gamification extends Plugin {
 					console.warn(`File ${file.path} is currently open. Skipping.`);
 					continue;
 				}
-				//console.log(`fileName.basename: ${fileName.basename}`)
+				//console.debug(`fileName.basename: ${fileName.basename}`)
 				const fileLength = countCharactersInActiveFile(fileContents, fileName.basename);
 				const rateFileLength = rateNoteLength(fileLength);
 				const {
@@ -388,7 +388,7 @@ export default class gamification extends Plugin {
 			}
 			if (pointsReceived > 0) {
 				new Notice(`${pointsReceived} Points received`,this.getSettingNumber('timeShowNotice') * 1000)
-				console.log(`${pointsReceived} Points received`)
+				console.debug(`${pointsReceived} Points received`)
 			}
 
 
@@ -397,7 +397,7 @@ export default class gamification extends Plugin {
 				// Code that you want to execute after the delay
 				const initBadge: Badge = getBadgeForInitLevel(this.getSettingNumber('statusLevel'));
 				new Notice(`You've earned the "${initBadge.name}" badge. ${initBadge.description}`,this.getSettingNumber('timeShowNotice') * 1000 * 1.2)
-				console.log(`You earned ${initBadge.name} - ${initBadge.description}`)
+				console.debug(`You earned ${initBadge.name} - ${initBadge.description}`)
 				await this.giveInitBadgeInProfile(this.getSettingString('avatarPageName'), initBadge);
 				await this.removeBadgesWhenInitLevelHigher(this.getSettingString('avatarPageName'), this.getSettingNumber('statusLevel'))
 				await this.boosterForInit()
@@ -482,7 +482,7 @@ export default class gamification extends Plugin {
 					if (frontmatter) {
 						let pointsReceived = 0; // to have one message at the end how many points received
 						if (rateDirectionForStatusPoints(frontmatter['note-maturity'], noteMajurity) >= 1){
-							console.log(`note-maturity >=1`)
+							console.debug(`note-maturity >=1`)
 							//pointsReceived += pointsNoteMajurity*rateDirectionForStatusPoints(frontmatter['note-maturity'], noteMajurity)
 							const newLevel = this.giveStatusPoints(pointsNoteMajurity * rateDirectionForStatusPoints("frontmatter['note-maturity']", noteMajurity),'fromNoteMajurity')
 							pointsReceived += pointsToReceived;
@@ -559,11 +559,11 @@ export default class gamification extends Plugin {
 							pointsReceived += pointsToReceived;
 							this.decisionIfBadge(newLevel)
 						}
-						//console.log(`pointsReceived: ${pointsReceived}`)
+						//console.debug(`pointsReceived: ${pointsReceived}`)
 						if (pointsReceived > 0){
 							const messagePoints = getRandomMessagePoints(pointsReceived);
 							new Notice(messagePoints,this.getSettingNumber('timeShowNotice') * 1000)
-							console.log(messagePoints)
+							console.debug(messagePoints)
 						}
 
 						this.writeFrontmatter(frontmatter, fileNameRate, rateFileLength, inlinkClass, rateOut, rateProgressiveSum, noteMajurity);
@@ -577,7 +577,7 @@ export default class gamification extends Plugin {
 				}
 			}
 			new Notice('note majurity updated!');
-			console.log('note majurity updated!')
+			console.debug('note majurity updated!')
 			await this.updateStatusBar(this.statusbarGamification)
 		} else {
 			console.error('file was not found to calculate majurities. Make sure one is active.')
@@ -595,7 +595,7 @@ export default class gamification extends Plugin {
 			this.setSettingNumber('dailyNoteCreationTask', 0);
 			this.setSettingString('dailyNoteCreationDate', window.moment().format('DD.MM.YYYY'))
 			await this.saveSettings();
-			console.log(`daily Challenge reseted`)
+			console.debug(`daily Challenge reseted`)
 			reset = true;
 		}
 		if(!isOneDayBefore(window.moment(this.getSettingString('weeklyNoteCreationDate'), 'DD.MM.YYYY')) && !isSameDay(window.moment(this.getSettingString('weeklyNoteCreationDate'), 'DD.MM.YYYY'))){
@@ -603,10 +603,10 @@ export default class gamification extends Plugin {
 			this.setSettingNumber('weeklyNoteCreationTask', 0);
 			this.setSettingString('weeklyNoteCreationDate', window.moment().subtract(1, 'day').format('DD.MM.YYYY'))
 			this.decreaseStreakbooster(daysPassed)
-			console.log(`${daysPassed} days passed`)
+			console.debug(`${daysPassed} days passed`)
 			await this.saveSettings();
 			await this.updateStatusBar(this.statusbarGamification)
-			console.log(`weekly Challenge reseted`)
+			console.debug(`weekly Challenge reseted`)
 			reset = true;
 		}
 		if(isOneDayBefore(window.moment(this.getSettingString('weeklyNoteCreationDate'), 'DD.MM.YYYY')) && this.getSettingNumber('weeklyNoteCreationTask') == 7){
@@ -622,39 +622,39 @@ export default class gamification extends Plugin {
 		// deativate boosters
 		if (this.getSettingBoolean('boosterFactorPerpetualProgress') == true && isMinutesPassed(window.moment(this.getSettingString('boosterDatePerpetualProgress'), 'YYYY-MM-DD HH:mm:ss'),getBoosterRunTimeFromVarName('perpetualProgress'))){
 			this.setSettingBoolean('boosterFactorPerpetualProgress',false);
-			console.log('"Perpetual Progress" has ended.')
+			console.debug('"Perpetual Progress" has ended.')
 		}
 		if (this.getSettingBoolean('boosterFactorStrategicSynapses') == true && isMinutesPassed(window.moment(this.getSettingString('boosterDateStrategicSynapses'), 'YYYY-MM-DD HH:mm:ss'),getBoosterRunTimeFromVarName('strategicSynapses'))){
 			this.setSettingBoolean('boosterFactorStrategicSynapses',false);
-			console.log('"Strategic Synapses" has ended.')
+			console.debug('"Strategic Synapses" has ended.')
 		}
 		if (this.getSettingBoolean('boosterFactorLinkersLode') == true && isMinutesPassed(window.moment(this.getSettingString('boosterDateLinkersLode'), 'YYYY-MM-DD HH:mm:ss'),getBoosterRunTimeFromVarName('linkersLode'))){
 			this.setSettingBoolean('boosterFactorLinkersLode',false);
-			console.log('"Linkers Lode" has ended.')
+			console.debug('"Linkers Lode" has ended.')
 		}
 		if (this.getSettingBoolean('boosterFactorRecursiveReflection') == true && isMinutesPassed(window.moment(this.getSettingString('boosterDateRecursiveReflection'), 'YYYY-MM-DD HH:mm:ss'),getBoosterRunTimeFromVarName('recursiveReflection'))){
 			this.setSettingBoolean('boosterFactorRecursiveReflection',false);
-			console.log('"Recursive Reflection" has ended.')
+			console.debug('"Recursive Reflection" has ended.')
 		}
 		if (this.getSettingBoolean('boosterFactorSynapticSurge') == true && isMinutesPassed(window.moment(this.getSettingString('boosterDateSynapticSurge'), 'YYYY-MM-DD HH:mm:ss'),getBoosterRunTimeFromVarName('synapticSurge'))){
 			this.setSettingBoolean('boosterFactorSynapticSurge',false);
-			console.log('"Synaptic Surge" has ended.')
+			console.debug('"Synaptic Surge" has ended.')
 		}
 		if (this.getSettingBoolean('boosterFactorTitleTitan') == true && isMinutesPassed(window.moment(this.getSettingString('boosterDateTitleTitan'), 'YYYY-MM-DD HH:mm:ss'),getBoosterRunTimeFromVarName('titleTitan'))){
 			this.setSettingBoolean('boosterFactorTitleTitan',false);
-			console.log('"Title Titan" has ended.')
+			console.debug('"Title Titan" has ended.')
 		}
 		if (this.getSettingBoolean('boosterFactorPrecisionPrism') == true && isMinutesPassed(window.moment(this.getSettingString('boosterDatePrecisionPrism'), 'YYYY-MM-DD HH:mm:ss'),getBoosterRunTimeFromVarName('precisionPrism'))){
 			this.setSettingBoolean('boosterFactorPrecisionPrism',false);
-			console.log('"Precision Prism" has ended.')
+			console.debug('"Precision Prism" has ended.')
 		}
 		if (this.getSettingBoolean('boosterFactorHyperlinkHarmony') == true && isMinutesPassed(window.moment(this.getSettingString('boosterDateHyperlinkHarmony'), 'YYYY-MM-DD HH:mm:ss'),getBoosterRunTimeFromVarName('hyperlinkHarmony'))){
 			this.setSettingBoolean('boosterFactorHyperlinkHarmony',false);
-			console.log('"Hyperlink Harmony" has ended.')
+			console.debug('"Hyperlink Harmony" has ended.')
 		}
 		if (this.getSettingBoolean('boosterFactorEphemeralEuphoria') == true && isMinutesPassed(window.moment(this.getSettingString('boosterDateEphemeralEuphoria'), 'YYYY-MM-DD HH:mm:ss'),getBoosterRunTimeFromVarName('ephemeralEuphoria'))){
 			this.setSettingBoolean('boosterFactorEphemeralEuphoria',false);
-			console.log('"Ephemeral Euphoria" has ended.')
+			console.debug('"Ephemeral Euphoria" has ended.')
 		}
 
 	}
@@ -670,19 +670,19 @@ export default class gamification extends Plugin {
 			if(newDailyNoteCreationTask == 1){
 				// update Avatar Page
 				await this.updateAvatarPage(this.getSettingString('avatarPageName'));
-				console.log(`${newDailyNoteCreationTask}/2 Notes created today.`)
+				console.debug(`${newDailyNoteCreationTask}/2 Notes created today.`)
 			} else if (newDailyNoteCreationTask == 2) {
 				this.increaseStreakbooster(streakboosterIncreaseDaily)
 				await this.saveSettings();
 				await this.updateStatusBar(this.statusbarGamification)
 				await this.giveStatusPoints(pointsForDailyChallenge,'formIncreaseDailyCreatedNoteCount')
 				const message = getRandomMessageTwoNoteChallenge(pointsForDailyChallenge * (this.getSettingNumber('badgeBoosterFactor') + this.getSettingNumber('streakbooster')));
-				console.log(`daily Challenge reached! ${newDailyNoteCreationTask}/2 created.`)
+				console.debug(`daily Challenge reached! ${newDailyNoteCreationTask}/2 created.`)
 				new Notice(message,this.getSettingNumber('timeShowNotice') * 1000)
-				console.log(message)
+				console.debug(message)
 			} else {
 				// nothing else to do here
-				console.log(`${newDailyNoteCreationTask}/2 Notes created today.`)
+				console.debug(`${newDailyNoteCreationTask}/2 Notes created today.`)
 			}
 		}
 	}
@@ -693,7 +693,7 @@ export default class gamification extends Plugin {
 			await this.checkForWeeklyNoteChallengeBelow7();
 		} else if (isSameDay(window.moment(this.getSettingString('weeklyNoteCreationDate'), 'DD.MM.YYYY'))){
 			// do nothing
-			console.log(`daily note creation was rated already today.`)
+			console.debug(`daily note creation was rated already today.`)
 		} else {
 			this.setSettingString('weeklyNoteCreationDate', window.moment().format('DD.MM.YYYY'))
 			this.setSettingNumber('weeklyNoteCreationTask', 1);
@@ -719,19 +719,19 @@ export default class gamification extends Plugin {
 		if (newWeeklyNoteCreationTask <= 6) {
 			// update Avatar Page
 			await this.updateAvatarPage(this.getSettingString('avatarPageName'));
-			console.log(`${newWeeklyNoteCreationTask}/7 Notes created in a chain.`)
+			console.debug(`${newWeeklyNoteCreationTask}/7 Notes created in a chain.`)
 		} else if (newWeeklyNoteCreationTask == 7) {
 			this.increaseStreakbooster(streakboosterIncreaseWeekly);
 			await this.saveSettings();
 			await this.updateStatusBar(this.statusbarGamification)
 			await this.giveStatusPoints(pointsForWeeklyChallenge, 'fromCheckForWeeklyNoteChallengeEvaluation')
-			console.log(`Weekly Challenge reached! ${newWeeklyNoteCreationTask}/7 created in a chain.`)
+			console.debug(`Weekly Challenge reached! ${newWeeklyNoteCreationTask}/7 created in a chain.`)
 			const message = getRandomMessageWeeklyChallenge(pointsForWeeklyChallenge * (this.getSettingNumber('badgeBoosterFactor') + this.getSettingNumber('streakbooster')));
 			new Notice(message,this.getSettingNumber('timeShowNotice') * 1000)
-			console.log(message)
+			console.debug(message)
 		} else {
 			// nothing else to do here
-			console.log(`${newWeeklyNoteCreationTask}/7 Notes created in a chain.`)
+			console.debug(`${newWeeklyNoteCreationTask}/7 Notes created in a chain.`)
 		}
 	}
 
@@ -773,7 +773,7 @@ export default class gamification extends Plugin {
 
 	async loadSettings() {
 		this.settings = Object.assign({}, defaultSettings, await this.loadData());
-		console.log('loadSettings()')
+		console.debug('loadSettings()')
 	}
 
 
@@ -846,13 +846,13 @@ export default class gamification extends Plugin {
 		if(newBoosterFakfor > 80){
 			newBoosterFakfor = 80;
 		}
-		console.log(`newBoosterFakfor: ${newBoosterFakfor}`)
-		//console.log(`old value streakbooster: ${this.getSettingNumber('streakbooster')}`)
+		console.debug(`newBoosterFakfor: ${newBoosterFakfor}`)
+		//console.debug(`old value streakbooster: ${this.getSettingNumber('streakbooster')}`)
 		this.setSettingNumber('streakbooster', newBoosterFakfor);
 		this.setSettingBoolean('streakboosterDate', true);
-		//console.log(`new value streakbooster: ${this.getSettingNumber('streakbooster')}`)
+		//console.debug(`new value streakbooster: ${this.getSettingNumber('streakbooster')}`)
 		//await this.saveData(this.settings)
-		//console.log(`streakbooster: ${this.getSettingNumber('streakbooster')}`)
+		//console.debug(`streakbooster: ${this.getSettingNumber('streakbooster')}`)
 		}
 
 
@@ -872,7 +872,7 @@ export default class gamification extends Plugin {
 		try {
 			const existingFile = this.app.vault.getAbstractFileByPath(`${avatarPageName}.md`);
 			if (existingFile == null) {
-				console.log(`File ${avatarPageName}.md does not exist`);
+				console.debug(`File ${avatarPageName}.md does not exist`);
 				return false;
 			}
 			const file = existingFile as TFile;
@@ -964,7 +964,7 @@ export default class gamification extends Plugin {
 			return receiveBadge
 		}
 		catch (e) {
-			console.log(e);
+			console.error(e);
 			return null;
 		}
 	}
@@ -973,7 +973,7 @@ export default class gamification extends Plugin {
 	async giveBadgeInProfile(avatarPageName: string, badge: Badge){
 		const existingFile = this.app.vault.getAbstractFileByPath(`${avatarPageName}.md`);
 		if (existingFile == null) {
-			console.log(`File ${avatarPageName}.md does not exist`);
+			console.debug(`File ${avatarPageName}.md does not exist`);
 			return;
 		}
 		const file = existingFile as TFile;
@@ -1011,7 +1011,7 @@ export default class gamification extends Plugin {
 			const newLines = [...lines.slice(0, start), badgeString, ...lines.slice(end)];
 			const newLines2 = [...newLines.slice(0, start2), ...newLines.slice(end2)]
 			await this.app.vault.modify(file, newLines2.join("\n"));
-			//console.log(`badgeString: ${badgeString}`)
+			//console.debug(`badgeString: ${badgeString}`)
 		}
 	}
 
@@ -1019,7 +1019,7 @@ export default class gamification extends Plugin {
 	async giveInitBadgeInProfile(avatarPageName: string, badge: Badge){
 		const existingFile = this.app.vault.getAbstractFileByPath(`${avatarPageName}.md`);
 		if (existingFile == null) {
-			console.log(`File ${avatarPageName}.md does not exist`);
+			console.debug(`File ${avatarPageName}.md does not exist`);
 			return;
 		}
 		const file = existingFile as TFile;
@@ -1045,7 +1045,7 @@ export default class gamification extends Plugin {
 			const badgeString = "**" + badge.name + "**\n> " + badge.description + " - *" + window.moment().format('D.M.YY') + "*\n"
 			const newLines = [...lines.slice(0, start), badgeString, ...lines.slice(end)];
 			await this.app.vault.modify(file, newLines.join("\n"));
-			console.log(`badgeString: ${badgeString}`)
+			console.debug(`badgeString: ${badgeString}`)
 		}
 	}
 
@@ -1053,7 +1053,7 @@ export default class gamification extends Plugin {
 	async removeBadgesWhenInitLevelHigher(avatarPageName: string, level: number){
 		const existingFile = this.app.vault.getAbstractFileByPath(`${avatarPageName}.md`);
 		if (existingFile == null) {
-			console.log(`File ${avatarPageName}.md does not exist`);
+			console.debug(`File ${avatarPageName}.md does not exist`);
 			return;
 		}
 		const file = existingFile as TFile;
@@ -1133,7 +1133,7 @@ export default class gamification extends Plugin {
 
 		let charStringModified = ""
 		for (const [value] of fileDateMonthMapMod) {
-			//console.log(`key: ${key}, value: ${value}`);
+			//console.debug(`key: ${key}, value: ${value}`);
 			charStringModified = charStringModified + value + ", "
 		}
 		charStringModified = charStringModified.slice(0,charStringModified.length-2)
@@ -1147,7 +1147,7 @@ export default class gamification extends Plugin {
 			if(result){
 				const badge : Badge = getBadgeForLevel(this.getSettingNumber('statusLevel'), false)
 				new Notice(`You've earned the "${badge.name}" badge. ${badge.description}`,this.getSettingNumber('timeShowNotice') * 1000 * 1.2)
-				console.log(`You've earned the "${badge.name}" badge. ${badge.description}`)
+				console.debug(`You've earned the "${badge.name}" badge. ${badge.description}`)
 				this.giveBadgeInProfile(this.getSettingString('avatarPageName'), badge)
 				this.setSettingBoolean('badgeBoosterState', false);
 				this.setSettingNumber('badgeBoosterFactor', 1);
@@ -1168,7 +1168,7 @@ export default class gamification extends Plugin {
 					console.warn(`File ${fileName} not found.`);
 					continue;
 				}
-				console.log(`Processing file ${fileName}`);
+				console.debug(`Processing file ${fileName}`);
 				try {
 					await this.app.fileManager.processFrontMatter(file, (frontmatter) => {
 						delete frontmatter['title-class']
@@ -1187,7 +1187,7 @@ export default class gamification extends Plugin {
 				}
 			}
 		} else {
-			console.log(`No files in vault found to remove frontmatter keys from`)
+			console.debug(`No files in vault found to remove frontmatter keys from`)
 		}
 	}
 
@@ -1211,7 +1211,7 @@ export default class gamification extends Plugin {
 			return nextBadgeLevel
 		}
 		catch (e) {
-			console.log(e)
+			console.error(e)
 			return null;
 		}
 	}
@@ -1222,21 +1222,21 @@ export default class gamification extends Plugin {
 			const nextBadgeAt = await this.whichLevelNextBadge(this.getSettingNumber('statusLevel'))
 			if (nextBadgeAt != null){
 				const statusPointsToReach = statusPointsForLevel(nextBadgeAt)
-				//console.log(`statusPointsToReach for next Badge: ${statusPointsToReach}`)
+				//console.debug(`statusPointsToReach for next Badge: ${statusPointsToReach}`)
 				// 50 Notes from Level 1 to 5 to get the first badge.
 				// 300 Points in average for a Note.
 				const boosterFactor = Math.round((statusPointsToReach - this.getSettingNumber('statusPoints'))/50/300);
 				this.setSettingNumber('badgeBoosterFactor', boosterFactor)
 				this.setSettingBoolean('badgeBoosterState', true)
 				//await this.saveData(this.settings)
-				//console.log(`boosterFaktor: ${boosterFactor}`)
+				//console.debug(`boosterFaktor: ${boosterFactor}`)
 				return boosterFactor
 			} else {
 				return 0
 			}
 		}
 		catch (e) {
-			console.log(e);
+			console.error(e);
 			return null;
 		}
 	}
@@ -1248,7 +1248,7 @@ export default class gamification extends Plugin {
 			const sourcePath = this.app.workspace.getActiveFile()?.path || '';
 			await this.app.workspace.openLinkText(existingFile.path, sourcePath);
 		} else {
-			console.log("File not found or unable to open.");
+			console.debug("File not found or unable to open.");
 		}
 	}
 
@@ -1276,10 +1276,11 @@ export default class gamification extends Plugin {
 					console.error(`Invalid element count for ${earnedIngredient.varName}`);
 				}
 			}
-			console.log(`You earned: ${concatenateStrings(earnedIngredientToShow)}`);
+			console.debug(`You earned: ${concatenateStrings(earnedIngredientToShow)}`);
 			new Notice(`You earned ${concatenateStrings(earnedIngredientToShow)}`,this.getSettingNumber('timeShowNotice') * 1000)
 		} else {
-			console.log('You did not earn an ingredient this time.');
+			new Notice(`This time you didn't earn an ingredient.`,this.getSettingNumber('timeShowNotice') * 1000)
+			console.debug('You did not earn an ingredient this time.');
 		}
 		
 	}
@@ -1377,7 +1378,7 @@ async function createAvatarFile(app: App, fileName: string) {
 
 	const existingFile = this.app.vault.getAbstractFileByPath(`${fileName}.md`);
 	if (existingFile instanceof TFile) {
-		console.log(`File ${fileName}.md already exists`);
+		console.debug(`File ${fileName}.md already exists`);
 		return;
 	}
 	// Create the file in the root of the vault

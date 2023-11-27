@@ -186,6 +186,6 @@ export function getRandomMessagePoints(points: number): string {
 // Example usage
 // const randomPoints = 100; // Replace with your actual points value
 // const randomMessage = getRandomMessageWeeklyChallenge(randomPoints);
-// console.log(randomMessage);
+// console.debug(randomMessage);
 
 

@@ -82,7 +82,7 @@ export function createChartFormat(y_axis: string, countsStringMod: string, chart
 export async function replaceChartContent (avatarPageName: string, newContent: string) {
 	const existingFile = this.app.vault.getAbstractFileByPath(`${avatarPageName}.md`);
 	if (existingFile == null) {
-		console.log(`File ${avatarPageName}.md does not exist`);
+		console.debug(`File ${avatarPageName}.md does not exist`);
 		return;
 		}
 	const file = existingFile as TFile;

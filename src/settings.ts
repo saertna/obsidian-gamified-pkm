@@ -332,7 +332,7 @@ export class GamificationPluginSettings extends PluginSettingTab {
 				//.setValue(this.plugin.settings.folderExclude)
         .setValue(decryptString(this.plugin.settings.folderExclude))
 				.onChange(async (value) => {
-					// console.log('folder to exclude: ' + value);
+					// console.debug('folder to exclude: ' + value);
 					this.plugin.settings.folderExclude = encryptString(value);
 					await this.plugin.saveSettings();
 				}));
@@ -345,7 +345,7 @@ export class GamificationPluginSettings extends PluginSettingTab {
 					//.setValue(this.plugin.settings.avatarPageName)
           .setValue(decryptString(this.plugin.settings.avatarPageName))
 					.onChange(async (value) => {
-						// console.log('folder to exclude: ' + value);
+						// console.debug('folder to exclude: ' + value);
 						this.plugin.settings.avatarPageName = encryptString(value);
 						await this.plugin.saveSettings();
 				}));
@@ -394,7 +394,7 @@ export class GamificationPluginSettings extends PluginSettingTab {
 					.setPlaceholder('Layer 2 is usually **')
 					.setValue(decryptString(this.plugin.settings.progressiveSumLayer2))
 					.onChange(async (value) => {
-						// console.log('folder to exclude: ' + value);
+						// console.debug('folder to exclude: ' + value);
 						this.plugin.settings.progressiveSumLayer2 = encryptString(value);
 						await this.plugin.saveSettings();
 				}))
@@ -402,7 +402,7 @@ export class GamificationPluginSettings extends PluginSettingTab {
 					.setPlaceholder('Layer 3 is usually ==')
 					.setValue(decryptString(this.plugin.settings.progressiveSumLayer3))
 					.onChange(async (value) => {
-						// console.log('folder to exclude: ' + value);
+						// console.debug('folder to exclude: ' + value);
 						this.plugin.settings.progressiveSumLayer3 = encryptString(value);
 						await this.plugin.saveSettings();
 			}));
