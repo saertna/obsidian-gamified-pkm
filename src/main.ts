@@ -151,7 +151,7 @@ export default class gamification extends Plugin {
 				//this.setSettingString('weeklyNoteCreationDate', window.moment().format('DD.MM.YYYY'))
 				//await this.saveSettings();
 				
-				//new ModalBooster(this.app, ` `, this).open();
+				new ModalBooster(this.app, ` `, this).open();
 				
 				//this.updateAvatarPage(this.getSettingString('avatarPageName'))
 
@@ -171,8 +171,8 @@ export default class gamification extends Plugin {
 					}
 				}*/
 				//this.openAvatarFile();
-				const badgeTemp = await this.whichLevelNextBadge(17)
-				new Notice(`${badgeTemp}`)
+				//const badgeTemp = await this.whichLevelNextBadge(17)
+				//new Notice(`${badgeTemp}`)
 			});
 		}
 

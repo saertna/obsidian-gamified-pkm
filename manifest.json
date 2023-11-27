@@ -7,6 +7,5 @@
 	"author": "Andreas Trebing",
 	"authorUrl": "https://github.com/saertna",
 	"fundingUrl": "https://ko-fi.com/andreastrebing",
-	"isDesktopOnly": true,
-	"styles": ["styles.css"]
+	"isDesktopOnly": true
 }
