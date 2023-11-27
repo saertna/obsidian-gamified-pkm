@@ -360,35 +360,35 @@ export function count_inlinks_single(file_path: string, vault_path: string): num
 
 	// Recursively search for files in the vault directory that link to our target file
 	const walkSync = (dir: string, filelist: string[]) => {
-		const files = fs.readdirSync(dir);
-		filelist = filelist || [];
-		files.forEach((file: string) => {
-			if (fs.statSync(path.join(dir, file)).isDirectory()) {
-				filelist = walkSync(path.join(dir, file), filelist);
+	const files = this.vault.adapter.fs.readdirSync(dir);
+	filelist = filelist || [];
+	files.forEach((file: string) => {
+		const filePath = `${dir}/${file}`;
+		if (this.vault.adapter.fs.statSync(filePath).isDirectory()) {
+			filelist = walkSync(filePath, filelist);
+		} else {
+		// Ignore non-md files and files with the same name as our target file
+			if (!file.endsWith(".md") || file === filename) {
+		  		return;
 			}
-			else {
-				// Ignore non-md files and files with the same name as our target file
-				if (!file.endsWith(".md") || file === filename) {
-					return;
-				}
-
-				// Read the file and look for links to our target file
-				const data = fs.readFileSync(path.join(dir, file), "utf-8");
-				data.split('\n').forEach((line: string) => {
-					if (line.includes(`[[${filename.slice(0, -3)}]]`) || line.includes(`[${filename.slice(0, -3)}]`)) {
-						// We found a link to our target file!
-						linking_files.add(path.relative(directory, path.join(dir, file)));
-					}
-				});
-			}
-		});
-		return filelist;
-	};
-
-	walkSync(vault_path, []);
-
-	// count how many files are mentioning the input file
-	return linking_files.size;
+  
+			// Read the file and look for links to our target file
+			const data = this.vault.read(file);
+			data.split('\n').forEach((line: string) => {
+		  		if (line.includes(`[[${filename.slice(0, -3)}]]`) || line.includes(`[${filename.slice(0, -3)}]`)) {
+				// found a link to our target file!
+				linking_files.add(this.vault.adapter.fs.relative(directory, filePath));
+		 		}
+			});
+	  	}
+	});
+	return filelist;
+  };
+  
+  walkSync(vault_path, []);
+  
+  // count how many files are mentioning the input file
+  return linking_files.size;
 }
 
 
