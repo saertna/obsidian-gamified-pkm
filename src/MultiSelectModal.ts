@@ -179,13 +179,12 @@ export class MultiSelectModal extends Modal {
 		const container = this.containerEl.createEl('div');
 		container.className = 'modal-crafting-container';
 	
-		// Create a container for the stock information
 		const stockContainer = container.createEl('div');
 		stockContainer.className = 'stock-container';
 	
-		// Create stockInfo div outside the loop
 		const stockInfo = stockContainer.createEl('div');
 		stockInfo.className = 'stock-info';
+		stockInfo.style.display = 'flex'; // Set display to flex to make items side by side
 	
 		boosterRecipes.forEach(recipe => {
 			if (this.boosterAvailableForUse(recipe.name)) {
@@ -201,15 +200,11 @@ export class MultiSelectModal extends Modal {
 				};
 	
 				const itemText = itemContainer.createEl('span', { text: `${recipe.name} ⇒ ${recipe.incredients.join('    ')}` });
-	
-				// Adding some spacing
-				itemContainer.createEl('span', { text: '\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0' });
-	
+		
 				container.appendChild(itemContainer);
 			}
 		});
 	
-		// Move this part outside the loop to prevent multiple listings
 		listOfUseableIngredientsToBeShown.forEach(element => {
 			const increment = this.getIngerementFromName(element);
 			const shortName = increment.shortName;
@@ -217,16 +212,19 @@ export class MultiSelectModal extends Modal {
 	
 			const stockDiv = stockInfo.createEl('div');
 			stockDiv.innerText = `${shortName} [${remainingStock}]`;
+	
+			// Adding margin for spacing between stock items
+			stockDiv.style.marginRight = '20px'; 
 		});
 	
-		// Add the stockInfo div to the main container
 		stockContainer.appendChild(stockInfo);
 	
-		// Add the stock container to the main container
 		container.appendChild(stockContainer);
 	
 		return container;
 	}
+	
+	
 	
 	
 
