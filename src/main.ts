@@ -169,8 +169,8 @@ export default class gamification extends Plugin {
 			});
 
 			this.addCommand({
-				id: 'boosters',
-				name: 'open booter pallete',
+				id: 'booster',
+				name: 'open booster pallete',
 				callback: async () => {
 					new ModalBooster(this.app, ` `, this).open();
 				},
