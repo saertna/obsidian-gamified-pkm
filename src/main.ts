@@ -1,17 +1,3 @@
-const style = document.createElement('style');
-style.textContent = `
-  .modal-checkbox-container {
-    margin-bottom: 10px;
-    display: flex;
-    align-items: center;
-  }
-
-  .modal-checkbox-container input[type="checkbox"] {
-    margin-right: 5px;
-  }
-`;
-
-document.head.append(style);
 import {App, MarkdownView, Notice, Plugin, TFile, Vault} from 'obsidian';
 import {defaultSettings, ISettings, GamificationPluginSettings} from './settings';
 import format from 'date-fns/format';
