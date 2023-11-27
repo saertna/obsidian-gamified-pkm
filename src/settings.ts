@@ -294,22 +294,11 @@ export class GamificationPluginSettings extends PluginSettingTab {
 		containerEl.addClass("gamification-settings");
 		this.containerEl.empty();
 
-		const coffeeDiv = containerEl.createDiv("coffee");
-		coffeeDiv.addClass("ex-coffee-div");
-		const coffeeLink = coffeeDiv.createEl("a", {
-		href: "https://ko-fi.com/andreastrebing",
-		});
-		const coffeeImg = coffeeLink.createEl("img", {
-		attr: {
-			src: "https://cdn.ko-fi.com/cdn/kofi3.png?v=3",
-		},
-		});
-		coffeeImg.height = 45;
+
 
 		//const { containerEl } = this;
 		//containerEl.empty();
   
-		containerEl.createEl('h2', { text: 'General' });
 		console.debug('settings called')
 		new Setting(containerEl)
 			.setName('#tags to ignore')
@@ -407,5 +396,16 @@ export class GamificationPluginSettings extends PluginSettingTab {
 						await this.plugin.saveSettings();
 			}));
 
+      const coffeeDiv = containerEl.createDiv("coffee");
+      coffeeDiv.addClass("ex-coffee-div");
+      const coffeeLink = coffeeDiv.createEl("a", {
+      href: "https://ko-fi.com/andreastrebing",
+      });
+      const coffeeImg = coffeeLink.createEl("img", {
+      attr: {
+        src: "https://cdn.ko-fi.com/cdn/kofi3.png?v=3",
+      },
+      });
+      coffeeImg.height = 45;
 	}
   }

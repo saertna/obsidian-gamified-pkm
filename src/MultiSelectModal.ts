@@ -176,56 +176,59 @@ export class MultiSelectModal extends Modal {
 
 	private createCraftingLayout() {
 		this.readIngrementStock();
-		const container = document.createElement('div');
+		const container = this.containerEl.createEl('div');
 		container.className = 'modal-crafting-container';
-
+	
 		// Create a container for the stock information
-		const stockContainer = document.createElement('div');
+		const stockContainer = container.createEl('div');
 		stockContainer.className = 'stock-container';
-
-
+	
+		// Create stockInfo div outside the loop
+		const stockInfo = stockContainer.createEl('div');
+		stockInfo.className = 'stock-info';
+	
 		boosterRecipes.forEach(recipe => {
 			if (this.boosterAvailableForUse(recipe.name)) {
-				const itemContainer = document.createElement('div');
+				const itemContainer = stockContainer.createEl('div');
 				itemContainer.className = 'crafting-item-container';
-
-				const button = document.createElement('button');
-				button.innerText = 'Craft';
+	
+				const button = itemContainer.createEl('button', { text: 'Craft' });
 				button.onclick = () => this.craftBoosterItem(recipe);
-
-				const useInfoButton = document.createElement('button');
-				useInfoButton.innerText = '?';
+	
+				const useInfoButton = itemContainer.createEl('button', { text: '?' });
 				useInfoButton.onclick = () => {
 					new ModalInformationbox(this.app, this.getBoosterInforFromFromName(recipe.name)).open();
 				};
-
-				const itemText = document.createElement('span');
-				itemText.innerText = `${recipe.name} ⇒ ${recipe.incredients.join('    ')}`;
-
-				itemContainer.appendChild(button);
-				itemContainer.appendChild(useInfoButton);
-				itemContainer.appendChild(itemText);
+	
+				const itemText = itemContainer.createEl('span', { text: `${recipe.name} ⇒ ${recipe.incredients.join('    ')}` });
+	
+				// Adding some spacing
+				itemContainer.createEl('span', { text: '\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0' });
+	
 				container.appendChild(itemContainer);
 			}
 		});
-
-		const stockInfo = document.createElement('div');
-		stockInfo.className = 'stock-info';
-
+	
+		// Move this part outside the loop to prevent multiple listings
 		listOfUseableIngredientsToBeShown.forEach(element => {
-			//console.debug(`${element.name} : ${this.remainingStock[element.name]}`)
-			stockInfo.innerHTML += `${this.getIngerementFromName(element).shortName} [${this.remainingStock[this.getIngerementFromName(element).name] || 0}]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`;
+			const increment = this.getIngerementFromName(element);
+			const shortName = increment.shortName;
+			const remainingStock = this.remainingStock[increment.name] || 0;
+	
+			const stockDiv = stockInfo.createEl('div');
+			stockDiv.innerText = `${shortName} [${remainingStock}]`;
 		});
-
+	
+		// Add the stockInfo div to the main container
 		stockContainer.appendChild(stockInfo);
-
-
-
+	
 		// Add the stock container to the main container
 		container.appendChild(stockContainer);
-
+	
 		return container;
 	}
+	
+	
 
 
 
