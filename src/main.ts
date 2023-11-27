@@ -60,6 +60,7 @@ export default class gamification extends Plugin {
 	private statusBarItem = this.addStatusBarItem();
 	private statusbarGamification = this.statusBarItem.createEl("span", { text: "" });
 	public settings: ISettings;
+	private exampleView: ExampleView | null = null;
 
 
 	getSettingString(key: string) {
@@ -111,9 +112,6 @@ export default class gamification extends Plugin {
         this.saveSettings();
 	}
 
-
-	
-
 	
 	async onload() {
 		console.log('obsidian-pkm-gamification loaded!');
@@ -143,10 +141,11 @@ export default class gamification extends Plugin {
 			(leaf) => new ExampleView(leaf)
 		  );
 	  
-		  this.addRibbonIcon("target", "gamification side overview", () => {
+		this.addRibbonIcon("target", "gamification side overview", () => {
 			this.activateView();
-		  });
-		  this.addCommand({
+		});
+
+		this.addCommand({
 			id: 'overview',
 			name: 'open gamification side overview',
 			callback: async () => {
@@ -154,6 +153,9 @@ export default class gamification extends Plugin {
 			},
 		});
 
+		this.addRibbonIcon("chevrons-right", "update overview leaf", () => {
+			this.updateView();
+		});
 
 		if (this.getSettingBoolean('debug')){
 			this.addRibbonIcon("accessibility", "crafting", async () => {
@@ -268,6 +270,25 @@ export default class gamification extends Plugin {
 			},
 		});
 
+	}
+
+
+	async updateView() {
+		this.app.workspace.getLeavesOfType(VIEW_TYPE_EXAMPLE).forEach((leaf) => {
+			if (leaf.view instanceof ExampleView) {
+			  // Access your view instance.
+			  if (this.exampleView) {
+				this.exampleView.updateContent("Updated content");
+			} else {
+				console.log(`exampleView not found.`)
+				// Our view could not be found in the workspace, create a new leaf
+				// in the right sidebar for it
+				let leaf = this.app.workspace.getRightLeaf(false);
+				leaf.setViewState({ type: VIEW_TYPE_EXAMPLE, active: true });
+				
+			}
+			}
+		  });
 	}
 
 	async activateView() {

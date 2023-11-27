@@ -24,4 +24,11 @@ export class ExampleView extends ItemView {
     async onClose() {
       // Nothing to clean up.
     }
+
+    // Method to update content
+    updateContent(newContent: string) {
+      const container = this.containerEl.children[1];
+      const contentDiv = container.createDiv({ cls: "my-plugin-content" });
+      contentDiv.setText(newContent);
+    }
   }
