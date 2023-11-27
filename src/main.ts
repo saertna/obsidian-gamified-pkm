@@ -127,7 +127,7 @@ export default class gamification extends Plugin {
 
 
 		if (this.getSettingBoolean('debug')){
-			this.addRibbonIcon("accessibility", "crafting", async () => {
+			this.addRibbonIcon("accessibility", "Crafting", async () => {
 
 				//this.acquireIngredients();
 				//this.resetDailyGoals();
@@ -170,14 +170,14 @@ export default class gamification extends Plugin {
 
 			this.addCommand({
 				id: 'booster',
-				name: 'open booster pallete',
+				name: 'Open booster pallete',
 				callback: async () => {
 					new ModalBooster(this.app, ` `, this).open();
 				},
 			});
 		}
 
-		this.addRibbonIcon("sprout", "Calculate Note Maturity", async () => {
+		this.addRibbonIcon("sprout", "Calculate note maturity", async () => {
 			//const file: TFile | null = this.app.workspace.getActiveFile();
 			await this.calculateNoteMajurity();
 		});
@@ -199,7 +199,7 @@ export default class gamification extends Plugin {
 			// command create avatar profile page
 			this.addCommand({
 				id: 'create-avatar-page',
-				name: 'create profile page',
+				name: 'Create profile page',
 				callback: async () => {
 					const { vault } = this.app;
 					await createAvatarFile(this.app, this.getSettingString('avatarPageName'))
@@ -214,7 +214,7 @@ export default class gamification extends Plugin {
 			// command: reset game
 			this.addCommand({
 				id: 'reset-game',
-				name: 'reset the game',
+				name: 'Reset game',
 				callback: async () => {
                     await this.resetGame();
                 },
@@ -243,7 +243,7 @@ export default class gamification extends Plugin {
 		// command: change progressive summarization symbols
 		this.addCommand({
 			id: 'change-progressive-formatting',
-			name: 'toggle progressive summarization formatting',
+			name: 'Toggle progressive summarization formatting',
 			checkCallback: (checking: boolean) => {
 				const view = this.app.workspace.getActiveViewOfType(MarkdownView);
 				if (view) {

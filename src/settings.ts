@@ -313,7 +313,7 @@ export class GamificationPluginSettings extends PluginSettingTab {
 		console.debug('settings called')
 		new Setting(containerEl)
 			.setName('#tags to ignore')
-			.setDesc('enter tags without # and separate with ", ".\nInclude nested tags.')
+			.setDesc('Enter tags without # and separate with ", ".\nInclude nested tags.')
 			.addText(text => text
 				.setPlaceholder('Enter your tag1, tag2/subtag, …')
 				//.setValue(this.plugin.settings.tagsExclude)
@@ -326,7 +326,7 @@ export class GamificationPluginSettings extends PluginSettingTab {
 				
 		new Setting(containerEl)
 			.setName('Folder to ignore')
-			.setDesc('enter folder whichs content shall be ignored. Separate with ", ".')
+			.setDesc('Enter folder whichs content shall be ignored. Separate with ", ".')
 			.addText(text => text
 				.setPlaceholder('Enter your folder1, folder2, …')
 				//.setValue(this.plugin.settings.folderExclude)
@@ -339,7 +339,7 @@ export class GamificationPluginSettings extends PluginSettingTab {
 
 		new Setting(containerEl)
 			.setName('Profile page name')
-			.setDesc('you can change here the name of your profile page if you like.')
+			.setDesc('You can change here the name of your profile page if you like.')
 			.addText(text => text
 					.setPlaceholder('name')
 					//.setValue(this.plugin.settings.avatarPageName)
@@ -353,7 +353,7 @@ export class GamificationPluginSettings extends PluginSettingTab {
     containerEl.createEl('h2', { text: 'Other' });
 		new Setting(containerEl)
 			.setName('Disable init command')
-			.setDesc('you can remove the init command from command prompt by switching off.\nrestart needed.')
+			.setDesc('You can remove the init command from command prompt by switching off.\nrestart needed.')
 			.addToggle((toggle) => 
 				toggle
           		.setValue(decryptBoolean(this.plugin.settings.enableInitCommand))
@@ -389,7 +389,7 @@ export class GamificationPluginSettings extends PluginSettingTab {
 
 		new Setting(containerEl)
 			.setName('Progressive Summarization')
-			.setDesc('you can change which formatting you use for Layer 2 and 3.')
+			.setDesc('You can change which formatting you use for Layer 2 and 3.')
 			.addText(text => text
 					.setPlaceholder('Layer 2 is usually **')
 					.setValue(decryptString(this.plugin.settings.progressiveSumLayer2))
