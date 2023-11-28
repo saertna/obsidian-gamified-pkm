@@ -354,23 +354,30 @@ export class MultiSelectModal extends Modal {
 
 	private updateQuantityDisplay(labelText: string) {
 		const stock = this.boosters[labelText];
-		const stockInfo = document.querySelector(`.${labelText.replace(' ', '-')}`);
+		const stockInfo = this.containerEl.querySelector(`.${labelText.replace(' ', '-')}`);
+		
 		if (stockInfo) {
-			stockInfo.innerHTML = ''; // Clear the current content
-			stockInfo.innerHTML = `${labelText} : (${stock})`;
+			// Clear the current content
+			stockInfo.empty();
+	
+			// Create and set the new content
+			stockInfo.createEl('div', { text: `${labelText} : (${stock})` });
 		}
-		const buttonUse: HTMLButtonElement | null = document.querySelector(`#use-button-${labelText.replace(' ', '-')}`);
+	
+		const buttonUse: HTMLButtonElement | null = this.containerEl.querySelector(`#use-button-${labelText.replace(' ', '-')}`);
+	
 		if (buttonUse !== null) {
-			const date = this.gamificationInstance.getSettingString(this.getBoosterDateFromName(labelText));
 			const momentDate = window.moment(this.gamificationInstance.getSettingString(this.getBoosterDateFromName(labelText)), 'YYYY-MM-DD HH:mm:ss');
+	
 			if (isMinutesPassed(momentDate, this.getBoosterCooldownFromName(labelText)) == false) {
 				buttonUse.setText(`cooldown ${hoursUntilMinutesPassed(momentDate, this.getBoosterCooldownFromName(labelText))} hours`);
 				buttonUse.onclick = () => {
 					new ModalInformationbox(this.app, `${labelText} is for ${hoursUntilMinutesPassed(momentDate, this.getBoosterCooldownFromName(labelText))} hours in cooldown and can only then be used again.`).open();
-				}
+				};
 			}
 		}
 	}
+	
 
 
 	private checkIngredientsAvailability(incredients: { name: string; incredients: string[]; }) {
@@ -443,17 +450,24 @@ export class MultiSelectModal extends Modal {
 
 
 	private updateStockInformation() {
-		const stockInfo = document.querySelector('.stock-info');
+		const stockInfo = this.containerEl.querySelector('.stock-info');
+		
 		if (stockInfo) {
-			stockInfo.innerHTML = ''; // Clear the current content
-
-			//elements.forEach(element => {
+			// Clear the current content
+			stockInfo.empty();
+	
 			listOfUseableIngredientsToBeShown.forEach(element => {
-				//stockInfo.innerHTML += `${element.shortName} [${this.remainingStock[element.name] || 0}]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`;
-				stockInfo.innerHTML += `${this.getIngerementFromName(element).shortName} [${this.remainingStock[this.getIngerementFromName(element).name] || 0}]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`;
+				const increment = this.getIngerementFromName(element);
+				const shortName = increment.shortName;
+				const remainingStock = this.remainingStock[increment.name] || 0;
+	
+				// Create and append the short name and remaining stock
+				const stockDiv = stockInfo.createEl('div', { text: `${shortName} [${remainingStock}]` });
+				stockDiv.style.marginRight = '20px'; 
 			});
 		}
 	}
+	
 
 
 	private craftBoosterItem(selectedItems: { name: string; incredients: string[]; }) {

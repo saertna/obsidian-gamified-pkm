@@ -129,7 +129,7 @@ export default class gamification extends Plugin {
 		if (this.getSettingBoolean('debug')){
 			this.addRibbonIcon("accessibility", "Crafting", async () => {
 
-				//this.acquireIngredients();
+				//this.acquireIngredients(1,400,500);
 				//this.resetDailyGoals();
 				//this.setSettingString('weeklyNoteCreationDate', window.moment().subtract(1, 'day').format('DD.MM.YYYY'))
 				//this.setSettingString('weeklyNoteCreationDate', window.moment().subtract(1, 'day').format('DD.MM.YYYY'))
