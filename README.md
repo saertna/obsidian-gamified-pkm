@@ -35,7 +35,7 @@ Thank you for being a part of this movement to revolutionize our approach to kno
 
 ## Manual installation
 
-1. Download the latest release 🔗 **Plugin Download:** [Obsidian Gamification Plugin](https://github.com/saertna/obsidian-gamified-pkm/releases/tag/0.0.82)
+1. Download the latest release 🔗 **Plugin Download:** [Obsidian Gamification Plugin](https://github.com/saertna/obsidian-gamified-pkm/releases/tag/0.0.83)
 2. Extract the obsidian-gamified-pkm folder from the zip to your vault's plugins folder: `<vault>`/.obsidian/plugins/
  - Note: On some machines the .obsidian folder may be hidden. On MacOS you should be able to press Command+Shift+Dot to show the folder in Finder.
  - Note: the files `main.js` and `manifest.json` are the files which you need in this folder.
