@@ -89,7 +89,7 @@ export const defaultSettings: Partial<ISettings> = {
   counterMajurityCalcInitial: "U2FsdGVkX1+2Qii8qhFSqrNqmKR1Wh6saEjYbwPdi8Q=",
   delayLoadTime: "U2FsdGVkX19TLndonGY4Y8vHuZFfLJ5gZ2t/CLprh0o=",
   timeShowNotice: "U2FsdGVkX190u8cOsylOs1cQ8MeZFq+i+Wv4ox6qq0k=",
-  receivedBadges: ""
+  receivedBadges: "U2FsdGVkX1/skTUHmzuMYD86hDA/uF1kElPVYm04ijQ="
 };
 
 export interface DynamicSettings {

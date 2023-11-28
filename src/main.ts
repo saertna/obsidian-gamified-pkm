@@ -89,6 +89,16 @@ export default class gamification extends Plugin {
         this.saveSettings();
 	}
 
+	setBadgeSave(newBadge: Badge, date: string, level: string){
+		const currentBadgeString:string = this.getSettingString('receivedBadges');
+		console.log(`currentBadgeString: ${currentBadgeString}`)
+		const newBadgeString = currentBadgeString + newBadge.name + ',' + date + ',' + level + '##';
+			//window.moment().format('YYYY-MM-DD') + ',' + this.getSettingNumber('statusLevel') + '\n';
+		console.log(`newBadgeString: ${newBadgeString}`)
+		this.setSettingString('receivedBadges',newBadgeString);
+		this.saveSettings();
+	}
+
 
 	setSettingNumber(key: string, value: number) {
         // Set a specific setting
@@ -117,8 +127,6 @@ export default class gamification extends Plugin {
 	async onload() {
 		console.log('obsidian-pkm-gamification loaded!');
 		//this.settings = defaultSettings;
-
-	 
 		this.addSettingTab(new GamificationPluginSettings(this.app, this));
 
 
@@ -157,13 +165,16 @@ export default class gamification extends Plugin {
 
 
 				// Example CSV string
-				const csvString = "Brainiac Trailblazer,2023-09-07,20\nSavvy Scholar,2023-08-15,15\nScribe of the Ancients,2023-07-1,10";
+				//const csvString = "Brainiac Trailblazer,2023-09-07,20\nSavvy Scholar,2023-08-15,15\nScribe of the Ancients,2023-07-1,10";
 
 				// Parse the CSV string
-				const badgeDict = parseBadgeCSV(csvString);
+				//const badgeDict = parseBadgeCSV(csvString);
+				const badgeDict = parseBadgeCSV(this.getSettingString('receivedBadges'))
+				//console.log(`badgeDict: ${badgeDict}`)
 
 				// Access badge information
 				//console.log(badgeDict["Brainiac Trailblazer"]);
+
 				for (const badgeName in badgeDict) {
 					if (badgeDict.hasOwnProperty(badgeName)) {
 						const badgeInfo = badgeDict[badgeName];
@@ -171,6 +182,12 @@ export default class gamification extends Plugin {
 						console.log(`Badge: ${badgeName}, Date: ${badgeInfo.date}, Level: ${badgeInfo.level}, Description: ${badgeDetails.name}`);
 					}
 				}
+
+
+
+
+				//this.setBadgeSave(getBadgeDetails('Brainiac Trailblazer'),'23-09-07', 'level 20');
+				//this.setBadgeSave(getBadgeDetails('Savvy Scholar'), '23-08-15', 'level 15');
 			});
 		}
 
@@ -1385,15 +1402,21 @@ function rateDirectionForStatusPoints(ratingCurrent: string, ratingNew: number):
 }
 
 
+function writeBadgeCSV(newBadge: Badge, date: string, level: string){
+	const gamificationInstante = new gamification(this.app,this.manifest);
+	gamificationInstante.setBadgeSave(newBadge, date, level);
+}
 
-function parseBadgeCSV(csvString: string): Record<string, { date: string, level: number }> {
-    const badgeDict: Record<string, { date: string, level: number }> = {};
-    const rows = csvString.split('\n');
+
+function parseBadgeCSV(csvString: string): Record<string, { date: string, level: string }> {
+    const badgeDict: Record<string, { date: string, level: string }> = {};
+    const rows = csvString.split('##');
+	console.log(`rows: ${rows}`)
     for (const row of rows) {
         const [badgeName, dateReceived, level] = row.split(',');
 
         if (badgeName && dateReceived && level) {
-            badgeDict[badgeName] = { date: dateReceived, level: parseInt(level, 10) };
+            badgeDict[badgeName] = { date: dateReceived, level: level };
         }
     }
     return badgeDict;
