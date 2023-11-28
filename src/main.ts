@@ -417,6 +417,7 @@ export default class gamification extends Plugin {
 			await this.removeBadgesWhenInitLevelHigher(this.getSettingString('avatarPageName'), this.getSettingNumber('statusLevel'))
 			await this.boosterForInit()
 			await this.updateStatusBar(statusbarGamification)
+			writeBadgeCSV(initBadge, window.moment().format('YYYY-MM-DD'),'level ' + (this.getSettingNumber('statusLevel')).toString())
 		}, 2000); // 2000 milliseconds = 2 seconds
 
 		new ModalInformationbox(this.app, `Finallized gamification initialistation!\nCongratulation, you earned ${pointsReceived} Points!\n\nCheck the Profile Page: "${this.getSettingString('avatarPageName')}.md"\n\nYou received an initialisation Booster aktiv for your first level ups. Game on!`).open();
@@ -1151,6 +1152,7 @@ export default class gamification extends Plugin {
 				this.giveBadgeInProfile(this.getSettingString('avatarPageName'), badge)
 				this.setSettingBoolean('badgeBoosterState', false);
 				this.setSettingNumber('badgeBoosterFactor', 1);
+				writeBadgeCSV(badge, window.moment().format('YYYY-MM-DD'), 'level ' + this.getSettingNumber('statusLevel').toString())
 				//this.saveData(this.settings)
 			}
 		});
@@ -1403,8 +1405,8 @@ function rateDirectionForStatusPoints(ratingCurrent: string, ratingNew: number):
 
 
 function writeBadgeCSV(newBadge: Badge, date: string, level: string){
-	const gamificationInstante = new gamification(this.app,this.manifest);
-	gamificationInstante.setBadgeSave(newBadge, date, level);
+	const gamificationInstance = new gamification(this.app,this.manifest);
+	gamificationInstance.setBadgeSave(newBadge, date, level);
 }
 
 

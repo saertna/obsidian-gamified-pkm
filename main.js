@@ -8778,6 +8778,7 @@ var gamification2 = class extends import_obsidian5.Plugin {
       await this.removeBadgesWhenInitLevelHigher(this.getSettingString("avatarPageName"), this.getSettingNumber("statusLevel"));
       await this.boosterForInit();
       await this.updateStatusBar(statusbarGamification);
+      writeBadgeCSV(initBadge, window.moment().format("YYYY-MM-DD"), "level " + this.getSettingNumber("statusLevel").toString());
     }, 2e3);
     new ModalInformationbox(this.app, `Finallized gamification initialistation!
 Congratulation, you earned ${pointsReceived} Points!
@@ -9397,6 +9398,7 @@ You received an initialisation Booster aktiv for your first level ups. Game on!`
         this.giveBadgeInProfile(this.getSettingString("avatarPageName"), badge);
         this.setSettingBoolean("badgeBoosterState", false);
         this.setSettingNumber("badgeBoosterFactor", 1);
+        writeBadgeCSV(badge, window.moment().format("YYYY-MM-DD"), "level " + this.getSettingNumber("statusLevel").toString());
       }
     });
   }
@@ -9575,6 +9577,10 @@ function rateDirectionForStatusPoints(ratingCurrent, ratingNew) {
     ratingFaktor = 0;
   }
   return ratingFaktor;
+}
+function writeBadgeCSV(newBadge, date, level) {
+  const gamificationInstance = new gamification2(this.app, this.manifest);
+  gamificationInstance.setBadgeSave(newBadge, date, level);
 }
 function parseBadgeCSV(csvString) {
   const badgeDict = {};
