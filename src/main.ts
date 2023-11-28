@@ -1,20 +1,21 @@
-import {App, MarkdownView, Notice, Plugin, TFile, Vault} from 'obsidian';
-import {defaultSettings, ISettings, GamificationPluginSettings} from './settings';
+import {App, MarkdownView, Notice, Plugin, TFile} from 'obsidian';
+import {defaultSettings, GamificationPluginSettings, ISettings} from './settings';
 import format from 'date-fns/format';
 import {
 	avatarInitContent,
-	pointsMajurity,
-	pointsNoteMajurity,
+	boosterRecipes,
+	chanceToEarnIngredient,
+	debugLogs,
+	elements,
+	listOfUseableIngredientsToBeShown,
 	pointsForDailyChallenge,
 	pointsForWeeklyChallenge,
-	elements,
-	boosterRecipes,
+	pointsMajurity,
+	pointsNoteMajurity,
 	streakboosterDecrease,
 	streakboosterIncreaseDaily,
-	streakboosterIncreaseWeekly,
-	chanceToEarnIngredient,
-	listOfUseableIngredientsToBeShown,
-	debugLogs} from './constants'
+	streakboosterIncreaseWeekly
+} from './constants'
 import {
 	count_inlinks,
 	countCharactersInActiveFile,
@@ -33,12 +34,16 @@ import {
 import {Badge, checkIfReceiveABadge, getBadgeForInitLevel, getBadgeForLevel} from './badges'
 import {getLevelForPoints, statusPointsForLevel} from './levels'
 import type {Moment} from 'moment';
-import { getRandomMessageWeeklyChallenge, getRandomMessageTwoNoteChallenge , getRandomMessagePoints } from './randomNotificationText'
-import { ModalInformationbox } from 'ModalInformationbox';
-import { ModalBooster } from 'ModalBooster';
-import { encryptValue, encryptString, decryptString, encryptNumber, decryptNumber, encryptBoolean, decryptBoolean } from 'encryption';
+import {
+	getRandomMessagePoints,
+	getRandomMessageTwoNoteChallenge,
+	getRandomMessageWeeklyChallenge
+} from './randomNotificationText'
+import {ModalInformationbox} from 'ModalInformationbox';
+import {ModalBooster} from 'ModalBooster';
+import {decryptBoolean, decryptNumber, decryptString, encryptBoolean, encryptNumber, encryptString} from 'encryption';
 
-let pointsToReceived: number = 0;  
+let pointsToReceived = 0;
 export default class gamification extends Plugin {
 	//public settings: GamificationPluginSettings;
 	private timerInterval: number;
@@ -69,32 +74,22 @@ export default class gamification extends Plugin {
 
 	setSettingString(key: string, value: string) {
         // Set a specific setting
-		const valueEncrypted = encryptString(value)
-        this.settings[key] = valueEncrypted;
-		//if(debugLogs) console.debug(`String: new value for ${key} is ${valueEncrypted}`)
-        //this.settings[key] = value;
-        this.saveSettings();
+		this.settings[key] = encryptString(value);
+		this.saveSettings();
 	}
 
 
 	setSettingNumber(key: string, value: number) {
         // Set a specific setting
-		//if(debugLogs) console.debug(`new value for ${key} is ${value}`)
-		const valueEncrypted = encryptNumber(value)
-        //if(debugLogs) console.debug(`new value for ${key} is ${value} ⇒ ${valueEncrypted}`)
-		this.settings[key] = valueEncrypted;
-        //if(debugLogs) console.debug(`Number: new value for ${key} is ${valueEncrypted}`)
+		this.settings[key] = encryptNumber(value);
         this.saveSettings();
     }
 
 		
 	setSettingBoolean(key: string, value: boolean) {
         // Set a specific setting
-		//if(debugLogs) console.debug(`new value for ${key} is ${value}`)
-		const valueEncrypted = encryptBoolean(value)
-        this.settings[key] = valueEncrypted;
-		//if(debugLogs) console.debug(`Boolean: new value for ${key} is ${valueEncrypted}`)
-        this.saveSettings();
+		this.settings[key] = encryptBoolean(value);
+		this.saveSettings();
 	}
 
 
@@ -105,7 +100,6 @@ export default class gamification extends Plugin {
 		console.log('obsidian-pkm-gamification loaded!');
 		//this.settings = defaultSettings;
 
-	 
 		this.addSettingTab(new GamificationPluginSettings(this.app, this));
 
 
@@ -202,7 +196,7 @@ export default class gamification extends Plugin {
 				id: 'create-avatar-page',
 				name: 'Create profile page',
 				callback: async () => {
-					const { vault } = this.app;
+					//const { vault } = this.app;
 					await createAvatarFile(this.app, this.getSettingString('avatarPageName'))
 					//const chartString = await this.createChart(vault)
 					//await replaceChartContent(this.getSettingString('avatarPageName'), chartString)
@@ -278,7 +272,7 @@ export default class gamification extends Plugin {
 		this.setSettingString('gamificationStartDate', format(new Date(), 'yyyy-MM-dd'));
 		await this.saveSettings();
 
-		const {vault} = this.app;
+		//const {vault} = this.app;
 		await createAvatarFile(this.app, this.getSettingString('avatarPageName'))
 		//const chartString = await this.createChart(vault)
 		//await replaceChartContent(this.getSettingString('avatarPageName'), chartString)
@@ -603,7 +597,7 @@ export default class gamification extends Plugin {
 			const daysPassed = window.moment().diff(window.moment(this.getSettingString('weeklyNoteCreationDate'), 'DD.MM.YYYY'), 'days') - 1; //today is still a chance. 
 			this.setSettingNumber('weeklyNoteCreationTask', 0);
 			this.setSettingString('weeklyNoteCreationDate', window.moment().subtract(1, 'day').format('DD.MM.YYYY'))
-			this.decreaseStreakbooster(daysPassed)
+			await this.decreaseStreakbooster(daysPassed)
 			if(debugLogs) console.debug(`${daysPassed} days passed`)
 			await this.saveSettings();
 			await this.updateStatusBar(this.statusbarGamification)
@@ -673,7 +667,7 @@ export default class gamification extends Plugin {
 				await this.updateAvatarPage(this.getSettingString('avatarPageName'));
 				if(debugLogs) console.debug(`${newDailyNoteCreationTask}/2 Notes created today.`)
 			} else if (newDailyNoteCreationTask == 2) {
-				this.increaseStreakbooster(streakboosterIncreaseDaily)
+				await this.increaseStreakbooster(streakboosterIncreaseDaily)
 				await this.saveSettings();
 				await this.updateStatusBar(this.statusbarGamification)
 				await this.giveStatusPoints(pointsForDailyChallenge,'formIncreaseDailyCreatedNoteCount')
@@ -722,7 +716,7 @@ export default class gamification extends Plugin {
 			await this.updateAvatarPage(this.getSettingString('avatarPageName'));
 			if(debugLogs) console.debug(`${newWeeklyNoteCreationTask}/7 Notes created in a chain.`)
 		} else if (newWeeklyNoteCreationTask == 7) {
-			this.increaseStreakbooster(streakboosterIncreaseWeekly);
+			await this.increaseStreakbooster(streakboosterIncreaseWeekly);
 			await this.saveSettings();
 			await this.updateStatusBar(this.statusbarGamification)
 			await this.giveStatusPoints(pointsForWeeklyChallenge, 'fromCheckForWeeklyNoteChallengeEvaluation')
@@ -785,7 +779,7 @@ export default class gamification extends Plugin {
 
 	async giveStatusPoints(pointsToAdd: number, caller: string): Promise<boolean>{
 		let boosterFactor = 1;
-		let streakbooster = this.getSettingNumber('streakbooster');
+		const streakbooster = this.getSettingNumber('streakbooster');
 		let boosterFactorPerpetualProgress = 0;
 		let boosterFactorStrategicSynapses = 0;
 		let boosterFactorLinkersLode = 0;
@@ -1181,7 +1175,7 @@ export default class gamification extends Plugin {
 					});
 				} catch (e) {
 					if (e?.name === 'YAMLParseError') {
-						const errorMessage = `Update majuritys failed Malformed frontamtter ${e.message}`;
+						const errorMessage = `Update majuritys failed Malformed frontmatter ${e.message}`;
 						new Notice(errorMessage, this.getSettingNumber('timeShowNotice') * 1000);
 						console.error(errorMessage);
 					}
@@ -1256,22 +1250,22 @@ export default class gamification extends Plugin {
 
 	getRandomInt(min: number, max: number) {
 		return Math.floor(Math.random() * (max - min + 1)) + min;
-	  }
+	}
 
 	async acquireIngredients(chance:number, min:number, max:number) {
-		let earnedIngredientToShow = [];
+		const earnedIngredientToShow = [];
 		if (Math.random() < chance) {
 			const randomAmount = this.getRandomInt(min,max);
 			for (let i=1;i<=randomAmount;i++){
 				const randomIngredientIndex = this.getRandomInt(0, listOfUseableIngredientsToBeShown.length-1);
 				const earnedIngredient = elements[randomIngredientIndex];
-				let elementCount = this.getSettingNumber(earnedIngredient.varName);
+				const elementCount = this.getSettingNumber(earnedIngredient.varName);
 				earnedIngredientToShow.push(earnedIngredient.name);
 
 				// Perform a null check
 				if (elementCount !== null && typeof elementCount === 'number') {
 					this.setSettingNumber(earnedIngredient.varName, elementCount + 1);
-					this.saveSettings();
+					await this.saveSettings();
 					
 				} else {
 					console.error(`Invalid element count for ${earnedIngredient.varName}`);
