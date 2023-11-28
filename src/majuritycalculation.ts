@@ -10,7 +10,7 @@ export function rateProgressiveSummarization(charCountTotal: number, layer2count
 	var majurity = 0;
 	if (charCountTotal < 3000) {
 		majurity = 0;
-		//console.debug(`Note is not long enough to get into calculation for majurity. The total character count is ${charCountTotal}`);
+		//if(debugLogs) console.debug(`Note is not long enough to get into calculation for majurity. The total character count is ${charCountTotal}`);
 	} else {
 		if (percentLayer2 == 0) {
 			layer2majurity = 0;
@@ -54,9 +54,9 @@ export function rateProgressiveSummarization(charCountTotal: number, layer2count
 	}
 
 	
-	//console.debug(`layer2majurity: ${layer2majurity} \tlayer3majurity: ${layer3majurity} \tmajurity: ${majurity}`);
-	//console.debug(`percentLayer2: ${percentLayer2} \tpercentLayer3: ${percentLayer3} \tmajurity: ${majurity}`);
-	//console.debug(`charCountTotal: ${charCountTotal}`);
+	//if(debugLogs) console.debug(`layer2majurity: ${layer2majurity} \tlayer3majurity: ${layer3majurity} \tmajurity: ${majurity}`);
+	//if(debugLogs) console.debug(`percentLayer2: ${percentLayer2} \tpercentLayer3: ${percentLayer3} \tmajurity: ${majurity}`);
+	//if(debugLogs) console.debug(`charCountTotal: ${charCountTotal}`);
 	return majurity;
 }
 
@@ -64,38 +64,38 @@ export function rateProgressiveSummarization(charCountTotal: number, layer2count
 export function countLayer2AndLayer3Characters(content: string, filename: string, layer2: string, layer3: string): { charCount: number; highlightedCount: number; boldCount: number } {
   
 	const filenameWithoutExtension = filename; //.slice(0, -filename.length);
-	// console.debug(`filenameWithoutExtension: ${filenameWithoutExtension}`);
+	// if(debugLogs) console.debug(`filenameWithoutExtension: ${filenameWithoutExtension}`);
 
 	// Remove markdown formatting symbols
 	const strippedContent = content.replace(/[*_~`]/g, "");
-	// console.debug(`filenameWithoutExtension: ${filenameWithoutExtension}`);
+	// if(debugLogs) console.debug(`filenameWithoutExtension: ${filenameWithoutExtension}`);
 
 	// Remove markdown headings that match the filename
 	const headingRegex = /^(#+)\s(.*)$/gm;
 	const contentWithoutHeadings = strippedContent.replace(headingRegex, (match, p1, p2) => {
 	
-		// console.debug(`p2: ${p2}`);
+		// if(debugLogs) console.debug(`p2: ${p2}`);
 		if (p2 === filenameWithoutExtension) {
 			return "";
 		}
 		return match;
 	});
-	// console.debug(`contentWithoutHeadings: ${contentWithoutHeadings}`);
+	// if(debugLogs) console.debug(`contentWithoutHeadings: ${contentWithoutHeadings}`);
 
 	// Remove metadata blocks from count
 	const metadataRegex = /^---[\s\S]*?---/gm;
 	const contentWithoutMetadata = contentWithoutHeadings.replace(metadataRegex, "");
-	// console.debug(`contentWithoutMetadata: ${contentWithoutMetadata}`);
+	// if(debugLogs) console.debug(`contentWithoutMetadata: ${contentWithoutMetadata}`);
 
 	// Remove #tags from count
 	const tagRegex = /#[^\s]+/g;
 	const contentWithoutTags = contentWithoutMetadata.replace(tagRegex, "");
-	// console.debug(`contentWithoutTags: ${contentWithoutTags}`);
+	// if(debugLogs) console.debug(`contentWithoutTags: ${contentWithoutTags}`);
 
 	// Remove links and Wikipedia-links from count
 	const linkRegex = /\[.*?\]\(.*?\)|\[\[.*?\]\]/g;
 	const contentWithoutLinks = contentWithoutTags.replace(linkRegex, "");
-	// console.debug(`contentWithoutLinks: ${contentWithoutLinks}`);
+	// if(debugLogs) console.debug(`contentWithoutLinks: ${contentWithoutLinks}`);
 
 	// Remove blank newlines
 	const filteredContent: string = contentWithoutLinks
@@ -103,11 +103,11 @@ export function countLayer2AndLayer3Characters(content: string, filename: string
 	.filter(line => line.trim() !== '') // Filter out lines that are empty or contain only whitespace
 	.filter(line => line.trim() !== '---') // remove --- on single lines
 	.join('\n'); // Join the remaining lines back into a string, separated by newlines
-	// console.debug(`filteredContent: ${filteredContent}`);
+	// if(debugLogs) console.debug(`filteredContent: ${filteredContent}`);
 
 	// Count the remaining characters
 	const charCount = filteredContent.length;
-	// console.debug(`charCount: ${charCount}`);
+	// if(debugLogs) console.debug(`charCount: ${charCount}`);
 
 
 	// calculate Layer 2 & 3 Length
@@ -156,7 +156,7 @@ export function countLayer2AndLayer3Characters(content: string, filename: string
 
 
 export function rateLevelOfMaturity(noteLength: number, lengthOfTitle: number, Inlinks: number, outgoingLinks: number, progressiveSumMajurity: number): number {
-	// console.debug(`noteLength: ${noteLength}\tlengthOfTitle: ${lengthOfTitle}\tInlinks: ${Inlinks}\toutgoingLinks: ${outgoingLinks}`)
+	// if(debugLogs) console.debug(`noteLength: ${noteLength}\tlengthOfTitle: ${lengthOfTitle}\tInlinks: ${Inlinks}\toutgoingLinks: ${outgoingLinks}`)
 	
 	// decide if noteLength-majurity or progressiveSum-majurity shall be used
 	var lengthMajurity = 0;
@@ -168,7 +168,7 @@ export function rateLevelOfMaturity(noteLength: number, lengthOfTitle: number, I
 	
 	const totalWeight : number = lengthMajurity + lengthOfTitle + Inlinks + outgoingLinks;
 	const averageWeight = totalWeight / 5;
-	// console.debug(`totalWeight: ${totalWeight}\taverageWeight: ${averageWeight}`)
+	// if(debugLogs) console.debug(`totalWeight: ${totalWeight}\taverageWeight: ${averageWeight}`)
 	if (averageWeight < 0.5) {
 		return 0;
 	} else if (averageWeight <= 1) {
@@ -188,7 +188,7 @@ export function rateLevelOfMaturity(noteLength: number, lengthOfTitle: number, I
 
 
 export function rateOutlinks(outlinks: number): number {
-	// console.debug(`outlinks: ${outlinks}`)
+	// if(debugLogs) console.debug(`outlinks: ${outlinks}`)
 	if (outlinks < 2) {
 		return 0;
 	} else if (outlinks < 3) {
@@ -209,7 +209,7 @@ export function rateOutlinks(outlinks: number): number {
 
 export function rateInlinks(numInlinks: number): number {
 	//var prozentInlinks = numInlinks * 100 / numAllFiles;
-	//console.debug(`numInlinks: ${numInlinks}\tnumAllFiles: ${numAllFiles}\tprozentInlinks: ${prozentInlinks}`)
+	//if(debugLogs) console.debug(`numInlinks: ${numInlinks}\tnumAllFiles: ${numAllFiles}\tprozentInlinks: ${prozentInlinks}`)
 	/*if (prozentInlinks < 0.005 || prozentInlinks > 0.1) {
 		return 0;
 	} else */ if (numInlinks == 0) {
@@ -301,38 +301,38 @@ export function getNumberOfOutlinks(activeFile: TFile): number {
 export function countCharactersInActiveFile(content: string, filename: string): number {
   
 	const filenameWithoutExtension = filename; //.slice(0, -filename.length);
-	// console.debug(`filenameWithoutExtension: ${filenameWithoutExtension}`);
+	// if(debugLogs) console.debug(`filenameWithoutExtension: ${filenameWithoutExtension}`);
 
 	// Remove markdown formatting symbols
 	const strippedContent = content.replace(/[*_~`]/g, "");
-	// console.debug(`filenameWithoutExtension: ${filenameWithoutExtension}`);
+	// if(debugLogs) console.debug(`filenameWithoutExtension: ${filenameWithoutExtension}`);
 
 	// Remove markdown headings that match the filename
 	const headingRegex = /^(#+)\s(.*)$/gm;
 	const contentWithoutHeadings = strippedContent.replace(headingRegex, (match, p1, p2) => {
 	
-		// console.debug(`p2: ${p2}`);
+		// if(debugLogs) console.debug(`p2: ${p2}`);
 		if (p2 === filenameWithoutExtension) {
 			return "";
 		}
 		return match;
 	});
-	// console.debug(`contentWithoutHeadings: ${contentWithoutHeadings}`);
+	// if(debugLogs) console.debug(`contentWithoutHeadings: ${contentWithoutHeadings}`);
 
 	// Remove metadata blocks from count
 	const metadataRegex = /^---[\s\S]*?---/gm;
 	const contentWithoutMetadata = contentWithoutHeadings.replace(metadataRegex, "");
-	// console.debug(`contentWithoutMetadata: ${contentWithoutMetadata}`);
+	// if(debugLogs) console.debug(`contentWithoutMetadata: ${contentWithoutMetadata}`);
 
 	// Remove #tags from count
 	const tagRegex = /#[^\s]+/g;
 	const contentWithoutTags = contentWithoutMetadata.replace(tagRegex, "");
-	// console.debug(`contentWithoutTags: ${contentWithoutTags}`);
+	// if(debugLogs) console.debug(`contentWithoutTags: ${contentWithoutTags}`);
 
 	// Remove links and Wikipedia-links from count
 	const linkRegex = /\[.*?\]\(.*?\)|\[\[.*?\]\]/g;
 	const contentWithoutLinks = contentWithoutTags.replace(linkRegex, "");
-	// console.debug(`contentWithoutLinks: ${contentWithoutLinks}`);
+	// if(debugLogs) console.debug(`contentWithoutLinks: ${contentWithoutLinks}`);
 
 	// Remove blank newlines
 	const filteredContent: string = contentWithoutLinks
@@ -340,11 +340,11 @@ export function countCharactersInActiveFile(content: string, filename: string): 
 	.filter(line => line.trim() !== '') // Filter out lines that are empty or contain only whitespace
 	.filter(line => line.trim() !== '---') // remove --- on single lines
 	.join('\n'); // Join the remaining lines back into a string, separated by newlines
-	// console.debug(`filteredContent: ${filteredContent}`);
+	// if(debugLogs) console.debug(`filteredContent: ${filteredContent}`);
 
 	// Count the remaining characters
 	const charCount = filteredContent.length;
-	// console.debug(`charCount: ${charCount}`);
+	// if(debugLogs) console.debug(`charCount: ${charCount}`);
 
 	return charCount;
 }
@@ -473,7 +473,7 @@ export const getFileMap = async (app: App, excludeTag: string, excludeFolder: st
 		} else {
 			excludedSubstrings = excludeTag.split(', ');
 		}
-		//console.debug(`excludedSubstrings: ${excludedSubstrings}`)
+		//if(debugLogs) console.debug(`excludedSubstrings: ${excludedSubstrings}`)
 		// folders to ignore .md-files in
 		let excludedFolders : string[] = []
 		if (excludeFolder == undefined) {
@@ -482,16 +482,16 @@ export const getFileMap = async (app: App, excludeTag: string, excludeFolder: st
 			excludedFolders = excludeFolder.split(', ');
 		}
 		excludedFolders.push('.obsidian', '.trash'); // hardcode the basic folders
-		//console.debug(`excludedFolders: ${excludedFolders}`)	
+		//if(debugLogs) console.debug(`excludedFolders: ${excludedFolders}`)	
 		let fileArray: TFile[] = [];
 		const files = await vault.getMarkdownFiles();
 		for (const file of files) {
 
 			const fileContents = await app.vault.read(file);
-			//console.debug(`file.path: ${file.path}`)
+			//if(debugLogs) console.debug(`file.path: ${file.path}`)
 			if ((!excludedSubstrings.some(substring => fileContents.includes(substring)) || excludeTag.length === 0) && 
 				!excludedFolders.some(folder => file.path.includes(folder))) {
-				//console.debug(`file ${file} get's added.`)
+				//if(debugLogs) console.debug(`file ${file} get's added.`)
 				fileArray.push(file)
 			}
 		}

@@ -1,4 +1,5 @@
 import {TFile} from 'obsidian';
+import { debugLogs } from './constants';
 
 export function findEarliestCreatedFile(files: TFile[]): TFile {
 	let earliestCreatedFile: TFile = files[0];
@@ -82,7 +83,7 @@ export function createChartFormat(y_axis: string, countsStringMod: string, chart
 export async function replaceChartContent (avatarPageName: string, newContent: string) {
 	const existingFile = this.app.vault.getAbstractFileByPath(`${avatarPageName}.md`);
 	if (existingFile == null) {
-		console.debug(`File ${avatarPageName}.md does not exist`);
+		if(debugLogs) console.debug(`File ${avatarPageName}.md does not exist`);
 		return;
 		}
 	const file = existingFile as TFile;

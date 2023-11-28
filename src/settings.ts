@@ -2,6 +2,7 @@ import { App, PluginSettingTab, Setting } from 'obsidian';
 import gamification from './main';
 import type {MomentInput} from 'moment';
 import { encryptValue, encryptString, decryptString, encryptNumber, decryptNumber, encryptBoolean, decryptBoolean } from 'encryption';
+import { debugLogs } from './constants';
 
 export const defaultSettings: Partial<ISettings> = {
   enableInitCommand: "U2FsdGVkX1+7lWe/h95uqzgl27JBGW2iki7sBwk44YQ=",
@@ -299,7 +300,7 @@ export class GamificationPluginSettings extends PluginSettingTab {
 		//const { containerEl } = this;
 		//containerEl.empty();
   
-		console.debug('settings called')
+		if(debugLogs) console.debug('settings called')
 		new Setting(containerEl)
 			.setName('#tags to ignore')
 			.setDesc('Enter tags without # and separate with ", ".\nInclude nested tags.')
@@ -321,7 +322,7 @@ export class GamificationPluginSettings extends PluginSettingTab {
 				//.setValue(this.plugin.settings.folderExclude)
         .setValue(decryptString(this.plugin.settings.folderExclude))
 				.onChange(async (value) => {
-					// console.debug('folder to exclude: ' + value);
+					// if(debugLogs) console.debug('folder to exclude: ' + value);
 					this.plugin.settings.folderExclude = encryptString(value);
 					await this.plugin.saveSettings();
 				}));
@@ -334,7 +335,7 @@ export class GamificationPluginSettings extends PluginSettingTab {
 					//.setValue(this.plugin.settings.avatarPageName)
           .setValue(decryptString(this.plugin.settings.avatarPageName))
 					.onChange(async (value) => {
-						// console.debug('folder to exclude: ' + value);
+						// if(debugLogs) console.debug('folder to exclude: ' + value);
 						this.plugin.settings.avatarPageName = encryptString(value);
 						await this.plugin.saveSettings();
 				}));
@@ -383,7 +384,7 @@ export class GamificationPluginSettings extends PluginSettingTab {
 					.setPlaceholder('Layer 2 is usually **')
 					.setValue(decryptString(this.plugin.settings.progressiveSumLayer2))
 					.onChange(async (value) => {
-						// console.debug('folder to exclude: ' + value);
+						// if(debugLogs) console.debug('folder to exclude: ' + value);
 						this.plugin.settings.progressiveSumLayer2 = encryptString(value);
 						await this.plugin.saveSettings();
 				}))
@@ -391,7 +392,7 @@ export class GamificationPluginSettings extends PluginSettingTab {
 					.setPlaceholder('Layer 3 is usually ==')
 					.setValue(decryptString(this.plugin.settings.progressiveSumLayer3))
 					.onChange(async (value) => {
-						// console.debug('folder to exclude: ' + value);
+						// if(debugLogs) console.debug('folder to exclude: ' + value);
 						this.plugin.settings.progressiveSumLayer3 = encryptString(value);
 						await this.plugin.saveSettings();
 			}));

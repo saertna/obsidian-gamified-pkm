@@ -7,6 +7,7 @@ export const streakboosterIncreaseDaily: number = 0.1;
 export const streakboosterIncreaseWeekly: number = 1;
 export const CryptoJS = require("crypto-js");
 export const secretKey = "2ZU^12y#QmNB5$yEin5^";
+export const debugLogs = false;
 export const avatarInitContent =  `# Avatar
 
 |           |         | 
