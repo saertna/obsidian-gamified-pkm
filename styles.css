@@ -42,3 +42,7 @@
 .modal-checkbox-container input[type="checkbox"] {
     margin-right: 5px;
 }
+
+.modal-button {
+    margin-right: 10px; 
+}
