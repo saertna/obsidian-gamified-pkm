@@ -231,51 +231,50 @@ export class MultiSelectModal extends Modal {
 
 
 	private createBoosterList(labelText: string) {
-		const container = document.createElement('div');
+		const container = this.containerEl.createEl('div');
 		container.className = 'modal-checkbox-container';
-
+	
 		//const stock = this.remainingStock[labelText] || 0;
 		const stock = this.boosters[labelText];
-
-		const label = document.createElement('div');
-		label.className = `${labelText.replace(' ', '-')}`;
-		const useButton = document.createElement('button');
+	
+		const label = container.createEl('div', { cls: `${labelText.replace(' ', '-')}` });
+	
+		const useButton = container.createEl('button');
 		const momentDate = this.gamificationInstance.getSettingString(this.getBoosterDateFromName(labelText));
+	
 		if (isMinutesPassed(window.moment(momentDate as string, 'YYYY-MM-DD HH:mm:ss'), this.getBoosterCooldownFromName(labelText)) == false) {
 			console.debug(`Booster ${labelText} is still in cooldown for ${window.moment(momentDate as string, 'YYYY-MM-DD HH:mm:ss'), this.getBoosterCooldownFromName(labelText) / 60} hours`);
-			label.innerHTML = `${labelText} : (${stock})`;
-			//const useButton = document.createElement('button');
+			label.createEl('div', { text: `${labelText} : (${stock})` });
+	
 			useButton.innerText = `cooldown ${hoursUntilMinutesPassed(window.moment(momentDate as string, 'YYYY-MM-DD HH:mm:ss'), this.getBoosterCooldownFromName(labelText))} hours`;
 			useButton.id = `use-button-${labelText.replace(' ', '-')}`;
 			useButton.onclick = () => {
 				new ModalInformationbox(this.app, `${labelText} is for ${hoursUntilMinutesPassed(window.moment(momentDate as string, 'YYYY-MM-DD HH:mm:ss'), this.getBoosterCooldownFromName(labelText))} hours in cooldown and can only then be used again.`).open();
 			};
 		} else {
-			label.innerHTML = `${labelText} : (${stock})`;
-			//const useButton = document.createElement('button');
+			label.createEl('div', { text: `${labelText} : (${stock})` });
+	
 			useButton.innerText = 'Use';
 			useButton.id = `use-button-${labelText.replace(' ', '-')}`;
 			useButton.onclick = () => {
 				this.useBoosterItem(labelText);
 			};
 		}
-
-		const useInfoButton = document.createElement('button');
-		useInfoButton.innerText = '?';
+	
+		const useInfoButton = container.createEl('button', { text: '?' });
 		useInfoButton.id = `information-${labelText.replace(' ', '-')}`;
 		useInfoButton.onclick = () => {
 			new ModalInformationbox(this.app, this.getBoosterInforFromFromName(labelText)).open();
 		};
-
-
+	
 		container.appendChild(useButton);
 		container.appendChild(useInfoButton);
 		container.appendChild(label);
-
-
+	
 		return container;
-
 	}
+	
+	
 
 
 	incrementItem(item: string) {
