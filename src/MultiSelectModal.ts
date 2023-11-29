@@ -4,7 +4,8 @@ import {
 	elements,
 	boosterRecipes,
 	listOfUseableBoostersToBeShown,
-	listOfUseableIngredientsToBeShown
+	listOfUseableIngredientsToBeShown,
+	debugLogs
 } from './constants';
 import { ModalInformationbox } from 'ModalInformationbox';
 import gamification, { isMinutesPassed, hoursUntilMinutesPassed} from 'main';
@@ -33,7 +34,7 @@ export class MultiSelectModal extends Modal {
 		const { contentEl } = this;
 		contentEl.empty();
 
-		//this.readBoostersStock();
+		this.readBoostersStock();
 		// take care only to run several times through when boosters are used
 		if (this.useBooster) {
 			boosterRecipes.forEach(item => {
@@ -59,10 +60,9 @@ export class MultiSelectModal extends Modal {
 	}
 
 	private boosterAvailableForUse(item: string) {
-		//console.debug(`boosterAvailableForUse: ${item}`)
+		if(debugLogs) console.debug(`boosterAvailableForUse: ${item}`)
 		let found = false;
 		listOfUseableBoostersToBeShown.forEach(element => {
-			//console.debug(`${item} == ${element} ??`)
 			if (item == element) {
 				if (!found) {
 					found = true;
@@ -90,7 +90,7 @@ export class MultiSelectModal extends Modal {
 	}
 
 	updateIncrementStock(increment: string, stock: number) {
-		console.debug(`increment "${increment}" new value ${stock}`);
+		if(debugLogs) console.debug(`increment "${increment}" new value ${stock}`);
 		this.remainingStock[increment] = stock;
 		this.gamificationInstance.setSettingNumber(this.getIngerementVarNameFromName(increment) || '', stock);
 	}
@@ -116,7 +116,7 @@ export class MultiSelectModal extends Modal {
 				this.gamificationInstance.setSettingNumber('boosterUseCount',boosterOverallUse + 1)
 			  } else {
 				// Handle the case where boosterLastUsedDate is not a valid string.
-				console.debug(`decrementBooster: "boosterUseCount" could not got read.`)
+				if(debugLogs) console.debug(`decrementBooster: "boosterUseCount" could not got read.`)
 			  }
 			const boosterUse = this.gamificationInstance.getSettingNumber(this.getBoosterUseFromName(booster))
 			if (typeof boosterUse === 'number' && boosterUse !== null) {
@@ -124,7 +124,7 @@ export class MultiSelectModal extends Modal {
 				this.gamificationInstance.setSettingNumber(this.getBoosterUseFromName(booster),boosterUse + 1)
 			  } else {
 				// Handle the case where boosterLastUsedDate is not a valid string.
-				console.debug(`decrementBooster: "${this.getBoosterUseFromName(booster)}" could not got read.`)
+				if(debugLogs) console.debug(`decrementBooster: "${this.getBoosterUseFromName(booster)}" could not got read.`)
 			  }
 			this.updateQuantityDisplay(booster);
 		}
@@ -235,6 +235,7 @@ export class MultiSelectModal extends Modal {
 		container.className = 'modal-checkbox-container';
 	
 		//const stock = this.remainingStock[labelText] || 0;
+		if(debugLogs) console.log(`createBoosterList: labelText: ${labelText}`)
 		const stock = this.boosters[labelText];
 	
 		const label = container.createEl('div', { cls: `${labelText.replace(' ', '-')}` });
@@ -243,7 +244,8 @@ export class MultiSelectModal extends Modal {
 		const momentDate = this.gamificationInstance.getSettingString(this.getBoosterDateFromName(labelText));
 	
 		if (isMinutesPassed(window.moment(momentDate as string, 'YYYY-MM-DD HH:mm:ss'), this.getBoosterCooldownFromName(labelText)) == false) {
-			console.debug(`Booster ${labelText} is still in cooldown for ${window.moment(momentDate as string, 'YYYY-MM-DD HH:mm:ss'), this.getBoosterCooldownFromName(labelText) / 60} hours`);
+			if(debugLogs) console.debug(`Booster ${labelText} is still in cooldown for ${window.moment(momentDate as string, 'YYYY-MM-DD HH:mm:ss'), this.getBoosterCooldownFromName(labelText) / 60} hours`);
+			if(debugLogs) console.log(`createBoosterList: Stock amount ${stock}`)
 			label.createEl('div', { text: `${labelText} : (${stock})` });
 	
 			useButton.innerText = `cooldown ${hoursUntilMinutesPassed(window.moment(momentDate as string, 'YYYY-MM-DD HH:mm:ss'), this.getBoosterCooldownFromName(labelText))} hours`;
@@ -279,7 +281,7 @@ export class MultiSelectModal extends Modal {
 
 	incrementItem(item: string) {
 		const stock = this.remainingStock[item];
-		//console.debug(`incrementItem: stock = ${stock}`);
+		if(debugLogs) console.debug(`incrementItem: stock = ${stock}`);
 		if (stock > 0) {
 			this.selectedItems.push(item);
 			this.remainingStock[item]--;
@@ -308,9 +310,9 @@ export class MultiSelectModal extends Modal {
 
 
 	private useBoosterItem(labelText: string) {
-		console.debug(`use Booster ${labelText}`);
+		if(debugLogs) console.debug(`use Booster ${labelText}`);
 		if(labelText=='Fortune Infusion'){
-			//console.debug(`acquireIngredients();`)
+			if(debugLogs) console.debug(`acquireIngredients();`)
 			this.gamificationInstance.acquireIngredients(1,1,10)
 		} else if (labelText=='Temporal Tweaker'){
 			
@@ -383,10 +385,10 @@ export class MultiSelectModal extends Modal {
 	private checkIngredientsAvailability(incredients: { name: string; incredients: string[]; }) {
 		for (const ingredient of incredients.incredients) {
 			const [quantity, shortName] = ingredient.split('x');
-			//console.debug(`quantity: ${quantity}\tshortName: ${shortName}`)
+			if(debugLogs) console.debug(`quantity: ${quantity}\tshortName: ${shortName}`)
 			const requiredQuantity = parseInt(quantity);
 			const availableStock = this.remainingStock[this.getIngerementNameFromShortName(shortName) || 0];
-			//console.debug(`requiredQuantity: ${requiredQuantity}\tavailableStock: ́${availableStock}`)
+			if(debugLogs) console.debug(`requiredQuantity: ${requiredQuantity}\tavailableStock: ́${availableStock}`)
 			if (requiredQuantity > availableStock) {
 				return false; // Not enough stock for this ingredient
 			}
@@ -405,7 +407,7 @@ export class MultiSelectModal extends Modal {
 			totalAvailableIngredients += this.remainingStock[this.getIngerementFromName(increment).name] || 0;
 		});
 	
-		console.debug(`total amount of ingrediments: ${totalAvailableIngredients}`)
+		if(debugLogs) console.debug(`total amount of ingrediments: ${totalAvailableIngredients}`)
 		// If at least 1000 ingredients are available
 		if (totalAvailableIngredients >= 1000) {
 			// Burn ingredients proportionally
@@ -414,7 +416,7 @@ export class MultiSelectModal extends Modal {
 				if (this.remainingStock[this.getIngerementFromName(increment).name]) {
 					const proportionalAmount = Math.ceil((this.remainingStock[this.getIngerementFromName(increment).name] / totalAvailableIngredients) * 1000);
 					//const rest = this.remainingStock[this.getIngerementFromName(increment).name] - proportionalAmount;
-					//console.debug(`${this.getIngerementFromName(increment).shortName} ${this.remainingStock[this.getIngerementFromName(increment).name]} shall be ${this.remainingStock[this.getIngerementFromName(increment).name] - rest} = ${this.remainingStock[this.getIngerementFromName(increment).name]} - ${rest}`)
+					//if(debugLogs) console.debug(`${this.getIngerementFromName(increment).shortName} ${this.remainingStock[this.getIngerementFromName(increment).name]} shall be ${this.remainingStock[this.getIngerementFromName(increment).name] - rest} = ${this.remainingStock[this.getIngerementFromName(increment).name]} - ${rest}`)
 					//this.remainingStock[this.getIngerementFromName(increment).name] = this.remainingStock[this.getIngerementFromName(increment).name] - proportionalAmount;
 					//this.updateIncrementStock(this.getIngerementFromName(increment).varName, this.remainingStock[this.getIngerementFromName(increment).name])
 					this.updateIncrementStock(this.getIngerementFromName(increment).name, this.remainingStock[this.getIngerementFromName(increment).name] - proportionalAmount)
@@ -476,23 +478,23 @@ export class MultiSelectModal extends Modal {
 			if(this.check1000IngredientsAvailableAndBurn()){
 				this.updateBoosterStock(selectedItems.name, 1);
 				this.gamificationInstance.setSettingNumber(this.getBoosterVarNameFromName(selectedItems.name), this.boosters[selectedItems.name]);
-				console.debug(`craft booster ${selectedItems.name}`);
+				if(debugLogs) console.debug(`craft booster ${selectedItems.name}`);
 			} else {
-				console.debug(`not enough ingredients for booster ${selectedItems.name} in stock`);
+				if(debugLogs) console.debug(`not enough ingredients for booster ${selectedItems.name} in stock`);
 				new ModalInformationbox(this.app, `Not enough ingrediments available for '${selectedItems.name}'. Craft more Notes to collect new ingrediments.`).open();
 			}
 		} else if(selectedItems.name == 'Fortune Infusion'){
 			
 		} else {
 			if (this.checkIngredientsAvailability(selectedItems)) {
-				console.debug(`craft booster ${selectedItems.name}`);
+				if(debugLogs) console.debug(`craft booster ${selectedItems.name}`);
 				this.updateBoosterStock(selectedItems.name, 1);
 				this.gamificationInstance.setSettingNumber(this.getBoosterVarNameFromName(selectedItems.name), this.boosters[selectedItems.name]);
 				this.useIngrediments(selectedItems);
 				//this.updateQuantityDisplay(selectedItems.name)
 				this.updateStockInformation();
 			} else {
-				console.debug(`not enough ingredients for booster ${selectedItems.name} in stock`);
+				if(debugLogs) console.debug(`not enough ingredients for booster ${selectedItems.name} in stock`);
 				new ModalInformationbox(this.app, `Not enough ingrediments available for '${selectedItems.name}'. Craft more Notes to collect new ingrediments.`).open();
 			}
 		}

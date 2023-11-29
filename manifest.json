@@ -1,7 +1,7 @@
 {
   "id": "gamified-pkm",
   "name": "Gamificate your PKM",
-  "version": "0.0.83",
+  "version": "0.0.84",
   "minAppVersion": "0.15.0",
   "description": "Enhance your Personal Knowledge Management with gamification elements. Boost motivation and achieve growth as you engage with your PKM.",
   "author": "Andreas Trebing",

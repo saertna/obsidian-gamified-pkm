@@ -34,11 +34,15 @@
 }
 
 .modal-checkbox-container {
-    margin-bottom: 10px;
     display: flex;
     align-items: center;
+    gap: 10px;
 }
 
 .modal-checkbox-container input[type="checkbox"] {
     margin-right: 5px;
+}
+
+.modal-button {
+    margin-right: 10px; 
 }
