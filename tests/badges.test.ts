@@ -1,5 +1,5 @@
-import {checkIfReceiveABadge, getBadgeForLevel, getBadgeForInitLevel, Badge} from '../src/badges'
-import { describe, test } from 'node:test';
+import {checkIfReceiveABadge, getBadgeForLevel, getBadgeForInitLevel, Badge, getBadgeDetails} from '../src/badges'
+import { describe } from 'node:test';
 
 
 describe('checkIfReceiveABadge', () => {
@@ -113,4 +113,26 @@ describe('getBadgeForInitLevel', () => {
         const expected = {"description": "Your existing notes have made you the 'Sultan of Synthesis.' You're the master weaver, threading together threads of information into a rich tapestry of insight.", "level": "level 90", "name": "Sultan of Synthesis"};
         expect(actual).toStrictEqual(expected);
         });
+});
+
+
+describe('getBadgeDetails', () => {
+    it('should return "Enlightened Novice" ', () => {
+        const actual = getBadgeDetails('Enlightened Novice');
+        const expected: Badge = { name: "Enlightened Novice", description: "Huzzah! You've embarked on the path of knowledge and earned the title of 'Enlightened Novice.' The journey has just begun, and you're already radiating wisdom like a baby sun!", level: "level 5" };
+        //const expected = false;
+        expect(actual).toStrictEqual(expected);
+    });
+
+    it('should return "Scholarly Trailblazer"', () => {
+        const actual = getBadgeDetails('Scholarly Trailblazer');
+        const expected = { name: "Scholarly Trailblazer", description: "Impressive! You're now a 'Scholarly Trailblazer,' boldly venturing through a sea of knowledge with a compass of curiosity and a map of intellect!" , level: "level 27" };
+        expect(actual).toStrictEqual(expected);
+    });
+
+    it('should return "Wisdom Seedling"', () => {
+        const actual = getBadgeDetails('Wisdom Seedling');
+        const expected = { name: "Wisdom Seedling", description: "Your existing notes have nurtured the growth of a 'Wisdom Seedling.' You're cultivating your garden of knowledge with care and patience." , level: "level 23" };
+        expect(actual).toStrictEqual(expected);
+    });
 });

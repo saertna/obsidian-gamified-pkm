@@ -67,7 +67,7 @@ export function getBadgeForLevel(level: number, inform: boolean): Badge {
         //}
       }
       if (index != null){
-        badgeFound = badgeNames[index]
+        badgeFound = badgeNamesInit[index]
       }
     } 
     return badgeFound
