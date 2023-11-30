@@ -189,6 +189,13 @@ export default class gamification extends Plugin {
 				//this.setBadgeSave(getBadgeDetails('Brainiac Trailblazer'),'23-09-07', 'level 20');
 				//this.setBadgeSave(getBadgeDetails('Savvy Scholar'), '23-08-15', 'level 15');
 			});
+
+			this.addRibbonIcon("chevrons-right", "boost", async () => {
+				//this.setSettingNumber('streakbooster',80)
+				console.log(`writeBadgeCSV()`)
+				await this.writeBadgeCSV(getBadgeDetails('Cerebral Maestro'), '24-01-03', 'level 21')
+
+			});
 		}
 
 
@@ -417,7 +424,7 @@ export default class gamification extends Plugin {
 			await this.removeBadgesWhenInitLevelHigher(this.getSettingString('avatarPageName'), this.getSettingNumber('statusLevel'))
 			await this.boosterForInit()
 			await this.updateStatusBar(statusbarGamification)
-			writeBadgeCSV(initBadge, window.moment().format('YYYY-MM-DD'),'level ' + (this.getSettingNumber('statusLevel')).toString())
+			this.writeBadgeCSV(initBadge, window.moment().format('YYYY-MM-DD'),'level ' + (this.getSettingNumber('statusLevel')).toString())
 		}, 2000); // 2000 milliseconds = 2 seconds
 
 		new ModalInformationbox(this.app, `Finallized gamification initialistation!\nCongratulation, you earned ${pointsReceived} Points!\n\nCheck the Profile Page: "${this.getSettingString('avatarPageName')}.md"\n\nYou received an initialisation Booster aktiv for your first level ups. Game on!`).open();
@@ -1152,7 +1159,7 @@ export default class gamification extends Plugin {
 				this.giveBadgeInProfile(this.getSettingString('avatarPageName'), badge)
 				this.setSettingBoolean('badgeBoosterState', false);
 				this.setSettingNumber('badgeBoosterFactor', 1);
-				writeBadgeCSV(badge, window.moment().format('YYYY-MM-DD'), 'level ' + this.getSettingNumber('statusLevel').toString())
+				this.writeBadgeCSV(badge, window.moment().format('YYYY-MM-DD'), 'level ' + this.getSettingNumber('statusLevel').toString())
 				//this.saveData(this.settings)
 			}
 		});
@@ -1264,6 +1271,13 @@ export default class gamification extends Plugin {
 			console.log('You did not earn an ingredient this time.');
 		}
 		
+	}
+
+	async writeBadgeCSV(newBadge: Badge, date: string, level: string){
+		//console.log(`${newBadge.name}, ${date}, ${level}`)
+		//const gamificationInstance = new gamification(this.app,this.manifest);
+		//console.log(`const gamificationInstance is created`)
+		this.setBadgeSave(newBadge, date, level);
 	}
 	
 	
@@ -1404,20 +1418,20 @@ function rateDirectionForStatusPoints(ratingCurrent: string, ratingNew: number):
 }
 
 
-function writeBadgeCSV(newBadge: Badge, date: string, level: string){
-	const gamificationInstance = new gamification(this.app,this.manifest);
-	gamificationInstance.setBadgeSave(newBadge, date, level);
-}
+
 
 
 function parseBadgeCSV(csvString: string): Record<string, { date: string, level: string }> {
+	// newBadgeString: Brainiac Trailblazer,23-09-07,level 20##Brainiac Trailblazer,23-08-15,level 15##Enlightened Novice,22-12-11,level 1##Cerebral Maestro,24-01-03,level 21##
     const badgeDict: Record<string, { date: string, level: string }> = {};
     const rows = csvString.split('##');
 	console.log(`rows: ${rows}`)
     for (const row of rows) {
+		console.log(`row: ${row}`)
         const [badgeName, dateReceived, level] = row.split(',');
 
         if (badgeName && dateReceived && level) {
+			console.log(`add Badge ${badgeName} to "badgeDict"`)
             badgeDict[badgeName] = { date: dateReceived, level: level };
         }
     }
