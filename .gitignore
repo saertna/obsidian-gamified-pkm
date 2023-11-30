@@ -10,7 +10,7 @@ node_modules
 
 # Don't include the compiled main.js file in the repo.
 # They should be uploaded to GitHub releases instead.
-# main.js
+main.js
 
 # Exclude sourcemaps
 *.map
@@ -23,6 +23,8 @@ data.json
 /cp-js2cortex.bat
 ncryption
 data_bkp_231023.json
+
+# Ignore Test Data
 *.html
 *.xml
 coverage/lcov.info
