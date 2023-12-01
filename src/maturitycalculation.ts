@@ -388,7 +388,7 @@ export function count_inlinks_single(file_path: string, vault_path: string): num
   return linking_files.size;
 }
 
-
+/*
 export function count_inlinks(file: TFile): number {
     const { app: { metadataCache: { resolvedLinks } } } = this;
     const { path } = file;
@@ -398,6 +398,20 @@ export function count_inlinks(file: TFile): number {
         .reduce((left, right) => left + right, 0);
 
     return sumInlinks;
+}
+*/
+
+export function count_inlinks(file: TFile): number {
+	const { app: { metadataCache: { resolvedLinks } } } = this;
+	const { path } = file;
+
+	console.log('Resolved Links Data:', resolvedLinks); // Add this line
+
+	const sumInlinks = Object.values(resolvedLinks)
+		.map((val: { [key: string]: number }) => val[path] ?? 0)
+		.reduce((left, right) => left + right, 0);
+
+	return sumInlinks;
 }
 
 
