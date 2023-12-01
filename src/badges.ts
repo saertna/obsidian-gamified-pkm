@@ -1,4 +1,4 @@
-import { badgeLevels, badgeNames, badgeInitLevels, badgeNamesInit } from './constants'
+import { badgeLevels, badgeNames, badgeInitLevels, badgeNamesInit , badges} from './constants'
 export interface Badge {
     name: string;
     description: string;
@@ -74,37 +74,14 @@ export function getBadgeForLevel(level: number, inform: boolean): Badge {
   }
 
 
-  // Example usage:
-  // const currentLevel = 42; // Replace this with the actual player's level
-  // const badge = getBadgeForLevel(currentLevel);
-  // if(debugLogs) console.debug(`Congratulations! You've reached Level ${currentLevel}. You've earned the "${badge.name}" badge. ${badge.description}`);
-  
+export function getBadge(badgeName: string): Badge {
+  const targetBadge = badges.find(badge => badge.name === badgeName);
+if(targetBadge){
+  return targetBadge;
+} else {
+  return {name: '', description:'',level:''}
+}
 
 
+}
 
-
-    /*
-  export function getBadgeForLevel(level: number): Badge {
-    const badges: Badge[] = [
-      { name: "Enlightened Novice", description: "Huzzah! You've embarked on the path of knowledge and earned the title of 'Enlightened Novice.' The journey has just begun, and you're already radiating wisdom like a baby sun!" },
-      { name: "Curious Connoisseur", description: "Fantastic! You've embraced the wonders of learning and become a 'Curious Connoisseur.' Your appetite for knowledge is insatiable, like a bottomless bowl of ice cream!" },
-      { name: "Brainiac Trailblazer", description: "Bravo! As a 'Brainiac Trailblazer,' you've carved your way through a jungle of information and emerged victorious. Your intellect is a beacon shining brightly for others to follow!" },
-      // Add more badges here for levels 5, 10, 20, 27, 35, 42, 50, 60, 75, 82, 90, and 100
-      // Example:
-      // { name: "Scholarly Trailblazer", description: "Impressive! You're now a 'Scholarly Trailblazer,' boldly venturing through a sea of knowledge with a compass of curiosity and a map of intellect!" },
-      // { name: "Info Ninja Master", description: "Incredible! You've reached the pinnacle of stealthy knowledge management. As an 'Info Ninja Master,' you can snatch information from the shadows like a digital ninja!" },
-      // ...and so on
-    ];
-  
-    const maxLevel =100; // Assuming each badge is awarded every 5 levels
-    const cappedLevel = Math.min(level, maxLevel);
-    const index = Math.floor(cappedLevel / 5) - 1;
-    return badges[index];
-  }
-  
-
-  interface Badge {
-    name: string;
-    description: string;
-  }
-  */

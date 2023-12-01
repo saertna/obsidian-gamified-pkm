@@ -31,7 +31,7 @@ import {
 	rateOutlinks,
 	rateProgressiveSummarization
 } from './majuritycalculation'
-import {Badge, checkIfReceiveABadge, getBadgeForInitLevel, getBadgeForLevel , getBadgeDetails } from './badges'
+import {Badge, checkIfReceiveABadge, getBadgeForInitLevel, getBadgeForLevel, getBadgeDetails, getBadge} from './badges'
 import {getLevelForPoints, statusPointsForLevel} from './levels'
 import type {Moment} from 'moment';
 import {
@@ -152,12 +152,13 @@ export default class gamification extends Plugin {
 
 				// Parse the CSV string
 				//const badgeDict = parseBadgeCSV(csvString);
-				const badgeDict = parseBadgeCSV2Dict(this.getSettingString('receivedBadges'))
+				//const badgeDict = parseBadgeCSV2Dict(this.getSettingString('receivedBadges'))
 				//console.log(`badgeDict: ${badgeDict}`)
 
 				// Access badge information
 				//console.log(badgeDict["Brainiac Trailblazer"]);
 
+				/*
 				for (const badgeName in badgeDict) {
 					if (badgeDict.hasOwnProperty(badgeName)) {
 						const badgeInfo = badgeDict[badgeName];
@@ -166,7 +167,9 @@ export default class gamification extends Plugin {
 					}
 				}
 
+				 */
 
+				await this.checkForContinuouslyNoteCreation(180)
 
 
 				//this.setBadgeSave(getBadgeDetails('Brainiac Trailblazer'),'23-09-07', 'level 20');
@@ -734,11 +737,25 @@ export default class gamification extends Plugin {
 			this.setSettingNumber('weeklyNoteCreationTask', currentWeeklyCreatedNotes);
 			this.setSettingNumber('weeklyNoteCreationTaskContinuously', weeklyNoteCreationTaskContinuously);
 			await this.saveSettings();
-
+			await this.checkForContinuouslyNoteCreation(weeklyNoteCreationTaskContinuously)
 			await this.checkForWeeklyNoteChallengeEvaluation(currentWeeklyCreatedNotes);
 		}
 	}
 
+	private async checkForContinuouslyNoteCreation(noteCount: number){
+		if (noteCount == 30){
+			await this.giveBadgeInProfile(this.getSettingString('avatarPageName'), getBadge('Consistent Lore Weaver'));
+		} else if (noteCount == 90){
+			await this.giveBadgeInProfile(this.getSettingString('avatarPageName'), getBadge('Knowledge Artisan Stalwart'));
+		} else if (noteCount == 180){
+			if(debugLogs) console.log(`noteCount = 180 ⇒ "Badge Wisdom Architect Virtuoso"`)
+			await this.giveBadgeInProfile(this.getSettingString('avatarPageName'), getBadge('Wisdom Architect Virtuoso'));
+		} else if (noteCount == 365){
+			await this.giveBadgeInProfile(this.getSettingString('avatarPageName'), getBadge('Eternal Scholar Maestro'));
+		} else if (noteCount == 730){
+			await this.giveBadgeInProfile(this.getSettingString('avatarPageName'), getBadge('Divine Omniscience Overlord'));
+		}
+	}
 
 	private async checkForWeeklyNoteChallengeEvaluation(newWeeklyNoteCreationTask: number) {
 		if (newWeeklyNoteCreationTask <= 6) {

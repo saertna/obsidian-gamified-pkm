@@ -8,7 +8,7 @@ export const streakboosterIncreaseDaily: number = 0.1;
 export const streakboosterIncreaseWeekly: number = 1;
 export const CryptoJS = require("crypto-js");
 export const secretKey = "2ZU^12y#QmNB5$yEin5^";
-export const debugLogs = false;
+export const debugLogs = true;
 export const avatarInitContent =  `# Avatar
 
 |           |         | 
@@ -252,4 +252,11 @@ export const badgeNamesInit: Badge[] = [
   { name: "Sultan of Synthesis", description: "Your existing notes have made you the 'Sultan of Synthesis.' You're the master weaver, threading together threads of information into a rich tapestry of insight." , level: "level 90" },
   { name: "Eternal Archivist", description: "At the pinnacle of personal knowledge mastery, you're now revered as the 'Eternal Archivist.' Your existing notes, carefully curated and nurtured, stand as immortal beacons, guiding seekers through the labyrinth of knowledge across ages." , level: "level 100" },
 ];
-// export const allBadges: Badge[] = {badgeNamesInit, badgeNames};
+
+export const badges: Badge[] = [
+  { name: "Consistent Lore Weaver", description: "Congratulations! You've woven a tapestry of knowledge for 30 consecutive days. As a 'Consistent Lore Weaver,' your daily contributions have become the threads that enrich the fabric of your growing wisdom.", level: "" },
+  { name: "Knowledge Artisan Stalwart", description: "You've forged a robust foundation with 90 consecutive days of dedicated note crafting. As a 'Knowledge Artisan Stalwart,' your commitment has sculpted your repository into a work of art, a testament to your persistent curiosity.", level: "" },
+  { name: "Wisdom Architect Virtuoso", description: "With each passing day, you've laid down the blueprints of a profound structure. As a 'Wisdom Architect Virtuoso' at 180 days, your continuous efforts have transformed your knowledge space into an architectural marvel, a testament to your enduring passion for learning.", level: "" },
+  { name: "Eternal Scholar Maestro", description: "A year of unwavering dedication! You've earned the title of 'Eternal Scholar Maestro' by contributing daily for 365 days. Your commitment has created a masterpiece of continuous learning, setting you apart as a true maestro of personal knowledge.", level: "" },
+  { name: "Divine Omniscience Overlord", description: "Behold the divine! Your unbroken streak of daily contributions for 730 days crowns you as the 'Divine Omniscience Overlord.' Your two-year feat is a testament to your unmatched commitment and the creation of a knowledge empire that stands as a beacon for all seekers.", level: "" },
+];
