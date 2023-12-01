@@ -15,25 +15,22 @@ export class ModalBooster extends Modal {
 	onOpen() {
 		const { contentEl } = this;
 		contentEl.setText(this.displayText);
+		
 
 		const multiSelectModal = new MultiSelectModal(this.app, [], 'Craft Booster Item', this.gamificationInstance); // Create the modal instance
 
 
-		// Add a button to open the multi-select modal
 		const button = document.createElement('button');
 		button.innerText = 'Open Crafting Table';
+		button.classList.add('modal-button'); 
 		button.onclick = () => {
-			multiSelectModal.setUseBooster(false); // Set the flag for crafting table
+			multiSelectModal.setUseBooster(false);
 			multiSelectModal.open();
 		};
 
-
-		multiSelectModal.readBoostersStock();
-		multiSelectModal.readIngrementStock();
-
-
 		const button2 = document.createElement('button');
 		button2.innerText = 'Open Booster Board';
+		button2.classList.add('modal-button'); 
 		button2.onclick = () => {
 			multiSelectModal.setUseBooster(true);
 			multiSelectModal.open();
@@ -41,6 +38,7 @@ export class ModalBooster extends Modal {
 
 		contentEl.appendChild(button);
 		contentEl.appendChild(button2);
+		
 	}
 
 	onClose() {

@@ -2,6 +2,7 @@ import { App, PluginSettingTab, Setting } from 'obsidian';
 import gamification from './main';
 import type {MomentInput} from 'moment';
 import { encryptValue, encryptString, decryptString, encryptNumber, decryptNumber, encryptBoolean, decryptBoolean } from 'encryption';
+import { debugLogs } from './constants';
 
 export const defaultSettings: Partial<ISettings> = {
   enableInitCommand: "U2FsdGVkX1+7lWe/h95uqzgl27JBGW2iki7sBwk44YQ=",
@@ -294,29 +295,18 @@ export class GamificationPluginSettings extends PluginSettingTab {
   
 	public display(): void {
 		const { containerEl } = this;
-		containerEl.addClass("excalidraw-settings");
+		containerEl.addClass("gamification-settings");
 		this.containerEl.empty();
 
-		const coffeeDiv = containerEl.createDiv("coffee");
-		coffeeDiv.addClass("ex-coffee-div");
-		const coffeeLink = coffeeDiv.createEl("a", {
-		href: "https://ko-fi.com/andreastrebing",
-		});
-		const coffeeImg = coffeeLink.createEl("img", {
-		attr: {
-			src: "https://cdn.ko-fi.com/cdn/kofi3.png?v=3",
-		},
-		});
-		coffeeImg.height = 45;
+
 
 		//const { containerEl } = this;
 		//containerEl.empty();
   
-		containerEl.createEl('h2', { text: 'Gamify your PKM - Settings' });
-		console.log('settings called')
+		if(debugLogs) console.debug('settings called')
 		new Setting(containerEl)
 			.setName('#tags to ignore')
-			.setDesc('enter tags without # and separate with ", ".\nInclude nested tags.')
+			.setDesc('Enter tags without # and separate with ", ".\nInclude nested tags.')
 			.addText(text => text
 				.setPlaceholder('Enter your tag1, tag2/subtag, …')
 				//.setValue(this.plugin.settings.tagsExclude)
@@ -328,35 +318,35 @@ export class GamificationPluginSettings extends PluginSettingTab {
 
 				
 		new Setting(containerEl)
-			.setName('folder to ignore')
-			.setDesc('enter folder whichs content shall be ignored. Separate with ", ".')
+			.setName('Folder to ignore')
+			.setDesc('Enter folder whichs content shall be ignored. Separate with ", ".')
 			.addText(text => text
 				.setPlaceholder('Enter your folder1, folder2, …')
 				//.setValue(this.plugin.settings.folderExclude)
         .setValue(decryptString(this.plugin.settings.folderExclude))
 				.onChange(async (value) => {
-					// console.log('folder to exclude: ' + value);
+					// if(debugLogs) console.debug('folder to exclude: ' + value);
 					this.plugin.settings.folderExclude = encryptString(value);
 					await this.plugin.saveSettings();
 				}));
 
 		new Setting(containerEl)
-			.setName('Profile Page Name')
-			.setDesc('you can change here the name of your profile page if you like.')
+			.setName('Profile page name')
+			.setDesc('You can change here the name of your profile page if you like.')
 			.addText(text => text
 					.setPlaceholder('name')
 					//.setValue(this.plugin.settings.avatarPageName)
           .setValue(decryptString(this.plugin.settings.avatarPageName))
 					.onChange(async (value) => {
-						// console.log('folder to exclude: ' + value);
+						// if(debugLogs) console.debug('folder to exclude: ' + value);
 						this.plugin.settings.avatarPageName = encryptString(value);
 						await this.plugin.saveSettings();
 				}));
 				
-    containerEl.createEl('h2', { text: 'Other Settings' });
+    containerEl.createEl('h2', { text: 'Other' });
 		new Setting(containerEl)
-			.setName('Disable Init Command')
-			.setDesc('you can remove the init command from command prompt by switching off.\nrestart needed.')
+			.setName('Disable init command')
+			.setDesc('You can remove the init command from command prompt by switching off.\nrestart needed.')
 			.addToggle((toggle) => 
 				toggle
           		.setValue(decryptBoolean(this.plugin.settings.enableInitCommand))
@@ -368,7 +358,7 @@ export class GamificationPluginSettings extends PluginSettingTab {
 
   
     new Setting(containerEl)
-			.setName('Delay Settings at startup')
+			.setName('Delay load settings at startup')
 			.setDesc('Enter in seconds to delay the load time. e.g. when GIT pull is performed before and settings get merge conflicts. Without GIT usage, keep it to 0.')
 			.addText(text => text
 					.setPlaceholder('0')
@@ -380,7 +370,7 @@ export class GamificationPluginSettings extends PluginSettingTab {
 		}));
 
     new Setting(containerEl)
-			.setName('Time how long Notices are shown')
+			.setName('Time how long notices are shown')
 			.setDesc('Enter in seconds. 4 seconds or more is a good value')
 			.addText(text => text
 					.setPlaceholder('4')
@@ -392,12 +382,12 @@ export class GamificationPluginSettings extends PluginSettingTab {
 
 		new Setting(containerEl)
 			.setName('Progressive Summarization')
-			.setDesc('you can change which formatting you use for Layer 2 and 3.')
+			.setDesc('You can change which formatting you use for Layer 2 and 3.')
 			.addText(text => text
 					.setPlaceholder('Layer 2 is usually **')
 					.setValue(decryptString(this.plugin.settings.progressiveSumLayer2))
 					.onChange(async (value) => {
-						// console.log('folder to exclude: ' + value);
+						// if(debugLogs) console.debug('folder to exclude: ' + value);
 						this.plugin.settings.progressiveSumLayer2 = encryptString(value);
 						await this.plugin.saveSettings();
 				}))
@@ -405,10 +395,21 @@ export class GamificationPluginSettings extends PluginSettingTab {
 					.setPlaceholder('Layer 3 is usually ==')
 					.setValue(decryptString(this.plugin.settings.progressiveSumLayer3))
 					.onChange(async (value) => {
-						// console.log('folder to exclude: ' + value);
+						// if(debugLogs) console.debug('folder to exclude: ' + value);
 						this.plugin.settings.progressiveSumLayer3 = encryptString(value);
 						await this.plugin.saveSettings();
 			}));
 
+      const coffeeDiv = containerEl.createDiv("coffee");
+      coffeeDiv.addClass("ex-coffee-div");
+      const coffeeLink = coffeeDiv.createEl("a", {
+      href: "https://ko-fi.com/andreastrebing",
+      });
+      const coffeeImg = coffeeLink.createEl("img", {
+      attr: {
+        src: "https://cdn.ko-fi.com/cdn/kofi3.png?v=3",
+      },
+      });
+      coffeeImg.height = 45;
 	}
   }

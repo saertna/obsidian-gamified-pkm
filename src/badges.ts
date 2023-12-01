@@ -77,7 +77,7 @@ export function getBadgeForLevel(level: number, inform: boolean): Badge {
   // Example usage:
   // const currentLevel = 42; // Replace this with the actual player's level
   // const badge = getBadgeForLevel(currentLevel);
-  // console.log(`Congratulations! You've reached Level ${currentLevel}. You've earned the "${badge.name}" badge. ${badge.description}`);
+  // if(debugLogs) console.debug(`Congratulations! You've reached Level ${currentLevel}. You've earned the "${badge.name}" badge. ${badge.description}`);
   
 
 
