@@ -13,7 +13,7 @@ import {
 	count_inlinks,
 	getFileCountMap,
 	getFileMap,
-} from '../src/majuritycalculation';
+} from '../src/maturitycalculation';
 import {decryptNumber, encryptNumber} from "../src/encryption";
 import {TFile} from "obsidian";
 

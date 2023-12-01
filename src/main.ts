@@ -30,7 +30,7 @@ import {
 	rateNoteLength,
 	rateOutlinks,
 	rateProgressiveSummarization
-} from './majuritycalculation'
+} from './maturitycalculation'
 import {Badge, checkIfReceiveABadge, getBadgeForInitLevel, getBadgeForLevel} from './badges'
 import {getLevelForPoints, statusPointsForLevel} from './levels'
 import type {Moment} from 'moment';
