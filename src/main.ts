@@ -169,7 +169,7 @@ export default class gamification extends Plugin {
 
 				// Parse the CSV string
 				//const badgeDict = parseBadgeCSV(csvString);
-				const badgeDict = parseBadgeCSV(this.getSettingString('receivedBadges'))
+				const badgeDict = parseBadgeCSV2Dict(this.getSettingString('receivedBadges'))
 				//console.log(`badgeDict: ${badgeDict}`)
 
 				// Access badge information
@@ -192,7 +192,6 @@ export default class gamification extends Plugin {
 
 			this.addRibbonIcon("chevrons-right", "boost", async () => {
 				//this.setSettingNumber('streakbooster',80)
-				console.log(`writeBadgeCSV()`)
 				await this.writeBadgeCSV(getBadgeDetails('Cerebral Maestro'), '24-01-03', 'level 21')
 
 			});
@@ -1274,10 +1273,13 @@ export default class gamification extends Plugin {
 	}
 
 	async writeBadgeCSV(newBadge: Badge, date: string, level: string){
-		//console.log(`${newBadge.name}, ${date}, ${level}`)
-		//const gamificationInstance = new gamification(this.app,this.manifest);
-		//console.log(`const gamificationInstance is created`)
-		this.setBadgeSave(newBadge, date, level);
+		// check first if badge is already in
+		const badgeDict = parseBadgeCSV2Dict(this.getSettingString('receivedBadges'));
+        if (!badgeDict[newBadge.name]) {
+			this.setBadgeSave(newBadge, date, level);
+		} else {
+			console.log(`Badge "${newBadge.name}" is already received before`)
+        }
 	}
 	
 	
@@ -1406,6 +1408,7 @@ async function replaceFormatStrings(layer2: string, layer3: string) {
 	editor.replaceSelection(replacedText);
 }
 
+
 function rateDirectionForStatusPoints(ratingCurrent: string, ratingNew: number): number {
 	let ratingFaktor: number
 	if (parseInt(ratingCurrent, 10) < ratingNew){
@@ -1418,30 +1421,15 @@ function rateDirectionForStatusPoints(ratingCurrent: string, ratingNew: number):
 }
 
 
-
-
-
-function parseBadgeCSV(csvString: string): Record<string, { date: string, level: string }> {
-	// newBadgeString: Brainiac Trailblazer,23-09-07,level 20##Brainiac Trailblazer,23-08-15,level 15##Enlightened Novice,22-12-11,level 1##Cerebral Maestro,24-01-03,level 21##
-    const badgeDict: Record<string, { date: string, level: string }> = {};
+function parseBadgeCSV2Dict(csvString: string): Record<string, { date: string, level: string }> {
+	const badgeDict: Record<string, { date: string, level: string }> = {};
     const rows = csvString.split('##');
-	console.log(`rows: ${rows}`)
-    for (const row of rows) {
-		console.log(`row: ${row}`)
-        const [badgeName, dateReceived, level] = row.split(',');
+	for (const row of rows) {
+		const [badgeName, dateReceived, level] = row.split(',');
 
         if (badgeName && dateReceived && level) {
-			console.log(`add Badge ${badgeName} to "badgeDict"`)
-            badgeDict[badgeName] = { date: dateReceived, level: level };
+			badgeDict[badgeName] = { date: dateReceived, level: level };
         }
     }
     return badgeDict;
 }
-
-
-  
-  
-
-
-
-
