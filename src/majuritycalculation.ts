@@ -1,63 +1,60 @@
 import { TFile, App, } from 'obsidian';
-import * as fs from 'fs';
 import * as path from 'path';
 
 export function rateProgressiveSummarization(charCountTotal: number, layer2count: number, layer3count: number): number {
 	const percentLayer2 = layer2count * 100 / charCountTotal;
     const percentLayer3 = layer3count * 100 / layer2count;
-	var layer2majurity = 0;
-	var layer3majurity = 0;
-	var majurity = 0;
+	let layer2maturity = 0;
+	let layer3maturity = 0;
+	let maturity = 0;
 	if (charCountTotal < 3000) {
-		majurity = 0;
-		//if(debugLogs) console.debug(`Note is not long enough to get into calculation for majurity. The total character count is ${charCountTotal}`);
+		maturity = 0;
+		//if(debugLogs) console.debug(`Note is not long enough to get into calculation for maturity. The total character count is ${charCountTotal}`);
 	} else {
 		if (percentLayer2 == 0) {
-			layer2majurity = 0;
+			layer2maturity = 0;
 		} else if (percentLayer2 <= 10) {
-			layer2majurity = 5;
+			layer2maturity = 5;
 		} else if (percentLayer2 <= 20) {
-			layer2majurity = 4;
+			layer2maturity = 4;
 		} else if (percentLayer2 <= 30) {
-			layer2majurity = 3;
+			layer2maturity = 3;
 		} else if (percentLayer2 <= 40) {
-			layer2majurity = 2;
-		} else if (percentLayer2 <= 40) {
-			layer2majurity = 1;
+			layer2maturity = 1;
 		} else {
-			layer2majurity = 0;
+			layer2maturity = 0;
 		}
 
 		if (layer3count == 0) {
-			layer3majurity = 0;
+			layer3maturity = 0;
 		} else if (percentLayer3 <= 10) {
-			layer3majurity = 5;
+			layer3maturity = 5;
 		} else if (percentLayer3 <= 20) {
-			layer3majurity = 4;
+			layer3maturity = 4;
 		} else {
-			layer3majurity = 0;
+			layer3maturity = 0;
 		}
 
-		if (layer2majurity == 1 && layer3majurity == 0) {
-			majurity = 1;
-		} else if (layer2majurity == 2 && layer3majurity == 0) {
-			majurity = 2;
-		} else if (layer2majurity >= 3 && layer3majurity == 0) {
-			majurity = 3;
-		} else if ((layer2majurity == 3 || layer2majurity == 4) && (layer3majurity == 4 || layer3majurity == 5)) {
-			majurity = 4;
-		} else if (layer2majurity == 5 && layer3majurity == 5) {
-			majurity = 5;
+		if (layer2maturity == 1 && layer3maturity == 0) {
+			maturity = 1;
+		} else if (layer2maturity == 2 && layer3maturity == 0) {
+			maturity = 2;
+		} else if (layer2maturity >= 3 && layer3maturity == 0) {
+			maturity = 3;
+		} else if ((layer2maturity == 3 || layer2maturity == 4) && (layer3maturity == 4 || layer3maturity == 5)) {
+			maturity = 4;
+		} else if (layer2maturity == 5 && layer3maturity == 5) {
+			maturity = 5;
 		} else {
-			majurity = 0;
+			maturity = 0;
 		}
 	}
 
 	
-	//if(debugLogs) console.debug(`layer2majurity: ${layer2majurity} \tlayer3majurity: ${layer3majurity} \tmajurity: ${majurity}`);
-	//if(debugLogs) console.debug(`percentLayer2: ${percentLayer2} \tpercentLayer3: ${percentLayer3} \tmajurity: ${majurity}`);
+	//if(debugLogs) console.debug(`layer2maturity: ${layer2maturity} \tlayer3maturity: ${layer3maturity} \tmaturity: ${maturity}`);
+	//if(debugLogs) console.debug(`percentLayer2: ${percentLayer2} \tpercentLayer3: ${percentLayer3} \tmaturity: ${maturity}`);
 	//if(debugLogs) console.debug(`charCountTotal: ${charCountTotal}`);
-	return majurity;
+	return maturity;
 }
 
 
@@ -116,8 +113,8 @@ export function countLayer2AndLayer3Characters(content: string, filename: string
 	let highlightedCount = 0;
 	let boldCount = 0;
   
-	var layer2exclude = '='
-	var layer3exclude = '\\*'
+	let layer2exclude = '='
+	let layer3exclude = '\\*'
 	// to have the reg ex correct. otherwise it will get stuc with **.
 	if(layer3 == '**'){
 		layer3 = '\\*\\*'
@@ -129,7 +126,7 @@ export function countLayer2AndLayer3Characters(content: string, filename: string
 		layer3exclude = '='
 		layer2exclude = '\\*'
 	}
-  	
+
 
 	const highlightRegex = new RegExp(`${layer2}[^${layer2exclude}]+${layer2}`, "g");
     const boldRegex = new RegExp(`${layer3}[^${layer3exclude}]+${layer3}`, "g");
@@ -137,14 +134,14 @@ export function countLayer2AndLayer3Characters(content: string, filename: string
 	// Count highlighted characters
 	const highlightedMatches = content.match(highlightRegex);
 	if (highlightedMatches) {
-	  highlightedCount = highlightedMatches.join("").length - (highlightedMatches.length * 4); // Subtract the length of '=='
-	  // first take the layer2 (highlightedCount) and run on this the 'boldRegex'
-	  // Count bold characters
-	  const layer2String = highlightedMatches.join("");
-	  const boldMatches = layer2String.match(boldRegex);
-	  if (boldMatches) {
-	    boldCount = boldMatches.join("").length - (boldMatches.length * 4); // Subtract the length of '**'
-	  }
+		highlightedCount = highlightedMatches.join("").length - (highlightedMatches.length * 4); // Subtract the length of '=='
+		// first take the layer2 (highlightedCount) and run on this the 'boldRegex'
+		// Count bold characters
+		const layer2String = highlightedMatches.join("");
+		const boldMatches = layer2String.match(boldRegex);
+		if (boldMatches) {
+			boldCount = boldMatches.join("").length - (boldMatches.length * 4); // Subtract the length of '**'
+		}
 	}
   
 	
@@ -159,7 +156,7 @@ export function rateLevelOfMaturity(noteLength: number, lengthOfTitle: number, I
 	// if(debugLogs) console.debug(`noteLength: ${noteLength}\tlengthOfTitle: ${lengthOfTitle}\tInlinks: ${Inlinks}\toutgoingLinks: ${outgoingLinks}`)
 	
 	// decide if noteLength-majurity or progressiveSum-majurity shall be used
-	var lengthMajurity = 0;
+	let lengthMajurity = 0;
 	if(noteLength >= progressiveSumMajurity) {
 		lengthMajurity = noteLength;
 	} else {
@@ -369,18 +366,18 @@ export function count_inlinks_single(file_path: string, vault_path: string): num
 		} else {
 		// Ignore non-md files and files with the same name as our target file
 			if (!file.endsWith(".md") || file === filename) {
-		  		return;
+				return;
 			}
   
 			// Read the file and look for links to our target file
 			const data = this.vault.read(file);
 			data.split('\n').forEach((line: string) => {
-		  		if (line.includes(`[[${filename.slice(0, -3)}]]`) || line.includes(`[${filename.slice(0, -3)}]`)) {
+				if (line.includes(`[[${filename.slice(0, -3)}]]`) || line.includes(`[${filename.slice(0, -3)}]`)) {
 				// found a link to our target file!
 				linking_files.add(this.vault.adapter.fs.relative(directory, filePath));
-		 		}
+				}
 			});
-	  	}
+		}
 	});
 	return filelist;
   };
@@ -483,7 +480,7 @@ export const getFileMap = async (app: App, excludeTag: string, excludeFolder: st
 		}
 		excludedFolders.push('.obsidian', '.trash'); // hardcode the basic folders
 		//if(debugLogs) console.debug(`excludedFolders: ${excludedFolders}`)	
-		let fileArray: TFile[] = [];
+		const fileArray: TFile[] = [];
 		const files = await vault.getMarkdownFiles();
 		for (const file of files) {
 
