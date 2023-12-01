@@ -744,16 +744,15 @@ export default class gamification extends Plugin {
 
 	private async checkForContinuouslyNoteCreation(noteCount: number){
 		if (noteCount == 30){
-			await this.giveBadgeInProfile(this.getSettingString('avatarPageName'), getBadge('Consistent Lore Weaver'));
+			await this.giveSecretBadgeInProfile(this.getSettingString('avatarPageName'), getBadge('Consistent Lore Weaver'));
 		} else if (noteCount == 90){
-			await this.giveBadgeInProfile(this.getSettingString('avatarPageName'), getBadge('Knowledge Artisan Stalwart'));
+			await this.giveSecretBadgeInProfile(this.getSettingString('avatarPageName'), getBadge('Knowledge Artisan Stalwart'));
 		} else if (noteCount == 180){
-			if(debugLogs) console.log(`noteCount = 180 ⇒ "Badge Wisdom Architect Virtuoso"`)
-			await this.giveBadgeInProfile(this.getSettingString('avatarPageName'), getBadge('Wisdom Architect Virtuoso'));
+			await this.giveSecretBadgeInProfile(this.getSettingString('avatarPageName'), getBadge('Wisdom Architect Virtuoso'));
 		} else if (noteCount == 365){
-			await this.giveBadgeInProfile(this.getSettingString('avatarPageName'), getBadge('Eternal Scholar Maestro'));
+			await this.giveSecretBadgeInProfile(this.getSettingString('avatarPageName'), getBadge('Eternal Scholar Maestro'));
 		} else if (noteCount == 730){
-			await this.giveBadgeInProfile(this.getSettingString('avatarPageName'), getBadge('Divine Omniscience Overlord'));
+			await this.giveSecretBadgeInProfile(this.getSettingString('avatarPageName'), getBadge('Divine Omniscience Overlord'));
 		}
 	}
 
@@ -1013,47 +1012,88 @@ export default class gamification extends Plugin {
 
 
 	async giveBadgeInProfile(avatarPageName: string, badge: Badge){
-		const existingFile = this.app.vault.getAbstractFileByPath(`${avatarPageName}.md`);
-		if (existingFile == null) {
-			if(debugLogs) console.debug(`File ${avatarPageName}.md does not exist`);
-			return;
-		}
-		const file = existingFile as TFile;
+		const badgeDict = parseBadgeCSV2Dict(this.getSettingString('receivedBadges'));
+		if (!badgeDict[badge.name]) {
+			await this.writeBadgeCSV(badge, window.moment().format('YYYY-MM-DD'), 'level ' + (this.getSettingNumber('statusLevel')).toString())
+			const existingFile = this.app.vault.getAbstractFileByPath(`${avatarPageName}.md`);
+			if (existingFile == null) {
+				if (debugLogs) console.debug(`File ${avatarPageName}.md does not exist`);
+				return;
+			}
+			const file = existingFile as TFile;
 
-		const content = await this.app.vault.read(file);
-		let reference: number | null = null;
-		let reference2: number | null = null;
-		let end: number | null = null;
-		let start: number | null = null;
-		let end2: number | null = null;
-		let start2: number | null = null;
+			const content = await this.app.vault.read(file);
+			let reference: number | null = null;
+			let reference2: number | null = null;
+			let end: number | null = null;
+			let start: number | null = null;
+			let end2: number | null = null;
+			let start2: number | null = null;
 
-		const lines = content.split("\n");
-		for (let i = 0; i < lines.length; i++) {
-			const line = lines[i].trim();
-			if (line === "#### achieved") {
-				if (reference === null) {
-					reference = i;
+			const lines = content.split("\n");
+			for (let i = 0; i < lines.length; i++) {
+				const line = lines[i].trim();
+				if (line === "#### achieved") {
+					if (reference === null) {
+						reference = i;
+					}
+				}
+				if (line === badge.level + ": *" + badge.name + "*") {
+					if (reference2 === null) {
+						reference2 = i;
+					}
 				}
 			}
-			if (line === badge.level + ": *" + badge.name + "*"){
-				if (reference2 === null) {
-					reference2 = i;
-				}
+			if (reference != null && reference2 != null) {
+				end = reference + 1;
+				start = reference + 1;
+
+				end2 = reference2 + 2;
+				start2 = reference2 + 1;
+
+				const badgeString = "**" + badge.name + "** " + badge.level + "\n> " + badge.description + " - *" + window.moment().format('D.M.YY') + "*\n"
+				const newLines = [...lines.slice(0, start), badgeString, ...lines.slice(end)];
+				const newLines2 = [...newLines.slice(0, start2), ...newLines.slice(end2)]
+				await this.app.vault.modify(file, newLines2.join("\n"));
+				//if(debugLogs) console.debug(`badgeString: ${badgeString}`)
 			}
 		}
-		if (reference != null && reference2 != null){
-			end = reference + 1;
-			start = reference + 1;
+	}
 
-			end2 = reference2 + 2;
-			start2 = reference2 + 1;
+	async giveSecretBadgeInProfile(avatarPageName: string, badge: Badge){
+		const badgeDict = parseBadgeCSV2Dict(this.getSettingString('receivedBadges'));
+		if (!badgeDict[badge.name]) {
+			await this.writeBadgeCSV(badge, window.moment().format('YYYY-MM-DD'), 'level ' + (this.getSettingNumber('statusLevel')).toString())
+			const existingFile = this.app.vault.getAbstractFileByPath(`${avatarPageName}.md`);
+			if (existingFile == null) {
+				if (debugLogs) console.debug(`File ${avatarPageName}.md does not exist`);
+				return;
+			}
+			const file = existingFile as TFile;
 
-			const badgeString = "**" + badge.name + "** " + badge.level + "\n> " + badge.description + " - *" + window.moment().format('D.M.YY') + "*\n"
-			const newLines = [...lines.slice(0, start), badgeString, ...lines.slice(end)];
-			const newLines2 = [...newLines.slice(0, start2), ...newLines.slice(end2)]
-			await this.app.vault.modify(file, newLines2.join("\n"));
-			//if(debugLogs) console.debug(`badgeString: ${badgeString}`)
+			const content = await this.app.vault.read(file);
+			let reference: number | null = null;
+			let end: number | null = null;
+			let start: number | null = null;
+
+			const lines = content.split("\n");
+			for (let i = 0; i < lines.length; i++) {
+				const line = lines[i].trim();
+				if (line === "#### achieved") {
+					if (reference === null) {
+						reference = i;
+					}
+				}
+			}
+			if (reference != null) {
+				end = reference + 1;
+				start = reference + 1;
+
+				const badgeString = "**" + badge.name + "** " + "\n> " + badge.description + " - *" + window.moment().format('D.M.YY') + "*\n"
+				const newLines = [...lines.slice(0, start), badgeString, ...lines.slice(end)];
+				await this.app.vault.modify(file, newLines.join("\n"));
+				//if(debugLogs) console.debug(`badgeString: ${badgeString}`)
+			}
 		}
 	}
 
