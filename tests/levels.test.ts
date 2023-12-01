@@ -1,6 +1,5 @@
-import { Vault, Plugin, TFile, App, Modal, MarkdownView, Notice } from 'obsidian';
-import {getLevelForPoints, LevelData, statusPointsForLevel} from '../src/levels'
-import { describe, test } from 'node:test';
+import {getLevelForPoints, statusPointsForLevel} from '../src/levels'
+import { describe } from 'node:test';
 
 
 describe('statusPointsForLevel', () => {
@@ -21,4 +20,43 @@ describe('statusPointsForLevel', () => {
     const expected = 104150000;
     expect(actual).toBe(expected);
     });
+});
+
+
+describe('getLevelForPoints', () => {
+    it('should return 1 (level) if points are 0', () => {
+        const actual = getLevelForPoints(0);
+        const expected = 1;
+        expect(actual).toBe(expected);
     });
+
+    it('should return 1 (level) if points are 1', () => {
+        const actual = getLevelForPoints(1);
+        const expected = 1;
+        expect(actual).toBe(expected);
+    });
+
+    it('should return 49 (level) if points are 16920000', () => {
+        const actual = getLevelForPoints(16920000);
+        const expected = 49;
+        expect(actual).toBe(expected);
+    });
+
+    it('should return 49 (level) if points are 17020000', () => {
+        const actual = getLevelForPoints(17020000);
+        const expected = 49;
+        expect(actual).toBe(expected);
+    });
+
+    it('should return 49 (level) if points are 17749999', () => {
+        const actual = getLevelForPoints(17749999);
+        const expected = 49;
+        expect(actual).toBe(expected);
+    });
+
+    it('should return 110 (level) if points are 104150000', () => {
+        const actual = getLevelForPoints(104150000);
+        const expected = 104150000;
+        expect(actual).toBe(expected);
+    });
+});
