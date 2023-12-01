@@ -12,6 +12,7 @@
     "isolatedModules": true,
     "jsx": "react",
 	"strictNullChecks": true,
+    "esModuleInterop": true,
     "lib": [
       "DOM",
       "ES5",
