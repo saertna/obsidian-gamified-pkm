@@ -19,9 +19,9 @@ main.js
 data.json
 
 # Exclude macOS Finder (System Explorer) View States
+coverage/
 .DS_Store
 /cp-js2cortex.bat
 ncryption
 *.html
 *.xml
-coverage/
