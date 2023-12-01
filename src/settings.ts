@@ -27,6 +27,7 @@ export const defaultSettings: Partial<ISettings> = {
   dailyNoteCreationDate: "U2FsdGVkX195v33EhTQvoQtR2/xfbC2Iag2Ly1UFSj8=",
   weeklyNoteCreationTask: "U2FsdGVkX1/MYfi0r0Btn2J7PmdQcWodJawC/uZAUSQ=",
   weeklyNoteCreationDate: "U2FsdGVkX18OX530OPOaURg/bv8xrM17hE0Y6641e30=",
+  weeklyNoteCreationTaskContinuously: "U2FsdGVkX1/MYfi0r0Btn2J7PmdQcWodJawC/uZAUSQ=",
   nexusNode: "U2FsdGVkX1+5+wg6OjOxBUvEe5w/SU0grvCLIshU/9s=",
   connectionCrystal: "U2FsdGVkX19SFmrQpmHJwAeiB/w1zUwmN3nOvfbfs8c=",
   masteryScroll: "U2FsdGVkX18Kw0rp3b/nkINNN3SpqvweJVE/rATCHtM=",
@@ -119,6 +120,7 @@ export interface ISettings extends DynamicSettings{
   dailyNoteCreationTask: string;
   dailyNoteCreationDate: string;
   weeklyNoteCreationTask: string;
+  weeklyNoteCreationTaskContinuously: string;
   weeklyNoteCreationDate: string;
   streakbooster: string;
   streakboosterDate: string;
@@ -208,6 +210,7 @@ export class GamificationPluginSettings extends PluginSettingTab {
   public dailyNoteCreationTask: string;
   public dailyNoteCreationDate: string;
   public weeklyNoteCreationTask: string;
+  public weeklyNoteCreationTaskContinuously: string;
   public weeklyNoteCreationDate: string;
   public streakbooster: string;
   public streakboosterDate: string;

@@ -621,6 +621,7 @@ export default class gamification extends Plugin {
 		if(!isOneDayBefore(window.moment(this.getSettingString('weeklyNoteCreationDate'), 'DD.MM.YYYY')) && !isSameDay(window.moment(this.getSettingString('weeklyNoteCreationDate'), 'DD.MM.YYYY'))){
 			const daysPassed = window.moment().diff(window.moment(this.getSettingString('weeklyNoteCreationDate'), 'DD.MM.YYYY'), 'days') - 1; //today is still a chance. 
 			this.setSettingNumber('weeklyNoteCreationTask', 0);
+			this.setSettingNumber('weeklyNoteCreationTaskContinuously', 0);
 			this.setSettingString('weeklyNoteCreationDate', window.moment().subtract(1, 'day').format('DD.MM.YYYY'))
 			await this.decreaseStreakbooster(daysPassed)
 			if(debugLogs) console.debug(`${daysPassed} days passed`)
@@ -639,7 +640,7 @@ export default class gamification extends Plugin {
 			await this.updateAvatarPage(this.getSettingString('avatarPageName'));
 		}
 
-		// deativate boosters
+		// deactivate boosters
 		if (this.getSettingBoolean('boosterFactorPerpetualProgress') == true && isMinutesPassed(window.moment(this.getSettingString('boosterDatePerpetualProgress'), 'YYYY-MM-DD HH:mm:ss'),getBoosterRunTimeFromVarName('perpetualProgress'))){
 			this.setSettingBoolean('boosterFactorPerpetualProgress',false);
 			if(debugLogs) console.debug('"Perpetual Progress" has ended.')
@@ -717,6 +718,7 @@ export default class gamification extends Plugin {
 		} else {
 			this.setSettingString('weeklyNoteCreationDate', window.moment().format('DD.MM.YYYY'))
 			this.setSettingNumber('weeklyNoteCreationTask', 1);
+			this.setSettingNumber('weeklyNoteCreationTaskContinuously', 1);
 			await this.saveSettings();
 		}
 	}
@@ -724,10 +726,13 @@ export default class gamification extends Plugin {
 
 	private async checkForWeeklyNoteChallengeBelow7() {
 		let currentWeeklyCreatedNotes = this.getSettingNumber('weeklyNoteCreationTask');
+		let weeklyNoteCreationTaskContinuously = this.getSettingNumber('weeklyNoteCreationTaskContinuously');
 		if (currentWeeklyCreatedNotes < 7) {
 			currentWeeklyCreatedNotes++;
+			weeklyNoteCreationTaskContinuously++;
 			this.setSettingString('weeklyNoteCreationDate', window.moment().format('DD.MM.YYYY'))
 			this.setSettingNumber('weeklyNoteCreationTask', currentWeeklyCreatedNotes);
+			this.setSettingNumber('weeklyNoteCreationTaskContinuously', weeklyNoteCreationTaskContinuously);
 			await this.saveSettings();
 
 			await this.checkForWeeklyNoteChallengeEvaluation(currentWeeklyCreatedNotes);
