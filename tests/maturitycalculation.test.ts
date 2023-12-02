@@ -208,6 +208,55 @@ describe('rateDirection', () => {
 });
 
 
+describe('rateLengthFilename', () => {
+	test('rating 0', () => {
+		const result= rateLengthFilename('aaaaaaaaaaaaaaaaaaaaaaaaaaaaa');
+		const expectedResult = 0;
+		expect(result).toEqual(expectedResult);
+	});
+	test('rating 1', () => {
+		const result= rateLengthFilename('aaaaaaaaaaaaaaa aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa');
+		const expectedResult = 1;
+		expect(result).toEqual(expectedResult);
+	});
+	test('rating 3', () => {
+		const result= rateLengthFilename('aaaaaaaaaaaaaaa aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa aaaaaaaaaaaaaaaaaaa');
+		const expectedResult = 3;
+		expect(result).toEqual(expectedResult);
+	});
+	test('rating 5', () => {
+		const result= rateLengthFilename('aaaaaaaaaaaaaaa aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa aaaaaaaaaaaaaaaaaaa aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa');
+		const expectedResult = 5;
+		expect(result).toEqual(expectedResult);
+	});
+	test('rating 4', () => {
+		const result= rateLengthFilename('aaaaaaaaaaaaaaa aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa aaaaaaaaaaaaaaaaaaa aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa');
+		const expectedResult = 4;
+		expect(result).toEqual(expectedResult);
+	});
+	test('rating 2', () => {
+		const result= rateLengthFilename('aaaaaaaaaaaaaaa aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa aaaaaaaaaaaaaaaaaaa aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa aaaaaaaaaaaaaaaaaaa');
+		const expectedResult = 2;
+		expect(result).toEqual(expectedResult);
+	});
+	test('rating 1', () => {
+		const result= rateLengthFilename('aaaaaaaaaaaaaaa aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa aaaaaaaaaaaaaaaaaaa aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa aaaaaaaaaaaaaaaaaaa aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa Aaaaaaaa');
+		const expectedResult = 1;
+		expect(result).toEqual(expectedResult);
+	});
+	test('rating 0', () => {
+		const result= rateLengthFilename('aaaaaaaaaaaaaaa aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa aaaaaaaaaaaaaaaaaaa aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa aaaaaaaaaaaaaaaaaaa aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa Aaaaaaaaa');
+		const expectedResult = 0;
+		expect(result).toEqual(expectedResult);
+	});
+	test('rating 0', () => {
+		const result= rateLengthFilename('aaaaaaaaaaaaaaa aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa aaaaaaaaaaaaaaaaaaa aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa aaaaaaaaaaaaaaaaaaa aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa Aaaaaaaaaaaaaaaaaaaaaaaa aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa aaaaaaaaaaaaaaaaaaa aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa aaaaaaaaaaaaaaaaaaa aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa Aaaaaaaaa');
+		const expectedResult = 0;
+		expect(result).toEqual(expectedResult);
+	});
+});
+
+
 
 jest.mock('../src/maturitycalculation.ts', () => ({
 	...jest.requireActual('../src/maturitycalculation.ts'),
