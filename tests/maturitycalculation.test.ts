@@ -257,6 +257,54 @@ describe('rateLengthFilename', () => {
 });
 
 
+describe('rateNoteLength', () => {
+	test('rate 0', () => {
+		const result= rateNoteLength(199);
+		const expectedResult = 0;
+		expect(result).toEqual(expectedResult);
+	});
+	test('rate 4', () => {
+		const result= rateNoteLength(549);
+		const expectedResult = 4;
+		expect(result).toEqual(expectedResult);
+	});
+	test('rate 5', () => {
+		const result= rateNoteLength(999);
+		const expectedResult = 5;
+		expect(result).toEqual(expectedResult);
+	});
+	test('rate 4', () => {
+		const result= rateNoteLength(1199);
+		const expectedResult = 4;
+		expect(result).toEqual(expectedResult);
+	});
+	test('rate 3', () => {
+		const result= rateNoteLength(1999);
+		const expectedResult = 3;
+		expect(result).toEqual(expectedResult);
+	});
+	test('rate 2', () => {
+		const result= rateNoteLength(2499);
+		const expectedResult = 2;
+		expect(result).toEqual(expectedResult);
+	});
+	test('rate 1', () => {
+		const result= rateNoteLength(2999);
+		const expectedResult = 1;
+		expect(result).toEqual(expectedResult);
+	});
+	test('rate 0', () => {
+		const result= rateNoteLength(3000);
+		const expectedResult = 0;
+		expect(result).toEqual(expectedResult);
+	});
+	test('rate 0', () => {
+		const result= rateNoteLength(5000);
+		const expectedResult = 0;
+		expect(result).toEqual(expectedResult);
+	});
+});
+
 
 jest.mock('../src/maturitycalculation.ts', () => ({
 	...jest.requireActual('../src/maturitycalculation.ts'),
