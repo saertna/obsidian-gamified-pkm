@@ -27,6 +27,7 @@ export const defaultSettings: Partial<ISettings> = {
   dailyNoteCreationDate: "U2FsdGVkX195v33EhTQvoQtR2/xfbC2Iag2Ly1UFSj8=",
   weeklyNoteCreationTask: "U2FsdGVkX1/MYfi0r0Btn2J7PmdQcWodJawC/uZAUSQ=",
   weeklyNoteCreationDate: "U2FsdGVkX18OX530OPOaURg/bv8xrM17hE0Y6641e30=",
+  weeklyNoteCreationTaskContinuously: "U2FsdGVkX1/MYfi0r0Btn2J7PmdQcWodJawC/uZAUSQ=",
   nexusNode: "U2FsdGVkX1+5+wg6OjOxBUvEe5w/SU0grvCLIshU/9s=",
   connectionCrystal: "U2FsdGVkX19SFmrQpmHJwAeiB/w1zUwmN3nOvfbfs8c=",
   masteryScroll: "U2FsdGVkX18Kw0rp3b/nkINNN3SpqvweJVE/rATCHtM=",
@@ -89,7 +90,8 @@ export const defaultSettings: Partial<ISettings> = {
   counterMajurityCalc: "U2FsdGVkX19TLndonGY4Y8vHuZFfLJ5gZ2t/CLprh0o=",
   counterMajurityCalcInitial: "U2FsdGVkX1+2Qii8qhFSqrNqmKR1Wh6saEjYbwPdi8Q=",
   delayLoadTime: "U2FsdGVkX19TLndonGY4Y8vHuZFfLJ5gZ2t/CLprh0o=",
-  timeShowNotice: "U2FsdGVkX190u8cOsylOs1cQ8MeZFq+i+Wv4ox6qq0k="
+  timeShowNotice: "U2FsdGVkX190u8cOsylOs1cQ8MeZFq+i+Wv4ox6qq0k=",
+  receivedBadges: "U2FsdGVkX1/skTUHmzuMYD86hDA/uF1kElPVYm04ijQ="
 };
 
 export interface DynamicSettings {
@@ -118,6 +120,7 @@ export interface ISettings extends DynamicSettings{
   dailyNoteCreationTask: string;
   dailyNoteCreationDate: string;
   weeklyNoteCreationTask: string;
+  weeklyNoteCreationTaskContinuously: string;
   weeklyNoteCreationDate: string;
   streakbooster: string;
   streakboosterDate: string;
@@ -177,7 +180,8 @@ export interface ISettings extends DynamicSettings{
   counterMajurityCalc: string;
   counterMajurityCalcInitial: string;
   delayLoadTime: string;
-  timeShowNotice: string
+  timeShowNotice: string;
+  receivedBadges: string
   //[key: string]: number | string | boolean | MomentInput;
 }
 
@@ -206,6 +210,7 @@ export class GamificationPluginSettings extends PluginSettingTab {
   public dailyNoteCreationTask: string;
   public dailyNoteCreationDate: string;
   public weeklyNoteCreationTask: string;
+  public weeklyNoteCreationTaskContinuously: string;
   public weeklyNoteCreationDate: string;
   public streakbooster: string;
   public streakboosterDate: string;
@@ -266,6 +271,7 @@ export class GamificationPluginSettings extends PluginSettingTab {
   public counterMajurityCalcInitial: string;
   public delayLoadTime: string;
   public timeShowNotice: string;
+  public receivedBadges: string;
 
 	constructor(app: App, plugin: gamification) {
 	  super(app, plugin);
