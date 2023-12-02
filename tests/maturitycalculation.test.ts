@@ -21,7 +21,6 @@ describe('rateProgressiveSummarization', () => {
 	test('test description', () => {
         const progSumRate= rateProgressiveSummarization(3003,200,20);
         const expectedResult = 5;
-
         expect(progSumRate).toEqual(expectedResult);
 	});
 });
@@ -110,6 +109,105 @@ describe('rateLevelOfMaturity', () => {
 		expect(result).toEqual(expectedResult);
 	});
 });
+
+
+describe('rateOutlinks', () => {
+	test('rate 0', () => {
+		const progSumRate= rateOutlinks(0);
+		const expectedResult = 0;
+		expect(progSumRate).toEqual(expectedResult);
+	});
+	test('rate 0', () => {
+		const progSumRate= rateOutlinks(1);
+		const expectedResult = 0;
+		expect(progSumRate).toEqual(expectedResult);
+	});
+	test('rate 1', () => {
+		const progSumRate= rateOutlinks(2);
+		const expectedResult = 1;
+		expect(progSumRate).toEqual(expectedResult);
+	});
+	test('rate 4', () => {
+		const progSumRate= rateOutlinks(3);
+		const expectedResult = 4;
+		expect(progSumRate).toEqual(expectedResult);
+	});
+	test('rate 4', () => {
+		const progSumRate= rateOutlinks(4);
+		const expectedResult = 4;
+		expect(progSumRate).toEqual(expectedResult);
+	});
+	test('rate 5', () => {
+		const progSumRate= rateOutlinks(5);
+		const expectedResult = 5;
+		expect(progSumRate).toEqual(expectedResult);
+	});
+	test('rate 5', () => {
+		const progSumRate= rateOutlinks(8);
+		const expectedResult = 5;
+		expect(progSumRate).toEqual(expectedResult);
+	});
+	test('rate 3', () => {
+		const progSumRate= rateOutlinks(9);
+		const expectedResult = 3;
+		expect(progSumRate).toEqual(expectedResult);
+	});
+	test('rate 3', () => {
+		const progSumRate= rateOutlinks(10);
+		const expectedResult = 3;
+		expect(progSumRate).toEqual(expectedResult);
+	});
+	test('rate 1', () => {
+		const progSumRate= rateOutlinks(11);
+		const expectedResult = 1;
+		expect(progSumRate).toEqual(expectedResult);
+	});
+	test('rate 0', () => {
+		const progSumRate= rateOutlinks(12);
+		const expectedResult = 0;
+		expect(progSumRate).toEqual(expectedResult);
+	});
+	test('rate 0', () => {
+		const progSumRate= rateOutlinks(20);
+		const expectedResult = 0;
+		expect(progSumRate).toEqual(expectedResult);
+	});
+});
+
+describe('rateDirection', () => {
+	test('same rating', () => {
+		const progSumRate= rateDirection('1➡️',1);
+		const expectedResult = '1➡️';
+		expect(progSumRate).toEqual(expectedResult);
+	});
+	test('same rating', () => {
+		const progSumRate= rateDirection('1',1);
+		const expectedResult = '1➡️';
+		expect(progSumRate).toEqual(expectedResult);
+	});
+	test('lower rating', () => {
+		const progSumRate= rateDirection('1➡️',1);
+		const expectedResult = '1➡️';
+		expect(progSumRate).toEqual(expectedResult);
+	});
+	test('higher rating', () => {
+		const progSumRate= rateDirection('2⬇️',1);
+		const expectedResult = '1⬇️';
+		expect(progSumRate).toEqual(expectedResult);
+	});
+	test('higher rating', () => {
+		const progSumRate= rateDirection('2',1);
+		const expectedResult = '1⬇️';
+		expect(progSumRate).toEqual(expectedResult);
+	});
+	test('higher rating', () => {
+		const progSumRate= rateDirection('0',1);
+		const expectedResult = '1⬆️';
+		expect(progSumRate).toEqual(expectedResult);
+	});
+});
+
+
 
 jest.mock('../src/maturitycalculation.ts', () => ({
 	...jest.requireActual('../src/maturitycalculation.ts'),
