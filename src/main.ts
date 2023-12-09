@@ -31,7 +31,7 @@ import {
 	rateOutlinks,
 	rateProgressiveSummarization
 } from './majuritycalculation'
-import {Badge, checkIfReceiveABadge, getBadgeForInitLevel, getBadgeForLevel} from './badges'
+import {Badge, checkIfReceiveABadge, getBadgeForInitLevel, getBadgeForLevel, getBadgeDetails, getBadge} from './badges'
 import {getLevelForPoints, statusPointsForLevel} from './levels'
 import type {Moment} from 'moment';
 import {
@@ -75,6 +75,16 @@ export default class gamification extends Plugin {
 	setSettingString(key: string, value: string) {
         // Set a specific setting
 		this.settings[key] = encryptString(value);
+		this.saveSettings();
+	}
+
+	setBadgeSave(newBadge: Badge, date: string, level: string){
+		const currentBadgeString:string = this.getSettingString('receivedBadges');
+		console.log(`currentBadgeString: ${currentBadgeString}`)
+		const newBadgeString = currentBadgeString + newBadge.name + ',' + date + ',' + level + '##';
+			//window.moment().format('YYYY-MM-DD') + ',' + this.getSettingNumber('statusLevel') + '\n';
+		console.log(`newBadgeString: ${newBadgeString}`)
+		this.setSettingString('receivedBadges',newBadgeString);
 		this.saveSettings();
 	}
 
@@ -131,31 +141,48 @@ export default class gamification extends Plugin {
 				//this.setSettingString('weeklyNoteCreationDate', window.moment().format('DD.MM.YYYY'))
 				//this.setSettingString('weeklyNoteCreationDate', window.moment().format('DD.MM.YYYY'))
 				//await this.saveSettings();
-				
-				new ModalBooster(this.app, ` `, this).open();
-				
+
+				//new ModalBooster(this.app, ` `, this).open();
+
 				//this.updateAvatarPage(this.getSettingString('avatarPageName'))
 
 
 				// Example CSV string
-				/*const csvString = "Brainiac Trailblazer,2023-09-07,20\nSavvy Scholar,2023-08-15,15";
+				//const csvString = "Brainiac Trailblazer,2023-09-07,20\nSavvy Scholar,2023-08-15,15\nScribe of the Ancients,2023-07-1,10";
 
 				// Parse the CSV string
-				const badgeDict = parseBadgeCSV(csvString);
+				//const badgeDict = parseBadgeCSV(csvString);
+				//const badgeDict = parseBadgeCSV2Dict(this.getSettingString('receivedBadges'))
+				//console.log(`badgeDict: ${badgeDict}`)
 
 				// Access badge information
-				//if(debugLogs) console.debug(badgeDict["Brainiac Trailblazer"]);
+				//console.log(badgeDict["Brainiac Trailblazer"]);
+
+				/*
 				for (const badgeName in badgeDict) {
 					if (badgeDict.hasOwnProperty(badgeName)) {
 						const badgeInfo = badgeDict[badgeName];
-						if(debugLogs) console.debug(`Badge: ${badgeName}, Date: ${badgeInfo.date}, Level: ${badgeInfo.level}`);
+						const badgeDetails = getBadgeDetails(badgeName)
+						console.log(`Badge: ${badgeName}, Date: ${badgeInfo.date}, Level: ${badgeInfo.level}, Description: ${badgeDetails.name}`);
 					}
-				}*/
-				//this.openAvatarFile();
-				//const badgeTemp = await this.whichLevelNextBadge(17)
-				//new Notice(`${badgeTemp}`)
+				}
+
+				 */
+
+				await this.checkForContinuouslyNoteCreation(180)
+
+
+				//this.setBadgeSave(getBadgeDetails('Brainiac Trailblazer'),'23-09-07', 'level 20');
+				//this.setBadgeSave(getBadgeDetails('Savvy Scholar'), '23-08-15', 'level 15');
+			});
+
+			this.addRibbonIcon("chevrons-right", "boost", async () => {
+				//this.setSettingNumber('streakbooster',80)
+				await this.writeBadgeCSV(getBadgeDetails('Cerebral Maestro'), '24-01-03', 'level 21')
+
 			});
 		}
+
 
 		if(this.getSettingNumber('counterMajurityCalcInitial') >= 50){
 			this.addRibbonIcon("test-tube-2", "Boosters", async () => {
@@ -387,17 +414,18 @@ export default class gamification extends Plugin {
 			}
 
 
-			// Inside your function where you want to introduce a delay
-			setTimeout(async () => {
-				// Code that you want to execute after the delay
-				const initBadge: Badge = getBadgeForInitLevel(this.getSettingNumber('statusLevel'));
-				new Notice(`You've earned the "${initBadge.name}" badge. ${initBadge.description}`,this.getSettingNumber('timeShowNotice') * 1000 * 1.2)
-				if(debugLogs) console.debug(`You earned ${initBadge.name} - ${initBadge.description}`)
-				await this.giveInitBadgeInProfile(this.getSettingString('avatarPageName'), initBadge);
-				await this.removeBadgesWhenInitLevelHigher(this.getSettingString('avatarPageName'), this.getSettingNumber('statusLevel'))
-				await this.boosterForInit()
-				await this.updateStatusBar(statusbarGamification)
-			}, 2000); // 2000 milliseconds = 2 seconds
+		// Inside your function where you want to introduce a delay
+		setTimeout(async () => {
+			// Code that you want to execute after the delay
+			const initBadge: Badge = getBadgeForInitLevel(this.getSettingNumber('statusLevel'));
+			new Notice(`You've earned the "${initBadge.name}" badge. ${initBadge.description}`,this.getSettingNumber('timeShowNotice') * 1000 * 1.2)
+			if(debugLogs) console.log(`You earned ${initBadge.name} - ${initBadge.description}`)
+			await this.giveInitBadgeInProfile(this.getSettingString('avatarPageName'), initBadge);
+			await this.removeBadgesWhenInitLevelHigher(this.getSettingString('avatarPageName'), this.getSettingNumber('statusLevel'))
+			await this.boosterForInit()
+			await this.updateStatusBar(statusbarGamification)
+			this.writeBadgeCSV(initBadge, window.moment().format('YYYY-MM-DD'),'level ' + (this.getSettingNumber('statusLevel')).toString())
+		}, 2000); // 2000 milliseconds = 2 seconds
 
 			new ModalInformationbox(this.app, `Finallized gamification initialistation!\nCongratulation, you earned ${pointsReceived} Points!\n\nCheck the Profile Page: "${this.getSettingString('avatarPageName')}.md"\n\nYou received an initialisation Booster aktiv for your first level ups. Game on!`).open();
 		}
@@ -596,6 +624,7 @@ export default class gamification extends Plugin {
 		if(!isOneDayBefore(window.moment(this.getSettingString('weeklyNoteCreationDate'), 'DD.MM.YYYY')) && !isSameDay(window.moment(this.getSettingString('weeklyNoteCreationDate'), 'DD.MM.YYYY'))){
 			const daysPassed = window.moment().diff(window.moment(this.getSettingString('weeklyNoteCreationDate'), 'DD.MM.YYYY'), 'days') - 1; //today is still a chance. 
 			this.setSettingNumber('weeklyNoteCreationTask', 0);
+			this.setSettingNumber('weeklyNoteCreationTaskContinuously', 0);
 			this.setSettingString('weeklyNoteCreationDate', window.moment().subtract(1, 'day').format('DD.MM.YYYY'))
 			await this.decreaseStreakbooster(daysPassed)
 			if(debugLogs) console.debug(`${daysPassed} days passed`)
@@ -614,7 +643,7 @@ export default class gamification extends Plugin {
 			await this.updateAvatarPage(this.getSettingString('avatarPageName'));
 		}
 
-		// deativate boosters
+		// deactivate boosters
 		if (this.getSettingBoolean('boosterFactorPerpetualProgress') == true && isMinutesPassed(window.moment(this.getSettingString('boosterDatePerpetualProgress'), 'YYYY-MM-DD HH:mm:ss'),getBoosterRunTimeFromVarName('perpetualProgress'))){
 			this.setSettingBoolean('boosterFactorPerpetualProgress',false);
 			if(debugLogs) console.debug('"Perpetual Progress" has ended.')
@@ -692,6 +721,7 @@ export default class gamification extends Plugin {
 		} else {
 			this.setSettingString('weeklyNoteCreationDate', window.moment().format('DD.MM.YYYY'))
 			this.setSettingNumber('weeklyNoteCreationTask', 1);
+			this.setSettingNumber('weeklyNoteCreationTaskContinuously', 1);
 			await this.saveSettings();
 		}
 	}
@@ -699,16 +729,32 @@ export default class gamification extends Plugin {
 
 	private async checkForWeeklyNoteChallengeBelow7() {
 		let currentWeeklyCreatedNotes = this.getSettingNumber('weeklyNoteCreationTask');
+		let weeklyNoteCreationTaskContinuously = this.getSettingNumber('weeklyNoteCreationTaskContinuously');
 		if (currentWeeklyCreatedNotes < 7) {
 			currentWeeklyCreatedNotes++;
+			weeklyNoteCreationTaskContinuously++;
 			this.setSettingString('weeklyNoteCreationDate', window.moment().format('DD.MM.YYYY'))
 			this.setSettingNumber('weeklyNoteCreationTask', currentWeeklyCreatedNotes);
+			this.setSettingNumber('weeklyNoteCreationTaskContinuously', weeklyNoteCreationTaskContinuously);
 			await this.saveSettings();
-
+			await this.checkForContinuouslyNoteCreation(weeklyNoteCreationTaskContinuously)
 			await this.checkForWeeklyNoteChallengeEvaluation(currentWeeklyCreatedNotes);
 		}
 	}
 
+	private async checkForContinuouslyNoteCreation(noteCount: number){
+		if (noteCount == 30){
+			await this.giveSecretBadgeInProfile(this.getSettingString('avatarPageName'), getBadge('Consistent Lore Weaver'));
+		} else if (noteCount == 90){
+			await this.giveSecretBadgeInProfile(this.getSettingString('avatarPageName'), getBadge('Knowledge Artisan Stalwart'));
+		} else if (noteCount == 180){
+			await this.giveSecretBadgeInProfile(this.getSettingString('avatarPageName'), getBadge('Wisdom Architect Virtuoso'));
+		} else if (noteCount == 365){
+			await this.giveSecretBadgeInProfile(this.getSettingString('avatarPageName'), getBadge('Eternal Scholar Maestro'));
+		} else if (noteCount == 730){
+			await this.giveSecretBadgeInProfile(this.getSettingString('avatarPageName'), getBadge('Divine Omniscience Overlord'));
+		}
+	}
 
 	private async checkForWeeklyNoteChallengeEvaluation(newWeeklyNoteCreationTask: number) {
 		if (newWeeklyNoteCreationTask <= 6) {
@@ -937,7 +983,7 @@ export default class gamification extends Plugin {
 			} else {
 				weeklyChallenge = '| **weekly Notes** | *' + pointsForWeeklyChallenge * (this.getSettingNumber('badgeBoosterFactor') + this.getSettingNumber('streakbooster')) + 'EP*     |  **' + this.getSettingNumber('weeklyNoteCreationTask') + '/7**   |\n^weeklyNotesChallenge\n```chart\ntype: bar\nlabels: [days done in a row]\nseries:\n  - title: days to do in a row\n    data: [' + this.getSettingNumber('weeklyNoteCreationTask') + ']\n  - title: points to earn to level up\n    data: [' + daysLeftInWeeklyChain + ']\nxMin: 0\nxMax: 7\ntension: 0.2\nwidth: 40%\nlabelColors: false\nfill: false\nbeginAtZero: false\nbestFit: false\nbestFitTitle: undefined\nbestFitNumber: 0\nstacked: true\nindexAxis: y\nxTitle: "progress"\nlegend: false\n```';
 			}
-			
+
 			const boosterFactor = '| **booster factor** | **' + this.getSettingNumber('streakbooster') + '** |'
 
 			if (levelAndPointsReference != null && reference2 != null && reference3 != null && reference4 != null){
@@ -966,47 +1012,88 @@ export default class gamification extends Plugin {
 
 
 	async giveBadgeInProfile(avatarPageName: string, badge: Badge){
-		const existingFile = this.app.vault.getAbstractFileByPath(`${avatarPageName}.md`);
-		if (existingFile == null) {
-			if(debugLogs) console.debug(`File ${avatarPageName}.md does not exist`);
-			return;
-		}
-		const file = existingFile as TFile;
+		const badgeDict = parseBadgeCSV2Dict(this.getSettingString('receivedBadges'));
+		if (!badgeDict[badge.name]) {
+			await this.writeBadgeCSV(badge, window.moment().format('YYYY-MM-DD'), 'level ' + (this.getSettingNumber('statusLevel')).toString())
+			const existingFile = this.app.vault.getAbstractFileByPath(`${avatarPageName}.md`);
+			if (existingFile == null) {
+				if (debugLogs) console.debug(`File ${avatarPageName}.md does not exist`);
+				return;
+			}
+			const file = existingFile as TFile;
 
-		const content = await this.app.vault.read(file);
-		let reference: number | null = null;
-		let reference2: number | null = null;
-		let end: number | null = null;
-		let start: number | null = null;
-		let end2: number | null = null;
-		let start2: number | null = null;
+			const content = await this.app.vault.read(file);
+			let reference: number | null = null;
+			let reference2: number | null = null;
+			let end: number | null = null;
+			let start: number | null = null;
+			let end2: number | null = null;
+			let start2: number | null = null;
 
-		const lines = content.split("\n");
-		for (let i = 0; i < lines.length; i++) {
-			const line = lines[i].trim();
-			if (line === "#### achieved") {
-				if (reference === null) {
-					reference = i;
+			const lines = content.split("\n");
+			for (let i = 0; i < lines.length; i++) {
+				const line = lines[i].trim();
+				if (line === "#### achieved") {
+					if (reference === null) {
+						reference = i;
+					}
+				}
+				if (line === badge.level + ": *" + badge.name + "*") {
+					if (reference2 === null) {
+						reference2 = i;
+					}
 				}
 			}
-			if (line === badge.level + ": *" + badge.name + "*"){
-				if (reference2 === null) {
-					reference2 = i;
-				}
+			if (reference != null && reference2 != null) {
+				end = reference + 1;
+				start = reference + 1;
+
+				end2 = reference2 + 2;
+				start2 = reference2 + 1;
+
+				const badgeString = "**" + badge.name + "** " + badge.level + "\n> " + badge.description + " - *" + window.moment().format('D.M.YY') + "*\n"
+				const newLines = [...lines.slice(0, start), badgeString, ...lines.slice(end)];
+				const newLines2 = [...newLines.slice(0, start2), ...newLines.slice(end2)]
+				await this.app.vault.modify(file, newLines2.join("\n"));
+				//if(debugLogs) console.debug(`badgeString: ${badgeString}`)
 			}
 		}
-		if (reference != null && reference2 != null){
-			end = reference + 1;
-			start = reference + 1;
+	}
 
-			end2 = reference2 + 2;
-			start2 = reference2 + 1;
+	async giveSecretBadgeInProfile(avatarPageName: string, badge: Badge){
+		const badgeDict = parseBadgeCSV2Dict(this.getSettingString('receivedBadges'));
+		if (!badgeDict[badge.name]) {
+			await this.writeBadgeCSV(badge, window.moment().format('YYYY-MM-DD'), 'level ' + (this.getSettingNumber('statusLevel')).toString())
+			const existingFile = this.app.vault.getAbstractFileByPath(`${avatarPageName}.md`);
+			if (existingFile == null) {
+				if (debugLogs) console.debug(`File ${avatarPageName}.md does not exist`);
+				return;
+			}
+			const file = existingFile as TFile;
 
-			const badgeString = "**" + badge.name + "** " + badge.level + "\n> " + badge.description + " - *" + window.moment().format('D.M.YY') + "*\n"
-			const newLines = [...lines.slice(0, start), badgeString, ...lines.slice(end)];
-			const newLines2 = [...newLines.slice(0, start2), ...newLines.slice(end2)]
-			await this.app.vault.modify(file, newLines2.join("\n"));
-			//if(debugLogs) console.debug(`badgeString: ${badgeString}`)
+			const content = await this.app.vault.read(file);
+			let reference: number | null = null;
+			let end: number | null = null;
+			let start: number | null = null;
+
+			const lines = content.split("\n");
+			for (let i = 0; i < lines.length; i++) {
+				const line = lines[i].trim();
+				if (line === "#### achieved") {
+					if (reference === null) {
+						reference = i;
+					}
+				}
+			}
+			if (reference != null) {
+				end = reference + 1;
+				start = reference + 1;
+
+				const badgeString = "**" + badge.name + "** " + "\n> " + badge.description + " - *" + window.moment().format('D.M.YY') + "*\n"
+				const newLines = [...lines.slice(0, start), badgeString, ...lines.slice(end)];
+				await this.app.vault.modify(file, newLines.join("\n"));
+				//if(debugLogs) console.debug(`badgeString: ${badgeString}`)
+			}
 		}
 	}
 
@@ -1146,6 +1233,7 @@ export default class gamification extends Plugin {
 				this.giveBadgeInProfile(this.getSettingString('avatarPageName'), badge)
 				this.setSettingBoolean('badgeBoosterState', false);
 				this.setSettingNumber('badgeBoosterFactor', 1);
+				this.writeBadgeCSV(badge, window.moment().format('YYYY-MM-DD'), 'level ' + this.getSettingNumber('statusLevel').toString())
 				//this.saveData(this.settings)
 			}
 		});
@@ -1279,7 +1367,17 @@ export default class gamification extends Plugin {
 		}
 		
 	}
-	
+
+	async writeBadgeCSV(newBadge: Badge, date: string, level: string){
+		// check first if badge is already in
+		const badgeDict = parseBadgeCSV2Dict(this.getSettingString('receivedBadges'));
+        if (!badgeDict[newBadge.name]) {
+			this.setBadgeSave(newBadge, date, level);
+		} else {
+			console.log(`Badge "${newBadge.name}" is already received before`)
+        }
+	}
+
 	
 }
 
@@ -1406,6 +1504,7 @@ async function replaceFormatStrings(layer2: string, layer3: string) {
 	editor.replaceSelection(replacedText);
 }
 
+
 function rateDirectionForStatusPoints(ratingCurrent: string, ratingNew: number): number {
 	let ratingFaktor: number
 	if (parseInt(ratingCurrent, 10) < ratingNew){
@@ -1418,24 +1517,15 @@ function rateDirectionForStatusPoints(ratingCurrent: string, ratingNew: number):
 }
 
 
-
-function parseBadgeCSV(csvString: string): Record<string, { date: string, level: number }> {
-    const badgeDict: Record<string, { date: string, level: number }> = {};
-    const rows = csvString.split('\n');
-    for (const row of rows) {
-        const [badgeName, dateReceived, level] = row.split(',');
+function parseBadgeCSV2Dict(csvString: string): Record<string, { date: string, level: string }> {
+	const badgeDict: Record<string, { date: string, level: string }> = {};
+    const rows = csvString.split('##');
+	for (const row of rows) {
+		const [badgeName, dateReceived, level] = row.split(',');
 
         if (badgeName && dateReceived && level) {
-            badgeDict[badgeName] = { date: dateReceived, level: parseInt(level, 10) };
+			badgeDict[badgeName] = { date: dateReceived, level: level };
         }
     }
     return badgeDict;
 }
-
-
-  
-  
-
-
-
-
