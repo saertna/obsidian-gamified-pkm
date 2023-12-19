@@ -15,7 +15,8 @@ import {
 	getFileMap,
 } from '../src/maturitycalculation';
 import {decryptNumber, encryptNumber} from "../src/encryption";
-import {TFile} from "obsidian";
+import { TFile, App, } from 'obsidian';
+import { mock, mockFn } from 'jest-mock-extended';
 
 describe('rateProgressiveSummarization', () => {
 	test('test description', () => {
@@ -306,7 +307,6 @@ describe('rateNoteLength', () => {
 });
 
 
-
 describe('countCharactersInActiveFile', () => {
 	test('test description', () => {
 		const content= "---\n" +
@@ -350,11 +350,14 @@ jest.mock('../src/maturitycalculation.ts', () => ({
 
 describe('count_inlinks2', () => {
 	test('returns the correct count of inlinks', async () => {
-		// Mock the necessary objects or functions used within count_inlinks
+		const mockFile = {
+			path: '/path/to/target_file_name.md',
+		};
+
 		const mockApp = {
 			metadataCache: {
 				resolvedLinks: {
-					'/path/to/your_target_file_name.md': {
+					[mockFile.path]: {
 						'/path/to/linking_file_1.md': 1,
 						'/path/to/linking_file_2.md': 2,
 					},
@@ -362,25 +365,72 @@ describe('count_inlinks2', () => {
 			},
 		};
 
-		// Mock the TFile object with relevant data
+		const mockContext = {
+			app: mockApp,
+		};
+
+		const inlinkCount = await count_inlinks.call(mockContext, mockFile);
+
+		expect(inlinkCount).toBe(3);
+	});
+	test('returns the correct count of inlinks', async () => {
 		const mockFile = {
-			path: '/path/to/your_target_file_name.md',
+			path: '/path/to/target_file_name.md',
 		};
 
 		// Set up the mock context for count_inlinks
 		const mockContext = {
-			app: mockApp,
+			app: new App(), // You might need to create a more complete mock of the App object if necessary
 		};
+
+		// Log the actual resolved links data during the test
+		console.log('Actual Resolved Links Data:', mockContext.app.metadataCache.resolvedLinks);
 
 		// Call the count_inlinks function with the mock context and file
 		const inlinkCount = await count_inlinks.call(mockContext, mockFile);
 
 		// Assert the expected count based on the mocked data
-		expect(inlinkCount).toBe(3); // Adjust the expected count based on your mock data
-
-		// Verify that count_inlinks was called with the correct arguments
-		expect((count_inlinks as jest.Mock).mock.calls[0]).toEqual([mockFile]);
+		expect(inlinkCount).toBe(3);
 	});
+
+
+	const mockTFile = jest.fn<TFile, [basename?: string, extension?: string]>(
+		(basename = 'target_file_name', extension = 'md') => {
+			const name = `${basename}.${extension}`;
+
+			return mock<TFile>({
+				path: `/path/to/${name}`,
+				basename,
+				extension,
+				name,
+			});
+		},
+	);
+
+	test('returns the correct count of inlinks', async () => {
+		const mockFile = mockTFile(); // Using the mockTFile function to create a mock TFile
+
+		const mockApp = {
+			metadataCache: {
+				resolvedLinks: {
+					[mockFile.path]: {
+						'/path/to/linking_file_1.md': 1,
+						'/path/to/linking_file_2.md': 2,
+					},
+				},
+			},
+		};
+
+		const mockContext = {
+			app: mockApp,
+		};
+
+		const inlinkCount = await count_inlinks.call(mockContext, mockFile);
+
+		expect(inlinkCount).toBe(3);
+	});
+
+
 });
 
 

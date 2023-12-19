@@ -1,11 +1,14 @@
-/** @type {import('ts-jest').JestConfigWithTsJest} */
 module.exports = {
-  preset: 'ts-jest',
-  testEnvironment: 'node',
-  collectCoverage: true,
+	preset: 'ts-jest',
+	testEnvironment: 'node',
+	moduleNameMapper: {
+		'^obsidian$': 'obsidian',
+	},
+	collectCoverage: true,
 	collectCoverageFrom: ["./src/**"],
 	coverageThreshold: {
-		"global": {
-		"lines": 4
-	}},
+		global: {
+			lines: 4,
+		},
+	},
 };
