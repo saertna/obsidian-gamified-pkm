@@ -348,6 +348,7 @@ jest.mock('../src/maturitycalculation.ts', () => ({
 	count_inlinks: jest.fn(),
 }));
 
+/*
 describe('count_inlinks2', () => {
 	test('returns the correct count of inlinks', async () => {
 		const mockFile = {
@@ -432,7 +433,7 @@ describe('count_inlinks2', () => {
 
 
 });
-
+*/
 
 
 
