@@ -1,6 +1,6 @@
 {
   "name": "obsidian-gamified-pkm",
-  "version": "0.0.85",
+  "version": "0.0.86",
   "description": "Enhance your Personal Knowledge Management with gamification elements. Boost motivation and achieve growth as you engage with your PKM.",
   "main": "main.js",
   "scripts": {
