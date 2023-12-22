@@ -4,7 +4,7 @@
 
 Hello, fellow learners and knowledge seekers! 📚 If you're as passionate about personal growth as I am, and you believe that motivation is the key to unlocking new horizons, then you're in for something special.
 
-## Hey there! 👋
+## Hey there! 👋 
 Imagine transforming your knowledge management into an adventure where every step forward is a celebration. Introducing the Obsidian Gamification Plugin – a tool designed to harness the motivating power of game techniques and apply it to our pursuit of knowledge.
 
 This plugin reimagines the way we interact with our knowledge base. By integrating game-like elements, it offers rewards for your progress, nurtures consistency, and makes the journey of learning a truly motivating experience. From achieving milestones to conquering challenges that shape your learning path, this plugin adds a layer of excitement to your knowledge management process.
@@ -35,9 +35,9 @@ Follow the steps below to install 'Gamificate your PKM'.
 1. Search for "Gamificate your PKM" in Obsidian's community plugins browser
 2. Enable the plugin in your Obsidian settings (find "Gamificate your PKM" under "Community plugins").
 3. Check the settings. Maybe you would like to exclute TAGs (more about it below).
-4. plugins needed to be installed and configured for fully operational
--  `dataview`. In dataview settings enable `Enable JavaScript Queries` and `Enable Inline JavaScript Queries` to display counting in profile.
--  `obsidian-charts`
+4. plugins needed to be installed and configured for fully operational 
+  -  `dataview`. In dataview settings enable `Enable JavaScript Queries` and `Enable Inline JavaScript Queries` to display counting in profile.
+  -  `obsidian-charts`
 5. in Obsidian hit `CTRL+P` and run command `Initialize gamification ratings`
 6. create and improve notes and rate again to increase points
 
