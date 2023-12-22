@@ -30,8 +30,8 @@ import {
 	rateNoteLength,
 	rateOutlinks,
 	rateProgressiveSummarization
-} from './majuritycalculation'
-import {Badge, checkIfReceiveABadge, getBadgeForInitLevel, getBadgeForLevel, getBadgeDetails, getBadge} from './badges'
+} from './maturitycalculation'
+import {Badge, checkIfReceiveABadge, getBadgeForInitLevel, getBadgeForLevel , getBadgeDetails , getBadge } from './badges'
 import {getLevelForPoints, statusPointsForLevel} from './levels'
 import type {Moment} from 'moment';
 import {
@@ -464,7 +464,12 @@ export default class gamification extends Plugin {
 		// get file content length
 		const activeView = this.app.workspace.getActiveViewOfType(MarkdownView);
 		const fileContents = activeView?.editor.getValue();
-		const fileName = activeView?.file.basename;
+		//const fileName = activeView?.file.basename;
+		const fileName = activeView?.file?.basename;
+		if (fileName === null || fileName === undefined) {
+			console.error("File name is null or undefined. Stopping further processing.");
+			return;
+		}
 		
 
 		let rateFileLength = 0;

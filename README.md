@@ -52,7 +52,7 @@ In some cases the same vault is used vor other activities as well an the knowled
 
 ### initialise game
 
-When not already done during installation, hit `CTRL+P` and run command `Initialize gamification ratings`. This command will create you profile, rate you existing notes and give you a starting level. On the profile you can get informations to you current level, points, badges and see the distribution of you note maturitys. 
+When not already done during installation, hit `CTRL+P` and run command `Initialize gamification ratings`. This command will create you profile, rate you existing notes and give you a starting level. On the profile you can get informations to you current level, points, badges and see the distribution of you note maturitys.
 
 ![Gamification Initialization Command](/docs/images/GamificationInitializationCommand.png)
 

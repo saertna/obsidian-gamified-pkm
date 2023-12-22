@@ -2,6 +2,7 @@ import os
 import json
 import shutil
 import zipfile
+import subprocess
 from urllib.parse import urlparse
 
 
@@ -66,11 +67,22 @@ def update_json_version(file_path, new_version):
 #                arcname = os.path.relpath(file_path, source_folder)
 #                zip_file.write(file_path, arcname=arcname)
 
+def update_constants(constants_path):
+    with open(constants_path, 'r', encoding='utf-8') as constants_file:
+        constants_content = constants_file.read()
+
+    updated_constants_content = constants_content.replace('export const debugLogs = true;', 'export const debugLogs = false;')
+
+    with open(constants_path, 'w', encoding='utf-8') as constants_file:
+        constants_file.write(updated_constants_content)
+
 def main(new_version):
     plugin_folder = '.'
     readme_path = os.path.join(plugin_folder, 'README.md')
     manifest_path = os.path.join(plugin_folder, 'manifest.json')
     package_path = os.path.join(plugin_folder, 'package.json')
+    constants_path = os.path.join(plugin_folder, 'src', 'constants.ts')
+
 
     # Update README.md
     update_readme_version(readme_path, new_version)
@@ -80,6 +92,16 @@ def main(new_version):
 
     # Update package.json
     update_json_version(package_path, new_version)
+    
+    # Update constants.ts
+    update_constants(constants_path)
+    
+    # Run npm build commands
+    try:
+        subprocess.run(["npm", "install"], check=True, cwd=plugin_folder, shell=True)
+        subprocess.run(["npm", "run", "build"], check=True, cwd=plugin_folder, shell=True)
+    except subprocess.CalledProcessError as e:
+        print(f"Error running npm commands: {e}")
 
     # Zip files
     files_to_zip = ['main.js', 'manifest.json', 'styles.css']
