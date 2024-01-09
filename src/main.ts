@@ -42,8 +42,10 @@ import {
 import {ModalInformationbox} from 'ModalInformationbox';
 import {ModalBooster} from 'ModalBooster';
 import {decryptBoolean, decryptNumber, decryptString, encryptBoolean, encryptNumber, encryptString} from 'encryption';
+import { checkGamifiedPkmVersion } from './Utils'
 
 let pointsToReceived = 0;
+export let PLUGIN_VERSION="0.0.0"
 export default class gamification extends Plugin {
 	//public settings: GamificationPluginSettings;
 	private timerInterval: number;
@@ -103,14 +105,21 @@ export default class gamification extends Plugin {
 	}
 
 
-	
 
-	
+
+
 	async onload() {
 		console.log('obsidian-pkm-gamification loaded!');
 		//this.settings = defaultSettings;
+		PLUGIN_VERSION=this.manifest.version
 
 		this.addSettingTab(new GamificationPluginSettings(this.app, this));
+
+
+		await this.loadSettings();
+		if(this.getSettingBoolean('showNewVersionNotification')) {
+			await checkGamifiedPkmVersion(this.app);
+		}
 
 
 		await this.loadSettings();

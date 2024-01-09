@@ -91,7 +91,8 @@ export const defaultSettings: Partial<ISettings> = {
   counterMajurityCalcInitial: "U2FsdGVkX1+2Qii8qhFSqrNqmKR1Wh6saEjYbwPdi8Q=",
   delayLoadTime: "U2FsdGVkX19TLndonGY4Y8vHuZFfLJ5gZ2t/CLprh0o=",
   timeShowNotice: "U2FsdGVkX190u8cOsylOs1cQ8MeZFq+i+Wv4ox6qq0k=",
-  receivedBadges: "U2FsdGVkX1/skTUHmzuMYD86hDA/uF1kElPVYm04ijQ="
+  receivedBadges: "U2FsdGVkX1/skTUHmzuMYD86hDA/uF1kElPVYm04ijQ=",
+  showNewVersionNotification: "U2FsdGVkX1+7lWe/h95uqzgl27JBGW2iki7sBwk44YQ="
 };
 
 export interface DynamicSettings {
@@ -181,7 +182,8 @@ export interface ISettings extends DynamicSettings{
   counterMajurityCalcInitial: string;
   delayLoadTime: string;
   timeShowNotice: string;
-  receivedBadges: string
+  receivedBadges: string;
+  showNewVersionNotification: string
   //[key: string]: number | string | boolean | MomentInput;
 }
 
@@ -272,6 +274,7 @@ export class GamificationPluginSettings extends PluginSettingTab {
   public delayLoadTime: string;
   public timeShowNotice: string;
   public receivedBadges: string;
+  public showNewVersionNotification: string;
 
 	constructor(app: App, plugin: gamification) {
 	  super(app, plugin);
@@ -307,6 +310,18 @@ export class GamificationPluginSettings extends PluginSettingTab {
 		//containerEl.empty();
   
 		if(debugLogs) console.debug('settings called')
+		new Setting(containerEl)
+			.setName('Plugin Update Notification')
+			.setDesc('When on, you get informed at startup if there is a newer Version.')
+			.addToggle((toggle) =>
+				toggle
+					.setValue(decryptBoolean(this.plugin.settings.showNewVersionNotification))
+					.onChange((value) => {
+						this.plugin.settings.showNewVersionNotification = encryptBoolean(value);
+						this.plugin.saveData(this.plugin.settings);
+					}),
+			);
+
 		new Setting(containerEl)
 			.setName('#tags to ignore')
 			.setDesc('Enter tags without # and separate with ", ".\nInclude nested tags.')
