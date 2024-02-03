@@ -20,6 +20,8 @@ export function rateProgressiveSummarization(charCountTotal: number, layer2count
 		} else if (percentLayer2 <= 30) {
 			layer2maturity = 3;
 		} else if (percentLayer2 <= 40) {
+			layer2maturity = 2;
+		} else if (percentLayer2 <= 50) {
 			layer2maturity = 1;
 		} else {
 			layer2maturity = 0;
@@ -39,7 +41,7 @@ export function rateProgressiveSummarization(charCountTotal: number, layer2count
 			maturity = 1;
 		} else if (layer2maturity == 2 && layer3maturity == 0) {
 			maturity = 2;
-		} else if (layer2maturity >= 3 && layer3maturity == 0) {
+		} else if ((layer2maturity >= 3 && layer3maturity == 0) || (layer2maturity <= 2 && layer3maturity >= 4)) {
 			maturity = 3;
 		} else if ((layer2maturity == 3 || layer2maturity == 4) && (layer3maturity == 4 || layer3maturity == 5)) {
 			maturity = 4;
