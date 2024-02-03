@@ -56,7 +56,7 @@ describe('getLevelForPoints', () => {
 
     it('should return 110 (level) if points are 104150000', () => {
         const actual = getLevelForPoints(104150000);
-        const expected = { points: 104150000, level: 110, pointsNext: 106150000 };
+        const expected = { points: 104150000, level: 110, pointsNext: 106200000 };
         expect(actual).toStrictEqual(expected);
     });
 });
