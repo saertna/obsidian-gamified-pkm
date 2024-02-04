@@ -18,6 +18,9 @@ main.js
 # obsidian
 data.json
 
+# zip-archive
+obsidian-gamified-pkm/obsidian-gamified-pkm.zip
+
 # Exclude macOS Finder (System Explorer) View States
 coverage/
 .DS_Store
