@@ -316,14 +316,13 @@ export default class gamification extends Plugin {
 			clearTimeout(this.editTimers[filePath]);
 		}
 
-		// Set new timer to trigger action after 5-10 seconds
 		this.editTimers[filePath] = setTimeout(() => {
 			// Check if no further edits happened within the delay
 			if (this.lastEditTimes[filePath] === currentTime) {
 				// Trigger your action here
 				this.triggerAction(filePath);
 			}
-		}, 5000); // Adjust delay as needed (e.g., 10000 for 10 seconds)
+		}, this.getSettingNumber('autoRateOnChangeDelayTime') * 1000);
 	}
 
 
@@ -333,8 +332,10 @@ export default class gamification extends Plugin {
 	}
 
 	triggerAction(filePath: string) {
-		this.calculateNoteMajurity().then(r => console.log(r));
-		if(debugLogs) console.log(`File ${filePath} was edited and no further changes occurred.`);
+		if(this.getSettingBoolean('autoRateOnChange')){
+			this.calculateNoteMajurity().then(r => console.log(r));
+			if(debugLogs) console.log(`File ${filePath} was edited and no further changes occurred.`);
+		}
 	}
 
     private async resetGame() {
