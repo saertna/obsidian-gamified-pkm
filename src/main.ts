@@ -144,6 +144,9 @@ export default class gamification extends Plugin {
 			this.app.workspace.on('editor-change', this.onEditorChanged.bind(this))
 		);
 
+		this.registerEvent(
+			this.app.vault.on('rename', this.onFileRenamed.bind(this))
+		);
 
 		if (this.getSettingBoolean('debug')){
 			this.addRibbonIcon("accessibility", "Crafting", async () => {
@@ -321,6 +324,12 @@ export default class gamification extends Plugin {
 				this.triggerAction(filePath);
 			}
 		}, 5000); // Adjust delay as needed (e.g., 10000 for 10 seconds)
+	}
+
+
+	onFileRenamed(oldPath: string, newPath: string) {
+		// Trigger action when a file is renamed
+		this.triggerAction(newPath);
 	}
 
 	triggerAction(filePath: string) {
