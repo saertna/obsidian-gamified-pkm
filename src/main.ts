@@ -53,6 +53,9 @@ export default class gamification extends Plugin {
 	private statusBarItem = this.addStatusBarItem();
 	private statusbarGamification = this.statusBarItem.createEl("span", { text: "" });
 	public settings: ISettings;
+	private lastEditTimes: Record<string, number> = {};
+	private editTimers: Record<string, ReturnType<typeof setTimeout>> = {};
+
 
 
 	getSettingString(key: string) {
@@ -126,7 +129,7 @@ export default class gamification extends Plugin {
 
 		// take care to reset when opened on a new day, don't wait for trigger
 		setTimeout(async () => {
-			// Code that you want to execute after the delay
+			// Code to execute after the delay
 			await this.loadSettings();
 			await this.resetDailyGoals()
 			await this.updateStatusBar(this.statusbarGamification)
@@ -137,7 +140,9 @@ export default class gamification extends Plugin {
 		this.timerInterval = 30 * 60 * 1000; // minutes x seconds x milliseconds
 		this.timerId = window.setInterval(this.resetDailyGoals.bind(this), this.timerInterval);
 
-		
+		this.registerEvent(
+			this.app.workspace.on('editor-change', this.onEditorChanged.bind(this))
+		);
 
 
 		if (this.getSettingBoolean('debug')){
@@ -289,6 +294,39 @@ export default class gamification extends Plugin {
 
 	}
 
+
+	onEditorChanged() {
+		const activeView  = this.app.workspace.getActiveViewOfType(MarkdownView);
+		if (!activeView ) return;
+
+		const activeFile = activeView.file;
+		if (!activeFile) return;
+
+		const filePath = activeFile.path;
+		const currentTime = Date.now();
+
+		// Update last edit time for the file
+		this.lastEditTimes[filePath] = currentTime;
+
+		// Clear previous timer if exists
+		if (this.editTimers[filePath]) {
+			clearTimeout(this.editTimers[filePath]);
+		}
+
+		// Set new timer to trigger action after 5-10 seconds
+		this.editTimers[filePath] = setTimeout(() => {
+			// Check if no further edits happened within the delay
+			if (this.lastEditTimes[filePath] === currentTime) {
+				// Trigger your action here
+				this.triggerAction(filePath);
+			}
+		}, 5000); // Adjust delay as needed (e.g., 10000 for 10 seconds)
+	}
+
+	triggerAction(filePath: string) {
+		this.calculateNoteMajurity().then(r => console.log(r));
+		if(debugLogs) console.log(`File ${filePath} was edited and no further changes occurred.`);
+	}
 
     private async resetGame() {
         await this.removeKeysFromFrontmatter();
@@ -458,6 +496,10 @@ export default class gamification extends Plugin {
 		if (this.timerId !== null) {
 			clearInterval(this.timerId);
 			this.timerId = null;
+		}
+
+		for (const timerId in this.editTimers) {
+			clearTimeout(this.editTimers[timerId]);
 		}
 	}
 
