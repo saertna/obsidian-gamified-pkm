@@ -298,7 +298,7 @@ export default class gamification extends Plugin {
 	}
 
 
-	onEditorChanged() {
+	async onEditorChanged() {
 		const activeView  = this.app.workspace.getActiveViewOfType(MarkdownView);
 		if (!activeView ) return;
 
@@ -307,6 +307,13 @@ export default class gamification extends Plugin {
 
 		const filePath = activeFile.path;
 		const currentTime = Date.now();
+
+		const fileLastModifiedTime = activeFile?.stat.mtime || 0;
+
+		// Check if the file was recently modified by comparing the last modification time
+		if (currentTime - fileLastModifiedTime < 900) {
+			return;
+		}
 
 		// Update last edit time for the file
 		this.lastEditTimes[filePath] = currentTime;
