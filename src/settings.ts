@@ -95,7 +95,8 @@ export const defaultSettings: Partial<ISettings> = {
   showNewVersionNotification: "U2FsdGVkX1+7lWe/h95uqzgl27JBGW2iki7sBwk44YQ=",
   autoRateOnChange: "U2FsdGVkX1/KT5I5txOiZ+r6Aa1F5RuE5b4eqpaZAqQ=",
   autoRateOnChangeDelayTime: "U2FsdGVkX1/RiGtHePLD9og+g+w+DL31vVK02vCSkQQ=",
-  previousRelease: "U2FsdGVkX1+z55uCXdMxdGtgg5oBmTGQPDroIP0PDIk="
+  previousRelease: "U2FsdGVkX1+z55uCXdMxdGtgg5oBmTGQPDroIP0PDIk=",
+  showReleaseNotes: "U2FsdGVkX1+7lWe/h95uqzgl27JBGW2iki7sBwk44YQ="
 };
 
 export interface DynamicSettings {
@@ -190,6 +191,7 @@ export interface ISettings extends DynamicSettings{
   autoRateOnChange: string
   autoRateOnChangeDelayTime: string
   previousRelease: string
+  showReleaseNotes: string
 	//[key: string]: number | string | boolean | MomentInput;
 }
 
@@ -284,6 +286,7 @@ export class GamificationPluginSettings extends PluginSettingTab {
   public autoRateOnChange: string;
   public autoRateOnChangeDelayTime: string;
   public previousRelease: string;
+	public showReleaseNotes: string;
 
 	constructor(app: App, plugin: gamification) {
 	  super(app, plugin);
@@ -449,6 +452,17 @@ export class GamificationPluginSettings extends PluginSettingTab {
 						this.plugin.settings.progressiveSumLayer3 = encryptString(value);
 						await this.plugin.saveSettings();
 			}));
+		new Setting(containerEl)
+			.setName('Display release notes after update')
+			.setDesc('`Toggle ON`: Display release notes each time you update the plugin\n`Toggle OFF`: Silent mode. You can still read release notes on [GitHub](https://github.com/saertna/obsidian-gamified-pkm)')
+			.addToggle((toggle) =>
+				toggle
+					.setValue(decryptBoolean(this.plugin.settings.showReleaseNotes))
+					.onChange((value) => {
+						this.plugin.settings.showReleaseNotes = encryptBoolean(value);
+						this.plugin.saveData(this.plugin.settings);
+					}),
+			);
 
       const coffeeDiv = containerEl.createDiv("coffee");
       coffeeDiv.addClass("ex-coffee-div");

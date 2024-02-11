@@ -44,6 +44,7 @@ import {ModalBooster} from 'ModalBooster';
 import {decryptBoolean, decryptNumber, decryptString, encryptBoolean, encryptNumber, encryptString} from 'encryption';
 import { checkGamifiedPkmVersion } from './Utils'
 import { ReleaseNotes } from "./ReleaseNotes";
+import { isVersionNewerThanOther } from "./Utils";
 //declare const PLUGIN_VERSION:string = manifest.version;
 
 let pointsToReceived = 0;
@@ -204,9 +205,24 @@ export default class gamification extends Plugin {
 
 			this.addRibbonIcon("chevrons-right", "boost", async () => {
 				//this.setSettingNumber('streakbooster',80)
-				await this.writeBadgeCSV(getBadgeDetails('Cerebral Maestro'), '24-01-03', 'level 21')
+				//await this.writeBadgeCSV(getBadgeDetails('Cerebral Maestro'), '24-01-03', 'level 21')
 
 			});
+		}
+
+		let obsidianJustInstalled = false;
+
+		if (this.getSettingBoolean('showReleaseNotes')) {
+			//I am repurposing imageElementNotice, if the value is true, this means the plugin was just newly installed to Obsidian.
+			obsidianJustInstalled = this.settings.previousRelease === "0.0.0";
+
+			if (isVersionNewerThanOther(PLUGIN_VERSION, this.settings.previousRelease)) {
+				new ReleaseNotes(
+					this.app,
+					this,
+					obsidianJustInstalled ? "0.0.0" : PLUGIN_VERSION,
+				).open();
+			}
 		}
 
 
