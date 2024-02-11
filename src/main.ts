@@ -58,7 +58,7 @@ export default class gamification extends Plugin {
 
 
 
-	getSettingString(key: string) {
+	getSettingString(key: string): string {
         const decryptedValue = this.settings[key] !== undefined ? this.settings[key].toString() : ''
 		//if(debugLogs) console.debug(`String: decrypted ${key} is ${decryptString(decryptedValue)}`)
 		return decryptString(decryptedValue);
@@ -299,16 +299,23 @@ export default class gamification extends Plugin {
 
 
 	async onEditorChanged() {
-		const activeView  = this.app.workspace.getActiveViewOfType(MarkdownView);
-		if (!activeView ) return;
+		const activeView = this.app.workspace.getActiveViewOfType(MarkdownView);
+		if (!activeView) return;
 
 		const activeFile = activeView.file;
 		if (!activeFile) return;
 
-		const filePath = activeFile.path;
+		//this.getSettingString('folderExclude')
+		const foldersToExclude = this.getSettingString('folderExclude');
+		const folderNames = foldersToExclude.split(',').map(folder => folder.trim());
+
+		const isInExcludedFolder = folderNames.some(folderName => activeFile.path.includes(folderName));
+
+		if (isInExcludedFolder) return;
+
 		const currentTime = Date.now();
 
-		const fileLastModifiedTime = activeFile?.stat.mtime || 0;
+		const fileLastModifiedTime = activeFile.stat.mtime || 0;
 
 		// Check if the file was recently modified by comparing the last modification time
 		if (currentTime - fileLastModifiedTime < 900) {
@@ -316,32 +323,45 @@ export default class gamification extends Plugin {
 		}
 
 		// Update last edit time for the file
-		this.lastEditTimes[filePath] = currentTime;
+		this.lastEditTimes[activeFile.path] = currentTime;
 
 		// Clear previous timer if exists
-		if (this.editTimers[filePath]) {
-			clearTimeout(this.editTimers[filePath]);
+		if (this.editTimers[activeFile.path]) {
+			clearTimeout(this.editTimers[activeFile.path]);
 		}
 
-		this.editTimers[filePath] = setTimeout(() => {
+		this.editTimers[activeFile.path] = setTimeout(() => {
 			// Check if no further edits happened within the delay
-			if (this.lastEditTimes[filePath] === currentTime) {
+			if (this.lastEditTimes[activeFile.path] === currentTime) {
 				// Trigger your action here
-				this.triggerAction(filePath);
+				this.triggerAction(activeFile.path);
 			}
 		}, this.getSettingNumber('autoRateOnChangeDelayTime') * 1000);
 	}
 
 
+
 	onFileRenamed(oldPath: string, newPath: string) {
-		// Trigger action when a file is renamed
+		console.log(`${newPath}`);
+		const foldersToExclude = this.getSettingString('folderExclude');
+		console.log(`foldersToExclude: ${foldersToExclude}`);
+		const folderNames = foldersToExclude.split(',').map(folder => folder.trim() + '/');
+
+		const isInExcludedFolder = folderNames.some(folderName => newPath.includes(folderName));
+
+		if (isInExcludedFolder) {
+			console.log(isInExcludedFolder);
+			return;
+		}
+
 		this.triggerAction(newPath);
 	}
+
 
 	triggerAction(filePath: string) {
 		if(this.getSettingBoolean('autoRateOnChange')){
 			this.calculateNoteMajurity().then(r => console.log(r));
-			if(debugLogs) console.log(`File ${filePath} was edited and no further changes occurred.`);
+			//if(debugLogs) console.log(`File ${filePath} was edited and no further changes occurred.`);
 		}
 	}
 

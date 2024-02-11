@@ -1,5 +1,6 @@
 import { TFile, App, } from 'obsidian';
 import * as path from 'path';
+import {debugLogs} from "./constants";
 
 export function rateProgressiveSummarization(charCountTotal: number, layer2count: number, layer3count: number): number {
 	const percentLayer2 = layer2count * 100 / charCountTotal;
@@ -407,7 +408,7 @@ export function count_inlinks(file: TFile): number {
 	const { app: { metadataCache: { resolvedLinks } } } = this;
 	const { path } = file;
 
-	console.log('Resolved Links Data:', resolvedLinks); // Add this line
+	if(debugLogs) console.log('Resolved Links Data:', resolvedLinks); // Add this line
 
 	const sumInlinks = Object.values(resolvedLinks)
 		.map((val: { [key: string]: number }) => val[path] ?? 0)
