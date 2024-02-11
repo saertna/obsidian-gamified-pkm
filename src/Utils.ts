@@ -1,8 +1,9 @@
 import {App, Notice, request} from 'obsidian';
-import { PLUGIN_VERSION } from "./main"
+//import { PLUGIN_VERSION } from "./main"
 
 //const PLUGIN_VERSION = this.manifest.version;
 //declare let PLUGIN_VERSION:string;
+declare const PLUGIN_VERSION:string;
 
 let versionUpdateChecked = false;
 export const checkGamifiedPkmVersion = async (app: App) => {

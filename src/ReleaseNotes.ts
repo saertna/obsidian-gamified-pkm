@@ -17,22 +17,20 @@ export class ReleaseNotes extends Modal {
   }
 
   onOpen(): void {
-    //this.contentEl.classList.add("excalidraw-release");
-    this.containerEl.classList.add("excalidraw-release");
-    this.titleEl.setText(`Welcome to Excalidraw ${this.version ?? ""}`);
+    this.containerEl.classList.add("gamified-pkm-release");
+    this.titleEl.setText(`Welcome to the Gamified PKM ${this.version ?? ""}`);
     this.createForm();
   }
 
   async onClose() {
     this.contentEl.empty();
     await this.plugin.loadSettings();
-    this.plugin.settings.previousRelease = PLUGIN_VERSION
-    await this.plugin.saveSettings();
+	this.plugin.setSettingString('previousRelease',PLUGIN_VERSION)
   }
 
   async createForm() {
-    let prevRelease = this.plugin.settings.previousRelease;
-    prevRelease = this.version === prevRelease ? "0.0.0" : prevRelease;
+    let prevRelease = this.plugin.getSettingString('previousRelease');
+	prevRelease = this.version === prevRelease ? "0.0.0" : prevRelease;
     const message = this.version
       ? Object.keys(RELEASE_NOTES)
           .filter((key) => key === "Intro" || isVersionNewerThanOther(key,prevRelease))

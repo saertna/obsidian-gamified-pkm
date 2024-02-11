@@ -94,7 +94,8 @@ export const defaultSettings: Partial<ISettings> = {
   receivedBadges: "U2FsdGVkX1/skTUHmzuMYD86hDA/uF1kElPVYm04ijQ=",
   showNewVersionNotification: "U2FsdGVkX1+7lWe/h95uqzgl27JBGW2iki7sBwk44YQ=",
   autoRateOnChange: "U2FsdGVkX1/KT5I5txOiZ+r6Aa1F5RuE5b4eqpaZAqQ=",
-  autoRateOnChangeDelayTime: "U2FsdGVkX1/RiGtHePLD9og+g+w+DL31vVK02vCSkQQ="
+  autoRateOnChangeDelayTime: "U2FsdGVkX1/RiGtHePLD9og+g+w+DL31vVK02vCSkQQ=",
+  previousRelease: "U2FsdGVkX1+z55uCXdMxdGtgg5oBmTGQPDroIP0PDIk="
 };
 
 export interface DynamicSettings {
@@ -188,7 +189,8 @@ export interface ISettings extends DynamicSettings{
   showNewVersionNotification: string
   autoRateOnChange: string
   autoRateOnChangeDelayTime: string
-  //[key: string]: number | string | boolean | MomentInput;
+  previousRelease: string
+	//[key: string]: number | string | boolean | MomentInput;
 }
 
 
@@ -281,6 +283,7 @@ export class GamificationPluginSettings extends PluginSettingTab {
   public showNewVersionNotification: string;
   public autoRateOnChange: string;
   public autoRateOnChangeDelayTime: string;
+  public previousRelease: string;
 
 	constructor(app: App, plugin: gamification) {
 	  super(app, plugin);

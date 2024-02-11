@@ -44,6 +44,7 @@ import {ModalBooster} from 'ModalBooster';
 import {decryptBoolean, decryptNumber, decryptString, encryptBoolean, encryptNumber, encryptString} from 'encryption';
 import { checkGamifiedPkmVersion } from './Utils'
 import { ReleaseNotes } from "./ReleaseNotes";
+//declare const PLUGIN_VERSION:string = manifest.version;
 
 let pointsToReceived = 0;
 export let PLUGIN_VERSION="0.0.0"
@@ -115,7 +116,7 @@ export default class gamification extends Plugin {
 	async onload() {
 		console.log('obsidian-pkm-gamification loaded!');
 		//this.settings = defaultSettings;
-		PLUGIN_VERSION=this.manifest.version
+		//PLUGIN_VERSION=this.manifest.version
 
 		this.addSettingTab(new GamificationPluginSettings(this.app, this));
 
@@ -189,11 +190,12 @@ export default class gamification extends Plugin {
 
 				//await this.checkForContinuouslyNoteCreation(180)
 
-				const obsidianJustInstalled = this.settings.previousRelease === "0.0.0"
+				//const obsidianJustInstalled = this.settings.previousRelease === "0.0.0"
 				new ReleaseNotes(
 					this.app,
 					this,
-					obsidianJustInstalled ? null : PLUGIN_VERSION,
+					//obsidianJustInstalled ? null :
+					PLUGIN_VERSION
 				).open();
 
 				//this.setBadgeSave(getBadgeDetails('Brainiac Trailblazer'),'23-09-07', 'level 20');
