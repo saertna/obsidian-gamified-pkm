@@ -53,9 +53,12 @@ export default class gamification extends Plugin {
 	private statusBarItem = this.addStatusBarItem();
 	private statusbarGamification = this.statusBarItem.createEl("span", { text: "" });
 	public settings: ISettings;
+	private lastEditTimes: Record<string, number> = {};
+	private editTimers: Record<string, ReturnType<typeof setTimeout>> = {};
 
 
-	getSettingString(key: string) {
+
+	getSettingString(key: string): string {
         const decryptedValue = this.settings[key] !== undefined ? this.settings[key].toString() : ''
 		//if(debugLogs) console.debug(`String: decrypted ${key} is ${decryptString(decryptedValue)}`)
 		return decryptString(decryptedValue);
@@ -126,7 +129,7 @@ export default class gamification extends Plugin {
 
 		// take care to reset when opened on a new day, don't wait for trigger
 		setTimeout(async () => {
-			// Code that you want to execute after the delay
+			// Code to execute after the delay
 			await this.loadSettings();
 			await this.resetDailyGoals()
 			await this.updateStatusBar(this.statusbarGamification)
@@ -137,8 +140,13 @@ export default class gamification extends Plugin {
 		this.timerInterval = 30 * 60 * 1000; // minutes x seconds x milliseconds
 		this.timerId = window.setInterval(this.resetDailyGoals.bind(this), this.timerInterval);
 
-		
+		this.registerEvent(
+			this.app.workspace.on('editor-change', this.onEditorChanged.bind(this))
+		);
 
+		this.registerEvent(
+			this.app.vault.on('rename', this.onFileRenamed.bind(this))
+		);
 
 		if (this.getSettingBoolean('debug')){
 			this.addRibbonIcon("accessibility", "Crafting", async () => {
@@ -289,6 +297,73 @@ export default class gamification extends Plugin {
 
 	}
 
+
+	async onEditorChanged() {
+		const activeView = this.app.workspace.getActiveViewOfType(MarkdownView);
+		if (!activeView) return;
+
+		const activeFile = activeView.file;
+		if (!activeFile) return;
+
+		//this.getSettingString('folderExclude')
+		const foldersToExclude = this.getSettingString('folderExclude');
+		const folderNames = foldersToExclude.split(',').map(folder => folder.trim());
+
+		const isInExcludedFolder = folderNames.some(folderName => activeFile.path.includes(folderName));
+
+		if (isInExcludedFolder) return;
+
+		const currentTime = Date.now();
+
+		const fileLastModifiedTime = activeFile.stat.mtime || 0;
+
+		// Check if the file was recently modified by comparing the last modification time
+		if (currentTime - fileLastModifiedTime < 900) {
+			return;
+		}
+
+		// Update last edit time for the file
+		this.lastEditTimes[activeFile.path] = currentTime;
+
+		// Clear previous timer if exists
+		if (this.editTimers[activeFile.path]) {
+			clearTimeout(this.editTimers[activeFile.path]);
+		}
+
+		this.editTimers[activeFile.path] = setTimeout(() => {
+			// Check if no further edits happened within the delay
+			if (this.lastEditTimes[activeFile.path] === currentTime) {
+				// Trigger your action here
+				this.triggerAction(activeFile.path);
+			}
+		}, this.getSettingNumber('autoRateOnChangeDelayTime') * 1000);
+	}
+
+
+
+	onFileRenamed(oldPath: string, newPath: string) {
+		console.log(`${newPath}`);
+		const foldersToExclude = this.getSettingString('folderExclude');
+		console.log(`foldersToExclude: ${foldersToExclude}`);
+		const folderNames = foldersToExclude.split(',').map(folder => folder.trim() + '/');
+
+		const isInExcludedFolder = folderNames.some(folderName => newPath.includes(folderName));
+
+		if (isInExcludedFolder) {
+			console.log(isInExcludedFolder);
+			return;
+		}
+
+		this.triggerAction(newPath);
+	}
+
+
+	triggerAction(filePath: string) {
+		if(this.getSettingBoolean('autoRateOnChange')){
+			this.calculateNoteMajurity().then(r => console.log(r));
+			//if(debugLogs) console.log(`File ${filePath} was edited and no further changes occurred.`);
+		}
+	}
 
     private async resetGame() {
         await this.removeKeysFromFrontmatter();
@@ -458,6 +533,10 @@ export default class gamification extends Plugin {
 		if (this.timerId !== null) {
 			clearInterval(this.timerId);
 			this.timerId = null;
+		}
+
+		for (const timerId in this.editTimers) {
+			clearTimeout(this.editTimers[timerId]);
 		}
 	}
 

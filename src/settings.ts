@@ -92,7 +92,9 @@ export const defaultSettings: Partial<ISettings> = {
   delayLoadTime: "U2FsdGVkX19TLndonGY4Y8vHuZFfLJ5gZ2t/CLprh0o=",
   timeShowNotice: "U2FsdGVkX190u8cOsylOs1cQ8MeZFq+i+Wv4ox6qq0k=",
   receivedBadges: "U2FsdGVkX1/skTUHmzuMYD86hDA/uF1kElPVYm04ijQ=",
-  showNewVersionNotification: "U2FsdGVkX1+7lWe/h95uqzgl27JBGW2iki7sBwk44YQ="
+  showNewVersionNotification: "U2FsdGVkX1+7lWe/h95uqzgl27JBGW2iki7sBwk44YQ=",
+  autoRateOnChange: "U2FsdGVkX1/KT5I5txOiZ+r6Aa1F5RuE5b4eqpaZAqQ=",
+  autoRateOnChangeDelayTime: "U2FsdGVkX1/RiGtHePLD9og+g+w+DL31vVK02vCSkQQ="
 };
 
 export interface DynamicSettings {
@@ -184,6 +186,8 @@ export interface ISettings extends DynamicSettings{
   timeShowNotice: string;
   receivedBadges: string;
   showNewVersionNotification: string
+  autoRateOnChange: string
+  autoRateOnChangeDelayTime: string
   //[key: string]: number | string | boolean | MomentInput;
 }
 
@@ -275,6 +279,8 @@ export class GamificationPluginSettings extends PluginSettingTab {
   public timeShowNotice: string;
   public receivedBadges: string;
   public showNewVersionNotification: string;
+  public autoRateOnChange: string;
+  public autoRateOnChangeDelayTime: string;
 
 	constructor(app: App, plugin: gamification) {
 	  super(app, plugin);
@@ -373,6 +379,29 @@ export class GamificationPluginSettings extends PluginSettingTab {
             			this.plugin.saveData(this.plugin.settings);
           			}),
 			);
+
+		new Setting(containerEl)
+			.setName('enable auto rate after change')
+			.setDesc('you can enable here an automatic trigger to rate a note when changed/created')
+			.addToggle((toggle) =>
+				toggle
+					.setValue(decryptBoolean(this.plugin.settings.autoRateOnChange))
+					.onChange((value) => {
+						this.plugin.settings.autoRateOnChange = encryptBoolean(value);
+						this.plugin.saveData(this.plugin.settings);
+					}),
+			);
+	new Setting(containerEl)
+		.setName('Wait time for automatic note rating')
+		.setDesc('Enter in seconds how long to wait after a change before automatical note ratting will be done')
+		.addText(text => text
+			.setPlaceholder('5')
+			.setValue(decryptNumber(this.plugin.settings.autoRateOnChangeDelayTime).toString())
+			//.setValue("0")
+			.onChange(async (value) => {
+				this.plugin.settings.autoRateOnChangeDelayTime = encryptNumber(parseInt(value));
+				await this.plugin.saveSettings();
+			}));
 
   
     new Setting(containerEl)
