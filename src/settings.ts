@@ -396,10 +396,10 @@ export class GamificationPluginSettings extends PluginSettingTab {
 		.setDesc('Enter in seconds how long to wait after a change before automatical note ratting will be done')
 		.addText(text => text
 			.setPlaceholder('5')
-			.setValue(decryptNumber(this.plugin.settings.delayLoadTime).toString())
+			.setValue(decryptNumber(this.plugin.settings.autoRateOnChangeDelayTime).toString())
 			//.setValue("0")
 			.onChange(async (value) => {
-				this.plugin.settings.delayLoadTime = encryptNumber(parseInt(value));
+				this.plugin.settings.autoRateOnChangeDelayTime = encryptNumber(parseInt(value));
 				await this.plugin.saveSettings();
 			}));
 
