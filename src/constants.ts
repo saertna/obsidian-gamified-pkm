@@ -1,14 +1,15 @@
 import { Badge } from './badges'
-export const pointsNoteMajurity: number = 100;
-export const pointsMajurity: number = 10;
-export const pointsForDailyChallenge: number = 500;
-export const pointsForWeeklyChallenge: number = 2000;
-export const streakboosterDecrease: number = 0.2;
-export const streakboosterIncreaseDaily: number = 0.1;
-export const streakboosterIncreaseWeekly: number = 1;
+export const pointsNoteMajurity = 100;
+export const pointsMajurity = 10;
+export const pointsForDailyChallenge = 500;
+export const pointsForWeeklyChallenge = 2000;
+export const streakboosterDecrease = 0.2;
+export const streakboosterIncreaseDaily = 0.1;
+export const streakboosterIncreaseWeekly = 1;
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 export const CryptoJS = require("crypto-js");
 export const secretKey = "2ZU^12y#QmNB5$yEin5^";
-export const debugLogs = true;
+export const debugLogs = false;
 export const avatarInitContent =  `# Avatar
 
 |           |         | 
