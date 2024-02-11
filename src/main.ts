@@ -116,7 +116,7 @@ export default class gamification extends Plugin {
 	async onload() {
 		console.log('obsidian-pkm-gamification loaded!');
 		//this.settings = defaultSettings;
-		//PLUGIN_VERSION=this.manifest.version
+		PLUGIN_VERSION=this.manifest.version
 
 		this.addSettingTab(new GamificationPluginSettings(this.app, this));
 
