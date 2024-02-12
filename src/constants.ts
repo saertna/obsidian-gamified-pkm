@@ -9,7 +9,7 @@ export const streakboosterIncreaseWeekly = 1;
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 export const CryptoJS = require("crypto-js");
 export const secretKey = "2ZU^12y#QmNB5$yEin5^";
-export const debugLogs = false;
+export const debugLogs = true;
 export const avatarInitContent =  `# Avatar
 
 |           |         | 

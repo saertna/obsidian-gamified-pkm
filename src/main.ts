@@ -112,9 +112,6 @@ export default class gamification extends Plugin {
 	}
 
 
-
-
-
 	async onload() {
 		console.log('obsidian-pkm-gamification loaded!');
 		//this.settings = defaultSettings;
@@ -122,12 +119,11 @@ export default class gamification extends Plugin {
 
 		this.addSettingTab(new GamificationPluginSettings(this.app, this));
 
-
 		await this.loadSettings();
+
 		if(this.getSettingBoolean('showNewVersionNotification')) {
 			await checkGamifiedPkmVersion(this.app);
 		}
-
 
 		await this.loadSettings();
 
@@ -214,10 +210,14 @@ export default class gamification extends Plugin {
 		let obsidianJustInstalled = false;
 
 		if (this.getSettingBoolean('showReleaseNotes')) {
+			if(debugLogs) console.log(`show release note`)
+			if(debugLogs) console.log(`current entry ${this.getSettingString('previousRelease')}`)
 			//I am repurposing imageElementNotice, if the value is true, this means the plugin was just newly installed to Obsidian.
-			obsidianJustInstalled = this.settings.previousRelease === "0.0.0";
+			//obsidianJustInstalled = this.settings.previousRelease === "0.0.0";
+			obsidianJustInstalled = this.getSettingString('previousRelease')  === "0.0.0";
 
-			if (isVersionNewerThanOther(PLUGIN_VERSION, this.settings.previousRelease)) {
+			if (isVersionNewerThanOther(PLUGIN_VERSION, this.getSettingString('previousRelease'))) {
+				if(debugLogs) console.log(`${PLUGIN_VERSION} newer than ${this.getSettingString('previousRelease')}`)
 				new ReleaseNotes(
 					this.app,
 					this,
