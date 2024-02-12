@@ -31,7 +31,7 @@ import {
 	rateOutlinks,
 	rateProgressiveSummarization
 } from './maturitycalculation'
-import {Badge, checkIfReceiveABadge, getBadgeForInitLevel, getBadgeForLevel , getBadgeDetails , getBadge } from './badges'
+import {Badge, checkIfReceiveABadge, getBadgeForInitLevel, getBadgeForLevel , getBadge } from './badges'
 import {getLevelForPoints, statusPointsForLevel} from './levels'
 import type {Moment} from 'moment';
 import {
@@ -46,9 +46,10 @@ import { checkGamifiedPkmVersion } from './Utils'
 import { ReleaseNotes } from "./ReleaseNotes";
 import { isVersionNewerThanOther } from "./Utils";
 //declare const PLUGIN_VERSION:string = manifest.version;
+declare const PLUGIN_VERSION:string;
 
 let pointsToReceived = 0;
-export let PLUGIN_VERSION="0.0.0"
+//export let PLUGIN_VERSION="0.0.0"
 export default class gamification extends Plugin {
 	//public settings: GamificationPluginSettings;
 	private timerInterval: number;
@@ -117,7 +118,7 @@ export default class gamification extends Plugin {
 	async onload() {
 		console.log('obsidian-pkm-gamification loaded!');
 		//this.settings = defaultSettings;
-		PLUGIN_VERSION=this.manifest.version
+		//PLUGIN_VERSION=this.manifest.version
 
 		this.addSettingTab(new GamificationPluginSettings(this.app, this));
 
