@@ -1,6 +1,7 @@
 import replace from "@rollup/plugin-replace";
 import typescript from "rollup-plugin-typescript2";
 import resolve from '@rollup/plugin-node-resolve';
+import { nodeResolve } from '@rollup/plugin-node-resolve';
 import fs from 'fs';
 
 const manifestStr = fs.readFileSync("manifest.json", "utf-8");
@@ -16,6 +17,7 @@ export default {
 	},
 	plugins: [
 		resolve(),
+		nodeResolve(),
 		typescript({
 			inlineSourceMap: true, // Ensure inline source map is generated
 			inlineSources: true, // Ensure inline sources are included
@@ -45,7 +47,6 @@ export default {
 			// Add a console log after the replace plugin
 			buildEnd() {
 				console.log('Rollup build completed.');
-				console.log(packageString)
 			}
 		}
 	]
