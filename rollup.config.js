@@ -1,7 +1,6 @@
 import replace from "@rollup/plugin-replace";
 import typescript from "rollup-plugin-typescript2";
-import { nodeResolve } from "@rollup/plugin-node-resolve";
-import commonjs from "@rollup/plugin-commonjs";
+import resolve from '@rollup/plugin-node-resolve';
 import fs from 'fs';
 
 const manifestStr = fs.readFileSync("manifest.json", "utf-8");
@@ -16,19 +15,38 @@ export default {
 		format: 'cjs'
 	},
 	plugins: [
-		typescript(),
-		nodeResolve(),
-		commonjs(),
+		resolve(),
+		typescript({
+			inlineSourceMap: true, // Ensure inline source map is generated
+			inlineSources: true, // Ensure inline sources are included
+			tsconfig: "tsconfig.json", // Specify the path to your tsconfig.json file
+			abortOnError: false // Continue bundling even if there are TypeScript errors
+		}),
+		{
+			name: 'debug-log',
+			// Add a console log before the replace plugin
+			buildStart() {
+				console.log('Starting Rollup build...');
+			}
+		},
 		replace({
 			preventAssignment: true,
 			delimiters: ['', ''],
 			patterns: [
 				{
-					match: /declare const PLUGIN_VERSION:string;/g,
+					match: /declare const PLUGIN_VERSION:string;/,
 					test: 'const PLUGIN_VERSION',
 					replace: packageString
 				}
 			]
-		})
+		}),
+		{
+			name: 'debug-log',
+			// Add a console log after the replace plugin
+			buildEnd() {
+				console.log('Rollup build completed.');
+				console.log(packageString)
+			}
+		}
 	]
 };
