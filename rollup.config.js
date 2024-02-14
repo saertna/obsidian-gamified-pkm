@@ -16,7 +16,7 @@ export default {
 		format: 'cjs',
 		exports: 'auto'
 	},
-	external: ['obsidian'],
+	external: ['obsidian', 'crypto-js'],
 	plugins: [
 		resolve(),
 		nodeResolve(),
@@ -37,7 +37,7 @@ export default {
 			preventAssignment: true,
 			values: {
 				// Replace the declaration of PLUGIN_VERSION directly
-				'declare const PLUGIN_VERSION:string;': packageString
+				'declare const PLUGIN_VERSION: string;': packageString
 			}
 		}),
 		{
