@@ -45,12 +45,17 @@ import {decryptBoolean, decryptNumber, decryptString, encryptBoolean, encryptNum
 import { checkGamifiedPkmVersion } from './Utils'
 import { ReleaseNotes } from "./ReleaseNotes";
 import { isVersionNewerThanOther } from "./Utils";
+import { GamificationMediator } from './GamificationMediator';
+
+
+
 //declare const PLUGIN_VERSION:string = manifest.version;
 declare const PLUGIN_VERSION:string;
 
 let pointsToReceived = 0;
 //export let PLUGIN_VERSION="0.0.0"
-export default class gamification extends Plugin {
+
+export default class gamification extends Plugin implements GamificationMediator {
 	//public settings: GamificationPluginSettings;
 	private timerInterval: number;
 	private timerId: number | null;
@@ -230,6 +235,7 @@ export default class gamification extends Plugin {
 		if(this.getSettingNumber('counterMajurityCalcInitial') >= 50){
 			this.addRibbonIcon("test-tube-2", "Boosters", async () => {
 				//const file: TFile | null = this.app.workspace.getActiveFile();
+				//new ModalBooster(this.app, ` `, this).open();
 				new ModalBooster(this.app, ` `, this).open();
 			});
 
@@ -322,6 +328,24 @@ export default class gamification extends Plugin {
 		});
 
 	}
+
+
+	updateIncrementStock(increment: string, stock: number): void {
+		this.setSettingNumber(increment,stock)
+	}
+
+	decrementBooster(booster: string, stock: number): void {
+		this.setSettingNumber(booster,stock)
+	}
+
+	decrementBoosterSwitch(booster: string, val: boolean): void {
+		this.setSettingBoolean(booster, val);
+	}
+
+	decrementBoosterDate(booster: string, date: string): void {
+		this.setSettingString(booster, date);
+	}
+
 
 
 	async onEditorChanged() {

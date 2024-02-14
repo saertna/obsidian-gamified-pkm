@@ -1,15 +1,23 @@
 import { App, Modal } from 'obsidian';
-import gamification from 'main';
+//import gamification from 'main';
 import { MultiSelectModal } from 'MultiSelectModal';
+import { GamificationMediator } from './GamificationMediator';
 
 export class ModalBooster extends Modal {
 	private readonly displayText: string;
-	private readonly gamificationInstance: gamification;
+	//private readonly gamificationInstance: gamification;
+	private readonly mediator: GamificationMediator;
 
-	constructor(app: App, displayText: string, gamificationInstance: gamification) {
+	// constructor(app: App, displayText: string, gamificationInstance: gamification) {
+	// 	super(app);
+	// 	this.displayText = displayText;
+	// 	this.gamificationInstance = gamificationInstance;
+	// }
+
+	constructor(app: App, displayText: string, mediator: GamificationMediator) {
 		super(app);
 		this.displayText = displayText;
-		this.gamificationInstance = gamificationInstance;
+		this.mediator = mediator;
 	}
 
 	onOpen() {
@@ -17,7 +25,8 @@ export class ModalBooster extends Modal {
 		contentEl.setText(this.displayText);
 		
 
-		const multiSelectModal = new MultiSelectModal(this.app, [], 'Craft Booster Item', this.gamificationInstance); // Create the modal instance
+		//const multiSelectModal = new MultiSelectModal(this.app, [], 'Craft Booster Item', this.gamificationInstance); // Create the modal instance
+		const multiSelectModal = new MultiSelectModal(this.app, [], 'Craft Booster Item', this.mediator);
 
 
 		const button = document.createElement('button');

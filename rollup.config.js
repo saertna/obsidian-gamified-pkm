@@ -33,20 +33,17 @@ export default {
 		},
 		replace({
 			preventAssignment: true,
-			delimiters: ['', ''],
-			patterns: [
-				{
-					match: /declare const PLUGIN_VERSION:string;/,
-					test: 'const PLUGIN_VERSION',
-					replace: packageString
-				}
-			]
+			values: {
+				// Replace the declaration of PLUGIN_VERSION directly
+				'declare const PLUGIN_VERSION:string;': packageString
+			}
 		}),
 		{
 			name: 'debug-log',
 			// Add a console log after the replace plugin
 			buildEnd() {
 				console.log('Rollup build completed.');
+				console.log(`packageString content: ${packageString}`)
 			}
 		}
 	]
