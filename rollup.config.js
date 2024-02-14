@@ -13,8 +13,10 @@ export default {
 	input: 'src/main.ts',
 	output: {
 		file: 'main.js',
-		format: 'cjs'
+		format: 'cjs',
+		exports: 'auto'
 	},
+	external: ['obsidian'],
 	plugins: [
 		resolve(),
 		nodeResolve(),
