@@ -1,4 +1,5 @@
 import {App, Notice, request} from 'obsidian';
+import type {Moment} from "moment/moment";
 //import { PLUGIN_VERSION } from "./main"
 
 //const PLUGIN_VERSION = this.manifest.version;
@@ -55,4 +56,21 @@ export const isVersionNewerThanOther = (version: string, otherVersion: string): 
 			(parseInt(v[1]) >= parseInt(o[1]) && parseInt(v[2]) >= parseInt(o[2]) && parseInt(v[3]) > parseInt(o[3]))
 		)
 	)
+}
+
+export function isMinutesPassed(inputDate: Moment, minutesPassed: number): boolean {
+    const minutesAgo = window.moment().subtract(minutesPassed, 'minutes'); // Calculate time 'minutesPassed' minutes ago
+    return inputDate.isSameOrBefore(minutesAgo);
+}
+
+export function hoursUntilMinutesPassed(inputDate: Moment, minutesToPass: number): number {
+	const currentTime = window.moment(); // Get the current time
+	const targetTime = inputDate.clone().add(minutesToPass, 'minutes'); // Calculate the target time
+
+	if (targetTime.isAfter(currentTime)) {
+		const hoursRemaining = targetTime.diff(currentTime, 'hours');
+		return hoursRemaining;
+	} else {
+		return 0;
+	}
 }

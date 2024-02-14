@@ -31,7 +31,7 @@ import {
 	rateOutlinks,
 	rateProgressiveSummarization
 } from './maturitycalculation'
-import {Badge, checkIfReceiveABadge, getBadgeForInitLevel, getBadgeForLevel , getBadge } from './badges'
+import {Badge, checkIfReceiveABadge, getBadge, getBadgeForInitLevel, getBadgeForLevel} from './badges'
 import {getLevelForPoints, statusPointsForLevel} from './levels'
 import type {Moment} from 'moment';
 import {
@@ -42,11 +42,9 @@ import {
 import {ModalInformationbox} from 'ModalInformationbox';
 import {ModalBooster} from 'ModalBooster';
 import {decryptBoolean, decryptNumber, decryptString, encryptBoolean, encryptNumber, encryptString} from 'encryption';
-import { checkGamifiedPkmVersion } from './Utils'
-import { ReleaseNotes } from "./ReleaseNotes";
-import { isVersionNewerThanOther } from "./Utils";
-import { GamificationMediator } from './GamificationMediator';
-
+import {checkGamifiedPkmVersion, isMinutesPassed, isVersionNewerThanOther} from './Utils'
+import {ReleaseNotes} from "./ReleaseNotes";
+import {GamificationMediator} from './GamificationMediator';
 
 
 //declare const PLUGIN_VERSION:string = manifest.version;
@@ -333,19 +331,6 @@ export default class gamification extends Plugin implements GamificationMediator
 	updateIncrementStock(increment: string, stock: number): void {
 		this.setSettingNumber(increment,stock)
 	}
-
-	decrementBooster(booster: string, stock: number): void {
-		this.setSettingNumber(booster,stock)
-	}
-
-	decrementBoosterSwitch(booster: string, val: boolean): void {
-		this.setSettingBoolean(booster, val);
-	}
-
-	decrementBoosterDate(booster: string, date: string): void {
-		this.setSettingString(booster, date);
-	}
-
 
 
 	async onEditorChanged() {
@@ -1588,25 +1573,6 @@ function isSameDay(inputDate: Moment): boolean {
 function isOneDayBefore(inputDate: Moment): boolean {
 	const oneDayBeforeCurrent = window.moment().subtract(1, 'day'); // Calculate one day before current date
 	return inputDate.isSame(oneDayBeforeCurrent, 'day');
-}
-
-
-export function isMinutesPassed(inputDate: Moment, minutesPassed: number): boolean {
-    const minutesAgo = window.moment().subtract(minutesPassed, 'minutes'); // Calculate time 'minutesPassed' minutes ago
-	return inputDate.isSameOrBefore(minutesAgo);
-}
-
-
-export function hoursUntilMinutesPassed(inputDate: Moment, minutesToPass: number): number {
-    const currentTime = window.moment(); // Get the current time
-    const targetTime = inputDate.clone().add(minutesToPass, 'minutes'); // Calculate the target time
-
-    if (targetTime.isAfter(currentTime)) {
-        const hoursRemaining = targetTime.diff(currentTime, 'hours');
-        return hoursRemaining;
-    } else {
-        return 0;
-    }
 }
 
 

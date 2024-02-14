@@ -7,8 +7,8 @@ import {
 	debugLogs
 } from './constants';
 import { ModalInformationbox } from 'ModalInformationbox';
-import { isMinutesPassed, hoursUntilMinutesPassed} from 'main';
 import { GamificationMediator } from './GamificationMediator';
+import {hoursUntilMinutesPassed, isMinutesPassed} from "./Utils";
 
 
 
@@ -110,11 +110,11 @@ export class MultiSelectModal extends Modal {
 		if (stock > 0 && isMinutesPassed(momentDate, this.getBoosterCooldownFromName(booster))) {
 			this.boosters[booster] -= stockIncrease;
 			//this.gamificationInstance.setSettingNumber(this.getBoosterVarNameFromName(booster), this.boosters[booster]);
-			this.mediator.decrementBooster(this.getBoosterVarNameFromName(booster), this.boosters[booster]);
+			this.mediator.setSettingNumber(this.getBoosterVarNameFromName(booster), this.boosters[booster]);
 			//this.gamificationInstance.setSettingBoolean(this.getBoosterSwitchFromName(booster), true);
-			this.mediator.decrementBoosterSwitch(this.getBoosterSwitchFromName(booster), true);
+			this.mediator.setSettingBoolean(this.getBoosterSwitchFromName(booster), true);
 			//this.gamificationInstance.setSettingString(this.getBoosterDateFromName(booster), window.moment().format('YYYY-MM-DD HH:mm:ss'));
-			this.mediator.decrementBoosterDate(this.getBoosterDateFromName(booster), window.moment().format('YYYY-MM-DD HH:mm:ss'))
+			this.mediator.setSettingString(this.getBoosterDateFromName(booster), window.moment().format('YYYY-MM-DD HH:mm:ss'))
 			//const boosterOverallUse = this.gamificationInstance.getSettingNumber('boosterUseCount')
 			const boosterOverallUse = this.mediator.getSettingNumber('boosterUseCount')
 			if (typeof boosterOverallUse === 'number' && boosterOverallUse !== null) {
