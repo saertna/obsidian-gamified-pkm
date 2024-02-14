@@ -47,7 +47,7 @@ import {ReleaseNotes} from "./ReleaseNotes";
 import {GamificationMediator} from './GamificationMediator';
 
 
-//declare const PLUGIN_VERSION:string = manifest.version;
+
 declare const PLUGIN_VERSION:string;
 
 let pointsToReceived = 0;
