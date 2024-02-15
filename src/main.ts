@@ -156,6 +156,12 @@ export default class gamification extends Plugin implements GamificationMediator
 			this.app.vault.on('rename', this.onFileRenamed.bind(this))
 		);
 
+
+		this.registerCommands();
+
+	}
+
+	private registerCommands() {
 		if (this.getSettingBoolean('debug')){
 			this.addRibbonIcon("accessibility", "Crafting", async () => {
 
@@ -263,13 +269,13 @@ export default class gamification extends Plugin implements GamificationMediator
 				id: 'reset-game',
 				name: 'Reset game',
 				callback: async () => {
-                    await this.resetGame();
-                },
+					await this.resetGame();
+				},
 
 			});
 		}
 
-		
+
 		// command: rate note maturity
 		this.addCommand({
 			id: 'rate-note-maturity',
@@ -302,9 +308,7 @@ export default class gamification extends Plugin implements GamificationMediator
 				return false;
 			}
 		});
-
 	}
-
 
 	async onEditorChanged() {
 		const activeView = this.app.workspace.getActiveViewOfType(MarkdownView);
