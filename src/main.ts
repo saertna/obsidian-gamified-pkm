@@ -31,7 +31,7 @@ import {
 	rateOutlinks,
 	rateProgressiveSummarization
 } from './maturitycalculation'
-import {Badge, checkIfReceiveABadge, getBadgeForInitLevel, getBadgeForLevel , getBadgeDetails , getBadge } from './badges'
+import {Badge, checkIfReceiveABadge, getBadge, getBadgeDetails, getBadgeForInitLevel, getBadgeForLevel} from './badges'
 import {getLevelForPoints, statusPointsForLevel} from './levels'
 import type {Moment} from 'moment';
 import {
@@ -42,11 +42,12 @@ import {
 import {ModalInformationbox} from 'ModalInformationbox';
 import {ModalBooster} from 'ModalBooster';
 import {decryptBoolean, decryptNumber, decryptString, encryptBoolean, encryptNumber, encryptString} from 'encryption';
-import { checkGamifiedPkmVersion } from './Utils'
+import {checkGamifiedPkmVersion, isMinutesPassed} from './Utils'
+import {GamificationMediator} from './GamificationMediator';
 
 let pointsToReceived = 0;
 export let PLUGIN_VERSION="0.0.0"
-export default class gamification extends Plugin {
+export default class gamification extends Plugin implements GamificationMediator {
 	//public settings: GamificationPluginSettings;
 	private timerInterval: number;
 	private timerId: number | null;
@@ -1538,25 +1539,6 @@ function isSameDay(inputDate: Moment): boolean {
 function isOneDayBefore(inputDate: Moment): boolean {
 	const oneDayBeforeCurrent = window.moment().subtract(1, 'day'); // Calculate one day before current date
 	return inputDate.isSame(oneDayBeforeCurrent, 'day');
-}
-
-
-export function isMinutesPassed(inputDate: Moment, minutesPassed: number): boolean {
-    const minutesAgo = window.moment().subtract(minutesPassed, 'minutes'); // Calculate time 'minutesPassed' minutes ago
-	return inputDate.isSameOrBefore(minutesAgo);
-}
-
-
-export function hoursUntilMinutesPassed(inputDate: Moment, minutesToPass: number): number {
-    const currentTime = window.moment(); // Get the current time
-    const targetTime = inputDate.clone().add(minutesToPass, 'minutes'); // Calculate the target time
-
-    if (targetTime.isAfter(currentTime)) {
-        const hoursRemaining = targetTime.diff(currentTime, 'hours');
-        return hoursRemaining;
-    } else {
-        return 0;
-    }
 }
 
 
