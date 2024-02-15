@@ -1,5 +1,5 @@
 export interface GamificationMediator {
-	updateIncrementStock(increment: string, stock: number): void;
+	//updateIncrementStock(increment: string, stock: number): void;
 
 	getSettingNumber(key: string):number;
 	getSettingString(key: string): string;

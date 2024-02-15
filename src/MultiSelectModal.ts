@@ -94,7 +94,7 @@ export class MultiSelectModal extends Modal {
 		if(debugLogs) console.debug(`increment "${increment}" new value ${stock}`);
 		this.remainingStock[increment] = stock;
 		//this.gamificationInstance.setSettingNumber(this.getIngerementVarNameFromName(increment) || '', stock);
-		this.mediator.updateIncrementStock(this.getIngerementVarNameFromName(increment) || '', stock);
+		this.mediator.setSettingNumber(this.getIngerementVarNameFromName(increment) || '', stock);
 	}
 
 
