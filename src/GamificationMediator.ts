@@ -1,10 +1,4 @@
 export interface GamificationMediator {
-	// Define methods for communication between ModalBooster and main.ts
-	// For example:
-	// method1(): void;
-	// method2(arg: string): number;
-	updateIncrementStock(increment: string, stock: number): void;
-
 	getSettingNumber(key: string):number;
 	getSettingString(key: string): string;
 
