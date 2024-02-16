@@ -48,17 +48,6 @@ import {
 	isMinutesPassed,
 	isOneDayBefore,
 	isSameDay,
-	parseBadgeCSV2Dict,
-	rateDirectionForStatusPoints
-} from './Utils'
-import {GamificationMediator} from './GamificationMediator';
-import {
-	checkGamifiedPkmVersion,
-	concatenateStrings,
-	getBoosterRunTimeFromVarName,
-	isMinutesPassed,
-	isOneDayBefore,
-	isSameDay,
 	isVersionNewerThanOther,
 	parseBadgeCSV2Dict,
 	rateDirectionForStatusPoints
