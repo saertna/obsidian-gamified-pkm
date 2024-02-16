@@ -57,10 +57,8 @@ import {GamificationMediator} from './GamificationMediator';
 
 
 let pointsToReceived = 0;
-//export let PLUGIN_VERSION="0.0.0"
 
 export default class gamification extends Plugin implements GamificationMediator {
-	//public settings: GamificationPluginSettings;
 	private timerInterval: number;
 	private timerId: number | null;
 	private statusBarItem = this.addStatusBarItem();
@@ -98,10 +96,10 @@ export default class gamification extends Plugin implements GamificationMediator
 
 	setBadgeSave(newBadge: Badge, date: string, level: string){
 		const currentBadgeString:string = this.getSettingString('receivedBadges');
-		console.log(`currentBadgeString: ${currentBadgeString}`)
+		if(debugLogs) console.log(`currentBadgeString: ${currentBadgeString}`)
 		const newBadgeString = currentBadgeString + newBadge.name + ',' + date + ',' + level + '##';
 			//window.moment().format('YYYY-MM-DD') + ',' + this.getSettingNumber('statusLevel') + '\n';
-		console.log(`newBadgeString: ${newBadgeString}`)
+		if(debugLogs) console.log(`newBadgeString: ${newBadgeString}`)
 		this.setSettingString('receivedBadges',newBadgeString);
 		this.saveSettings();
 	}
@@ -123,8 +121,6 @@ export default class gamification extends Plugin implements GamificationMediator
 
 	async onload() {
 		console.log('obsidian-pkm-gamification loaded!');
-		//this.settings = defaultSettings;
-		//PLUGIN_VERSION=this.manifest.version
 
 		this.addSettingTab(new GamificationPluginSettings(this.app, this));
 
@@ -163,7 +159,6 @@ export default class gamification extends Plugin implements GamificationMediator
 			if(debugLogs) console.log(`show release note`)
 			if(debugLogs) console.log(`current entry ${this.getSettingString('previousRelease')}`)
 			//I am repurposing imageElementNotice, if the value is true, this means the plugin was just newly installed to Obsidian.
-			//obsidianJustInstalled = this.settings.previousRelease === "0.0.0";
 			obsidianJustInstalled = this.getSettingString('previousRelease')  === "0.0.0";
 
 			if (isVersionNewerThanOther(PLUGIN_VERSION, this.getSettingString('previousRelease'))) {
