@@ -1,10 +1,11 @@
 import {App, Notice, request} from 'obsidian';
 import type {Moment} from "moment/moment";
-//import { PLUGIN_VERSION } from "./main"
+import { PLUGIN_VERSION } from "./constants"
 
 //const PLUGIN_VERSION = this.manifest.version;
 //declare let PLUGIN_VERSION:string;
-declare const PLUGIN_VERSION:string;
+//declare const PLUGIN_VERSION = '0.0.89';
+
 
 let versionUpdateChecked = false;
 export const checkGamifiedPkmVersion = async (app: App) => {

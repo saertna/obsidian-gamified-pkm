@@ -1,4 +1,5 @@
 import { Badge } from './badges'
+export const PLUGIN_VERSION = '0.0.90';
 export const pointsNoteMajurity = 100;
 export const pointsMajurity = 10;
 export const pointsForDailyChallenge = 500;
@@ -9,7 +10,7 @@ export const streakboosterIncreaseWeekly = 1;
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 export const CryptoJS = require("crypto-js");
 export const secretKey = "2ZU^12y#QmNB5$yEin5^";
-export const debugLogs = true;
+export const debugLogs = false;
 export const avatarInitContent =  `# Avatar
 
 |           |         | 

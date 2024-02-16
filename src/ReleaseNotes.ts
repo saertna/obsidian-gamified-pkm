@@ -2,9 +2,10 @@ import { App, MarkdownRenderer, Modal } from "obsidian";
 import { isVersionNewerThanOther } from "./Utils";
 import gamification from "./main";
 import { FIRST_RUN, RELEASE_NOTES } from "./Messages";
+import { PLUGIN_VERSION } from "./constants"
 //import { PLUGIN_VERSION } from "./main"
 
-declare const PLUGIN_VERSION:string;
+//const PLUGIN_VERSION = '0.0.89';
 
 export class ReleaseNotes extends Modal {
   private plugin: gamification;
