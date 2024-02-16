@@ -31,7 +31,7 @@ import {
 	rateOutlinks,
 	rateProgressiveSummarization
 } from './maturitycalculation'
-import {Badge, checkIfReceiveABadge, getBadge, getBadgeForInitLevel, getBadgeForLevel} from './badges'
+import {Badge, checkIfReceiveABadge, getBadge, getBadgeDetails, getBadgeForInitLevel, getBadgeForLevel} from './badges'
 import {getLevelForPoints, statusPointsForLevel} from './levels'
 import {
 	getRandomMessagePoints,
@@ -41,6 +41,17 @@ import {
 import {ModalInformationbox} from 'ModalInformationbox';
 import {ModalBooster} from 'ModalBooster';
 import {decryptBoolean, decryptNumber, decryptString, encryptBoolean, encryptNumber, encryptString} from 'encryption';
+import {
+	checkGamifiedPkmVersion,
+	concatenateStrings,
+	getBoosterRunTimeFromVarName,
+	isMinutesPassed,
+	isOneDayBefore,
+	isSameDay,
+	parseBadgeCSV2Dict,
+	rateDirectionForStatusPoints
+} from './Utils'
+import {GamificationMediator} from './GamificationMediator';
 import {
 	checkGamifiedPkmVersion,
 	concatenateStrings,
@@ -241,7 +252,6 @@ export default class gamification extends Plugin implements GamificationMediator
 		if(this.getSettingNumber('counterMajurityCalcInitial') >= 50){
 			this.addRibbonIcon("test-tube-2", "Boosters", async () => {
 				//const file: TFile | null = this.app.workspace.getActiveFile();
-				//new ModalBooster(this.app, ` `, this).open();
 				new ModalBooster(this.app, ` `, this).open();
 			});
 
@@ -333,11 +343,6 @@ export default class gamification extends Plugin implements GamificationMediator
 			}
 		});
 	}
-
-	updateIncrementStock(increment: string, stock: number): void {
-		this.setSettingNumber(increment,stock)
-	}
-
 
 	async onEditorChanged() {
 		const activeView = this.app.workspace.getActiveViewOfType(MarkdownView);
