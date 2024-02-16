@@ -59,22 +59,32 @@ def update_json_version(file_path, new_version):
     with open(file_path, 'w') as json_file:
         json.dump(data, json_file, indent=2)
 
-#def zip_files(source_folder, output_zip_path):
-#    with shutil.ZipFile(output_zip_path, 'w') as zip_file:
-#        for root, dirs, files in os.walk(source_folder):
-#            for file in files:
-#                file_path = os.path.join(root, file)
-#                arcname = os.path.relpath(file_path, source_folder)
-#                zip_file.write(file_path, arcname=arcname)
 
-def update_constants(constants_path):
+
+
+
+def update_constants_false(constants_path):
+     with open(constants_path, 'r', encoding='utf-8') as constants_file:
+         constants_content = constants_file.read()
+
+     updated_constants_content = constants_content.replace('export const debugLogs = true;', 'export const debugLogs = false;')
+
+     with open(constants_path, 'w', encoding='utf-8') as constants_file:
+         constants_file.write(updated_constants_content)
+
+def update_constants(constants_path, new_version):
     with open(constants_path, 'r', encoding='utf-8') as constants_file:
-        constants_content = constants_file.read()
+        constants_lines = constants_file.readlines()
 
-    updated_constants_content = constants_content.replace('export const debugLogs = true;', 'export const debugLogs = false;')
+    # Find the line containing the version string
+    for i, line in enumerate(constants_lines):
+        if 'export const PLUGIN_VERSION' in line:
+            old_version = line.split('=')[1].strip().strip(';').strip("'")
+            constants_lines[i] = line.replace(old_version, new_version)
 
+    # Write the updated content back to the file
     with open(constants_path, 'w', encoding='utf-8') as constants_file:
-        constants_file.write(updated_constants_content)
+        constants_file.writelines(constants_lines)
 
 def main(new_version):
     plugin_folder = '.'
@@ -94,8 +104,10 @@ def main(new_version):
     update_json_version(package_path, new_version)
     
     # Update constants.ts
-    update_constants(constants_path)
-    
+    print(constants_path)
+    update_constants(constants_path, new_version)
+    update_constants_false(constants_path)
+
     # Run npm build commands
     try:
         subprocess.run(["npm", "install"], check=True, cwd=plugin_folder, shell=True)
@@ -104,19 +116,19 @@ def main(new_version):
         print(f"Error running npm commands: {e}")
 
     # Zip files
-    files_to_zip = ['main.js', 'manifest.json', 'styles.css']
-    zip_folder = os.path.join(plugin_folder, f'obsidian-gamified-pkm.zip')
-    zip_files(plugin_folder, zip_folder, files_to_zip)
+    # files_to_zip = ['main.js', 'manifest.json', 'styles.css']
+    # zip_folder = os.path.join(plugin_folder, f'obsidian-gamified-pkm.zip')
+    # zip_files(plugin_folder, zip_folder, files_to_zip)
 
     # Move the zip archive to the 'install-zip' subfolder
-    install_zip_folder = os.path.join(plugin_folder, 'obsidian-gamified-pkm')
-    os.makedirs(install_zip_folder, exist_ok=True)
+    # install_zip_folder = os.path.join(plugin_folder, 'obsidian-gamified-pkm')
+    # os.makedirs(install_zip_folder, exist_ok=True)
 
     # Create the new path for the zip archive in the 'install-zip' folder
-    new_zip_path = os.path.join(install_zip_folder, f'obsidian-gamified-pkm.zip')
+    # new_zip_path = os.path.join(install_zip_folder, f'obsidian-gamified-pkm.zip')
 
     # Move the zip archive
-    shutil.move(zip_folder, new_zip_path)
+    # shutil.move(zip_folder, new_zip_path)
 
 if __name__ == "__main__":
     new_version = input("Enter the new version: ")
