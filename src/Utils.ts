@@ -1,6 +1,6 @@
 import {App, Notice, request} from 'obsidian';
 import type {Moment} from "moment/moment";
-import { PLUGIN_VERSION } from "./constants"
+import {boosterRecipes, PLUGIN_VERSION} from "./constants"
 
 //const PLUGIN_VERSION = this.manifest.version;
 //declare let PLUGIN_VERSION:string;
@@ -73,5 +73,76 @@ export function hoursUntilMinutesPassed(inputDate: Moment, minutesToPass: number
 		return hoursRemaining;
 	} else {
 		return 0;
+	}
+}
+
+export function parseBadgeCSV2Dict(csvString: string): Record<string, { date: string, level: string }> {
+	const badgeDict: Record<string, { date: string, level: string }> = {};
+	const rows = csvString.split('##');
+	for (const row of rows) {
+		const [badgeName, dateReceived, level] = row.split(',');
+
+		if (badgeName && dateReceived && level) {
+			badgeDict[badgeName] = {date: dateReceived, level: level};
+		}
+	}
+	return badgeDict;
+}
+
+export function rateDirectionForStatusPoints(ratingCurrent: string, ratingNew: number): number {
+	let ratingFaktor: number
+	if (parseInt(ratingCurrent, 10) < ratingNew) {
+		ratingFaktor = ratingNew - parseInt(ratingCurrent, 10)
+	} else {
+		ratingFaktor = 0
+	}
+
+	return ratingFaktor
+}
+
+export function isOneDayBefore(inputDate: Moment): boolean {
+	const oneDayBeforeCurrent = window.moment().subtract(1, 'day'); // Calculate one day before current date
+	return inputDate.isSame(oneDayBeforeCurrent, 'day');
+}
+
+export function isSameDay(inputDate: Moment): boolean {
+	const currentDate = window.moment(); // Get the current date
+	return currentDate.isSame(inputDate, 'day'); // Check if they are the same day
+}
+
+export function getBoosterRunTimeFromVarName(boosterVarName: string) {
+	for (const element of boosterRecipes) {
+		if (element.varname === boosterVarName) {
+			return element.boosterRunTime as number;
+		}
+	}
+	return 0; // Return null if no matching element is found
+}
+
+export function concatenateStrings(arr: string[]): string {
+	if (arr.length === 1) {
+		return arr[0];
+	} else {
+		const frequencyMap: Record<string, number> = {};
+
+		arr.forEach(item => {
+			if (frequencyMap[item]) {
+				frequencyMap[item]++;
+			} else {
+				frequencyMap[item] = 1;
+			}
+		});
+
+		const resultArray: string[] = [];
+
+		for (const [key, value] of Object.entries(frequencyMap)) {
+			if (value === 1) {
+				resultArray.push(key);
+			} else {
+				resultArray.push(`${value} x ${key}`);
+			}
+		}
+
+		return resultArray.join(', ');
 	}
 }

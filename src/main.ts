@@ -3,11 +3,11 @@ import {defaultSettings, GamificationPluginSettings, ISettings} from './settings
 import format from 'date-fns/format';
 import {
 	avatarInitContent,
-	boosterRecipes,
 	chanceToEarnIngredient,
 	debugLogs,
 	elements,
 	listOfUseableIngredientsToBeShown,
+	PLUGIN_VERSION,
 	pointsForDailyChallenge,
 	pointsForWeeklyChallenge,
 	pointsMajurity,
@@ -33,7 +33,6 @@ import {
 } from './maturitycalculation'
 import {Badge, checkIfReceiveABadge, getBadge, getBadgeForInitLevel, getBadgeForLevel} from './badges'
 import {getLevelForPoints, statusPointsForLevel} from './levels'
-import type {Moment} from 'moment';
 import {
 	getRandomMessagePoints,
 	getRandomMessageTwoNoteChallenge,
@@ -42,12 +41,19 @@ import {
 import {ModalInformationbox} from 'ModalInformationbox';
 import {ModalBooster} from 'ModalBooster';
 import {decryptBoolean, decryptNumber, decryptString, encryptBoolean, encryptNumber, encryptString} from 'encryption';
-import {checkGamifiedPkmVersion, isMinutesPassed, isVersionNewerThanOther} from './Utils'
+import {
+	checkGamifiedPkmVersion,
+	concatenateStrings,
+	getBoosterRunTimeFromVarName,
+	isMinutesPassed,
+	isOneDayBefore,
+	isSameDay,
+	isVersionNewerThanOther,
+	parseBadgeCSV2Dict,
+	rateDirectionForStatusPoints
+} from './Utils'
 import {ReleaseNotes} from "./ReleaseNotes";
 import {GamificationMediator} from './GamificationMediator';
-import { PLUGIN_VERSION } from "./constants"
-
-
 
 
 let pointsToReceived = 0;
@@ -1515,72 +1521,6 @@ export default class gamification extends Plugin implements GamificationMediator
 }
 
 
-
-
-
-// Example usage
-//const originalData = '2023-08-15 20:00:00';
-//const encryptedData = encryptString(originalData);
-
-// Save `encryptedData` in your settings
-
-// Later, when you retrieve the data
-//const decryptedData = decryptSrting(encryptedData);
-
-// Use `decryptedData` in your plugin
-
-
-function concatenateStrings(arr: string[]): string {
-    if (arr.length === 1) {
-        return arr[0];
-    } else {
-        const frequencyMap: Record<string, number> = {};
-
-        arr.forEach(item => {
-            if (frequencyMap[item]) {
-                frequencyMap[item]++;
-            } else {
-                frequencyMap[item] = 1;
-            }
-        });
-
-        const resultArray: string[] = [];
-
-        for (const [key, value] of Object.entries(frequencyMap)) {
-            if (value === 1) {
-                resultArray.push(key);
-            } else {
-                resultArray.push(`${value} x ${key}`);
-            }
-        }
-
-        return resultArray.join(', ');
-    }
-}
-
-
-function getBoosterRunTimeFromVarName(boosterVarName: string) {
-	for (const element of boosterRecipes) {
-		if (element.varname === boosterVarName) {
-			return element.boosterRunTime as number;
-		}
-	}
-	return 0; // Return null if no matching element is found
-}
-
-
-function isSameDay(inputDate: Moment): boolean {
-	const currentDate = window.moment(); // Get the current date
-	return currentDate.isSame(inputDate, 'day'); // Check if they are the same day
-}
-
-
-function isOneDayBefore(inputDate: Moment): boolean {
-	const oneDayBeforeCurrent = window.moment().subtract(1, 'day'); // Calculate one day before current date
-	return inputDate.isSame(oneDayBeforeCurrent, 'day');
-}
-
-
 async function createAvatarFile(app: App, fileName: string) {
 
 	const existingFile = this.app.vault.getAbstractFileByPath(`${fileName}.md`);
@@ -1619,27 +1559,3 @@ async function replaceFormatStrings(layer2: string, layer3: string) {
 }
 
 
-function rateDirectionForStatusPoints(ratingCurrent: string, ratingNew: number): number {
-	let ratingFaktor: number
-	if (parseInt(ratingCurrent, 10) < ratingNew){
-		ratingFaktor = ratingNew - parseInt(ratingCurrent, 10)
-	} else {
-		ratingFaktor = 0
-	}
-
-	return ratingFaktor
-}
-
-
-function parseBadgeCSV2Dict(csvString: string): Record<string, { date: string, level: string }> {
-	const badgeDict: Record<string, { date: string, level: string }> = {};
-    const rows = csvString.split('##');
-	for (const row of rows) {
-		const [badgeName, dateReceived, level] = row.split(',');
-
-        if (badgeName && dateReceived && level) {
-			badgeDict[badgeName] = { date: dateReceived, level: level };
-        }
-    }
-    return badgeDict;
-}
