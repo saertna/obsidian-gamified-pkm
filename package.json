@@ -5,8 +5,8 @@
   "main": "main.js",
   "scripts": {
     "dev": "rollup --config rollup.config.js -w",
-    "esbuild": "tsc -noEmit -skipLibCheck && node esbuild.config.mjs production",
-    "build": "rollup --config rollup.config.js",
+    "build": "tsc -noEmit -skipLibCheck && node esbuild.config.mjs production",
+    "rbuild": "rollup --config rollup.config.js",
     "dev2": "node esbuild.config.mjs --config rollup.config.js -w",
     "version": "node version-bump.mjs && git add manifest.json versions.json",
     "lint:js": "eslint *.js",
