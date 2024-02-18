@@ -6,7 +6,7 @@ import {
 	decryptNumber,
 	encryptBoolean,
 	decryptBoolean,
-} from '../src/encryption'; // Update this with your actual file name
+} from '../src/encryption';
 
 test('encrypt and decrypt value', () => {
 	const originalValue = 'testValue';

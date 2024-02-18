@@ -363,17 +363,17 @@ export class MultiSelectModal extends Modal {
 	private updateQuantityDisplay(labelText: string) {
 		const stock = this.boosters[labelText];
 		const stockInfo = this.containerEl.querySelector(`.${labelText.replace(' ', '-')}`);
-
+		
 		if (stockInfo) {
 			// Clear the current content
 			stockInfo.empty();
-
+	
 			// Create and set the new content
 			stockInfo.createEl('div', { text: `${labelText} : (${stock})` });
 		}
-
+	
 		const buttonUse: HTMLButtonElement | null = this.containerEl.querySelector(`#use-button-${labelText.replace(' ', '-')}`);
-
+	
 		if (buttonUse !== null) {
 			const momentDate = window.moment(this.mediator.getSettingString(this.getBoosterDateFromName(labelText)), 'YYYY-MM-DD HH:mm:ss');
 
@@ -385,7 +385,7 @@ export class MultiSelectModal extends Modal {
 			}
 		}
 	}
-
+	
 
 
 	private checkIngredientsAvailability(incredients: { name: string; incredients: string[]; }) {
@@ -406,13 +406,13 @@ export class MultiSelectModal extends Modal {
 
 	private check1000IngredientsAvailableAndBurn() {
 		let totalAvailableIngredients = 0;
-
+	
 		// Calculate the total number of available ingredients
 		//elements.forEach(increment => {
 		listOfUseableIngredientsToBeShown.forEach(increment => {
 			totalAvailableIngredients += this.remainingStock[this.getIngerementFromName(increment).name] || 0;
 		});
-
+	
 		if(debugLogs) console.debug(`total amount of ingrediments: ${totalAvailableIngredients}`)
 		// If at least 1000 ingredients are available
 		if (totalAvailableIngredients >= 1000) {
@@ -428,20 +428,20 @@ export class MultiSelectModal extends Modal {
 					this.updateIncrementStock(this.getIngerementFromName(increment).name, this.remainingStock[this.getIngerementFromName(increment).name] - proportionalAmount)
 				}
 			});
-
+	
 			//save new stock
 
 			// Update the stock information display
 			this.updateStockInformation();
-
+	
 			return true;
 		}
-
+	
 		return false;
 	}
+	
 
-
-
+	
 
 
 	private useIngrediments(incredients: { name: string; incredients: string[]; }) {

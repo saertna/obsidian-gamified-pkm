@@ -1,8 +1,9 @@
 {
   "compilerOptions": {
 	"baseUrl": "./src",
-    "inlineSourceMap": true,
+	"inlineSourceMap": false,
     "inlineSources": true,
+	"sourceMap": true,
     "module": "ESNext",
     "target": "ES6",
     "allowJs": true,
@@ -13,6 +14,7 @@
     "jsx": "react",
 	"strictNullChecks": true,
     "types": ["jest", "obsidian"],
+	"allowSyntheticDefaultImports": true,
     "lib": [
       "DOM",
       "ES5",

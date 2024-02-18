@@ -7,6 +7,7 @@ import {
 	debugLogs,
 	elements,
 	listOfUseableIngredientsToBeShown,
+	PLUGIN_VERSION,
 	pointsForDailyChallenge,
 	pointsForWeeklyChallenge,
 	pointsMajurity,
@@ -47,15 +48,17 @@ import {
 	isMinutesPassed,
 	isOneDayBefore,
 	isSameDay,
+	isVersionNewerThanOther,
 	parseBadgeCSV2Dict,
 	rateDirectionForStatusPoints
 } from './Utils'
+import {ReleaseNotes} from "./ReleaseNotes";
 import {GamificationMediator} from './GamificationMediator';
 
+
 let pointsToReceived = 0;
-export let PLUGIN_VERSION="0.0.0"
+
 export default class gamification extends Plugin implements GamificationMediator {
-	//public settings: GamificationPluginSettings;
 	private timerInterval: number;
 	private timerId: number | null;
 	private statusBarItem = this.addStatusBarItem();
@@ -93,10 +96,10 @@ export default class gamification extends Plugin implements GamificationMediator
 
 	setBadgeSave(newBadge: Badge, date: string, level: string){
 		const currentBadgeString:string = this.getSettingString('receivedBadges');
-		console.log(`currentBadgeString: ${currentBadgeString}`)
+		if(debugLogs) console.log(`currentBadgeString: ${currentBadgeString}`)
 		const newBadgeString = currentBadgeString + newBadge.name + ',' + date + ',' + level + '##';
 			//window.moment().format('YYYY-MM-DD') + ',' + this.getSettingNumber('statusLevel') + '\n';
-		console.log(`newBadgeString: ${newBadgeString}`)
+		if(debugLogs) console.log(`newBadgeString: ${newBadgeString}`)
 		this.setSettingString('receivedBadges',newBadgeString);
 		this.saveSettings();
 	}
@@ -116,22 +119,16 @@ export default class gamification extends Plugin implements GamificationMediator
 	}
 
 
-
-
-
 	async onload() {
 		console.log('obsidian-pkm-gamification loaded!');
-		//this.settings = defaultSettings;
-		PLUGIN_VERSION=this.manifest.version
 
 		this.addSettingTab(new GamificationPluginSettings(this.app, this));
 
-
 		await this.loadSettings();
+
 		if(this.getSettingBoolean('showNewVersionNotification')) {
 			await checkGamifiedPkmVersion(this.app);
 		}
-
 
 		await this.loadSettings();
 
@@ -156,12 +153,32 @@ export default class gamification extends Plugin implements GamificationMediator
 			this.app.vault.on('rename', this.onFileRenamed.bind(this))
 		);
 
+		let obsidianJustInstalled = false;
+
+		if (this.getSettingBoolean('showReleaseNotes')) {
+			if(debugLogs) console.log(`show release note`)
+			if(debugLogs) console.log(`current entry ${this.getSettingString('previousRelease')}`)
+			//I am repurposing imageElementNotice, if the value is true, this means the plugin was just newly installed to Obsidian.
+			obsidianJustInstalled = this.getSettingString('previousRelease')  === "0.0.0";
+
+			if (isVersionNewerThanOther(PLUGIN_VERSION, this.getSettingString('previousRelease'))) {
+				if(debugLogs) console.log(`${PLUGIN_VERSION} newer than ${this.getSettingString('previousRelease')}`)
+				new ReleaseNotes(
+					this.app,
+					this,
+					obsidianJustInstalled ? "0.0.0" : PLUGIN_VERSION,
+				).open();
+			}
+		}
+
+
 
 		this.registerCommands();
 
 	}
 
-	private registerCommands() {
+	private registerCommands(){
+
 		if (this.getSettingBoolean('debug')){
 			this.addRibbonIcon("accessibility", "Crafting", async () => {
 
@@ -200,8 +217,15 @@ export default class gamification extends Plugin implements GamificationMediator
 
 				 */
 
-				await this.checkForContinuouslyNoteCreation(180)
+				//await this.checkForContinuouslyNoteCreation(180)
 
+				//const obsidianJustInstalled = this.settings.previousRelease === "0.0.0"
+				new ReleaseNotes(
+					this.app,
+					this,
+					//obsidianJustInstalled ? null :
+					PLUGIN_VERSION
+				).open();
 
 				//this.setBadgeSave(getBadgeDetails('Brainiac Trailblazer'),'23-09-07', 'level 20');
 				//this.setBadgeSave(getBadgeDetails('Savvy Scholar'), '23-08-15', 'level 15');
@@ -209,11 +233,10 @@ export default class gamification extends Plugin implements GamificationMediator
 
 			this.addRibbonIcon("chevrons-right", "boost", async () => {
 				//this.setSettingNumber('streakbooster',80)
-				await this.writeBadgeCSV(getBadgeDetails('Cerebral Maestro'), '24-01-03', 'level 21')
+				//await this.writeBadgeCSV(getBadgeDetails('Cerebral Maestro'), '24-01-03', 'level 21')
 
 			});
 		}
-
 
 		if(this.getSettingNumber('counterMajurityCalcInitial') >= 50){
 			this.addRibbonIcon("test-tube-2", "Boosters", async () => {

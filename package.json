@@ -4,8 +4,10 @@
   "description": "Enhance your Personal Knowledge Management with gamification elements. Boost motivation and achieve growth as you engage with your PKM.",
   "main": "main.js",
   "scripts": {
-    "dev": "node esbuild.config.mjs",
+    "dev": "rollup --config rollup.config.js -w",
     "build": "tsc -noEmit -skipLibCheck && node esbuild.config.mjs production",
+    "rbuild": "rollup --config rollup.config.js",
+    "dev2": "node esbuild.config.mjs --config rollup.config.js -w",
     "version": "node version-bump.mjs && git add manifest.json versions.json",
     "lint:js": "eslint *.js",
     "lint": "npm run lint:js",
@@ -15,7 +17,24 @@
   "keywords": [],
   "author": "Andreas Trebing",
   "license": "MIT",
+  "dependencies": {
+    "crypto-js": "^4.1.1",
+    "date-fns": "^2.30.0",
+    "markdown-it": "^13.0.1",
+    "moment": "^2.29.4",
+    "obsidian-dataview": "^0.4.21",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "ts-node": "^10.9.1"
+  },
   "devDependencies": {
+    "@jridgewell/sourcemap-codec": "^1.4.15",
+    "@rollup/plugin-commonjs": "^24.1.0",
+    "@rollup/plugin-node-resolve": "^15.2.3",
+    "@rollup/plugin-replace": "^5.0.5",
+    "@rollup/plugin-terser": "^0.4.4",
+    "@rollup/plugin-typescript": "^11.1.2",
+    "@types/crypto-js": "^4.1.1",
     "@types/jest": "^29.5.4",
     "@types/node": "^16.11.6",
     "@types/react": "^18.2.0",
@@ -30,18 +49,15 @@
     "lint": "^1.1.2",
     "markdownlint": "^0.30.0",
     "obsidian": "^1.4.11",
+    "rollup": "^2.79.1",
+    "rollup-plugin-commonjs": "^10.1.0",
+    "rollup-plugin-copy": "^3.4.0",
+    "rollup-plugin-node-resolve": "^5.2.0",
+    "rollup-plugin-postprocess": "github:brettz9/rollup-plugin-postprocess#update",
+    "rollup-plugin-terser": "^7.0.2",
+    "rollup-plugin-typescript2": "^0.34.1",
     "ts-jest": "^29.1.1",
     "tslib": "2.4.0",
     "typescript": "4.7.4"
-  },
-  "dependencies": {
-    "crypto-js": "^4.1.1",
-    "date-fns": "^2.30.0",
-    "markdown-it": "^13.0.1",
-    "moment": "^2.29.4",
-    "obsidian-dataview": "^0.4.21",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "ts-node": "^10.9.1"
   }
 }
