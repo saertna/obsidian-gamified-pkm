@@ -20,7 +20,7 @@ I develop this plugin as a hobby, spending my free time doing this. If you find 
 "0.0.88":`
 ## Changed 
 - Support more levels, up to 200, and fix incorrect calculations
-- Make layer 2 and layer 3 score more accurate`,
+- Make layer 2 and layer 3 in 'progressive summarization' score more accurate`,
 "0.0.87":`
 ## New 
 - check for new available version`,
