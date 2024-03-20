@@ -111,7 +111,7 @@ export default class gamification extends Plugin implements GamificationMediator
         this.saveSettings();
     }
 
-		
+
 	setSettingBoolean(key: string, value: boolean) {
         // Set a specific setting
 		this.settings[key] = encryptBoolean(value);
@@ -742,11 +742,12 @@ export default class gamification extends Plugin implements GamificationMediator
 
 	async resetDailyGoals(){
 		let reset = false;
+		await this.loadSettings()
 		if(!isSameDay(window.moment(this.getSettingString('dailyNoteCreationDate'), 'DD.MM.YYYY'))){
 			this.setSettingNumber('dailyNoteCreationTask', 0);
 			this.setSettingString('dailyNoteCreationDate', window.moment().format('DD.MM.YYYY'))
 			await this.saveSettings();
-			if(debugLogs) console.debug(`daily Challenge reseted`)
+			if(debugLogs) console.debug(`reset daily Challenge`)
 			reset = true;
 		}
 		if(!isOneDayBefore(window.moment(this.getSettingString('weeklyNoteCreationDate'), 'DD.MM.YYYY')) && !isSameDay(window.moment(this.getSettingString('weeklyNoteCreationDate'), 'DD.MM.YYYY'))){
@@ -758,7 +759,7 @@ export default class gamification extends Plugin implements GamificationMediator
 			if(debugLogs) console.debug(`${daysPassed} days passed`)
 			await this.saveSettings();
 			await this.updateStatusBar(this.statusbarGamification)
-			if(debugLogs) console.debug(`weekly Challenge reseted`)
+			if(debugLogs) console.debug(`reset weekly Challenge`)
 			reset = true;
 		}
 		if(isOneDayBefore(window.moment(this.getSettingString('weeklyNoteCreationDate'), 'DD.MM.YYYY')) && this.getSettingNumber('weeklyNoteCreationTask') == 7){
