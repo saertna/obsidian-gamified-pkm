@@ -1014,13 +1014,13 @@ export default class gamification extends Plugin implements GamificationMediator
 	}
 
 	async increaseStreakbooster(increaseValue:number){
-		let newBoosterFakfor = parseFloat((this.getSettingNumber('streakbooster') + increaseValue).toFixed(1));
-		if(newBoosterFakfor > 80){
-			newBoosterFakfor = 80;
+		let newBoosterFactor = parseFloat((this.getSettingNumber('streakbooster') + increaseValue).toFixed(1));
+		if(newBoosterFactor > 80){
+			newBoosterFactor = 80;
 		}
-		if(debugLogs) console.debug(`newBoosterFakfor: ${newBoosterFakfor}`)
+		if(debugLogs) console.debug(`newBoosterFakfor: ${newBoosterFactor}`)
 		//if(debugLogs) console.debug(`old value streakbooster: ${this.getSettingNumber('streakbooster')}`)
-		this.setSettingNumber('streakbooster', newBoosterFakfor);
+		this.setSettingNumber('streakbooster', newBoosterFactor);
 		this.setSettingBoolean('streakboosterDate', true);
 		//if(debugLogs) console.debug(`new value streakbooster: ${this.getSettingNumber('streakbooster')}`)
 		//await this.saveData(this.settings)
