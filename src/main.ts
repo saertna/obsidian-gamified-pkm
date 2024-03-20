@@ -1025,8 +1025,7 @@ export default class gamification extends Plugin implements GamificationMediator
 		const oldIntegerPart = Math.floor(oldBoosterFactor);
 		const newIntegerPart = Math.floor(newBoosterFactor);
 		if (newBoosterFactor > oldBoosterFactor && newIntegerPart !== oldIntegerPart) {
-			// send high five
-
+			new Notice(`Boom! You just hit another milestone! High five, champ!`,this.getSettingNumber('timeShowNotice') * 1000 * 1.2)
 		}
 
 		if (debugLogs) console.debug(`newBoosterFakfor: ${newBoosterFactor}`);
