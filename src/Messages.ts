@@ -17,7 +17,8 @@ I develop this plugin as a hobby, spending my free time doing this. If you find 
 ## New
 - Introduction to Release Note showcase
 - Added automatic triggering of rate, can be enabled in settings
-- booster factor is not going below a multiple of 5. Means, whenever you reach a multiple of 5, it's a secured milestone.`,
+- booster factor is not going below a multiple of 5. Means, whenever you reach a multiple of 5, it's a secured milestone.
+- inform about booster factor milestone achievement`,
 "0.0.88":`
 ## Changed 
 - Support more levels, up to 200, and fix incorrect calculations
