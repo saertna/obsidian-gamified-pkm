@@ -1013,19 +1013,28 @@ export default class gamification extends Plugin implements GamificationMediator
 
 	}
 
-	async increaseStreakbooster(increaseValue:number){
-		let newBoosterFactor = parseFloat((this.getSettingNumber('streakbooster') + increaseValue).toFixed(1));
-		if(newBoosterFactor > 80){
+	async increaseStreakbooster(increaseValue: number) {
+		const oldBoosterFactor = this.getSettingNumber('streakbooster');
+		let newBoosterFactor = parseFloat((oldBoosterFactor + increaseValue).toFixed(1));
+
+		if (newBoosterFactor > 80) {
 			newBoosterFactor = 80;
 		}
-		if(debugLogs) console.debug(`newBoosterFakfor: ${newBoosterFactor}`)
-		//if(debugLogs) console.debug(`old value streakbooster: ${this.getSettingNumber('streakbooster')}`)
+
+		// Send message if newBoosterFactor crosses a multiple of 5
+		const oldIntegerPart = Math.floor(oldBoosterFactor);
+		const newIntegerPart = Math.floor(newBoosterFactor);
+		if (newBoosterFactor > oldBoosterFactor && newIntegerPart !== oldIntegerPart) {
+			// send high five
+
+		}
+
+		if (debugLogs) console.debug(`newBoosterFakfor: ${newBoosterFactor}`);
+
 		this.setSettingNumber('streakbooster', newBoosterFactor);
 		this.setSettingBoolean('streakboosterDate', true);
-		//if(debugLogs) console.debug(`new value streakbooster: ${this.getSettingNumber('streakbooster')}`)
-		//await this.saveData(this.settings)
-		//if(debugLogs) console.debug(`streakbooster: ${this.getSettingNumber('streakbooster')}`)
-		}
+	}
+
 
 
 	async decreaseStreakbooster(decreaseValue:number){
