@@ -36,7 +36,8 @@ import {getLevelForPoints, statusPointsForLevel} from './levels'
 import {
 	getRandomMessagePoints,
 	getRandomMessageTwoNoteChallenge,
-	getRandomMessageWeeklyChallenge
+	getRandomMessageWeeklyChallenge,
+	getRandomMessageBoosterFactor
 } from './randomNotificationText'
 import {ModalInformationbox} from 'ModalInformationbox';
 import {ModalBooster} from 'ModalBooster';
@@ -228,7 +229,9 @@ export default class gamification extends Plugin implements GamificationMediator
 				// 	PLUGIN_VERSION
 				// ).open();
 
-				await this.decreaseStreakbooster(50);
+				//await this.decreaseStreakbooster(50);
+				await this.increaseStreakbooster(0.8);
+
 				//this.setBadgeSave(getBadgeDetails('Brainiac Trailblazer'),'23-09-07', 'level 20');
 				//this.setBadgeSave(getBadgeDetails('Savvy Scholar'), '23-08-15', 'level 15');
 			});
@@ -1024,8 +1027,10 @@ export default class gamification extends Plugin implements GamificationMediator
 		// Send message if newBoosterFactor crosses a multiple of 5
 		const oldIntegerPart = Math.floor(oldBoosterFactor);
 		const newIntegerPart = Math.floor(newBoosterFactor);
-		if (newBoosterFactor > oldBoosterFactor && newIntegerPart !== oldIntegerPart) {
-			new Notice(`Boom! You just hit another milestone! High five, champ!`,this.getSettingNumber('timeShowNotice') * 1000 * 1.2)
+		if (oldBoosterFactor <= 80 && newBoosterFactor <= 80 && newBoosterFactor > oldBoosterFactor &&
+			newIntegerPart !== oldIntegerPart && newIntegerPart % 5 === 0) {
+			new Notice(getRandomMessageBoosterFactor(),this.getSettingNumber('timeShowNotice') * 1000 * 1.2)
+			console.log(`${getRandomMessageBoosterFactor()} : ${newBoosterFactor}`)
 		}
 
 		if (debugLogs) console.debug(`newBoosterFakfor: ${newBoosterFactor}`);
