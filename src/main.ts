@@ -31,7 +31,7 @@ import {
 	rateOutlinks,
 	rateProgressiveSummarization
 } from './maturitycalculation'
-import {Badge, checkIfReceiveABadge, getBadge, getBadgeDetails, getBadgeForInitLevel, getBadgeForLevel} from './badges'
+import {Badge, checkIfReceiveABadge, getBadge, getBadgeForInitLevel, getBadgeForLevel} from './badges'
 import {getLevelForPoints, statusPointsForLevel} from './levels'
 import {
 	getRandomMessagePoints,
@@ -220,13 +220,15 @@ export default class gamification extends Plugin implements GamificationMediator
 				//await this.checkForContinuouslyNoteCreation(180)
 
 				//const obsidianJustInstalled = this.settings.previousRelease === "0.0.0"
-				new ReleaseNotes(
-					this.app,
-					this,
-					//obsidianJustInstalled ? null :
-					PLUGIN_VERSION
-				).open();
 
+				// new ReleaseNotes(
+				// 	this.app,
+				// 	this,
+				// 	//obsidianJustInstalled ? null :
+				// 	PLUGIN_VERSION
+				// ).open();
+
+				await this.decreaseStreakbooster(50);
 				//this.setBadgeSave(getBadgeDetails('Brainiac Trailblazer'),'23-09-07', 'level 20');
 				//this.setBadgeSave(getBadgeDetails('Savvy Scholar'), '23-08-15', 'level 15');
 			});
@@ -1027,7 +1029,17 @@ export default class gamification extends Plugin implements GamificationMediator
 
 
 	async decreaseStreakbooster(decreaseValue:number){
-		let newBoosterFakfor = parseFloat((this.getSettingNumber('streakbooster') - decreaseValue * streakboosterDecrease).toFixed(1))
+		//let newBoosterFakfor = parseFloat((this.getSettingNumber('streakbooster') - decreaseValue * streakboosterDecrease).toFixed(1))
+		const currentValue = this.getSettingNumber('streakbooster');
+		let newBoosterFakfor;
+		if (streakboosterDecrease >= currentValue % 5) {
+			// If streakboosterDecrease is greater than or equal to the difference to the next multiple of 5
+			newBoosterFakfor = Math.floor(currentValue / 5) * 5; // Round down to the nearest multiple of 5
+		} else {
+			// If streakboosterDecrease is smaller than the difference to the next multiple of 5
+			newBoosterFakfor = currentValue - (currentValue % 5 - streakboosterDecrease); // Subtract the difference
+		}
+
 		this.setSettingNumber('streakbooster', newBoosterFakfor)
 		if (newBoosterFakfor < 0){
 			newBoosterFakfor = 0
