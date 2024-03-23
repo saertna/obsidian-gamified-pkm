@@ -7,7 +7,7 @@
 	} from "obsidian";
 	import Fab from "./Fab.svelte";
 	import ObsidianIcon from "./ObsidianIcon.svelte";
-	import type {SetState, State} from "../avatar/stateProviders";
+	import type {SetState, State} from "./stateProviders";
 	import {SelectImageModal} from "./SelectImageModal";
 	import {gamification} from "../main";
 	import {onMount} from "svelte";
@@ -101,7 +101,7 @@
 			</Fab>
 		{/if}
 	</div>
-	<div class="description" on:click={enterEditMode}>
+	<div class="description" >
 		<textarea
 			class="textarea"
 			bind:this={descriptionEditEl}
