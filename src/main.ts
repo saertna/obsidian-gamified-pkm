@@ -55,7 +55,10 @@ import {
 } from './Utils'
 import {ReleaseNotes} from "./ReleaseNotes";
 import {GamificationMediator} from './GamificationMediator';
-
+import {renderCodeBlockProcessor} from "./avatar/renderCodeBlockProcessor";
+// @ts-ignore
+import AvatarView from "./avatar/AvatarView.svelte";
+import {withCodeblockState} from "./avatar/stateProviders";
 
 let pointsToReceived = 0;
 
@@ -154,6 +157,10 @@ export default class gamification extends Plugin implements GamificationMediator
 			this.app.vault.on('rename', this.onFileRenamed.bind(this))
 		);
 
+		// This portion of code is adapted from the following source under the MIT License:
+		// https://github.com/zsviczian/obsidian-excalidraw-plugin
+		// Copyright (c) [2024], [zsviczian]
+		// License: MIT
 		let obsidianJustInstalled = false;
 
 		if (this.getSettingBoolean('showReleaseNotes')) {
@@ -171,7 +178,18 @@ export default class gamification extends Plugin implements GamificationMediator
 				).open();
 			}
 		}
+		// import ends here
 
+		// This portion of code is adapted from the following source under the MIT License:
+		// https://github.com/froehlichA/obsidian-avatar
+		// Copyright (c) [2024], [froehlichA]
+		// License: MIT
+		this.registerMarkdownCodeBlockProcessor("gamification-avatar", renderCodeBlockProcessor(
+			AvatarView,
+			{ app: this.app, plugin: this },
+			withCodeblockState()
+		));
+		// import ends here
 
 
 		this.registerCommands();
@@ -222,15 +240,15 @@ export default class gamification extends Plugin implements GamificationMediator
 
 				//const obsidianJustInstalled = this.settings.previousRelease === "0.0.0"
 
-				// new ReleaseNotes(
-				// 	this.app,
-				// 	this,
-				// 	//obsidianJustInstalled ? null :
-				// 	PLUGIN_VERSION
-				// ).open();
+				new ReleaseNotes(
+				 	this.app,
+				 	this,
+				 	//obsidianJustInstalled ? null :
+				 	PLUGIN_VERSION
+				).open();
 
 				//await this.decreaseStreakbooster(50);
-				await this.increaseStreakbooster(0.8);
+				//await this.increaseStreakbooster(0.8);
 
 				//this.setBadgeSave(getBadgeDetails('Brainiac Trailblazer'),'23-09-07', 'level 20');
 				//this.setBadgeSave(getBadgeDetails('Savvy Scholar'), '23-08-15', 'level 15');
@@ -1128,7 +1146,7 @@ export default class gamification extends Plugin implements GamificationMediator
 			}
 
 			const progressBarEnd = nextLevelAt - newPoints;
-			const newPointsString = '| **Level**  | **' + level.level + '** |\n| Points | ' + newPoints + '    |\n^levelAndPoints\n```chart\ntype: bar\nlabels: [Expririence]\nseries:\n  - title: points reached\n    data: [' + newPoints + ']\n  - title: points to earn to level up\n    data: [' + progressBarEnd + ']\nxMin: ' + level.points + '\nxMax: ' + level.pointsNext + '\ntension: 0.2\nwidth: 40%\nlabelColors: false\nfill: false\nbeginAtZero: false\nbestFit: false\nbestFitTitle: undefined\nbestFitNumber: 0\nstacked: true\nindexAxis: y\nxTitle: "progress"\nlegend: false\n```'
+			const newPointsString = '  | **Level**  | **' + level.level + '** |\n  | Points | ' + newPoints + '    |\n  ^levelAndPoints\n  ```chart\n  type: bar\n  labels: [Expririence]\n  series:\n    - title: points reached\n      data: [' + newPoints + ']\n    - title: points to earn to level up\n      data: [' + progressBarEnd + ']\n  xMin: ' + level.points + '\n  xMax: ' + level.pointsNext + '\n  tension: 0.2\n  width: 70%\n  labelColors: false\n  fill: false\n  beginAtZero: false\n  bestFit: false\n  bestFitTitle: undefined\n  bestFitNumber: 0\n  stacked: true\n  indexAxis: y\n  xTitle: "progress"\n  legend: false\n```'
 			const dailyChallenge = '| **daily Notes** | *' + pointsForDailyChallenge * (this.getSettingNumber('badgeBoosterFactor') + this.getSettingNumber('streakbooster')) + 'EP* | **' + this.getSettingNumber('dailyNoteCreationTask') + '/2**   |';
 			const daysLeftInWeeklyChain : number = 7 - this.getSettingNumber('weeklyNoteCreationTask');
 			let weeklyChallenge = ''

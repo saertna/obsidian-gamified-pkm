@@ -1,5 +1,5 @@
 import { Badge } from './badges'
-export const PLUGIN_VERSION = '0.0.89';
+export const PLUGIN_VERSION = '0.0.90';
 export const pointsNoteMajurity = 100;
 export const pointsMajurity = 10;
 export const pointsForDailyChallenge = 500;
@@ -13,33 +13,37 @@ export const secretKey = "2ZU^12y#QmNB5$yEin5^";
 export const debugLogs = false;
 export const avatarInitContent =  `# Avatar
 
-|           |         | 
-| --------- | ------- |
-| **Level**  | **1** |
-| Points | 0    |
-^levelAndPoints
-\`\`\`chart
-type: bar
-labels: [Expririence]
-series:
-  - title: points reached
-    data: [0]
-  - title: points to earn to level up
-    data: [1000]
-xMin: 0
-xMax: 1000
-tension: 0.2
-width: 40%
-labelColors: false
-fill: false
-beginAtZero: false
-bestFit: false
-bestFitTitle: undefined
-bestFitNumber: 0
-stacked: true
-indexAxis: y
-xTitle: "progress"
-legend: false
+
+\`\`\`gamification-avatar
+image: 
+description: |-2
+  |           |         | 
+  | --------- | ------- |
+  | **Level**  | **1** |
+  | Points | 0    |
+  ^levelAndPoints
+  \`\`\`chart
+  type: bar
+  labels: [Expririence]
+  series:
+    - title: points reached
+      data: [0]
+    - title: points to earn to level up
+      data: [1000]
+  xMin: 0
+  xMax: 1000
+  tension: 0.2
+  width: 40%
+  labelColors: false
+  fill: false
+  beginAtZero: false
+  bestFit: false
+  bestFitTitle: undefined
+  bestFitNumber: 0
+  stacked: true
+  indexAxis: y
+  xTitle: "progress"
+  legend: false
 \`\`\`
 
 |                  |       |
