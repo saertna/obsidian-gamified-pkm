@@ -240,15 +240,15 @@ export default class gamification extends Plugin implements GamificationMediator
 
 				//const obsidianJustInstalled = this.settings.previousRelease === "0.0.0"
 
-				// new ReleaseNotes(
-				// 	this.app,
-				// 	this,
-				// 	//obsidianJustInstalled ? null :
-				// 	PLUGIN_VERSION
-				// ).open();
+				new ReleaseNotes(
+				 	this.app,
+				 	this,
+				 	//obsidianJustInstalled ? null :
+				 	PLUGIN_VERSION
+				).open();
 
 				//await this.decreaseStreakbooster(50);
-				await this.increaseStreakbooster(0.8);
+				//await this.increaseStreakbooster(0.8);
 
 				//this.setBadgeSave(getBadgeDetails('Brainiac Trailblazer'),'23-09-07', 'level 20');
 				//this.setBadgeSave(getBadgeDetails('Savvy Scholar'), '23-08-15', 'level 15');

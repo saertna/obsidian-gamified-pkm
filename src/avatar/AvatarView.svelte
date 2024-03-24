@@ -106,14 +106,14 @@
 			class="textarea"
 			bind:this={descriptionEditEl}
 			hidden={!editMode}
-			placeholder="Your stats here..."
+			placeholder=""
 			bind:value={state.description}
 		></textarea>
 		<span
 			class="avatar-plugin--md-preview with-placeholder"
 			hidden={editMode}
 			bind:this={descriptionPreviewEl}
-			data-placeholder="Your stats here..."
+			data-placeholder=""
 		></span>
 		{#if editMode}
 			<Fab on:click={updateDescription}>
