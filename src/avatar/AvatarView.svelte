@@ -85,6 +85,12 @@
 		descriptionPreviewEl.innerHTML = '';
 		MarkdownRenderer.renderMarkdown(state.description, descriptionPreviewEl, ctx?.sourcePath ?? "", plugin);
 	}
+
+	function handleKeyDown(event) {
+		if (event.key === "Enter" || event.key === "Spacebar" || event.key === " ") {
+			updateImage();
+		}
+	}
 </script>
 
 <div class="flex">
@@ -93,6 +99,7 @@
 		on:click={updateImage}
 		on:mouseenter={() => hoverOnImage = true}
 		on:mouseleave={() => hoverOnImage = false}
+		on:keydown={handleKeyDown}
 	>
 		<img class="avatar" alt="Avatar" src={normalizeImgPath(state?.image) ?? fallbackImage} />
 		{#if inSourceMode && hoverOnImage}
