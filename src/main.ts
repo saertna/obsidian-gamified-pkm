@@ -14,7 +14,8 @@ import {
 	pointsNoteMajurity,
 	streakboosterDecrease,
 	streakboosterIncreaseDaily,
-	streakboosterIncreaseWeekly
+	streakboosterIncreaseWeekly,
+	mil2sec, milliseconds, seconds, minutesTimer
 } from './constants'
 import {
 	count_inlinks,
@@ -146,7 +147,7 @@ export default class gamification extends Plugin implements GamificationMediator
 
 
 		// to set timer for reset daily and weekly goals
-		this.timerInterval = 30 * 60 * 1000; // minutes x seconds x milliseconds
+		this.timerInterval = minutesTimer * seconds * milliseconds; // minutes x seconds x milliseconds
 		this.timerId = window.setInterval(this.resetDailyGoals.bind(this), this.timerInterval);
 
 		this.registerEvent(
@@ -241,10 +242,10 @@ export default class gamification extends Plugin implements GamificationMediator
 				//const obsidianJustInstalled = this.settings.previousRelease === "0.0.0"
 
 				new ReleaseNotes(
-				 	this.app,
-				 	this,
-				 	//obsidianJustInstalled ? null :
-				 	PLUGIN_VERSION
+					this.app,
+					this,
+					//obsidianJustInstalled ? null :
+					PLUGIN_VERSION
 				).open();
 
 				//await this.decreaseStreakbooster(50);
@@ -394,7 +395,7 @@ export default class gamification extends Plugin implements GamificationMediator
 				// Trigger your action here
 				this.triggerAction(activeFile.path);
 			}
-		}, this.getSettingNumber('autoRateOnChangeDelayTime') * 1000);
+		}, this.getSettingNumber('autoRateOnChangeDelayTime') * mil2sec);
 	}
 
 
@@ -545,13 +546,13 @@ export default class gamification extends Plugin implements GamificationMediator
 				} catch (e) {
 					if (e?.name === 'YAMLParseError') {
 						const errorMessage = `Update majuritys failed Malformed frontamtter on this file : ${file.path} ${e.message}`;
-						new Notice(errorMessage, this.getSettingNumber('timeShowNotice') * 1000);
+						new Notice(errorMessage, this.getSettingNumber('timeShowNotice') * mil2sec);
 						console.error(errorMessage);
 					}
 				}
 			}
 			if (pointsReceived > 0) {
-				new Notice(`${pointsReceived} Points received`,this.getSettingNumber('timeShowNotice') * 1000)
+				new Notice(`${pointsReceived} Points received`,this.getSettingNumber('timeShowNotice') * mil2sec)
 				if(debugLogs) console.debug(`${pointsReceived} Points received`)
 			}
 
@@ -560,7 +561,7 @@ export default class gamification extends Plugin implements GamificationMediator
 		setTimeout(async () => {
 			// Code that you want to execute after the delay
 			const initBadge: Badge = getBadgeForInitLevel(this.getSettingNumber('statusLevel'));
-			new Notice(`You've earned the "${initBadge.name}" badge. ${initBadge.description}`,this.getSettingNumber('timeShowNotice') * 1000 * 1.2)
+			new Notice(`You've earned the "${initBadge.name}" badge. ${initBadge.description}`,this.getSettingNumber('timeShowNotice') * mil2sec * 1.2)
 			if(debugLogs) console.log(`You earned ${initBadge.name} - ${initBadge.description}`)
 			await this.giveInitBadgeInProfile(this.getSettingString('avatarPageName'), initBadge);
 			await this.removeBadgesWhenInitLevelHigher(this.getSettingString('avatarPageName'), this.getSettingNumber('statusLevel'))
@@ -736,7 +737,7 @@ export default class gamification extends Plugin implements GamificationMediator
 						//if(debugLogs) console.debug(`pointsReceived: ${pointsReceived}`)
 						if (pointsReceived > 0){
 							const messagePoints = getRandomMessagePoints(pointsReceived);
-							new Notice(messagePoints,this.getSettingNumber('timeShowNotice') * 1000)
+							new Notice(messagePoints,this.getSettingNumber('timeShowNotice') * mil2sec)
 							if(debugLogs) console.debug(messagePoints)
 						}
 
@@ -746,7 +747,7 @@ export default class gamification extends Plugin implements GamificationMediator
 			} catch (e) {
 				if (e?.name === 'YAMLParseError') {
 					const errorMessage = `Update majuritys failed Malformed frontamtter on this file : ${file.path} ${e.message}`;
-					new Notice(errorMessage, this.getSettingNumber('timeShowNotice') * 1000);
+					new Notice(errorMessage, this.getSettingNumber('timeShowNotice') * mil2sec);
 					console.error(errorMessage);
 				}
 			}
@@ -854,7 +855,7 @@ export default class gamification extends Plugin implements GamificationMediator
 				await this.giveStatusPoints(pointsForDailyChallenge,'formIncreaseDailyCreatedNoteCount')
 				const message = getRandomMessageTwoNoteChallenge(pointsForDailyChallenge * (this.getSettingNumber('badgeBoosterFactor') + this.getSettingNumber('streakbooster')));
 				if(debugLogs) console.debug(`daily Challenge reached! ${newDailyNoteCreationTask}/2 created.`)
-				new Notice(message,this.getSettingNumber('timeShowNotice') * 1000)
+				new Notice(message,this.getSettingNumber('timeShowNotice') * mil2sec)
 				if(debugLogs) console.debug(message)
 			} else {
 				// nothing else to do here
@@ -920,7 +921,7 @@ export default class gamification extends Plugin implements GamificationMediator
 			await this.giveStatusPoints(pointsForWeeklyChallenge, 'fromCheckForWeeklyNoteChallengeEvaluation')
 			if(debugLogs) console.debug(`Weekly Challenge reached! ${newWeeklyNoteCreationTask}/7 created in a chain.`)
 			const message = getRandomMessageWeeklyChallenge(pointsForWeeklyChallenge * (this.getSettingNumber('badgeBoosterFactor') + this.getSettingNumber('streakbooster')));
-			new Notice(message,this.getSettingNumber('timeShowNotice') * 1000)
+			new Notice(message,this.getSettingNumber('timeShowNotice') * mil2sec)
 			if(debugLogs) console.debug(message)
 		} else {
 			// nothing else to do here
@@ -1047,7 +1048,7 @@ export default class gamification extends Plugin implements GamificationMediator
 		const newIntegerPart = Math.floor(newBoosterFactor);
 		if (oldBoosterFactor <= 80 && newBoosterFactor <= 80 && newBoosterFactor > oldBoosterFactor &&
 			newIntegerPart !== oldIntegerPart && newIntegerPart % 5 === 0) {
-			new Notice(getRandomMessageBoosterFactor(),this.getSettingNumber('timeShowNotice') * 1000 * 1.2)
+			new Notice(getRandomMessageBoosterFactor(),this.getSettingNumber('timeShowNotice') * mil2sec * 1.2)
 			console.log(`${getRandomMessageBoosterFactor()} : ${newBoosterFactor}`)
 		}
 
@@ -1136,7 +1137,7 @@ export default class gamification extends Plugin implements GamificationMediator
 			let receiveBadge = false
 			if (this.getSettingNumber('statusLevel') < level.level){
 				// Level Up archived
-				new Notice(`With ${newPoints} points, the current level is ${level.level}.`,this.getSettingNumber('timeShowNotice') * 1000 * 1.2)
+				new Notice(`With ${newPoints} points, the current level is ${level.level}.`,this.getSettingNumber('timeShowNotice') * mil2sec * 1.2)
 				// check first if this means a new badge before it gets overwritten
 				receiveBadge = checkIfReceiveABadge(this.getSettingNumber('statusLevel'), level.level)
 				this.setSettingNumber('statusLevel', level.level);
@@ -1400,7 +1401,7 @@ export default class gamification extends Plugin implements GamificationMediator
 		newLevel.then((result: boolean)=> {
 			if(result){
 				const badge : Badge = getBadgeForLevel(this.getSettingNumber('statusLevel'), false)
-				new Notice(`You've earned the "${badge.name}" badge. ${badge.description}`,this.getSettingNumber('timeShowNotice') * 1000 * 1.2)
+				new Notice(`You've earned the "${badge.name}" badge. ${badge.description}`,this.getSettingNumber('timeShowNotice') * mil2sec * 1.2)
 				if(debugLogs) console.debug(`You've earned the "${badge.name}" badge. ${badge.description}`)
 				this.giveBadgeInProfile(this.getSettingString('avatarPageName'), badge)
 				this.setSettingBoolean('badgeBoosterState', false);
@@ -1436,7 +1437,7 @@ export default class gamification extends Plugin implements GamificationMediator
 				} catch (e) {
 					if (e?.name === 'YAMLParseError') {
 						const errorMessage = `Update majuritys failed Malformed frontmatter ${e.message}`;
-						new Notice(errorMessage, this.getSettingNumber('timeShowNotice') * 1000);
+						new Notice(errorMessage, this.getSettingNumber('timeShowNotice') * mil2sec);
 						console.error(errorMessage);
 					}
 				}
@@ -1532,9 +1533,9 @@ export default class gamification extends Plugin implements GamificationMediator
 				}
 			}
 			if(debugLogs) console.debug(`You earned: ${concatenateStrings(earnedIngredientToShow)}`);
-			new Notice(`You earned ${concatenateStrings(earnedIngredientToShow)}`,this.getSettingNumber('timeShowNotice') * 1000)
+			new Notice(`You earned ${concatenateStrings(earnedIngredientToShow)}`,this.getSettingNumber('timeShowNotice') * mil2sec)
 		} else {
-			new Notice(`This time you didn't earn an ingredient.`,this.getSettingNumber('timeShowNotice') * 1000)
+			new Notice(`This time you didn't earn an ingredient.`,this.getSettingNumber('timeShowNotice') * mil2sec)
 			if(debugLogs) console.debug('You did not earn an ingredient this time.');
 		}
 		
