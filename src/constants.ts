@@ -11,6 +11,11 @@ export const streakboosterIncreaseWeekly = 1;
 export const CryptoJS = require("crypto-js");
 export const secretKey = "2ZU^12y#QmNB5$yEin5^";
 export const debugLogs = false;
+export const mil2sec = 1000;
+export const milliseconds = 1000;
+export const seconds = 1000;
+export const minutesTimer = 1000;
+
 export const avatarInitContent =  `# Avatar
 
 
