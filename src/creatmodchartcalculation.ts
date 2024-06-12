@@ -30,8 +30,8 @@ export function findEarliestModifiedFile<T extends FileInterface>(files: T[]): T
 }  
 
 
-export function findEarliestDateFile(files: TFile[]): TFile {
-	let earliestCreatedFile: TFile = files[0];
+export function findEarliestDateFile<T extends FileInterface>(files: T[]): T {
+	let earliestCreatedFile: T = files[0];
 	for (const file of files) {
 		if (file.stat.ctime < earliestCreatedFile.stat.ctime) {
 			earliestCreatedFile = file;
@@ -53,25 +53,21 @@ export function monthsBetween(startMonth: Date, endMonth: Date): number {
 }
 
 
-export function getCreationDates(files: TFile[]): Array<Date> {
+export function getCreationDates<T extends FileInterface>(files: T[]): Array<Date> {
 	const creationDates: Array<Date> = [];
-  
 	for (const file of files) {
 		creationDates.push(new Date(file.stat.ctime));
 	}
-  
 	return creationDates;
 }
 
 
-export function getModificationDates(files: TFile[]): Array<Date> {
-	const creationDates: Array<Date> = [];
-  
+export function getModificationDates<T extends FileInterface>(files: T[]): Array<Date> {
+	const modificationDates: Array<Date> = [];
 	for (const file of files) {
-		creationDates.push(new Date(file.stat.mtime));
+		modificationDates.push(new Date(file.stat.mtime));
 	}
-  
-	return creationDates;
+	return modificationDates;
 }
 
 

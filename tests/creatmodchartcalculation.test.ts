@@ -52,6 +52,24 @@ describe('findEarliestModifiedFile', () => {
 	});
 });
 
+describe('findEarliestDateFile', () => {
+	it('should return the file with the earliest date for creation or modification time', () => {
+		const result = findEarliestDateFile(files);
+		expect(result).toEqual(files[1]);
+	});
+
+	it('should handle an empty array', () => {
+		const result = findEarliestDateFile([]);
+		expect(result).toBeUndefined();
+	});
+
+	it('should handle a single element array', () => {
+		const singleFile = [files[0]];
+		const result = findEarliestDateFile(singleFile);
+		expect(result).toEqual(files[0]);
+	});
+});
+
 describe('monthsBetween', () => {
   it('should return how many month are between March 22 and July 23', () => {
   const actual = monthsBetween(new Date(2022,3), new Date(2023,6));
@@ -72,6 +90,50 @@ describe('monthsBetween', () => {
     });
 });
 
+
+describe('getCreationDates', () => {
+	it('should return an array of creation dates', () => {
+		const result = getCreationDates(files);
+		expect(result).toEqual([
+			new Date(1625234672000),
+			new Date(1625233672000),
+			new Date(1625235672000)
+		]);
+	});
+
+	it('should handle an empty array', () => {
+		const result = getCreationDates([]);
+		expect(result).toEqual([]);
+	});
+
+	it('should handle a single element array', () => {
+		const singleFile = [files[0]];
+		const result = getCreationDates(singleFile);
+		expect(result).toEqual([new Date(1625234672000)]);
+	});
+});
+
+describe('getModificationDates', () => {
+	it('should return an array of modification dates', () => {
+		const result = getModificationDates(files);
+		expect(result).toEqual([
+			new Date(1625234672000),
+			new Date(1625233672000),
+			new Date(1625235672000)
+		]);
+	});
+
+	it('should handle an empty array', () => {
+		const result = getModificationDates([]);
+		expect(result).toEqual([]);
+	});
+
+	it('should handle a single element array', () => {
+		const singleFile = [files[0]];
+		const result = getModificationDates(singleFile);
+		expect(result).toEqual([new Date(1625234672000)]);
+	});
+});
 
 describe('createChartFormat', () => {
   it('should return chart full length', () => {
