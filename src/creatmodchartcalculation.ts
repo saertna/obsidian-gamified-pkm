@@ -4,6 +4,7 @@ import { debugLogs } from './constants';
 interface FileInterface {
 	stat: {
 		ctime: number;
+		mtime: number;
 	};
 }
 
@@ -18,8 +19,8 @@ export function findEarliestCreatedFile<T extends FileInterface>(files: T[]): T 
 }
 
   
-export function findEarliestModifiedFile(files: TFile[]): TFile {
-	let earliestModifiedFile: TFile = files[0];
+export function findEarliestModifiedFile<T extends FileInterface>(files: T[]): T {
+	let earliestModifiedFile: T = files[0];
 	for (const file of files) {
 		if (file.stat.mtime < earliestModifiedFile.stat.mtime) {
 			earliestModifiedFile = file;
