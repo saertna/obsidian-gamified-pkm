@@ -1,8 +1,14 @@
 import {TFile} from 'obsidian';
 import { debugLogs } from './constants';
 
-export function findEarliestCreatedFile(files: TFile[]): TFile {
-	let earliestCreatedFile: TFile = files[0];
+interface FileInterface {
+	stat: {
+		ctime: number;
+	};
+}
+
+export function findEarliestCreatedFile<T extends FileInterface>(files: T[]): T {
+	let earliestCreatedFile: T = files[0];
 	for (const file of files) {
 		if (file.stat.ctime < earliestCreatedFile.stat.ctime) {
 			earliestCreatedFile = file;

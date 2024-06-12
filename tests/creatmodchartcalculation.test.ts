@@ -246,6 +246,38 @@ describe('findEarliestDateFile Test', () => {
 });
 */
 
+// Mock data
+interface MockFile {
+	stat: {
+		ctime: number;
+	};
+}
+
+const files: MockFile[] = [
+	{ stat: { ctime: 1625234672000 } }, // File created on July 2, 2021
+	{ stat: { ctime: 1625233672000 } }, // File created on July 2, 2021 (earliest)
+	{ stat: { ctime: 1625235672000 } }, // File created on July 2, 2021
+];
+
+describe('findEarliestCreatedFile', () => {
+	it('should return the file with the earliest creation time', () => {
+		const result = findEarliestCreatedFile(files);
+		expect(result).toEqual(files[1]);
+	});
+
+	it('should handle an empty array', () => {
+		const result = findEarliestCreatedFile([]);
+		expect(result).toBeUndefined();
+	});
+
+	it('should handle a single element array', () => {
+		const singleFile = [files[0]];
+		const result = findEarliestCreatedFile(singleFile);
+		expect(result).toEqual(files[0]);
+	});
+});
+
+
 describe('monthsBetween', () => {
   it('should return how many month are between March 22 and July 23', () => {
   const actual = monthsBetween(new Date(2022,3), new Date(2023,6));
