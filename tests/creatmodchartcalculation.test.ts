@@ -1,4 +1,4 @@
-import {findEarliestCreatedFile, findEarliestModifiedFile, findEarliestDateFile, monthsBetween, getCreationDates, getModificationDates, createChartFormat, replaceChartContent} from '../src/creatmodchartcalculation'
+import {AbstractFile, VaultInterface, FileInterface, findEarliestCreatedFile, findEarliestModifiedFile, findEarliestDateFile, monthsBetween, getCreationDates, getModificationDates, createChartFormat, replaceChartContent} from '../src/creatmodchartcalculation'
 import { describe } from 'node:test';
 
 
@@ -7,13 +7,14 @@ interface MockFile {
 	stat: {
 		ctime: number;
 		mtime: number;
+		size: number;
 	};
 }
 
-const files: MockFile[] = [
-	{ stat: { ctime: 1625234672000 , mtime: 1625234672000 } }, // File created on July 2, 2021
-	{ stat: { ctime: 1625233672000 , mtime: 1625233672000 } }, // File created on July 2, 2021 (earliest)
-	{ stat: { ctime: 1625235672000 , mtime: 1625235672000 } }, // File created on July 2, 2021
+const files: FileInterface[] = [
+	{ path: 'file1.md', stat: { ctime: 1625234672000, mtime: 1625234672000, size: 1234 } },
+	{ path: 'file2.md', stat: { ctime: 1625233672000, mtime: 1625233672000, size: 1234 } },
+	{ path: 'file3.md', stat: { ctime: 1625235672000, mtime: 1625235672000, size: 1234 } },
 ];
 
 describe('findEarliestCreatedFile', () => {
@@ -149,3 +150,56 @@ describe('createChartFormat', () => {
   });
   
 });
+
+// Mock data and implementations
+class MockVault implements VaultInterface {
+	private files: { [key: string]: string } = {};
+
+	addFile(path: string, content: string) {
+		this.files[path] = content;
+	}
+
+	getAbstractFileByPath(path: string): AbstractFile | null {
+		if (this.files[path]) {
+			return { path } as AbstractFile;
+		}
+		return null;
+	}
+
+	async read(file: FileInterface): Promise<string> {
+		return this.files[file.path];
+	}
+
+	async modify(file: FileInterface, data: string): Promise<void> {
+		this.files[file.path] = data;
+	}
+}
+/*
+describe('replaceChartContent', () => {
+	let mockVault: MockVault;
+
+	beforeEach(() => {
+		mockVault = new MockVault();
+		mockVault.addFile('test.md', 'Line 1\n^ChartMonth\nLine 3');
+	});
+
+	it('should replace chart content correctly', async () => {
+		await replaceChartContent('test', 'New Chart Content', mockVault, true);
+		const modifiedContent = await mockVault.read({ path: 'test.md' } as FileInterface);
+		expect(modifiedContent).toBe('New Chart Content\nLine 3');
+	});
+
+	it('should log and return if the file does not exist', async () => {
+		const consoleSpy = jest.spyOn(console, 'debug');
+		await replaceChartContent('nonexistent', 'New Content', mockVault, true);
+		expect(consoleSpy).toHaveBeenCalledWith('File nonexistent.md does not exist');
+	});
+
+	it('should handle file with no ^ChartMonth', async () => {
+		mockVault.addFile('nochart.md', 'Line 1\nLine 2\nLine 3');
+		await replaceChartContent('nochart', 'New Content', mockVault, true);
+		const modifiedContent = await mockVault.read({ path: 'nochart.md' } as FileInterface);
+		expect(modifiedContent).toBe('Line 1\nLine 2\nLine 3');
+	});
+});
+*/

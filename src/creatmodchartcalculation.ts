@@ -1,11 +1,22 @@
 import {TFile} from 'obsidian';
 import { debugLogs } from './constants';
 
-interface FileInterface {
+export interface AbstractFile {
+	path: string;
+}
+
+export interface FileInterface extends AbstractFile{
 	stat: {
 		ctime: number;
 		mtime: number;
+		size: number;
 	};
+}
+
+export interface VaultInterface {
+	getAbstractFileByPath(path: string): AbstractFile | null;
+	read(file: FileInterface): Promise<string>;
+	modify(file: FileInterface, data: string): Promise<void>;
 }
 
 export function findEarliestCreatedFile<T extends FileInterface>(files: T[]): T {
@@ -82,16 +93,22 @@ export function createChartFormat(y_axis: string, countsStringMod: string, chart
 	return "```chart\ntype: bar\nlabels: [" + y_axis + "]\nseries:\n  - title: modified\n    data: [" + countsStringMod + "]\ntension: 0.2\nwidth: 80 %\nlabelColors: false\nfill: false\nbeginAtZero: false\nbestFit: false\nbestFitTitle: undefined\nbestFitNumber: 0\nstacked: true\nyTitle: \"Number of Notes\"\nxTitle: \"Months\"\nxMin: " + monatsbegrenzung + "\n```";
 }
 
-  
-export async function replaceChartContent (avatarPageName: string, newContent: string) {
-	const existingFile = this.app.vault.getAbstractFileByPath(`${avatarPageName}.md`);
-	if (existingFile == null) {
-		if(debugLogs) console.debug(`File ${avatarPageName}.md does not exist`);
-		return;
-		}
-	const file = existingFile as TFile;
 
-	const content = await this.app.vault.read(file);
+export async function replaceChartContent(
+	avatarPageName: string,
+	newContent: string,
+	vault: VaultInterface,
+	debugLogs = false
+): Promise<void> {
+	const existingFile = vault.getAbstractFileByPath(`${avatarPageName}.md`);
+	if (existingFile == null) {
+		if (debugLogs) console.debug(`File ${avatarPageName}.md does not exist`);
+		return;
+	}
+
+	const file = existingFile as FileInterface;
+
+	const content = await vault.read(file);
 	let reference: number | null = null;
 	let end: number | null = null;
 	let start: number | null = null;
@@ -105,11 +122,11 @@ export async function replaceChartContent (avatarPageName: string, newContent: s
 			}
 		}
 	}
-	if (reference != null){
+	if (reference != null) {
 		end = reference;
 		start = reference - 19;
 		const newLines = [...lines.slice(0, start), newContent, ...lines.slice(end)];
-		await this.app.vault.modify(file, newLines.join("\n"));
+		await vault.modify(file, newLines.join("\n"));
 	}
 }
 
