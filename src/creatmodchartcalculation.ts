@@ -101,33 +101,26 @@ export async function replaceChartContent(
 	debugLogs = false
 ): Promise<void> {
 	const existingFile = vault.getAbstractFileByPath(`${avatarPageName}.md`);
-	if (existingFile == null) {
+	if (!existingFile) {
 		if (debugLogs) console.debug(`File ${avatarPageName}.md does not exist`);
 		return;
 	}
 
 	const file = existingFile as FileInterface;
-
 	const content = await vault.read(file);
-	let reference: number | null = null;
-	let end: number | null = null;
-	let start: number | null = null;
-
 	const lines = content.split("\n");
-	for (let i = 0; i < lines.length; i++) {
-		const line = lines[i].trim();
-		if (line === "^ChartMonth") {
-			if (reference === null) {
-				reference = i;
-			}
-		}
-	}
-	if (reference != null) {
-		end = reference;
-		start = reference - 19;
-		const newLines = [...lines.slice(0, start), newContent, ...lines.slice(end)];
-		await vault.modify(file, newLines.join("\n"));
-	}
+
+	const referenceIndex = lines.findIndex(line => line.trim() === "^ChartMonth");
+	if (referenceIndex === -1) return;
+
+	// Calculate start index for replacement (ensure it doesn't go below 0)
+	const start = Math.max(referenceIndex - 19, 0);
+
+	// Slice lines and replace the specified block with new content
+	const newLines = [...lines.slice(0, start), newContent, ...lines.slice(referenceIndex + 1)];
+	await vault.modify(file, newLines.join("\n"));
 }
+
+
 
 

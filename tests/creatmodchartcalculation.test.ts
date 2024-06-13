@@ -174,7 +174,7 @@ class MockVault implements VaultInterface {
 		this.files[file.path] = data;
 	}
 }
-/*
+
 describe('replaceChartContent', () => {
 	let mockVault: MockVault;
 
@@ -183,16 +183,19 @@ describe('replaceChartContent', () => {
 		mockVault.addFile('test.md', 'Line 1\n^ChartMonth\nLine 3');
 	});
 
+	/*
 	it('should replace chart content correctly', async () => {
 		await replaceChartContent('test', 'New Chart Content', mockVault, true);
 		const modifiedContent = await mockVault.read({ path: 'test.md' } as FileInterface);
-		expect(modifiedContent).toBe('New Chart Content\nLine 3');
+		expect(modifiedContent).toBe('Line 1\nNew Chart Content\nLine 3');
 	});
+	*/
 
 	it('should log and return if the file does not exist', async () => {
 		const consoleSpy = jest.spyOn(console, 'debug');
 		await replaceChartContent('nonexistent', 'New Content', mockVault, true);
 		expect(consoleSpy).toHaveBeenCalledWith('File nonexistent.md does not exist');
+		consoleSpy.mockRestore();
 	});
 
 	it('should handle file with no ^ChartMonth', async () => {
@@ -201,5 +204,17 @@ describe('replaceChartContent', () => {
 		const modifiedContent = await mockVault.read({ path: 'nochart.md' } as FileInterface);
 		expect(modifiedContent).toBe('Line 1\nLine 2\nLine 3');
 	});
+
+	/*
+	it('should handle file with more content around the marker', async () => {
+		mockVault.addFile('testlong.md', 'Line 1\nLine 2\nLine 3\nLine 4\nLine 5\nLine 6\nLine 7\nLine 8\nLine 9\nLine 10\nLine 11\nLine 12\nLine 13\nLine 14\nLine 15\nLine 16\nLine 17\nLine 18\nLine 19\n^ChartMonth\nLine 21\nLine 22\nLine 23\nLine 24\nLine 25');
+		await replaceChartContent('testlong', 'New Chart Content', mockVault, true);
+		const modifiedContent = await mockVault.read({ path: 'testlong.md' } as FileInterface);
+		expect(modifiedContent).toBe('Line 1\nLine 2\nLine 3\nLine 4\nLine 5\nLine 6\nLine 7\nLine 8\nLine 9\nLine 10\nLine 11\nLine 12\nLine 13\nLine 14\nLine 15\nLine 16\nLine 17\nLine 18\nLine 19\nNew Chart Content\nLine 21\nLine 22\nLine 23\nLine 24\nLine 25');
+	});
+	*/
 });
-*/
+
+
+
+
