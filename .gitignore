@@ -20,9 +20,10 @@ data.json
 
 # zip-archive
 obsidian-gamified-pkm/obsidian-gamified-pkm.zip
+*.zip
 
 # Exclude macOS Finder (System Explorer) View States
-coverage/
+/coverage/
 .DS_Store
 /cp-js2cortex.bat
 ncryption
