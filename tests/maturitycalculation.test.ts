@@ -680,6 +680,55 @@ describe('count_inlinks2', () => {
 */
 
 
+describe('getNumberOfOutlinks', () => {
+	let mockApp: any;
+
+	beforeEach(() => {
+		// Mock the app object and metadataCache
+		mockApp = {
+			metadataCache: {
+				getFileCache: jest.fn(),
+			},
+		};
+		(global as any).app = mockApp; // set the global app object if necessary
+	});
+
+	afterEach(() => {
+		jest.resetAllMocks();
+	});
+
+	test('should return 0 if activeFile is null', () => {
+		// Assuming TFile cannot be null, this might need adjustment in the function itself
+		const result = getNumberOfOutlinks(null as unknown as TFile);
+		expect(result).toBe(0);
+	});
+
+	test('should return 0 if activeFile has no links', () => {
+		const activeFile: TFile = {} as TFile; // mock TFile object
+		mockApp.metadataCache.getFileCache.mockReturnValue(null);
+		const result = getNumberOfOutlinks(activeFile);
+		expect(result).toBe(0);
+		expect(mockApp.metadataCache.getFileCache).toHaveBeenCalledWith(activeFile);
+	});
+
+	test('should return the number of links if activeFile has links', () => {
+		const activeFile: TFile = {} as TFile; // mock TFile object
+		const links = { link1: {}, link2: {} }; // mock links object
+		mockApp.metadataCache.getFileCache.mockReturnValue({ links });
+		const result = getNumberOfOutlinks(activeFile);
+		expect(result).toBe(2);
+		expect(mockApp.metadataCache.getFileCache).toHaveBeenCalledWith(activeFile);
+	});
+
+	test('should return 0 if inlinks is undefined', () => {
+		const activeFile: TFile = {} as TFile; // mock TFile object
+		mockApp.metadataCache.getFileCache.mockReturnValue({ links: undefined });
+		const result = getNumberOfOutlinks(activeFile);
+		expect(result).toBe(0);
+		expect(mockApp.metadataCache.getFileCache).toHaveBeenCalledWith(activeFile);
+	});
+});
+
 
 
 
