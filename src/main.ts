@@ -222,7 +222,7 @@ export default class gamification extends Plugin implements GamificationMediator
 		});
 
 		this.addRibbonIcon("chevrons-right", "update overview leaf", () => {
-			this.updateView();
+			this.updateView("New Text");
 		});
 
 		this.addCommand({
@@ -458,7 +458,7 @@ export default class gamification extends Plugin implements GamificationMediator
 		}
 	}
 
-	async updateView() {
+	async updateView(newContent: string) {
 		const leaves = this.app.workspace.getLeavesOfType(VIEW_TYPE_EXAMPLE);
 
 		if (leaves.length > 0) {
@@ -466,7 +466,7 @@ export default class gamification extends Plugin implements GamificationMediator
 				const view = leaf.view;
 				if (view instanceof ExampleView) {
 					// Directly call the update method on the ExampleView instance
-					view.updateContent("Updated content");
+					view.updateContent(newContent);
 				}
 			});
 		} else {
