@@ -12,7 +12,7 @@ style.textContent = `
 `;
 
 document.head.append(style);
-import {App, MarkdownView, Notice, Plugin, TFile} from 'obsidian';
+import {App, MarkdownView, Notice, Plugin, TFile, WorkspaceLeaf} from 'obsidian';
 import {defaultSettings, GamificationPluginSettings, ISettings} from './settings';
 import format from 'date-fns/format';
 import {
@@ -82,7 +82,6 @@ export default class gamification extends Plugin implements GamificationMediator
 	private exampleView: ExampleView | null = null;
 	private lastEditTimes: Record<string, number> = {};
 	private editTimers: Record<string, ReturnType<typeof setTimeout>> = {};
-
 
 
 	getSettingString(key: string): string {
@@ -175,16 +174,7 @@ export default class gamification extends Plugin implements GamificationMediator
 			(leaf) => new ExampleView(leaf)
 		);
 
-		this.addRibbonIcon("target", "gamification side overview", () => {
-			this.activateView();
-		});
-		this.addCommand({
-			id: 'overview',
-			name: 'open gamification side overview',
-			callback: async () => {
-				this.activateView();
-			},
-		});
+
 
 		// This portion of code is adapted from the following source under the MIT License:
 		// https://github.com/zsviczian/obsidian-excalidraw-plugin
@@ -227,8 +217,20 @@ export default class gamification extends Plugin implements GamificationMediator
 
 	private registerCommands(){
 
+		this.addRibbonIcon("target", "gamification side overview", () => {
+			this.activateView();
+		});
+
 		this.addRibbonIcon("chevrons-right", "update overview leaf", () => {
 			this.updateView();
+		});
+
+		this.addCommand({
+			id: 'overview',
+			name: 'open gamification side overview',
+			callback: async () => {
+				this.activateView();
+			},
 		});
 
 		if (this.getSettingBoolean('debug')){
@@ -466,7 +468,7 @@ export default class gamification extends Plugin implements GamificationMediator
 				console.log(`exampleView not found.`)
 				// Our view could not be found in the workspace, create a new leaf
 				// in the right sidebar for it
-				let leaf = this.app.workspace.getRightLeaf(false);
+				const leaf = this.app.workspace.getRightLeaf(false);
 				leaf.setViewState({ type: VIEW_TYPE_EXAMPLE, active: true });
 
 			}
@@ -475,10 +477,10 @@ export default class gamification extends Plugin implements GamificationMediator
 	}
 
 	async activateView() {
-		let { workspace }  = this.app;
+		const { workspace }  = this.app;
 
 		let leaf: WorkspaceLeaf | null = null;
-		let leaves = workspace.getLeavesOfType(VIEW_TYPE_EXAMPLE);
+		const leaves = workspace.getLeavesOfType(VIEW_TYPE_EXAMPLE);
 
 		if (leaves.length > 0) {
 			// A leaf with our view already exists, use that
