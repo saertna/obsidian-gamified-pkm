@@ -2,6 +2,7 @@ import { App, PluginSettingTab, Setting } from 'obsidian';
 import gamification from './main';
 import type {MomentInput} from 'moment';
 import { encryptValue, encryptString, decryptString, encryptNumber, decryptNumber, encryptBoolean, decryptBoolean } from 'encryption';
+import { debugLogs } from './constants';
 
 export const defaultSettings: Partial<ISettings> = {
   enableInitCommand: "U2FsdGVkX1+7lWe/h95uqzgl27JBGW2iki7sBwk44YQ=",
@@ -26,6 +27,7 @@ export const defaultSettings: Partial<ISettings> = {
   dailyNoteCreationDate: "U2FsdGVkX195v33EhTQvoQtR2/xfbC2Iag2Ly1UFSj8=",
   weeklyNoteCreationTask: "U2FsdGVkX1/MYfi0r0Btn2J7PmdQcWodJawC/uZAUSQ=",
   weeklyNoteCreationDate: "U2FsdGVkX18OX530OPOaURg/bv8xrM17hE0Y6641e30=",
+  weeklyNoteCreationTaskContinuously: "U2FsdGVkX1/MYfi0r0Btn2J7PmdQcWodJawC/uZAUSQ=",
   nexusNode: "U2FsdGVkX1+5+wg6OjOxBUvEe5w/SU0grvCLIshU/9s=",
   connectionCrystal: "U2FsdGVkX19SFmrQpmHJwAeiB/w1zUwmN3nOvfbfs8c=",
   masteryScroll: "U2FsdGVkX18Kw0rp3b/nkINNN3SpqvweJVE/rATCHtM=",
@@ -88,7 +90,13 @@ export const defaultSettings: Partial<ISettings> = {
   counterMajurityCalc: "U2FsdGVkX19TLndonGY4Y8vHuZFfLJ5gZ2t/CLprh0o=",
   counterMajurityCalcInitial: "U2FsdGVkX1+2Qii8qhFSqrNqmKR1Wh6saEjYbwPdi8Q=",
   delayLoadTime: "U2FsdGVkX19TLndonGY4Y8vHuZFfLJ5gZ2t/CLprh0o=",
-  timeShowNotice: "U2FsdGVkX190u8cOsylOs1cQ8MeZFq+i+Wv4ox6qq0k="
+  timeShowNotice: "U2FsdGVkX190u8cOsylOs1cQ8MeZFq+i+Wv4ox6qq0k=",
+  receivedBadges: "U2FsdGVkX1/skTUHmzuMYD86hDA/uF1kElPVYm04ijQ=",
+  showNewVersionNotification: "U2FsdGVkX1+7lWe/h95uqzgl27JBGW2iki7sBwk44YQ=",
+  autoRateOnChange: "U2FsdGVkX1/KT5I5txOiZ+r6Aa1F5RuE5b4eqpaZAqQ=",
+  autoRateOnChangeDelayTime: "U2FsdGVkX1/RiGtHePLD9og+g+w+DL31vVK02vCSkQQ=",
+  previousRelease: "U2FsdGVkX1+z55uCXdMxdGtgg5oBmTGQPDroIP0PDIk=",
+  showReleaseNotes: "U2FsdGVkX1+7lWe/h95uqzgl27JBGW2iki7sBwk44YQ="
 };
 
 export interface DynamicSettings {
@@ -117,6 +125,7 @@ export interface ISettings extends DynamicSettings{
   dailyNoteCreationTask: string;
   dailyNoteCreationDate: string;
   weeklyNoteCreationTask: string;
+  weeklyNoteCreationTaskContinuously: string;
   weeklyNoteCreationDate: string;
   streakbooster: string;
   streakboosterDate: string;
@@ -176,8 +185,14 @@ export interface ISettings extends DynamicSettings{
   counterMajurityCalc: string;
   counterMajurityCalcInitial: string;
   delayLoadTime: string;
-  timeShowNotice: string
-  //[key: string]: number | string | boolean | MomentInput;
+  timeShowNotice: string;
+  receivedBadges: string;
+  showNewVersionNotification: string
+  autoRateOnChange: string
+  autoRateOnChangeDelayTime: string
+  previousRelease: string
+  showReleaseNotes: string
+	//[key: string]: number | string | boolean | MomentInput;
 }
 
 
@@ -205,6 +220,7 @@ export class GamificationPluginSettings extends PluginSettingTab {
   public dailyNoteCreationTask: string;
   public dailyNoteCreationDate: string;
   public weeklyNoteCreationTask: string;
+  public weeklyNoteCreationTaskContinuously: string;
   public weeklyNoteCreationDate: string;
   public streakbooster: string;
   public streakboosterDate: string;
@@ -265,6 +281,12 @@ export class GamificationPluginSettings extends PluginSettingTab {
   public counterMajurityCalcInitial: string;
   public delayLoadTime: string;
   public timeShowNotice: string;
+  public receivedBadges: string;
+  public showNewVersionNotification: string;
+  public autoRateOnChange: string;
+  public autoRateOnChangeDelayTime: string;
+  public previousRelease: string;
+	public showReleaseNotes: string;
 
 	constructor(app: App, plugin: gamification) {
 	  super(app, plugin);
@@ -291,29 +313,30 @@ export class GamificationPluginSettings extends PluginSettingTab {
   
 	public display(): void {
 		const { containerEl } = this;
-		containerEl.addClass("excalidraw-settings");
+		containerEl.addClass("gamification-settings");
 		this.containerEl.empty();
 
-		const coffeeDiv = containerEl.createDiv("coffee");
-		coffeeDiv.addClass("ex-coffee-div");
-		const coffeeLink = coffeeDiv.createEl("a", {
-		href: "https://ko-fi.com/andreastrebing",
-		});
-		const coffeeImg = coffeeLink.createEl("img", {
-		attr: {
-			src: "https://cdn.ko-fi.com/cdn/kofi3.png?v=3",
-		},
-		});
-		coffeeImg.height = 45;
+
 
 		//const { containerEl } = this;
 		//containerEl.empty();
   
-		containerEl.createEl('h2', { text: 'Gamify your PKM - Settings' });
-		console.log('settings called')
+		if(debugLogs) console.debug('settings called')
+		new Setting(containerEl)
+			.setName('Plugin Update Notification')
+			.setDesc('When on, you get informed at startup if there is a newer Version.')
+			.addToggle((toggle) =>
+				toggle
+					.setValue(decryptBoolean(this.plugin.settings.showNewVersionNotification))
+					.onChange((value) => {
+						this.plugin.settings.showNewVersionNotification = encryptBoolean(value);
+						this.plugin.saveData(this.plugin.settings);
+					}),
+			);
+
 		new Setting(containerEl)
 			.setName('#tags to ignore')
-			.setDesc('enter tags without # and separate with ", ".\nInclude nested tags.')
+			.setDesc('Enter tags without # and separate with ", ".\nInclude nested tags.')
 			.addText(text => text
 				.setPlaceholder('Enter your tag1, tag2/subtag, …')
 				//.setValue(this.plugin.settings.tagsExclude)
@@ -325,35 +348,35 @@ export class GamificationPluginSettings extends PluginSettingTab {
 
 				
 		new Setting(containerEl)
-			.setName('folder to ignore')
-			.setDesc('enter folder whichs content shall be ignored. Separate with ", ".')
+			.setName('Folder to ignore')
+			.setDesc('Enter folder whichs content shall be ignored. Separate with ", ".')
 			.addText(text => text
 				.setPlaceholder('Enter your folder1, folder2, …')
 				//.setValue(this.plugin.settings.folderExclude)
         .setValue(decryptString(this.plugin.settings.folderExclude))
 				.onChange(async (value) => {
-					// console.log('folder to exclude: ' + value);
+					// if(debugLogs) console.debug('folder to exclude: ' + value);
 					this.plugin.settings.folderExclude = encryptString(value);
 					await this.plugin.saveSettings();
 				}));
 
 		new Setting(containerEl)
-			.setName('Profile Page Name')
-			.setDesc('you can change here the name of your profile page if you like.')
+			.setName('Profile page name')
+			.setDesc('You can change here the name of your profile page if you like.')
 			.addText(text => text
 					.setPlaceholder('name')
 					//.setValue(this.plugin.settings.avatarPageName)
           .setValue(decryptString(this.plugin.settings.avatarPageName))
 					.onChange(async (value) => {
-						// console.log('folder to exclude: ' + value);
+						// if(debugLogs) console.debug('folder to exclude: ' + value);
 						this.plugin.settings.avatarPageName = encryptString(value);
 						await this.plugin.saveSettings();
 				}));
 				
-    containerEl.createEl('h2', { text: 'Other Settings' });
+    containerEl.createEl('h2', { text: 'Other' });
 		new Setting(containerEl)
-			.setName('Disable Init Command')
-			.setDesc('you can remove the init command from command prompt by switching off.\nrestart needed.')
+			.setName('Disable init command')
+			.setDesc('You can remove the init command from command prompt by switching off.\nrestart needed.')
 			.addToggle((toggle) => 
 				toggle
           		.setValue(decryptBoolean(this.plugin.settings.enableInitCommand))
@@ -363,9 +386,32 @@ export class GamificationPluginSettings extends PluginSettingTab {
           			}),
 			);
 
+		new Setting(containerEl)
+			.setName('enable auto rate after change')
+			.setDesc('you can enable here an automatic trigger to rate a note when changed/created')
+			.addToggle((toggle) =>
+				toggle
+					.setValue(decryptBoolean(this.plugin.settings.autoRateOnChange))
+					.onChange((value) => {
+						this.plugin.settings.autoRateOnChange = encryptBoolean(value);
+						this.plugin.saveData(this.plugin.settings);
+					}),
+			);
+	new Setting(containerEl)
+		.setName('Wait time for automatic note rating')
+		.setDesc('Enter in seconds how long to wait after a change before automatical note ratting will be done')
+		.addText(text => text
+			.setPlaceholder('5')
+			.setValue(decryptNumber(this.plugin.settings.autoRateOnChangeDelayTime).toString())
+			//.setValue("0")
+			.onChange(async (value) => {
+				this.plugin.settings.autoRateOnChangeDelayTime = encryptNumber(parseInt(value));
+				await this.plugin.saveSettings();
+			}));
+
   
     new Setting(containerEl)
-			.setName('Delay Settings at startup')
+			.setName('Delay load settings at startup')
 			.setDesc('Enter in seconds to delay the load time. e.g. when GIT pull is performed before and settings get merge conflicts. Without GIT usage, keep it to 0.')
 			.addText(text => text
 					.setPlaceholder('0')
@@ -377,7 +423,7 @@ export class GamificationPluginSettings extends PluginSettingTab {
 		}));
 
     new Setting(containerEl)
-			.setName('Time how long Notices are shown')
+			.setName('Time how long notices are shown')
 			.setDesc('Enter in seconds. 4 seconds or more is a good value')
 			.addText(text => text
 					.setPlaceholder('4')
@@ -389,12 +435,12 @@ export class GamificationPluginSettings extends PluginSettingTab {
 
 		new Setting(containerEl)
 			.setName('Progressive Summarization')
-			.setDesc('you can change which formatting you use for Layer 2 and 3.')
+			.setDesc('You can change which formatting you use for Layer 2 and 3.')
 			.addText(text => text
 					.setPlaceholder('Layer 2 is usually **')
 					.setValue(decryptString(this.plugin.settings.progressiveSumLayer2))
 					.onChange(async (value) => {
-						// console.log('folder to exclude: ' + value);
+						// if(debugLogs) console.debug('folder to exclude: ' + value);
 						this.plugin.settings.progressiveSumLayer2 = encryptString(value);
 						await this.plugin.saveSettings();
 				}))
@@ -402,10 +448,32 @@ export class GamificationPluginSettings extends PluginSettingTab {
 					.setPlaceholder('Layer 3 is usually ==')
 					.setValue(decryptString(this.plugin.settings.progressiveSumLayer3))
 					.onChange(async (value) => {
-						// console.log('folder to exclude: ' + value);
+						// if(debugLogs) console.debug('folder to exclude: ' + value);
 						this.plugin.settings.progressiveSumLayer3 = encryptString(value);
 						await this.plugin.saveSettings();
 			}));
+		new Setting(containerEl)
+			.setName('Display release notes after update')
+			.setDesc('`Toggle ON`: Display release notes each time you update the plugin\n`Toggle OFF`: Silent mode. You can still read release notes on [GitHub](https://github.com/saertna/obsidian-gamified-pkm)')
+			.addToggle((toggle) =>
+				toggle
+					.setValue(decryptBoolean(this.plugin.settings.showReleaseNotes))
+					.onChange((value) => {
+						this.plugin.settings.showReleaseNotes = encryptBoolean(value);
+						this.plugin.saveData(this.plugin.settings);
+					}),
+			);
 
+      const coffeeDiv = containerEl.createDiv("coffee");
+      coffeeDiv.addClass("ex-coffee-div");
+      const coffeeLink = coffeeDiv.createEl("a", {
+      href: "https://ko-fi.com/andreastrebing",
+      });
+      const coffeeImg = coffeeLink.createEl("img", {
+      attr: {
+        src: "https://cdn.ko-fi.com/cdn/kofi3.png?v=3",
+      },
+      });
+      coffeeImg.height = 45;
 	}
   }

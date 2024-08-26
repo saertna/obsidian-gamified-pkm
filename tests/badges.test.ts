@@ -1,5 +1,12 @@
-import {checkIfReceiveABadge, getBadgeForLevel, getBadgeForInitLevel, Badge} from '../src/badges'
-import { describe, test } from 'node:test';
+import {
+    checkIfReceiveABadge,
+    getBadgeForLevel,
+    getBadgeForInitLevel,
+    Badge,
+    getBadgeDetails,
+    getBadge
+} from '../src/badges'
+import { describe } from 'node:test';
 
 
 describe('checkIfReceiveABadge', () => {
@@ -113,4 +120,65 @@ describe('getBadgeForInitLevel', () => {
         const expected = {"description": "Your existing notes have made you the 'Sultan of Synthesis.' You're the master weaver, threading together threads of information into a rich tapestry of insight.", "level": "level 90", "name": "Sultan of Synthesis"};
         expect(actual).toStrictEqual(expected);
         });
+});
+
+
+describe('getBadgeDetails', () => {
+    it('should return "Enlightened Novice" ', () => {
+        const actual = getBadgeDetails('Enlightened Novice');
+        const expected: Badge = { name: "Enlightened Novice", description: "Huzzah! You've embarked on the path of knowledge and earned the title of 'Enlightened Novice.' The journey has just begun, and you're already radiating wisdom like a baby sun!", level: "level 5" };
+        //const expected = false;
+        expect(actual).toStrictEqual(expected);
+    });
+
+    it('should return "Scholarly Trailblazer"', () => {
+        const actual = getBadgeDetails('Scholarly Trailblazer');
+        const expected = { name: "Scholarly Trailblazer", description: "Impressive! You're now a 'Scholarly Trailblazer,' boldly venturing through a sea of knowledge with a compass of curiosity and a map of intellect!" , level: "level 27" };
+        expect(actual).toStrictEqual(expected);
+    });
+
+    it('should return "Wisdom Seedling"', () => {
+        const actual = getBadgeDetails('Wisdom Seedling');
+        const expected = { name: "Wisdom Seedling", description: "Your existing notes have nurtured the growth of a 'Wisdom Seedling.' You're cultivating your garden of knowledge with care and patience." , level: "level 23" };
+        expect(actual).toStrictEqual(expected);
+    });
+});
+
+
+describe('getBadge', () => {
+    it('should return badge "Consistent Lore Weaver" ', () => {
+        const actual = getBadge('Consistent Lore Weaver');
+        const expected: Badge = { name: "Consistent Lore Weaver", description: "Congratulations! You've woven a tapestry of knowledge for 30 consecutive days. As a 'Consistent Lore Weaver,' your daily contributions have become the threads that enrich the fabric of your growing wisdom.", level: "" };
+        expect(actual).toStrictEqual(expected);
+    });
+
+    it('should return badge "Knowledge Artisan Stalwart"', () => {
+        const actual = getBadge('Knowledge Artisan Stalwart');
+        const expected = { name: "Knowledge Artisan Stalwart", description: "You've forged a robust foundation with 90 consecutive days of dedicated note crafting. As a 'Knowledge Artisan Stalwart,' your commitment has sculpted your repository into a work of art, a testament to your persistent curiosity.", level: "" };
+        expect(actual).toStrictEqual(expected);
+    });
+
+    it('should return badge "Wisdom Architect Virtuoso"', () => {
+        const actual = getBadge('Wisdom Architect Virtuoso');
+        const expected = { name: "Wisdom Architect Virtuoso", description: "With each passing day, you've laid down the blueprints of a profound structure. As a 'Wisdom Architect Virtuoso' at 180 days, your continuous efforts have transformed your knowledge space into an architectural marvel, a testament to your enduring passion for learning.", level: "" };
+        expect(actual).toStrictEqual(expected);
+    });
+
+    it('should return badge "Eternal Scholar Maestro"', () => {
+        const actual = getBadge('Eternal Scholar Maestro');
+        const expected = { name: "Eternal Scholar Maestro", description: "A year of unwavering dedication! You've earned the title of 'Eternal Scholar Maestro' by contributing daily for 365 days. Your commitment has created a masterpiece of continuous learning, setting you apart as a true maestro of personal knowledge.", level: "" }
+        expect(actual).toStrictEqual(expected);
+    });
+
+    it('should return badge "Divine Omniscience Overlord"', () => {
+        const actual = getBadge('Divine Omniscience Overlord');
+        const expected = { name: "Divine Omniscience Overlord", description: "Behold the divine! Your unbroken streak of daily contributions for 730 days crowns you as the 'Divine Omniscience Overlord.' Your two-year feat is a testament to your unmatched commitment and the creation of a knowledge empire that stands as a beacon for all seekers.", level: "" }
+        expect(actual).toStrictEqual(expected);
+    });
+
+    it('should return empty entry', () => {
+        const actual = getBadge('no idea what this could be');
+        const expected = { name: "", description: "", level: "" }
+        expect(actual).toStrictEqual(expected);
+    });
 });

@@ -162,6 +162,58 @@ const randomPointNotices: string[] = [
 	"Well deserved! [X] points earned!"
 ];
 
+const boosterFactorMessage : string[] = [
+	"Boom! You just hit a new Boosterfactor milestone! High five, booster pro!",
+	"Boosting it up! High five for reaching that Boosterfactor benchmark!",
+	"Way to amplify your game! High five for hitting that Boosterfactor goal!",
+	"You're turbocharging your progress! High five for achieving that Boosterfactor milestone!",
+	"Bam! Another Boosterfactor milestone smashed! High five, booster champion!",
+	"You're on turbo mode! High five for maximizing your Boosterfactor!",
+	"High five alert! You just boosted your way to a new milestone!",
+	"You're officially a booster master! High five for your unstoppable Boosterfactor streak!",
+	"Nailed it! High five for reaching another Boosterfactor milestone!",
+	"Woo hoo! High five for leveling up your Boosterfactor game!",
+	"On a boost spree! High five for maximizing your Boosterfactor!",
+	"High fives all around for reaching that Boosterfactor milestone!",
+	"Look at you go! High five for turbocharging your Boosterfactor!",
+	"You're making waves with your Boosterfactor! High five for the milestone!",
+	"High five incoming! You're a Boosterfactor maestro!",
+	"Keep 'em coming! High five for reaching another Boosterfactor milestone!",
+	"Bravo! High five for your stellar Boosterfactor progress!",
+	"High fives galore for hitting that Boosterfactor milestone!",
+	"You're unstoppable! High five for your Boosterfactor mayhem!",
+	"Kaboom! High five for blowing past that Boosterfactor milestone!",
+	"Way to hustle with your Boosterfactor! High five, booster hustler!",
+	"High five vibes for boosting your way to that milestone!",
+	"Bringing the heat with your Boosterfactor! High five for the milestone heatwave!",
+	"You're a Boosterfactor machine! High five, keep it up!",
+	"High fives incoming! You're a Boosterfactor mastermind!",
+	"Boosting like a boss! High five, booster superstar!",
+	"Look out, world! High five for your Boosterfactor domination!",
+	"High fives on repeat! You're a Boosterfactor magician!",
+	"Impressive stuff! High five for your Boosterfactor magic!",
+	"You're unstoppable! High five for your Boosterfactor momentum!",
+	"Keep the boost alive! High five for your Boosterfactor mojo!",
+	"High fives are in order! You're a Boosterfactor ninja!",
+	"Mission accomplished! High five for reaching that Boosterfactor milestone!",
+	"You're on a boost roll! High five for your Boosterfactor rampage!",
+	"High five alert! You're a Boosterfactor rockstar!",
+	"Two thumbs up! High five for your Boosterfactor success!",
+	"You're boosting it! High five for your Boosterfactor spree!",
+	"High fives incoming! You're a Boosterfactor sensation!",
+	"You're a Boosterfactor superhero! High five, booster caped crusader!",
+	"High five vibes! You're a Boosterfactor sensation!",
+	"You're a Boosterfactor legend! High five, oh mighty booster!",
+	"High fives all around! You're a Boosterfactor superstar!",
+	"You're a Boosterfactor champion! High five, boost conqueror!",
+	"High five incoming! You're a Boosterfactor warrior!",
+	"You're on fire with your Boosterfactor! High five for the victory!",
+	"You're a Boosterfactor guru! High five, wise booster!",
+	"High five vibes! You're a Boosterfactor wizard!",
+	"You're a Boosterfactor icon! High five, illustrious booster!",
+	"High five alert! You're a Boosterfactor prodigy!",
+	"You're unstoppable! High five for your Boosterfactor triumph!"
+]
 
 export function getRandomMessageWeeklyChallenge(points: number): string {
 	const randomIndex = Math.floor(Math.random() * messagesWeeklyChallenge.length);
@@ -183,9 +235,14 @@ export function getRandomMessagePoints(points: number): string {
 	return message.replace("[X]", points.toString());
 }
 
+export function getRandomMessageBoosterFactor(): string {
+	const randomIndex = Math.floor(Math.random() * boosterFactorMessage.length);
+	return boosterFactorMessage[randomIndex];
+}
+
 // Example usage
 // const randomPoints = 100; // Replace with your actual points value
 // const randomMessage = getRandomMessageWeeklyChallenge(randomPoints);
-// console.log(randomMessage);
+// console.debug(randomMessage);
 
 
