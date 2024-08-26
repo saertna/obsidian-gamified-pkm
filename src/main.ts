@@ -459,22 +459,29 @@ export default class gamification extends Plugin implements GamificationMediator
 	}
 
 	async updateView() {
-		this.app.workspace.getLeavesOfType(VIEW_TYPE_EXAMPLE).forEach((leaf) => {
-			if (leaf.view instanceof ExampleView) {
-				// Access your view instance.
-				if (this.exampleView) {
-				this.exampleView.updateContent("Updated content");
-			} else {
-				console.log(`exampleView not found.`)
-				// Our view could not be found in the workspace, create a new leaf
-				// in the right sidebar for it
-				const leaf = this.app.workspace.getRightLeaf(false);
-				leaf.setViewState({ type: VIEW_TYPE_EXAMPLE, active: true });
+		const leaves = this.app.workspace.getLeavesOfType(VIEW_TYPE_EXAMPLE);
 
+		if (leaves.length > 0) {
+			leaves.forEach((leaf) => {
+				const view = leaf.view;
+				if (view instanceof ExampleView) {
+					// Directly call the update method on the ExampleView instance
+					view.updateContent("Updated content");
+				}
+			});
+		} else {
+			console.log("No leaves found of type:", VIEW_TYPE_EXAMPLE);
+			// Optionally create a new leaf if none exist
+			const newLeaf = this.app.workspace.getRightLeaf(false);
+			await newLeaf.setViewState({ type: VIEW_TYPE_EXAMPLE, active: true });
+
+			const newView = newLeaf.view;
+			if (newView instanceof ExampleView) {
+				newView.updateContent("Updated content");
 			}
-			}
-		});
+		}
 	}
+
 
 	async activateView() {
 		const { workspace }  = this.app;
