@@ -26,9 +26,11 @@ export class ExampleView extends ItemView {
     }
 
     // Method to update content
-    updateContent(newContent: string) {
-      const container = this.containerEl.children[1];
-      const contentDiv = container.createDiv({ cls: "my-plugin-content" });
-      contentDiv.setText(newContent);
-    }
-  }
+	updateContent(newContent: string) {
+		const container = this.containerEl.children[1];
+		container.empty(); // Clear the existing content before adding new content
+		const contentDiv = container.createDiv({ cls: "my-plugin-content" });
+		contentDiv.setText(newContent);
+	}
+
+}
