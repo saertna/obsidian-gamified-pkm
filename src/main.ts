@@ -19,21 +19,15 @@ import {
 	avatarInitContent,
 	chanceToEarnIngredient,
 	debugLogs,
-	elements,
-	listOfUseableIngredientsToBeShown,
 	PLUGIN_VERSION,
-	pointsForDailyChallenge,
-	pointsForWeeklyChallenge,
 	pointsMajurity,
 	pointsNoteMajurity,
 	pointsForDailyChallenge,
 	pointsForWeeklyChallenge,
 	elements,
-	boosterRecipes,
 	streakboosterDecrease,
 	streakboosterIncreaseDaily,
 	streakboosterIncreaseWeekly,
-	chanceToEarnIngredient,
 	listOfUseableIngredientsToBeShown,
 	mil2sec, milliseconds, seconds, minutesTimer} from './constants'
 import {
@@ -53,11 +47,11 @@ import {
 } from './maturitycalculation'
 import {Badge, checkIfReceiveABadge, getBadge, getBadgeForInitLevel, getBadgeForLevel} from './badges'
 import {getLevelForPoints, statusPointsForLevel} from './levels'
-import type {Moment} from 'moment';
+// import type {Moment} from 'moment';
 import { getRandomMessageWeeklyChallenge, getRandomMessageTwoNoteChallenge , getRandomMessagePoints, getRandomMessageBoosterFactor } from './randomNotificationText'
 import { ModalInformationbox } from 'ModalInformationbox';
 import { ModalBooster } from 'ModalBooster';
-import { encryptValue, encryptString, decryptString, encryptNumber, decryptNumber, encryptBoolean, decryptBoolean } from 'encryption';
+import { encryptString, decryptString, encryptNumber, decryptNumber, encryptBoolean, decryptBoolean } from 'encryption';
 import { ExampleView, VIEW_TYPE_EXAMPLE } from "./view";
 import {
 	checkGamifiedPkmVersion,
