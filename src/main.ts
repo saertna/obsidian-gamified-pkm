@@ -222,7 +222,8 @@ export default class gamification extends Plugin implements GamificationMediator
 		});
 
 		this.addRibbonIcon("chevrons-right", "update overview leaf", () => {
-			this.updateView("New Text");
+			//this.updateView("New Text");
+			this.updateContent()
 		});
 
 		this.addCommand({
@@ -458,6 +459,7 @@ export default class gamification extends Plugin implements GamificationMediator
 		}
 	}
 
+
 	async updateView(newContent: string) {
 		const leaves = this.app.workspace.getLeavesOfType(VIEW_TYPE_EXAMPLE);
 
@@ -486,7 +488,7 @@ export default class gamification extends Plugin implements GamificationMediator
 	async activateView() {
 		const { workspace } = this.app;
 		let leaf = null;
-		const leaves = workspace.getLeavesOfType(VIEW_TYPE_EXAMPLE);
+		const leaves = this.app.workspace.getLeavesOfType(VIEW_TYPE_EXAMPLE);
 
 		if (leaves.length > 0) {
 			leaf = leaves[0];
@@ -503,6 +505,28 @@ export default class gamification extends Plugin implements GamificationMediator
 
 		// Optional: reveal the leaf if it's in a collapsed sidebar
 		// workspace.revealLeaf(leaf);
+	}
+
+	async updateContent() {
+		const { workspace } = this.app;
+		let leaf = null;
+		const leaves = this.app.workspace.getLeavesOfType(VIEW_TYPE_EXAMPLE);
+
+		if (leaves.length > 0) {
+			leaf = leaves[0];
+		} else {
+			leaf = workspace.getRightLeaf(false);
+			await leaf.setViewState({ type: VIEW_TYPE_EXAMPLE, active: true });
+		}
+
+		// Access and update the view content
+		const view = leaf.view;
+		if (view instanceof ExampleView) {
+			view.updateLevel(34);
+			view.updatePoints(7000000);
+		}else {
+			console.log('ExampleView is not loaded yet.');
+		}
 	}
 
 
