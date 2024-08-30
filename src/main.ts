@@ -475,8 +475,10 @@ export default class gamification extends Plugin implements GamificationMediator
 			console.log("No leaves found of type:", VIEW_TYPE_EXAMPLE);
 			// Optionally create a new leaf if none exist
 			const newLeaf = this.app.workspace.getRightLeaf(false);
+			// @ts-ignore
 			await newLeaf.setViewState({ type: VIEW_TYPE_EXAMPLE, active: true });
 
+			// @ts-ignore
 			const newView = newLeaf.view;
 			if (newView instanceof ExampleView) {
 				newView.updateContent("Updated content");
@@ -494,10 +496,12 @@ export default class gamification extends Plugin implements GamificationMediator
 			leaf = leaves[0];
 		} else {
 			leaf = workspace.getRightLeaf(false);
+			// @ts-ignore
 			await leaf.setViewState({ type: VIEW_TYPE_EXAMPLE, active: true });
 		}
 
 		// Access and update the view content
+		// @ts-ignore
 		const view = leaf.view;
 		if (view instanceof ExampleView) {
 			view.updateContent("Initial content");
@@ -516,16 +520,19 @@ export default class gamification extends Plugin implements GamificationMediator
 			leaf = leaves[0];
 		} else {
 			leaf = workspace.getRightLeaf(false);
+			// @ts-ignore
 			await leaf.setViewState({ type: VIEW_TYPE_EXAMPLE, active: true });
 		}
 
 		// Access and update the view content
+		// @ts-ignore
 		const view = leaf.view;
 		if (view instanceof ExampleView) {
 			//view.updateLevel(34);
 			//view.updatePoints(7000000);
 			//view.updateChart(6000000,4000000)
 			view.updateChartMinMax(200,800,0,1000)
+			view.updateMaturityCounts()
 		}else {
 			console.log('ExampleView is not loaded yet.');
 		}

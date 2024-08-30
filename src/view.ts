@@ -1,12 +1,12 @@
 import { ItemView, WorkspaceLeaf } from "obsidian";
 import Chart from 'chart.js/auto';
-
-
+import { DataviewApi, getAPI} from "obsidian-dataview";
 
 export const VIEW_TYPE_EXAMPLE = "example-view";
 
 export class ExampleView extends ItemView {
 	chart: Chart;
+	dataview: DataviewApi | null;
     constructor(leaf: WorkspaceLeaf) {
       super(leaf);
     }
@@ -58,8 +58,80 @@ export class ExampleView extends ItemView {
     `;
 
 
+		const maturityLevelContainer = profileContainer.createDiv({ cls: 'maturity-level-container' });
+		maturityLevelContainer.innerHTML = `
+			<table class="maturity-table">
+				<thead>
+					<tr>
+						<th>Level</th>
+						<th>Count</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>Majurity 5</td>
+						<td id="maturity-5-count"></td>
+					</tr>
+					<tr>
+						<td>Majurity 4</td>
+						<td id="maturity-4-count"></td>
+					</tr>
+					<tr>
+						<td>Majurity 3</td>
+						<td id="maturity-3-count"></td>
+					</tr>
+					<tr>
+						<td>Majurity 2</td>
+						<td id="maturity-2-count"></td>
+					</tr>
+					<tr>
+						<td>Majurity 1</td>
+						<td id="maturity-1-count"></td>
+					</tr>
+					<tr>
+						<td>Majurity 0</td>
+						<td id="maturity-0-count"></td>
+					</tr>
+				</tbody>
+			</table>
+		`;
+
+		// Initialize Dataview and update the maturity counts
+		this.initializeDataview();
 	}
 
+	initializeDataview() {
+		// Get Dataview API instance
+		this.dataview = getAPI(this.app);
+
+		if (!this.dataview) {
+			console.error("Dataview plugin is not enabled.");
+			return;
+		}
+
+		// Fetch counts and update the UI
+		this.updateMaturityCounts();
+	}
+
+	updateMaturityCounts() {
+		if (!this.dataview) {
+			return;
+		}
+
+		// Array of maturity levels to check
+		const maturityLevels = [5, 4, 3, 2, 1, 0];
+
+		maturityLevels.forEach(level => {
+			const count = this.dataview.pages()
+				.where((p: { file: { frontmatter: { [x: string]: string | number; }; }; }) => [level, `${level}`, `${level}➡️`, `${level}⬇️`, `${level}⬆️`].includes(p.file.frontmatter['note-maturity']))
+				.length;
+
+			const maturityCountElement = this.containerEl.querySelector(`#maturity-${level}-count`);
+			if (maturityCountElement) {
+				maturityCountElement.textContent = count.toString();
+			}
+		});
+	}
 
 	initializeChart(canvas: HTMLCanvasElement) {
 		const ctx = canvas.getContext('2d');
@@ -122,6 +194,7 @@ export class ExampleView extends ItemView {
 			}
 		});
 	}
+
 
 
 	async onClose() {
