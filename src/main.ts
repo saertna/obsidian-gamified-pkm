@@ -524,7 +524,8 @@ export default class gamification extends Plugin implements GamificationMediator
 		if (view instanceof ExampleView) {
 			//view.updateLevel(34);
 			//view.updatePoints(7000000);
-			view.updateChart(6000000,4000000)
+			//view.updateChart(6000000,4000000)
+			view.updateChartMinMax(200,800,0,1000)
 		}else {
 			console.log('ExampleView is not loaded yet.');
 		}
