@@ -49,7 +49,6 @@
 
 .avatar-profile {
 	padding: 20px;
-	background-color: #f4f4f4;
 	border-radius: 8px;
 	text-align: center;
 }
@@ -63,8 +62,11 @@
 .level-and-points, .booster-factor, .daily-notes, .weekly-notes {
 	margin-top: 10px;
 	font-size: 18px;
+	text-align: center;
 }
 
 .chart-container {
-	margin-top: 20px;
+	width: 80%;
+	height: 50px;
+	margin-bottom: 20px;
 }

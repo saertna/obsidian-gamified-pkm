@@ -6,7 +6,7 @@ import Chart from 'chart.js/auto';
 export const VIEW_TYPE_EXAMPLE = "example-view";
 
 export class ExampleView extends ItemView {
-	chart: Chart; // Storing the chart instance if you're using Chart.js
+	chart: Chart;
     constructor(leaf: WorkspaceLeaf) {
       super(leaf);
     }
@@ -19,11 +19,6 @@ export class ExampleView extends ItemView {
       return "Gamification";
     }
   
-/*    async onOpen() {
-      const container = this.containerEl.children[1];
-      container.empty();
-      container.createEl("h4", { text: "Gamification" });
-    }*/
 	async onOpen() {
 		const container = this.containerEl.children[1];
 		container.empty();
@@ -45,6 +40,10 @@ export class ExampleView extends ItemView {
 		chartContainer.innerHTML = `
         <canvas id="points-chart"></canvas>
     `;*/
+		const chartContainer = profileContainer.createDiv({ cls: 'chart-container' });
+		// @ts-ignore
+		const canvas = chartContainer.createEl('canvas', { id: 'points-chart' });
+		this.initializeChart(canvas);
 
 		const boosterFactorContainer = profileContainer.createDiv({ cls: 'booster-factor' });
 		boosterFactorContainer.innerHTML = `
@@ -61,14 +60,7 @@ export class ExampleView extends ItemView {
         <p><strong>Weekly Notes:</strong> 52400EP, <span id="weekly-notes-value">2✔️/7</span></p>
     `;
 
-		// Initialize chart (for example using Chart.js)
-		//this.initializeChart();
 
-		const chartContainer = profileContainer.createDiv({ cls: 'chart-container' });
-		// @ts-ignore
-		const canvas = chartContainer.createEl('canvas', { id: 'points-chart' });
-
-		this.initializeChart(canvas);
 	}
 
 
