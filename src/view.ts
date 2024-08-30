@@ -6,6 +6,7 @@ import Chart from 'chart.js/auto';
 export const VIEW_TYPE_EXAMPLE = "example-view";
 
 export class ExampleView extends ItemView {
+	chart: Chart; // Storing the chart instance if you're using Chart.js
     constructor(leaf: WorkspaceLeaf) {
       super(leaf);
     }
@@ -40,10 +41,10 @@ export class ExampleView extends ItemView {
         <p><strong>Points:</strong> <span id="points-value">6564629</span></p>
     `;
 
-		const chartContainer = profileContainer.createDiv({ cls: 'chart-container' });
+		/*const chartContainer = profileContainer.createDiv({ cls: 'chart-container' });
 		chartContainer.innerHTML = `
         <canvas id="points-chart"></canvas>
-    `;
+    `;*/
 
 		const boosterFactorContainer = profileContainer.createDiv({ cls: 'booster-factor' });
 		boosterFactorContainer.innerHTML = `
@@ -61,13 +62,21 @@ export class ExampleView extends ItemView {
     `;
 
 		// Initialize chart (for example using Chart.js)
-		this.initializeChart();
+		//this.initializeChart();
+
+		const chartContainer = profileContainer.createDiv({ cls: 'chart-container' });
+		// @ts-ignore
+		const canvas = chartContainer.createEl('canvas', { id: 'points-chart' });
+
+		this.initializeChart(canvas);
 	}
 
-	initializeChart() {
+
+	initializeChart(canvas: HTMLCanvasElement) {
 		// @ts-ignore
-		const ctx = document.getElementById('points-chart').getContext('2d');
-		new Chart(ctx, {
+		const ctx = canvas.getContext('2d');
+		// @ts-ignore
+		this.chart = new Chart(ctx, {
 			type: 'bar',
 			data: {
 				labels: ['Experience'],
@@ -94,7 +103,6 @@ export class ExampleView extends ItemView {
 			}
 		});
 	}
-
 
 	async onClose() {
       // Nothing to clean up.
@@ -143,6 +151,12 @@ export class ExampleView extends ItemView {
 		}
 	}
 
-
+	updateChart(newPointsReached: number, newPointsToLevelUp: number) {
+		if (this.chart) {
+			this.chart.data.datasets[0].data = [newPointsReached];
+			this.chart.data.datasets[1].data = [newPointsToLevelUp];
+			this.chart.update();
+		}
+	}
 
 }

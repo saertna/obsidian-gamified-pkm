@@ -522,8 +522,9 @@ export default class gamification extends Plugin implements GamificationMediator
 		// Access and update the view content
 		const view = leaf.view;
 		if (view instanceof ExampleView) {
-			view.updateLevel(34);
-			view.updatePoints(7000000);
+			//view.updateLevel(34);
+			//view.updatePoints(7000000);
+			view.updateChart(6000000,4000000)
 		}else {
 			console.log('ExampleView is not loaded yet.');
 		}
