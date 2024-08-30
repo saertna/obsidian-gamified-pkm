@@ -27,8 +27,9 @@ export class ExampleView extends ItemView {
 		const profileContainer = container.createDiv({ cls: 'avatar-profile' });
 
 		// Add sections for different parts of the content
+		const imagePath = this.app.vault.adapter.getResourcePath('Attachements/Avatar-Zettelkasten.png');
 		const avatarImage = profileContainer.createEl('img', { cls: 'avatar-image' });
-		avatarImage.src = 'Attachements/Avatar-Zettelkasten.png';
+		avatarImage.src = imagePath;
 
 		const levelAndPointsContainer = profileContainer.createDiv({ cls: 'level-and-points' });
 		levelAndPointsContainer.innerHTML = `
@@ -36,10 +37,6 @@ export class ExampleView extends ItemView {
         <p><strong>Points:</strong> <span id="points-value">6564629</span></p>
     `;
 
-		/*const chartContainer = profileContainer.createDiv({ cls: 'chart-container' });
-		chartContainer.innerHTML = `
-        <canvas id="points-chart"></canvas>
-    `;*/
 		const chartContainer = profileContainer.createDiv({ cls: 'chart-container' });
 		// @ts-ignore
 		const canvas = chartContainer.createEl('canvas', { id: 'points-chart' });
