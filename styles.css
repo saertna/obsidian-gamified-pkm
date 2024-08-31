@@ -55,6 +55,7 @@
 
 .avatar-profile img {
 	max-width: 150px;
+	max-height: 120px;
 	border-radius: 50%;
 	margin-bottom: 15px;
 }

@@ -6,6 +6,7 @@ export const VIEW_TYPE_GAMIFICATION_PROFILE = "gamified-pkm-profile";
 
 export class GamifiedPkmProfileView extends ItemView {
 	chart: Chart;
+	chartWeekly: Chart;
 	dataview: DataviewApi | null;
     constructor(leaf: WorkspaceLeaf) {
       super(leaf);
@@ -55,6 +56,10 @@ export class GamifiedPkmProfileView extends ItemView {
         <p><strong>Weekly Notes:</strong> <span id="weekly-notes-value"></span></p>
     `;
 
+		const chartContainerWeekly = profileContainer.createDiv({ cls: 'chart-container' });
+		// @ts-ignore
+		const canvasWeekly = chartContainerWeekly.createEl('canvas', { id: 'weekly-chart' });
+		this.initializeChartWeekly(canvasWeekly);
 
 		const maturityLevelContainer = profileContainer.createDiv({ cls: 'maturity-level-container' });
 		maturityLevelContainer.innerHTML = `
@@ -191,6 +196,70 @@ export class GamifiedPkmProfileView extends ItemView {
 		});
 	}
 
+	initializeChartWeekly(canvasWeekly: HTMLCanvasElement) {
+		const ctx = canvasWeekly.getContext('2d');
+		if (!ctx) {
+			console.error('Failed to get canvas context');
+			return;
+		}
+
+		this.chartWeekly = new Chart(ctx, {
+			type: 'bar',
+			data: {
+				labels: ['Days in row'],
+				datasets: [
+					{
+						label: 'days done',
+						data: [0], // Data for points reached
+						//backgroundColor: 'rgba(54, 162, 235, 0.5)',
+						//borderColor: 'rgba(54, 162, 235, 1)',
+						backgroundColor: 'rgba(0, 0, 0, 0.5)',
+						borderColor: 'rgba(0, 0, 0, 1)',
+						borderWidth: 1
+					},
+					{
+						label: 'days to do',
+						data: [0], // Data for points to earn to level up
+						//backgroundColor: 'rgba(255, 99, 132, 0.5)',
+						//borderColor: 'rgba(255, 99, 132, 1)',
+						backgroundColor: 'rgba(255, 255, 255, 0.5)',
+						borderColor: 'rgba(255, 255, 255, 0.5)',
+						borderWidth: 1
+					}
+				]
+			},
+			options: {
+				responsive: true,
+				maintainAspectRatio: false,
+				indexAxis: 'y',
+				scales: {
+					x: {
+						beginAtZero: false,
+						min: 0,
+						max: 7,
+						stacked: true
+					},
+					y: {
+						beginAtZero: true,
+						stacked: true
+					}
+				},
+				plugins: {
+					legend: {
+						display: false // Hide the legend
+					},
+					tooltip: {
+						enabled: true // Enable tooltips for interactivity
+					}
+				},
+				elements: {
+					bar: {
+						borderWidth: 2 // Set border width for the bars
+					}
+				}
+			}
+		});
+	}
 
 
 	async onClose() {
@@ -237,6 +306,14 @@ export class GamifiedPkmProfileView extends ItemView {
 		const weeklyNotesValue = this.containerEl.querySelector('#weekly-notes-value');
 		if (weeklyNotesValue) {
 			weeklyNotesValue.textContent = newValue;
+		}
+	}
+
+	updateChartWeekly(days: number) {
+		if (this.chartWeekly) {
+			this.chartWeekly.data.datasets[0].data = [days];
+			this.chartWeekly.data.datasets[1].data = [7-days];
+			this.chartWeekly.update();
 		}
 	}
 

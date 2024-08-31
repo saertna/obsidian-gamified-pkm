@@ -230,6 +230,7 @@ export default class gamification extends Plugin implements GamificationMediator
 			this.profileLeafUpdateBoosterFactor(this.getSettingNumber('streakbooster'))
 			this.profileLeafUpdateDailyNotes(pointsForDailyChallenge * (this.getSettingNumber('badgeBoosterFactor') + this.getSettingNumber('streakbooster')) + 'EP | ' + this.getSettingNumber('dailyNoteCreationTask') + '/2')
 			this.profileLeafUpdateWeeklyNotes(pointsForWeeklyChallenge * (this.getSettingNumber('badgeBoosterFactor') + this.getSettingNumber('streakbooster')) + 'EP | ' + this.getSettingNumber('weeklyNoteCreationTask') + '/7')
+			this.profileLeafUpdateWeeklyChart(this.getSettingNumber('weeklyNoteCreationTask'));
 			this.profileLeafUpdateuUdateMajurityList()
 		});
 
@@ -512,13 +513,14 @@ export default class gamification extends Plugin implements GamificationMediator
 		const view = leaf.view;
 		if (view instanceof GamifiedPkmProfileView) {
 			//view.updateContent("Initial content");
-			const newPoints = this.getSettingNumber('statusPoints')
+			const newPoints = this.getSettingNumber('statusPoints');
 			const level = getLevelForPoints(newPoints);
-			this.profileLeafUpdateLevel(this.getSettingNumber('statusLevel'),this.getSettingNumber('statusPoints'),this.getSettingNumber('xpForNextLevel'),level.points,level.pointsNext)
-			this.profileLeafUpdateBoosterFactor(this.getSettingNumber('streakbooster'))
-			this.profileLeafUpdateDailyNotes(pointsForDailyChallenge * (this.getSettingNumber('badgeBoosterFactor') + this.getSettingNumber('streakbooster')) + 'EP | ' + this.getSettingNumber('dailyNoteCreationTask') + '/2')
-			this.profileLeafUpdateWeeklyNotes(pointsForWeeklyChallenge * (this.getSettingNumber('badgeBoosterFactor') + this.getSettingNumber('streakbooster')) + 'EP | ' + this.getSettingNumber('weeklyNoteCreationTask') + '/7')
-			this.profileLeafUpdateuUdateMajurityList()
+			this.profileLeafUpdateLevel(this.getSettingNumber('statusLevel'),this.getSettingNumber('statusPoints'),this.getSettingNumber('xpForNextLevel'),level.points,level.pointsNext);
+			this.profileLeafUpdateBoosterFactor(this.getSettingNumber('streakbooster'));
+			this.profileLeafUpdateDailyNotes(pointsForDailyChallenge * (this.getSettingNumber('badgeBoosterFactor') + this.getSettingNumber('streakbooster')) + 'EP | ' + this.getSettingNumber('dailyNoteCreationTask') + '/2');
+			this.profileLeafUpdateWeeklyNotes(pointsForWeeklyChallenge * (this.getSettingNumber('badgeBoosterFactor') + this.getSettingNumber('streakbooster')) + 'EP | ' + this.getSettingNumber('weeklyNoteCreationTask') + '/7');
+			this.profileLeafUpdateWeeklyChart(this.getSettingNumber('weeklyNoteCreationTask'));
+			this.profileLeafUpdateuUdateMajurityList();
 		}
 
 		// Optional: reveal the leaf if it's in a collapsed sidebar
@@ -660,6 +662,28 @@ export default class gamification extends Plugin implements GamificationMediator
 		const view = leaf.view;
 		if (view instanceof GamifiedPkmProfileView) {
 			view.updateWeeklyNotes(weeklyString)
+		}else {
+			if(debugLogs) console.log('gamified-pkm-profile is not loaded yet.');
+		}
+	}
+
+	async profileLeafUpdateWeeklyChart(days:number) {
+		const { workspace } = this.app;
+		let leaf = null;
+		const leaves = this.app.workspace.getLeavesOfType(VIEW_TYPE_GAMIFICATION_PROFILE);
+
+		if (leaves.length > 0) {
+			leaf = leaves[0];
+		} else {
+			leaf = workspace.getRightLeaf(false);
+			// @ts-ignore
+			await leaf.setViewState({ type: VIEW_TYPE_GAMIFICATION_PROFILE, active: true });
+		}
+
+		// @ts-ignore
+		const view = leaf.view;
+		if (view instanceof GamifiedPkmProfileView) {
+			view.updateChartWeekly(days)
 		}else {
 			if(debugLogs) console.log('gamified-pkm-profile is not loaded yet.');
 		}
