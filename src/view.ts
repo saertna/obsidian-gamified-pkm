@@ -19,7 +19,11 @@ export class GamifiedPkmProfileView extends ItemView {
     getDisplayText() {
       return "Gamification";
     }
-  
+
+	getIcon() {
+		return "dices"; //"trophy";
+	}
+
 	async onOpen() {
 		const container = this.containerEl.children[1];
 		container.empty();
