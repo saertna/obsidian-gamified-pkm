@@ -23,10 +23,8 @@ export class GamifiedPkmProfileView extends ItemView {
 		const container = this.containerEl.children[1];
 		container.empty();
 
-		// Create main container for the avatar profile
 		const profileContainer = container.createDiv({ cls: 'avatar-profile' });
 
-		// Add sections for different parts of the content
 		const imagePath = this.app.vault.adapter.getResourcePath('Attachements/Avatar-Zettelkasten.png');
 		const avatarImage = profileContainer.createEl('img', { cls: 'avatar-image' });
 		avatarImage.src = imagePath;
@@ -96,20 +94,15 @@ export class GamifiedPkmProfileView extends ItemView {
 			</table>
 		`;
 
-		// Initialize Dataview and update the maturity counts
 		this.initializeDataview();
 	}
 
 	initializeDataview() {
-		// Get Dataview API instance
 		this.dataview = getAPI(this.app);
-
 		if (!this.dataview) {
 			console.error("Dataview plugin is not enabled.");
 			return;
 		}
-
-		// Fetch counts and update the UI
 		this.updateMaturityCounts();
 	}
 
@@ -140,11 +133,10 @@ export class GamifiedPkmProfileView extends ItemView {
 			return;
 		}
 
-		// Define chart configuration with stacked bars and horizontal orientation
 		this.chart = new Chart(ctx, {
 			type: 'bar',
 			data: {
-				labels: ['Experience'], // X-axis label, displayed on Y-axis in horizontal mode
+				labels: ['Experience'],
 				datasets: [
 					{
 						label: 'Points Reached',
@@ -169,22 +161,22 @@ export class GamifiedPkmProfileView extends ItemView {
 			options: {
 				responsive: true,
 				maintainAspectRatio: false,
-				indexAxis: 'y', // Display bars horizontally
+				indexAxis: 'y',
 				scales: {
 					x: {
-						beginAtZero: false, // Don't start the X-axis at zero
-						min: 0, // Minimum value for the X-axis
-						max: 1, // Maximum value for the X-axis
-						stacked: true // Enable stacked bars on the X-axis
+						beginAtZero: false,
+						min: 0,
+						max: 1,
+						stacked: true
 					},
 					y: {
-						beginAtZero: true, // Start the Y-axis at zero
-						stacked: true // Enable stacked bars on the Y-axis
+						beginAtZero: true,
+						stacked: true
 					}
 				},
 				plugins: {
 					legend: {
-						display: false // Hide the legend, as per your settings
+						display: false // Hide the legend
 					},
 					tooltip: {
 						enabled: true // Enable tooltips for interactivity
