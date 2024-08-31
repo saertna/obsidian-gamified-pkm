@@ -1,8 +1,8 @@
 import { App, PluginSettingTab, Setting } from 'obsidian';
-import gamification from './main';
-//import type {MomentInput} from 'moment';
-import { encryptString, decryptString, encryptNumber, decryptNumber, encryptBoolean, decryptBoolean } from 'encryption';
 import { debugLogs } from './constants';
+import { GamificationMediator } from './GamificationMediator';
+import gamification from './main'
+
 
 export const defaultSettings: Partial<ISettings> = {
   enableInitCommand: "U2FsdGVkX1+7lWe/h95uqzgl27JBGW2iki7sBwk44YQ=",
@@ -97,7 +97,7 @@ export const defaultSettings: Partial<ISettings> = {
   autoRateOnChangeDelayTime: "U2FsdGVkX1/RiGtHePLD9og+g+w+DL31vVK02vCSkQQ=",
   previousRelease: "U2FsdGVkX1+z55uCXdMxdGtgg5oBmTGQPDroIP0PDIk=",
   showReleaseNotes: "U2FsdGVkX1+7lWe/h95uqzgl27JBGW2iki7sBwk44YQ=",
-  avatarPicture: "U2FsdGVkX1+7lWe/h95uqzgl27JBGW2iki7sBwk44YQ="
+  avatarPicture: "U2FsdGVkX18zJk4m8pNboYxTAVmT5KytaqxAsTw/50I="
 };
 
 export interface DynamicSettings {
@@ -199,7 +199,9 @@ export interface ISettings extends DynamicSettings{
 
 
 export class GamificationPluginSettings extends PluginSettingTab {
+	//private readonly plugin: gamification;
 	private readonly plugin: gamification;
+	private readonly mediator: GamificationMediator;
   public settings: ISettings;
   public enableInitCommand: string;
   public bindEnter: string;
@@ -291,9 +293,9 @@ export class GamificationPluginSettings extends PluginSettingTab {
   public showReleaseNotes: string;
   public avatarPicture: string;
 
-  constructor(app: App, plugin: gamification) {
-    super(app, plugin);
-    this.plugin = plugin;
+  constructor(app: App, plugin: gamification, mediator: GamificationMediator) {
+    super(app, plugin as any);
+    this.mediator = mediator;
 
   // let settings = Object.assign({}, defaultSettings);
 
@@ -327,67 +329,55 @@ public display(): void {
 	if(debugLogs) console.debug('settings called')
 	new Setting(containerEl)
 		.setName('Plugin Update Notification')
-		.setDesc('When on, you get informed at startup if there is a newer Version.')
+		.setDesc('When on, you get informed at startup if there is a newer version.')
 		.addToggle((toggle) =>
 			toggle
-				.setValue(decryptBoolean(this.plugin.settings.showNewVersionNotification))
-				.onChange((value) => {
-					this.plugin.settings.showNewVersionNotification = encryptBoolean(value);
-					this.plugin.saveData(this.plugin.settings);
+				.setValue(this.mediator.getSettingBoolean('showNewVersionNotification'))
+				.onChange(async (value) => {
+					this.mediator.setSettingBoolean('showNewVersionNotification', value);
+					await this.mediator.saveSettings();
 				}),
 		);
 
 	new Setting(containerEl)
 		.setName('#tags to ignore')
-		.setDesc('Enter tags without # and separate with ", ".\nInclude nested tags.')
-		.addText(text => text
-			.setPlaceholder('Enter your tag1, tag2/subtag, …')
-			//.setValue(this.plugin.settings.tagsExclude)
-	.setValue(decryptString(this.plugin.settings.tagsExclude))
-			.onChange(async (value) => {
-				this.plugin.settings.tagsExclude = encryptString(value);
-				await this.plugin.saveSettings();
-			}));
+		.setDesc('Enter tags without # and separate with ", ". Include nested tags.')
+		.addText(text =>
+			text
+				.setPlaceholder('Enter your tag1, tag2/subtag, …')
+				.setValue(this.mediator.getSettingString('tagsExclude'))
+				.onChange(async (value) => {
+					this.mediator.setSettingString('tagsExclude', value);
+					await this.mediator.saveSettings();
+				}),
+		);
 
-				
+
 	new Setting(containerEl)
 		.setName('Folder to ignore')
-		.setDesc('Enter folder whichs content shall be ignored. Separate with ", ".')
-		.addText(text => text
-			.setPlaceholder('Enter your folder1, folder2, …')
-			//.setValue(this.plugin.settings.folderExclude)
-	.setValue(decryptString(this.plugin.settings.folderExclude))
-			.onChange(async (value) => {
-				// if(debugLogs) console.debug('folder to exclude: ' + value);
-				this.plugin.settings.folderExclude = encryptString(value);
-				await this.plugin.saveSettings();
-			}));
-
-	/*new Setting(containerEl)
-		.setName('Profile page name')
-		.setDesc('You can change here the name of your profile page if you like.')
-		.addText(text => text
-				.setPlaceholder('name')
-				//.setValue(this.plugin.settings.avatarPageName)
-		.setValue(decryptString(this.plugin.settings.avatarPageName))
+		.setDesc('Enter folders whose content shall be ignored. Separate with ", ".')
+		.addText(text =>
+			text
+				.setPlaceholder('Enter your folder1, folder2, …')
+				.setValue(this.mediator.getSettingString('folderExclude'))
 				.onChange(async (value) => {
-					// if(debugLogs) console.debug('folder to exclude: ' + value);
-					this.plugin.settings.avatarPageName = encryptString(value);
-					await this.plugin.saveSettings();
-			}));*/
+					this.mediator.setSettingString('folderExclude', value);
+					await this.mediator.saveSettings();
+				}),
+		);
 
 	new Setting(containerEl)
 		.setName('Path to profile picture')
-		.setDesc('You can point here to a picture you would like to use as avatar. Inculde your vault path.')
-		.addText(text => text
-			.setPlaceholder('attachment/avatar.png')
-			//.setValue(this.plugin.settings.avatarPageName)
-			.setValue(decryptString(this.plugin.settings.avatarPicture))
-			.onChange(async (value) => {
-				// if(debugLogs) console.debug('folder to exclude: ' + value);
-				this.plugin.settings.avatarPicture = encryptString(value);
-				await this.plugin.saveSettings();
-			}));
+		.setDesc('You can point here to a picture you would like to use as avatar. Include your vault path.')
+		.addText(text =>
+			text
+				.setPlaceholder('attachment/avatar.png')
+				.setValue(this.mediator.getSettingString('avatarPicture'))
+				.onChange(async (value) => {
+					this.mediator.setSettingString('avatarPicture', value);
+					await this.mediator.saveSettings();
+				}),
+		);
 				
     containerEl.createEl('h2', { text: 'Other' });
 		new Setting(containerEl)
@@ -395,10 +385,10 @@ public display(): void {
 			.setDesc('You can remove the init command from command prompt by switching off.\nrestart needed.')
 			.addToggle((toggle) => 
 				toggle
-					.setValue(decryptBoolean(this.plugin.settings.enableInitCommand))
+					.setValue(this.mediator.getSettingBoolean('enableInitCommand'))
 					.onChange((value) => {
-						this.plugin.settings.enableInitCommand = encryptBoolean(value);
-						this.plugin.saveData(this.plugin.settings);
+						this.mediator.setSettingBoolean('enableInitCommand',value);
+						this.mediator.saveSettings();
 					}),
 			);
 
@@ -407,23 +397,24 @@ public display(): void {
 			.setDesc('you can enable here an automatic trigger to rate a note when changed/created')
 			.addToggle((toggle) =>
 				toggle
-					.setValue(decryptBoolean(this.plugin.settings.autoRateOnChange))
+					.setValue(this.mediator.getSettingBoolean('autoRateOnChange'))
 					.onChange((value) => {
-						this.plugin.settings.autoRateOnChange = encryptBoolean(value);
-						this.plugin.saveData(this.plugin.settings);
+						this.mediator.setSettingBoolean('autoRateOnChange',value);
+						this.mediator.saveSettings();
 					}),
 			);
 	new Setting(containerEl)
 		.setName('Wait time for automatic note rating')
-		.setDesc('Enter in seconds how long to wait after a change before automatical note ratting will be done')
-		.addText(text => text
-			.setPlaceholder('5')
-			.setValue(decryptNumber(this.plugin.settings.autoRateOnChangeDelayTime).toString())
-			//.setValue("0")
-			.onChange(async (value) => {
-				this.plugin.settings.autoRateOnChangeDelayTime = encryptNumber(parseInt(value));
-				await this.plugin.saveSettings();
-			}));
+		.setDesc('Enter in seconds how long to wait after a change before automatic note rating will be done')
+		.addText(text =>
+			text
+				.setPlaceholder('5')
+				.setValue(this.mediator.getSettingNumber('autoRateOnChangeDelayTime').toString())
+				.onChange(async (value) => {
+					this.mediator.setSettingNumber('autoRateOnChangeDelayTime', parseInt(value));
+					await this.mediator.saveSettings();
+				}),
+		);
 
   
     new Setting(containerEl)
@@ -431,11 +422,10 @@ public display(): void {
 			.setDesc('Enter in seconds to delay the load time. e.g. when GIT pull is performed before and settings get merge conflicts. Without GIT usage, keep it to 0.')
 			.addText(text => text
 					.setPlaceholder('0')
-					.setValue(decryptNumber(this.plugin.settings.delayLoadTime).toString())
-          //.setValue("0")
+					.setValue(this.mediator.getSettingNumber('delayLoadTime').toString())
 					.onChange(async (value) => {
-						this.plugin.settings.delayLoadTime = encryptNumber(parseInt(value));
-						await this.plugin.saveSettings();
+						this.mediator.setSettingNumber('delayLoadTime', parseInt(value));
+						this.mediator.saveSettings();
 		}));
 
     new Setting(containerEl)
@@ -443,10 +433,10 @@ public display(): void {
 			.setDesc('Enter in seconds. 4 seconds or more is a good value')
 			.addText(text => text
 					.setPlaceholder('4')
-					.setValue(decryptNumber(this.plugin.settings.timeShowNotice).toString())
-          .onChange(async (value) => {
-						this.plugin.settings.timeShowNotice = encryptNumber(parseInt(value));
-						await this.plugin.saveSettings();
+					.setValue(this.mediator.getSettingNumber('timeShowNotice').toString())
+					.onChange(async (value) => {
+						this.mediator.setSettingNumber('timeShowNotice', parseInt(value));
+						this.mediator.saveSettings();
 		}));
 
 		new Setting(containerEl)
@@ -454,29 +444,30 @@ public display(): void {
 			.setDesc('You can change which formatting you use for Layer 2 and 3.')
 			.addText(text => text
 					.setPlaceholder('Layer 2 is usually **')
-					.setValue(decryptString(this.plugin.settings.progressiveSumLayer2))
+					.setValue(this.mediator.getSettingString('progressiveSumLayer2'))
 					.onChange(async (value) => {
-						// if(debugLogs) console.debug('folder to exclude: ' + value);
-						this.plugin.settings.progressiveSumLayer2 = encryptString(value);
-						await this.plugin.saveSettings();
+							// if(debugLogs) console.debug('folder to exclude: ' + value);
+							this.mediator.setSettingString('progressiveSumLayer2', value);
+							this.mediator.saveSettings();
 				}))
 			.addText(text => text
 					.setPlaceholder('Layer 3 is usually ==')
-					.setValue(decryptString(this.plugin.settings.progressiveSumLayer3))
+					.setValue(this.mediator.getSettingString('progressiveSumLayer3'))
 					.onChange(async (value) => {
 						// if(debugLogs) console.debug('folder to exclude: ' + value);
-						this.plugin.settings.progressiveSumLayer3 = encryptString(value);
-						await this.plugin.saveSettings();
+						this.mediator.setSettingString('progressiveSumLayer3', value);
+						this.mediator.saveSettings();
 			}));
+
 		new Setting(containerEl)
 			.setName('Display release notes after update')
 			.setDesc('`Toggle ON`: Display release notes each time you update the plugin\n`Toggle OFF`: Silent mode. You can still read release notes on [GitHub](https://github.com/saertna/obsidian-gamified-pkm)')
 			.addToggle((toggle) =>
 				toggle
-					.setValue(decryptBoolean(this.plugin.settings.showReleaseNotes))
+					.setValue(this.mediator.getSettingBoolean('showReleaseNotes'))
 					.onChange((value) => {
-						this.plugin.settings.showReleaseNotes = encryptBoolean(value);
-						this.plugin.saveData(this.plugin.settings);
+						this.mediator.setSettingBoolean('showReleaseNotes',value);
+						this.mediator.saveSettings();
 					}),
 			);
 

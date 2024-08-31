@@ -89,7 +89,7 @@ export default class gamification extends Plugin {
 
 		this.mediator = new GamificationMediatorImpl(this.settings, this);
 
-		this.addSettingTab(new GamificationPluginSettings(this.app, this));
+		this.addSettingTab(new GamificationPluginSettings(this.app, this, this.mediator));
 
 		await this.mediator.loadSettings();
 

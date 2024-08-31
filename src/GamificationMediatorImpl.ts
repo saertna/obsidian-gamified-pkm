@@ -64,7 +64,7 @@ export class GamificationMediatorImpl implements GamificationMediator {
 		this.saveSettings();
 	}
 
-	private async saveSettings(): Promise<void> {
+	async saveSettings(): Promise<void> {
 		await this.plugin.saveData(this.settings);
 	}
 
