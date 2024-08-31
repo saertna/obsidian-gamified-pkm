@@ -154,7 +154,7 @@ export default class gamification extends Plugin implements GamificationMediator
 			await this.loadSettings();
 			await this.resetDailyGoals()
 			await this.updateStatusBar(this.statusbarGamification)
-			this.actualizeProfileLeave()
+			await this.actualizeProfileLeave()
 		}, this.getSettingNumber('delayLoadTime')*1000); // 2000 milliseconds = 2 seconds
 
 
@@ -216,7 +216,7 @@ export default class gamification extends Plugin implements GamificationMediator
 
 	}
 
-	private actualizeProfileLeave(){
+	private async actualizeProfileLeave(){
 		const newPoints = this.getSettingNumber('statusPoints')
 		const level = getLevelForPoints(newPoints);
 		this.profileLeafUpdateLevel(this.getSettingNumber('statusLevel'),this.getSettingNumber('statusPoints'),this.getSettingNumber('xpForNextLevel'),level.points,level.pointsNext)
@@ -516,14 +516,14 @@ export default class gamification extends Plugin implements GamificationMediator
 		const view = leaf.view;
 		if (view instanceof GamifiedPkmProfileView) {
 			//view.updateContent("Initial content");
-			const newPoints = this.getSettingNumber('statusPoints');
+			/*const newPoints = this.getSettingNumber('statusPoints');
 			const level = getLevelForPoints(newPoints);
 			this.profileLeafUpdateLevel(this.getSettingNumber('statusLevel'),this.getSettingNumber('statusPoints'),this.getSettingNumber('xpForNextLevel'),level.points,level.pointsNext);
 			this.profileLeafUpdateBoosterFactor(this.getSettingNumber('streakbooster'));
 			this.profileLeafUpdateDailyNotes(pointsForDailyChallenge * (this.getSettingNumber('badgeBoosterFactor') + this.getSettingNumber('streakbooster')) + 'EP | ' + this.getSettingNumber('dailyNoteCreationTask') + '/2');
 			this.profileLeafUpdateWeeklyNotes(pointsForWeeklyChallenge * (this.getSettingNumber('badgeBoosterFactor') + this.getSettingNumber('streakbooster')) + 'EP | ' + this.getSettingNumber('weeklyNoteCreationTask') + '/7');
 			this.profileLeafUpdateWeeklyChart(this.getSettingNumber('weeklyNoteCreationTask'));
-			this.profileLeafUpdateuUdateMajurityList();
+			this.profileLeafUpdateuUdateMajurityList();*/
 		}
 
 		// Optional: reveal the leaf if it's in a collapsed sidebar
@@ -1045,12 +1045,14 @@ export default class gamification extends Plugin implements GamificationMediator
 			new Notice('note majurity updated!');
 			if(debugLogs) console.debug('note majurity updated!')
 			await this.updateStatusBar(this.statusbarGamification)
+			await this.actualizeProfileLeave();
 		} else {
 			console.error('file was not found to calculate majurities. Make sure one is active.')
 		}
 		if (detectIfNoteIsFirstTimeRated){
 			await this.increaseDailyCreatedNoteCount();
 			await this.increaseWeeklyCreatedNoteCount();
+			await this.actualizeProfileLeave();
 		}
 	}
 
@@ -1084,7 +1086,8 @@ export default class gamification extends Plugin implements GamificationMediator
 			reset = true;
 		}
 		if (reset){
-			await this.updateAvatarPage(this.getSettingString('avatarPageName'));
+			//await this.updateAvatarPage(this.getSettingString('avatarPageName'));
+			await this.actualizeProfileLeave();
 		}
 
 		// deactivate boosters
@@ -1137,7 +1140,8 @@ export default class gamification extends Plugin implements GamificationMediator
 
 			if(newDailyNoteCreationTask == 1){
 				// update Avatar Page
-				await this.updateAvatarPage(this.getSettingString('avatarPageName'));
+				//await this.updateAvatarPage(this.getSettingString('avatarPageName'));
+				await this.actualizeProfileLeave();
 				if(debugLogs) console.debug(`${newDailyNoteCreationTask}/2 Notes created today.`)
 			} else if (newDailyNoteCreationTask == 2) {
 				await this.increaseStreakbooster(streakboosterIncreaseDaily)
@@ -1203,7 +1207,8 @@ export default class gamification extends Plugin implements GamificationMediator
 	private async checkForWeeklyNoteChallengeEvaluation(newWeeklyNoteCreationTask: number) {
 		if (newWeeklyNoteCreationTask <= 6) {
 			// update Avatar Page
-			await this.updateAvatarPage(this.getSettingString('avatarPageName'));
+			//await this.updateAvatarPage(this.getSettingString('avatarPageName'));
+			await this.actualizeProfileLeave();
 			if(debugLogs) console.debug(`${newWeeklyNoteCreationTask}/7 Notes created in a chain.`)
 		} else if (newWeeklyNoteCreationTask == 7) {
 			await this.increaseStreakbooster(streakboosterIncreaseWeekly);
@@ -1267,6 +1272,7 @@ export default class gamification extends Plugin implements GamificationMediator
 	}
 
 
+	// @ts-ignore
 	async giveStatusPoints(pointsToAdd: number, caller: string): Promise<boolean>{
 		let boosterFactor = 1;
 		const streakbooster = this.getSettingNumber('streakbooster');
@@ -1316,13 +1322,14 @@ export default class gamification extends Plugin implements GamificationMediator
 		//await this.saveData(this.settings)
 
 
-		const questionToReceiveBadge: boolean | null = await this.updateAvatarPage(this.getSettingString('avatarPageName'));
+		//TODO new solution necessary how to trigger badge for certain levels
+		/*const questionToReceiveBadge: boolean | null = await this.updateAvatarPage(this.getSettingString('avatarPageName'));
 
 		if (questionToReceiveBadge !== null) {
 			return questionToReceiveBadge;
 		} else {
 			return false;
-		}
+		}*/
 
 	}
 
