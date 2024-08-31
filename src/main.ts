@@ -154,6 +154,7 @@ export default class gamification extends Plugin implements GamificationMediator
 			await this.loadSettings();
 			await this.resetDailyGoals()
 			await this.updateStatusBar(this.statusbarGamification)
+			this.actualizeProfileLeave()
 		}, this.getSettingNumber('delayLoadTime')*1000); // 2000 milliseconds = 2 seconds
 
 
@@ -215,6 +216,17 @@ export default class gamification extends Plugin implements GamificationMediator
 
 	}
 
+	private actualizeProfileLeave(){
+		const newPoints = this.getSettingNumber('statusPoints')
+		const level = getLevelForPoints(newPoints);
+		this.profileLeafUpdateLevel(this.getSettingNumber('statusLevel'),this.getSettingNumber('statusPoints'),this.getSettingNumber('xpForNextLevel'),level.points,level.pointsNext)
+		this.profileLeafUpdateBoosterFactor(this.getSettingNumber('streakbooster'))
+		this.profileLeafUpdateDailyNotes(pointsForDailyChallenge * (this.getSettingNumber('badgeBoosterFactor') + this.getSettingNumber('streakbooster')) + 'EP | ' + this.getSettingNumber('dailyNoteCreationTask') + '/2')
+		this.profileLeafUpdateWeeklyNotes(pointsForWeeklyChallenge * (this.getSettingNumber('badgeBoosterFactor') + this.getSettingNumber('streakbooster')) + 'EP | ' + this.getSettingNumber('weeklyNoteCreationTask') + '/7')
+		this.profileLeafUpdateWeeklyChart(this.getSettingNumber('weeklyNoteCreationTask'));
+		this.profileLeafUpdateuUdateMajurityList()
+	}
+
 	private registerCommands(){
 
 		this.addRibbonIcon("target", "gamification side overview", () => {
@@ -222,16 +234,7 @@ export default class gamification extends Plugin implements GamificationMediator
 		});
 
 		this.addRibbonIcon("chevrons-right", "update overview leaf", () => {
-			//this.updateView("New Text");
-			//this.updateContent()
-			const newPoints = this.getSettingNumber('statusPoints')
-			const level = getLevelForPoints(newPoints);
-			this.profileLeafUpdateLevel(this.getSettingNumber('statusLevel'),this.getSettingNumber('statusPoints'),this.getSettingNumber('xpForNextLevel'),level.points,level.pointsNext)
-			this.profileLeafUpdateBoosterFactor(this.getSettingNumber('streakbooster'))
-			this.profileLeafUpdateDailyNotes(pointsForDailyChallenge * (this.getSettingNumber('badgeBoosterFactor') + this.getSettingNumber('streakbooster')) + 'EP | ' + this.getSettingNumber('dailyNoteCreationTask') + '/2')
-			this.profileLeafUpdateWeeklyNotes(pointsForWeeklyChallenge * (this.getSettingNumber('badgeBoosterFactor') + this.getSettingNumber('streakbooster')) + 'EP | ' + this.getSettingNumber('weeklyNoteCreationTask') + '/7')
-			this.profileLeafUpdateWeeklyChart(this.getSettingNumber('weeklyNoteCreationTask'));
-			this.profileLeafUpdateuUdateMajurityList()
+			this.actualizeProfileLeave();
 		});
 
 		this.addCommand({
