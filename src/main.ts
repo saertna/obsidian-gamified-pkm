@@ -12,7 +12,7 @@ style.textContent = `
 `;
 
 document.head.append(style);
-import {App, MarkdownView, Notice, Plugin, TFile, WorkspaceLeaf} from 'obsidian';
+import {App, MarkdownView, Notice, Plugin, TFile} from 'obsidian';
 import {defaultSettings, GamificationPluginSettings, ISettings} from './settings';
 import format from 'date-fns/format';
 import {
@@ -224,10 +224,12 @@ export default class gamification extends Plugin implements GamificationMediator
 		this.addRibbonIcon("chevrons-right", "update overview leaf", () => {
 			//this.updateView("New Text");
 			//this.updateContent()
-			this.profileLeafUpdateLevel(10,100,1000,0,1000)
-			this.profileLeafUpdateBoosterFactor(100)
-			this.profileLeafUpdateDailyNotes("13000EP, 0/2")
-			this.profileLeafUpdateWeeklyNotes("52000EP, 2/7")
+			const newPoints = this.getSettingNumber('statusPoints')
+			const level = getLevelForPoints(newPoints);
+			this.profileLeafUpdateLevel(this.getSettingNumber('statusLevel'),this.getSettingNumber('statusPoints'),this.getSettingNumber('xpForNextLevel'),level.points,level.pointsNext)
+			this.profileLeafUpdateBoosterFactor(this.getSettingNumber('streakbooster'))
+			this.profileLeafUpdateDailyNotes(pointsForDailyChallenge * (this.getSettingNumber('badgeBoosterFactor') + this.getSettingNumber('streakbooster')) + 'EP | ' + this.getSettingNumber('dailyNoteCreationTask') + '/2')
+			this.profileLeafUpdateWeeklyNotes(pointsForWeeklyChallenge * (this.getSettingNumber('badgeBoosterFactor') + this.getSettingNumber('streakbooster')) + 'EP | ' + this.getSettingNumber('weeklyNoteCreationTask') + '/7')
 			this.profileLeafUpdateuUdateMajurityList()
 		});
 
@@ -510,10 +512,12 @@ export default class gamification extends Plugin implements GamificationMediator
 		const view = leaf.view;
 		if (view instanceof GamifiedPkmProfileView) {
 			//view.updateContent("Initial content");
-			this.profileLeafUpdateLevel(10,100,1000,0,1000)
-			this.profileLeafUpdateBoosterFactor(100)
-			this.profileLeafUpdateDailyNotes("13000EP, 0/2")
-			this.profileLeafUpdateWeeklyNotes("52000EP, 2/7")
+			const newPoints = this.getSettingNumber('statusPoints')
+			const level = getLevelForPoints(newPoints);
+			this.profileLeafUpdateLevel(this.getSettingNumber('statusLevel'),this.getSettingNumber('statusPoints'),this.getSettingNumber('xpForNextLevel'),level.points,level.pointsNext)
+			this.profileLeafUpdateBoosterFactor(this.getSettingNumber('streakbooster'))
+			this.profileLeafUpdateDailyNotes(pointsForDailyChallenge * (this.getSettingNumber('badgeBoosterFactor') + this.getSettingNumber('streakbooster')) + 'EP | ' + this.getSettingNumber('dailyNoteCreationTask') + '/2')
+			this.profileLeafUpdateWeeklyNotes(pointsForWeeklyChallenge * (this.getSettingNumber('badgeBoosterFactor') + this.getSettingNumber('streakbooster')) + 'EP | ' + this.getSettingNumber('weeklyNoteCreationTask') + '/7')
 			this.profileLeafUpdateuUdateMajurityList()
 		}
 

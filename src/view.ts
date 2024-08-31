@@ -33,8 +33,8 @@ export class GamifiedPkmProfileView extends ItemView {
 
 		const levelAndPointsContainer = profileContainer.createDiv({ cls: 'level-and-points' });
 		levelAndPointsContainer.innerHTML = `
-        <p><strong>Level:</strong> <span id="level-value">33</span></p>
-        <p><strong>Points:</strong> <span id="points-value">6564629</span></p>
+        <p><strong>Level:</strong> <span id="level-value"></span></p>
+        <p><strong>Points:</strong> <span id="points-value"></span></p>
     `;
 
 		const chartContainer = profileContainer.createDiv({ cls: 'chart-container' });
@@ -44,17 +44,17 @@ export class GamifiedPkmProfileView extends ItemView {
 
 		const boosterFactorContainer = profileContainer.createDiv({ cls: 'booster-factor' });
 		boosterFactorContainer.innerHTML = `
-        <p><strong>Booster Factor:</strong> <span id="booster-factor-value">25.2</span></p>
+        <p><strong>Booster Factor:</strong> <span id="booster-factor-value"></span></p>
     `;
 
 		const dailyNotesContainer = profileContainer.createDiv({ cls: 'daily-notes' });
 		dailyNotesContainer.innerHTML = `
-        <p><strong>Daily Notes:</strong> <span id="daily-notes-value">13100EP, 2/2</span></p>
+        <p><strong>Daily Notes:</strong> <span id="daily-notes-value"></span></p>
     `;
 
 		const weeklyNotesContainer = profileContainer.createDiv({ cls: 'weekly-notes' });
 		weeklyNotesContainer.innerHTML = `
-        <p><strong>Weekly Notes:</strong> <span id="weekly-notes-value">52400EP, 2✔️/7</span></p>
+        <p><strong>Weekly Notes:</strong> <span id="weekly-notes-value"></span></p>
     `;
 
 
@@ -148,7 +148,7 @@ export class GamifiedPkmProfileView extends ItemView {
 				datasets: [
 					{
 						label: 'Points Reached',
-						data: [2214079], // Data for points reached
+						data: [0], // Data for points reached
 						//backgroundColor: 'rgba(54, 162, 235, 0.5)',
 						//borderColor: 'rgba(54, 162, 235, 1)',
 						backgroundColor: 'rgba(0, 0, 0, 0.5)',
@@ -157,7 +157,7 @@ export class GamifiedPkmProfileView extends ItemView {
 					},
 					{
 						label: 'Points to Earn to Level Up',
-						data: [145921], // Data for points to earn to level up
+						data: [0], // Data for points to earn to level up
 						//backgroundColor: 'rgba(255, 99, 132, 0.5)',
 						//borderColor: 'rgba(255, 99, 132, 1)',
 						backgroundColor: 'rgba(255, 255, 255, 0.5)',
@@ -173,8 +173,8 @@ export class GamifiedPkmProfileView extends ItemView {
 				scales: {
 					x: {
 						beginAtZero: false, // Don't start the X-axis at zero
-						min: 2070000, // Minimum value for the X-axis
-						max: 2360000, // Maximum value for the X-axis
+						min: 0, // Minimum value for the X-axis
+						max: 1, // Maximum value for the X-axis
 						stacked: true // Enable stacked bars on the X-axis
 					},
 					y: {
