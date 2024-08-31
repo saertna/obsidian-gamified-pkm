@@ -52,7 +52,7 @@ import { getRandomMessageWeeklyChallenge, getRandomMessageTwoNoteChallenge , get
 import { ModalInformationbox } from 'ModalInformationbox';
 import { ModalBooster } from 'ModalBooster';
 import { encryptString, decryptString, encryptNumber, decryptNumber, encryptBoolean, decryptBoolean } from 'encryption';
-import { ExampleView, VIEW_TYPE_EXAMPLE } from "./view";
+import { GamifiedPkmProfileView, VIEW_TYPE_GAMIFICATION_PROFILE } from "./view";
 import {
 	checkGamifiedPkmVersion,
 	concatenateStrings,
@@ -79,7 +79,7 @@ export default class gamification extends Plugin implements GamificationMediator
 	private statusBarItem = this.addStatusBarItem();
 	private statusbarGamification = this.statusBarItem.createEl("span", { text: "" });
 	public settings: ISettings;
-	private exampleView: ExampleView | null = null;
+	private exampleView: GamifiedPkmProfileView | null = null;
 	private lastEditTimes: Record<string, number> = {};
 	private editTimers: Record<string, ReturnType<typeof setTimeout>> = {};
 
@@ -170,8 +170,8 @@ export default class gamification extends Plugin implements GamificationMediator
 		);
 
 		this.registerView(
-			VIEW_TYPE_EXAMPLE,
-			(leaf) => new ExampleView(leaf)
+			VIEW_TYPE_GAMIFICATION_PROFILE,
+			(leaf) => new GamifiedPkmProfileView(leaf)
 		);
 
 
@@ -223,7 +223,12 @@ export default class gamification extends Plugin implements GamificationMediator
 
 		this.addRibbonIcon("chevrons-right", "update overview leaf", () => {
 			//this.updateView("New Text");
-			this.updateContent()
+			//this.updateContent()
+			this.profileLeafUpdateLevel(10,100,1000,0,1000)
+			this.profileLeafUpdateBoosterFactor(100)
+			this.profileLeafUpdateDailyNotes("13000EP, 0/2")
+			this.profileLeafUpdateWeeklyNotes("52000EP, 2/7")
+			this.profileLeafUpdateuUdateMajurityList()
 		});
 
 		this.addCommand({
@@ -461,26 +466,26 @@ export default class gamification extends Plugin implements GamificationMediator
 
 
 	async updateView(newContent: string) {
-		const leaves = this.app.workspace.getLeavesOfType(VIEW_TYPE_EXAMPLE);
+		const leaves = this.app.workspace.getLeavesOfType(VIEW_TYPE_GAMIFICATION_PROFILE);
 
 		if (leaves.length > 0) {
 			leaves.forEach((leaf) => {
 				const view = leaf.view;
-				if (view instanceof ExampleView) {
+				if (view instanceof GamifiedPkmProfileView) {
 					// Directly call the update method on the ExampleView instance
 					view.updateContent(newContent);
 				}
 			});
 		} else {
-			console.log("No leaves found of type:", VIEW_TYPE_EXAMPLE);
-			// Optionally create a new leaf if none exist
+			console.log("No leaves found of type:", VIEW_TYPE_GAMIFICATION_PROFILE);
+			// create a new leaf if none exist
 			const newLeaf = this.app.workspace.getRightLeaf(false);
 			// @ts-ignore
-			await newLeaf.setViewState({ type: VIEW_TYPE_EXAMPLE, active: true });
+			await newLeaf.setViewState({ type: VIEW_TYPE_GAMIFICATION_PROFILE, active: true });
 
 			// @ts-ignore
 			const newView = newLeaf.view;
-			if (newView instanceof ExampleView) {
+			if (newView instanceof GamifiedPkmProfileView) {
 				newView.updateContent("Updated content");
 			}
 		}
@@ -490,21 +495,26 @@ export default class gamification extends Plugin implements GamificationMediator
 	async activateView() {
 		const { workspace } = this.app;
 		let leaf = null;
-		const leaves = this.app.workspace.getLeavesOfType(VIEW_TYPE_EXAMPLE);
+		const leaves = this.app.workspace.getLeavesOfType(VIEW_TYPE_GAMIFICATION_PROFILE);
 
 		if (leaves.length > 0) {
 			leaf = leaves[0];
 		} else {
 			leaf = workspace.getRightLeaf(false);
 			// @ts-ignore
-			await leaf.setViewState({ type: VIEW_TYPE_EXAMPLE, active: true });
+			await leaf.setViewState({ type: VIEW_TYPE_GAMIFICATION_PROFILE, active: true });
 		}
 
 		// Access and update the view content
 		// @ts-ignore
 		const view = leaf.view;
-		if (view instanceof ExampleView) {
-			view.updateContent("Initial content");
+		if (view instanceof GamifiedPkmProfileView) {
+			//view.updateContent("Initial content");
+			this.profileLeafUpdateLevel(10,100,1000,0,1000)
+			this.profileLeafUpdateBoosterFactor(100)
+			this.profileLeafUpdateDailyNotes("13000EP, 0/2")
+			this.profileLeafUpdateWeeklyNotes("52000EP, 2/7")
+			this.profileLeafUpdateuUdateMajurityList()
 		}
 
 		// Optional: reveal the leaf if it's in a collapsed sidebar
@@ -514,27 +524,162 @@ export default class gamification extends Plugin implements GamificationMediator
 	async updateContent() {
 		const { workspace } = this.app;
 		let leaf = null;
-		const leaves = this.app.workspace.getLeavesOfType(VIEW_TYPE_EXAMPLE);
+		const leaves = this.app.workspace.getLeavesOfType(VIEW_TYPE_GAMIFICATION_PROFILE);
 
 		if (leaves.length > 0) {
 			leaf = leaves[0];
 		} else {
 			leaf = workspace.getRightLeaf(false);
 			// @ts-ignore
-			await leaf.setViewState({ type: VIEW_TYPE_EXAMPLE, active: true });
+			await leaf.setViewState({ type: VIEW_TYPE_GAMIFICATION_PROFILE, active: true });
 		}
 
 		// Access and update the view content
 		// @ts-ignore
 		const view = leaf.view;
-		if (view instanceof ExampleView) {
+		if (view instanceof GamifiedPkmProfileView) {
 			//view.updateLevel(34);
 			//view.updatePoints(7000000);
 			//view.updateChart(6000000,4000000)
-			view.updateChartMinMax(200,800,0,1000)
+			view.updateChartMinMax(6530000,340000,6360000,6870000)
 			view.updateMaturityCounts()
 		}else {
-			console.log('ExampleView is not loaded yet.');
+			if(debugLogs) console.log('gamified-pkm-profile is not loaded yet.');
+		}
+	}
+
+	async profileLeafUpdateLevel(newLevel:number, newPoints:number, nextLevel:number, min:number, max:number) {
+		const { workspace } = this.app;
+		let leaf = null;
+		const leaves = this.app.workspace.getLeavesOfType(VIEW_TYPE_GAMIFICATION_PROFILE);
+
+		if (leaves.length > 0) {
+			leaf = leaves[0];
+		} else {
+			leaf = workspace.getRightLeaf(false);
+			// @ts-ignore
+			await leaf.setViewState({ type: VIEW_TYPE_GAMIFICATION_PROFILE, active: true });
+		}
+
+		// @ts-ignore
+		const view = leaf.view;
+		if (view instanceof GamifiedPkmProfileView) {
+			view.updateLevel(newLevel)
+			view.updatePoints(newPoints)
+			view.updateChartMinMax(newPoints, nextLevel, min, max)
+		}else {
+			console.log('gamified-pkm-profile is not loaded yet.');
+		}
+	}
+
+	async profileLeafUpdatePoints(newPoints:number, nextLevel: number) {
+		const { workspace } = this.app;
+		let leaf = null;
+		const leaves = this.app.workspace.getLeavesOfType(VIEW_TYPE_GAMIFICATION_PROFILE);
+
+		if (leaves.length > 0) {
+			leaf = leaves[0];
+		} else {
+			leaf = workspace.getRightLeaf(false);
+			// @ts-ignore
+			await leaf.setViewState({ type: VIEW_TYPE_GAMIFICATION_PROFILE, active: true });
+		}
+
+		// @ts-ignore
+		const view = leaf.view;
+		if (view instanceof GamifiedPkmProfileView) {
+			view.updatePoints(newPoints)
+			view.updateChart(newPoints,nextLevel-newPoints)
+		}else {
+			if(debugLogs) console.log('gamified-pkm-profile is not loaded yet.');
+		}
+	}
+
+	async profileLeafUpdateBoosterFactor(newFactor:number) {
+		const { workspace } = this.app;
+		let leaf = null;
+		const leaves = this.app.workspace.getLeavesOfType(VIEW_TYPE_GAMIFICATION_PROFILE);
+
+		if (leaves.length > 0) {
+			leaf = leaves[0];
+		} else {
+			leaf = workspace.getRightLeaf(false);
+			// @ts-ignore
+			await leaf.setViewState({ type: VIEW_TYPE_GAMIFICATION_PROFILE, active: true });
+		}
+
+		// @ts-ignore
+		const view = leaf.view;
+		if (view instanceof GamifiedPkmProfileView) {
+			view.updateBoosterFactor(newFactor)
+		}else {
+			if(debugLogs) console.log('gamified-pkm-profile is not loaded yet.');
+		}
+	}
+
+	async profileLeafUpdateDailyNotes(dailyString:string) {
+		const { workspace } = this.app;
+		let leaf = null;
+		const leaves = this.app.workspace.getLeavesOfType(VIEW_TYPE_GAMIFICATION_PROFILE);
+
+		if (leaves.length > 0) {
+			leaf = leaves[0];
+		} else {
+			leaf = workspace.getRightLeaf(false);
+			// @ts-ignore
+			await leaf.setViewState({ type: VIEW_TYPE_GAMIFICATION_PROFILE, active: true });
+		}
+
+		// @ts-ignore
+		const view = leaf.view;
+		if (view instanceof GamifiedPkmProfileView) {
+			view.updateDailyNotes(dailyString)
+		}else {
+			if(debugLogs) console.log('gamified-pkm-profile is not loaded yet.');
+		}
+	}
+
+	async profileLeafUpdateWeeklyNotes(weeklyString:string) {
+		const { workspace } = this.app;
+		let leaf = null;
+		const leaves = this.app.workspace.getLeavesOfType(VIEW_TYPE_GAMIFICATION_PROFILE);
+
+		if (leaves.length > 0) {
+			leaf = leaves[0];
+		} else {
+			leaf = workspace.getRightLeaf(false);
+			// @ts-ignore
+			await leaf.setViewState({ type: VIEW_TYPE_GAMIFICATION_PROFILE, active: true });
+		}
+
+		// @ts-ignore
+		const view = leaf.view;
+		if (view instanceof GamifiedPkmProfileView) {
+			view.updateWeeklyNotes(weeklyString)
+		}else {
+			if(debugLogs) console.log('gamified-pkm-profile is not loaded yet.');
+		}
+	}
+
+	async profileLeafUpdateuUdateMajurityList() {
+		const { workspace } = this.app;
+		let leaf = null;
+		const leaves = this.app.workspace.getLeavesOfType(VIEW_TYPE_GAMIFICATION_PROFILE);
+
+		if (leaves.length > 0) {
+			leaf = leaves[0];
+		} else {
+			leaf = workspace.getRightLeaf(false);
+			// @ts-ignore
+			await leaf.setViewState({ type: VIEW_TYPE_GAMIFICATION_PROFILE, active: true });
+		}
+
+		// @ts-ignore
+		const view = leaf.view;
+		if (view instanceof GamifiedPkmProfileView) {
+			view.updateMaturityCounts()
+		}else {
+			if(debugLogs) console.log('gamified-pkm-profile is not loaded yet.');
 		}
 	}
 

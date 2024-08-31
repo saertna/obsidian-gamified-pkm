@@ -2,9 +2,9 @@ import { ItemView, WorkspaceLeaf } from "obsidian";
 import Chart from 'chart.js/auto';
 import { DataviewApi, getAPI} from "obsidian-dataview";
 
-export const VIEW_TYPE_EXAMPLE = "example-view";
+export const VIEW_TYPE_GAMIFICATION_PROFILE = "gamified-pkm-profile";
 
-export class ExampleView extends ItemView {
+export class GamifiedPkmProfileView extends ItemView {
 	chart: Chart;
 	dataview: DataviewApi | null;
     constructor(leaf: WorkspaceLeaf) {
@@ -12,7 +12,7 @@ export class ExampleView extends ItemView {
     }
   
     getViewType() {
-      return VIEW_TYPE_EXAMPLE;
+      return VIEW_TYPE_GAMIFICATION_PROFILE;
     }
   
     getDisplayText() {
@@ -49,12 +49,12 @@ export class ExampleView extends ItemView {
 
 		const dailyNotesContainer = profileContainer.createDiv({ cls: 'daily-notes' });
 		dailyNotesContainer.innerHTML = `
-        <p><strong>Daily Notes:</strong> 13100EP, <span id="daily-notes-value">2/2</span></p>
+        <p><strong>Daily Notes:</strong> <span id="daily-notes-value">13100EP, 2/2</span></p>
     `;
 
 		const weeklyNotesContainer = profileContainer.createDiv({ cls: 'weekly-notes' });
 		weeklyNotesContainer.innerHTML = `
-        <p><strong>Weekly Notes:</strong> 52400EP, <span id="weekly-notes-value">2✔️/7</span></p>
+        <p><strong>Weekly Notes:</strong> <span id="weekly-notes-value">52400EP, 2✔️/7</span></p>
     `;
 
 
@@ -149,15 +149,19 @@ export class ExampleView extends ItemView {
 					{
 						label: 'Points Reached',
 						data: [2214079], // Data for points reached
-						backgroundColor: 'rgba(54, 162, 235, 0.5)',
-						borderColor: 'rgba(54, 162, 235, 1)',
+						//backgroundColor: 'rgba(54, 162, 235, 0.5)',
+						//borderColor: 'rgba(54, 162, 235, 1)',
+						backgroundColor: 'rgba(0, 0, 0, 0.5)',
+						borderColor: 'rgba(0, 0, 0, 1)',
 						borderWidth: 1
 					},
 					{
 						label: 'Points to Earn to Level Up',
 						data: [145921], // Data for points to earn to level up
-						backgroundColor: 'rgba(255, 99, 132, 0.5)',
-						borderColor: 'rgba(255, 99, 132, 1)',
+						//backgroundColor: 'rgba(255, 99, 132, 0.5)',
+						//borderColor: 'rgba(255, 99, 132, 1)',
+						backgroundColor: 'rgba(255, 255, 255, 0.5)',
+						borderColor: 'rgba(255, 255, 255, 0.5)',
 						borderWidth: 1
 					}
 				]
