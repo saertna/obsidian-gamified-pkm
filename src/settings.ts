@@ -1,7 +1,7 @@
 import { App, PluginSettingTab, Setting } from 'obsidian';
 import gamification from './main';
-import type {MomentInput} from 'moment';
-import { encryptValue, encryptString, decryptString, encryptNumber, decryptNumber, encryptBoolean, decryptBoolean } from 'encryption';
+//import type {MomentInput} from 'moment';
+import { encryptString, decryptString, encryptNumber, decryptNumber, encryptBoolean, decryptBoolean } from 'encryption';
 import { debugLogs } from './constants';
 
 export const defaultSettings: Partial<ISettings> = {
@@ -96,7 +96,8 @@ export const defaultSettings: Partial<ISettings> = {
   autoRateOnChange: "U2FsdGVkX1/KT5I5txOiZ+r6Aa1F5RuE5b4eqpaZAqQ=",
   autoRateOnChangeDelayTime: "U2FsdGVkX1/RiGtHePLD9og+g+w+DL31vVK02vCSkQQ=",
   previousRelease: "U2FsdGVkX1+z55uCXdMxdGtgg5oBmTGQPDroIP0PDIk=",
-  showReleaseNotes: "U2FsdGVkX1+7lWe/h95uqzgl27JBGW2iki7sBwk44YQ="
+  showReleaseNotes: "U2FsdGVkX1+7lWe/h95uqzgl27JBGW2iki7sBwk44YQ=",
+  avatarPicture: "U2FsdGVkX1+7lWe/h95uqzgl27JBGW2iki7sBwk44YQ="
 };
 
 export interface DynamicSettings {
@@ -192,6 +193,7 @@ export interface ISettings extends DynamicSettings{
   autoRateOnChangeDelayTime: string
   previousRelease: string
   showReleaseNotes: string
+  avatarPicture: string
 	//[key: string]: number | string | boolean | MomentInput;
 }
 
@@ -286,13 +288,14 @@ export class GamificationPluginSettings extends PluginSettingTab {
   public autoRateOnChange: string;
   public autoRateOnChangeDelayTime: string;
   public previousRelease: string;
-	public showReleaseNotes: string;
+  public showReleaseNotes: string;
+  public avatarPicture: string;
 
-	constructor(app: App, plugin: gamification) {
-	  super(app, plugin);
-	  this.plugin = plugin;
+  constructor(app: App, plugin: gamification) {
+    super(app, plugin);
+    this.plugin = plugin;
 
-    let settings = Object.assign({}, defaultSettings);
+  // let settings = Object.assign({}, defaultSettings);
 
     /*
     for (const key in settings) {
@@ -311,67 +314,80 @@ export class GamificationPluginSettings extends PluginSettingTab {
 
 	}
   
-	public display(): void {
-		const { containerEl } = this;
-		containerEl.addClass("gamification-settings");
-		this.containerEl.empty();
+public display(): void {
+	const { containerEl } = this;
+	containerEl.addClass("gamification-settings");
+	this.containerEl.empty();
 
 
 
-		//const { containerEl } = this;
-		//containerEl.empty();
+	//const { containerEl } = this;
+	//containerEl.empty();
   
-		if(debugLogs) console.debug('settings called')
-		new Setting(containerEl)
-			.setName('Plugin Update Notification')
-			.setDesc('When on, you get informed at startup if there is a newer Version.')
-			.addToggle((toggle) =>
-				toggle
-					.setValue(decryptBoolean(this.plugin.settings.showNewVersionNotification))
-					.onChange((value) => {
-						this.plugin.settings.showNewVersionNotification = encryptBoolean(value);
-						this.plugin.saveData(this.plugin.settings);
-					}),
-			);
+	if(debugLogs) console.debug('settings called')
+	new Setting(containerEl)
+		.setName('Plugin Update Notification')
+		.setDesc('When on, you get informed at startup if there is a newer Version.')
+		.addToggle((toggle) =>
+			toggle
+				.setValue(decryptBoolean(this.plugin.settings.showNewVersionNotification))
+				.onChange((value) => {
+					this.plugin.settings.showNewVersionNotification = encryptBoolean(value);
+					this.plugin.saveData(this.plugin.settings);
+				}),
+		);
 
-		new Setting(containerEl)
-			.setName('#tags to ignore')
-			.setDesc('Enter tags without # and separate with ", ".\nInclude nested tags.')
-			.addText(text => text
-				.setPlaceholder('Enter your tag1, tag2/subtag, …')
-				//.setValue(this.plugin.settings.tagsExclude)
-        .setValue(decryptString(this.plugin.settings.tagsExclude))
-				.onChange(async (value) => {
-					this.plugin.settings.tagsExclude = encryptString(value);
-					await this.plugin.saveSettings();
-				}));
+	new Setting(containerEl)
+		.setName('#tags to ignore')
+		.setDesc('Enter tags without # and separate with ", ".\nInclude nested tags.')
+		.addText(text => text
+			.setPlaceholder('Enter your tag1, tag2/subtag, …')
+			//.setValue(this.plugin.settings.tagsExclude)
+	.setValue(decryptString(this.plugin.settings.tagsExclude))
+			.onChange(async (value) => {
+				this.plugin.settings.tagsExclude = encryptString(value);
+				await this.plugin.saveSettings();
+			}));
 
 				
-		new Setting(containerEl)
-			.setName('Folder to ignore')
-			.setDesc('Enter folder whichs content shall be ignored. Separate with ", ".')
-			.addText(text => text
-				.setPlaceholder('Enter your folder1, folder2, …')
-				//.setValue(this.plugin.settings.folderExclude)
-        .setValue(decryptString(this.plugin.settings.folderExclude))
+	new Setting(containerEl)
+		.setName('Folder to ignore')
+		.setDesc('Enter folder whichs content shall be ignored. Separate with ", ".')
+		.addText(text => text
+			.setPlaceholder('Enter your folder1, folder2, …')
+			//.setValue(this.plugin.settings.folderExclude)
+	.setValue(decryptString(this.plugin.settings.folderExclude))
+			.onChange(async (value) => {
+				// if(debugLogs) console.debug('folder to exclude: ' + value);
+				this.plugin.settings.folderExclude = encryptString(value);
+				await this.plugin.saveSettings();
+			}));
+
+	/*new Setting(containerEl)
+		.setName('Profile page name')
+		.setDesc('You can change here the name of your profile page if you like.')
+		.addText(text => text
+				.setPlaceholder('name')
+				//.setValue(this.plugin.settings.avatarPageName)
+		.setValue(decryptString(this.plugin.settings.avatarPageName))
 				.onChange(async (value) => {
 					// if(debugLogs) console.debug('folder to exclude: ' + value);
-					this.plugin.settings.folderExclude = encryptString(value);
+					this.plugin.settings.avatarPageName = encryptString(value);
 					await this.plugin.saveSettings();
-				}));
+			}));*/
 
-		new Setting(containerEl)
-			.setName('Profile page name')
-			.setDesc('You can change here the name of your profile page if you like.')
-			.addText(text => text
-					.setPlaceholder('name')
-					//.setValue(this.plugin.settings.avatarPageName)
-          .setValue(decryptString(this.plugin.settings.avatarPageName))
-					.onChange(async (value) => {
-						// if(debugLogs) console.debug('folder to exclude: ' + value);
-						this.plugin.settings.avatarPageName = encryptString(value);
-						await this.plugin.saveSettings();
-				}));
+	new Setting(containerEl)
+		.setName('Path to profile picture')
+		.setDesc('You can point here to a picture you would like to use as avatar. Inculde your vault path.')
+		.addText(text => text
+			.setPlaceholder('attachment/avatar.png')
+			//.setValue(this.plugin.settings.avatarPageName)
+			.setValue(decryptString(this.plugin.settings.avatarPicture))
+			.onChange(async (value) => {
+				// if(debugLogs) console.debug('folder to exclude: ' + value);
+				this.plugin.settings.avatarPicture = encryptString(value);
+				await this.plugin.saveSettings();
+			}));
 				
     containerEl.createEl('h2', { text: 'Other' });
 		new Setting(containerEl)
@@ -379,11 +395,11 @@ export class GamificationPluginSettings extends PluginSettingTab {
 			.setDesc('You can remove the init command from command prompt by switching off.\nrestart needed.')
 			.addToggle((toggle) => 
 				toggle
-          		.setValue(decryptBoolean(this.plugin.settings.enableInitCommand))
-        			.onChange((value) => {
-            			this.plugin.settings.enableInitCommand = encryptBoolean(value);
-            			this.plugin.saveData(this.plugin.settings);
-          			}),
+					.setValue(decryptBoolean(this.plugin.settings.enableInitCommand))
+					.onChange((value) => {
+						this.plugin.settings.enableInitCommand = encryptBoolean(value);
+						this.plugin.saveData(this.plugin.settings);
+					}),
 			);
 
 		new Setting(containerEl)

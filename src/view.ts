@@ -1,6 +1,7 @@
 import { ItemView, WorkspaceLeaf } from "obsidian";
 import Chart from 'chart.js/auto';
 import { DataviewApi, getAPI} from "obsidian-dataview";
+import { GamificationMediator } from './GamificationMediator';
 
 export const VIEW_TYPE_GAMIFICATION_PROFILE = "gamified-pkm-profile";
 
@@ -8,8 +9,10 @@ export class GamifiedPkmProfileView extends ItemView {
 	chart: Chart;
 	chartWeekly: Chart;
 	dataview: DataviewApi | null;
-    constructor(leaf: WorkspaceLeaf) {
+	private readonly mediator: GamificationMediator;
+    constructor(leaf: WorkspaceLeaf, mediator: GamificationMediator) {
       super(leaf);
+		this.mediator = mediator;
     }
   
     getViewType() {
@@ -30,9 +33,19 @@ export class GamifiedPkmProfileView extends ItemView {
 
 		const profileContainer = container.createDiv({ cls: 'avatar-profile' });
 
-		const imagePath = this.app.vault.adapter.getResourcePath('Attachements/Avatar-Zettelkasten.png');
+		/*const imagePath = this.app.vault.adapter.getResourcePath('Attachements/Avatar-Zettelkasten.png');
 		const avatarImage = profileContainer.createEl('img', { cls: 'avatar-image' });
-		avatarImage.src = imagePath;
+		avatarImage.src = imagePath;*/
+
+		/*
+		const imagePath = this.mediator.getSettingString('avatarPicture'); // Assuming a function to get the setting value
+
+		// Conditionally create the avatar image if the path is provided
+		if (imagePath) {
+			const fullPath = this.app.vault.adapter.getResourcePath(imagePath);
+			const avatarImage = profileContainer.createEl('img', { cls: 'avatar-image' });
+			avatarImage.src = fullPath;
+		}*/
 
 		const levelAndPointsContainer = profileContainer.createDiv({ cls: 'level-and-points' });
 		levelAndPointsContainer.innerHTML = `

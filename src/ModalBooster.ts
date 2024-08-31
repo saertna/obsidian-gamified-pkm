@@ -1,37 +1,26 @@
 import { App, Modal } from 'obsidian';
-import gamification from 'main';
-import { MultiSelectModal } from 'MultiSelectModal';
-import { GamificationMediator } from './GamificationMediator';
+import { GamificationMediatorImpl } from './GamificationMediatorImpl';
+import { MultiSelectModal } from './MultiSelectModal';
 
 export class ModalBooster extends Modal {
 	private readonly displayText: string;
-	private readonly gamificationInstance: gamification;
-	private readonly mediator: GamificationMediator;
+	private readonly mediator: GamificationMediatorImpl; // Use the concrete implementation
 
-	constructor(app: App, displayText: string, gamificationInstance: gamification) {
+	constructor(app: App, displayText: string, mediator: GamificationMediatorImpl) {
 		super(app);
 		this.displayText = displayText;
-		this.gamificationInstance = gamificationInstance;
+		this.mediator = mediator;
 	}
-
-	// constructor(app: App, displayText: string, mediator: GamificationMediator) {
-	// 	super(app);
-	// 	this.displayText = displayText;
-	// 	this.mediator = mediator;
-	// }
 
 	onOpen() {
 		const { contentEl } = this;
 		contentEl.setText(this.displayText);
-		
 
-		const multiSelectModal = new MultiSelectModal(this.app, [], 'Craft Booster Item', this.gamificationInstance); // Create the modal instance
-		//const multiSelectModal = new MultiSelectModal(this.app, [], 'Craft Booster Item', this.mediator);
-
+		const multiSelectModal = new MultiSelectModal(this.app, [], 'Craft Booster Item', this.mediator); // Create the modal instance
 
 		const button = document.createElement('button');
 		button.innerText = 'Open Crafting Table';
-		button.classList.add('modal-button'); 
+		button.classList.add('modal-button');
 		button.onclick = () => {
 			multiSelectModal.setUseBooster(false);
 			multiSelectModal.open();
@@ -39,7 +28,7 @@ export class ModalBooster extends Modal {
 
 		const button2 = document.createElement('button');
 		button2.innerText = 'Open Booster Board';
-		button2.classList.add('modal-button'); 
+		button2.classList.add('modal-button');
 		button2.onclick = () => {
 			multiSelectModal.setUseBooster(true);
 			multiSelectModal.open();
@@ -47,12 +36,10 @@ export class ModalBooster extends Modal {
 
 		contentEl.appendChild(button);
 		contentEl.appendChild(button2);
-		
 	}
 
 	onClose() {
 		const { contentEl } = this;
 		contentEl.empty();
 	}
-
 }
