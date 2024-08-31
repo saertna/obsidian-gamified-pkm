@@ -1266,7 +1266,8 @@ export default class gamification extends Plugin {
 		}
 		
 		pointsToReceived = pointsToAdd * (boosterFactor + streakbooster + boosterFactorPerpetualProgress + boosterFactorStrategicSynapses + boosterFactorLinkersLode + boosterFactorRecursiveReflection + boosterFactorSynapticSurge + boosterFactorTitleTitan + boosterFactorPrecisionPrism + boosterFactorHyperlinkHarmony + boosterFactorEphemeralEuphoria )
-		this.mediator.setSettingNumber('statusPoints', pointsToReceived + this.mediator.getSettingNumber('statusPoints'))
+		const pointsTotal = pointsToReceived + this.mediator.getSettingNumber('statusPoints')
+		this.mediator.setSettingNumber('statusPoints', pointsTotal)
 		//await this.saveData(this.settings)
 
 
@@ -1278,6 +1279,15 @@ export default class gamification extends Plugin {
 		} else {
 			return false;
 		}*/
+		const level = getLevelForPoints(pointsTotal);
+		let receiveBadge = false
+		if ( this.mediator.getSettingNumber('statusLevel') < level.level){
+			receiveBadge = checkIfReceiveABadge(this.mediator.getSettingNumber('statusLevel'), level.level)
+			this.mediator.setSettingNumber('statusLevel', level.level)
+			new Notice(`With ${pointsTotal} points, the current level is ${level.level}.`,this.mediator.getSettingNumber('timeShowNotice') * mil2sec * 1.2)
+		}
+
+		return receiveBadge;
 
 	}
 
@@ -1653,6 +1663,7 @@ export default class gamification extends Plugin {
 				this.mediator.setSettingBoolean('badgeBoosterState', false);
 				this.mediator.setSettingNumber('badgeBoosterFactor', 1);
 				this.writeBadgeCSV(badge, window.moment().format('YYYY-MM-DD'), 'level ' + this.mediator.getSettingNumber('statusLevel').toString())
+
 				//this.saveData(this.settings)
 			}
 		});
