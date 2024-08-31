@@ -27,7 +27,8 @@ import {
 	streakboosterDecrease,
 	streakboosterIncreaseDaily,
 	streakboosterIncreaseWeekly,
-	mil2sec, milliseconds, seconds, minutesTimer} from './constants'
+	mil2sec, milliseconds, seconds, minutesTimer, badgeLevels
+} from './constants'
 import {
 	count_inlinks,
 	countCharactersInActiveFile,
@@ -238,12 +239,19 @@ export default class gamification extends Plugin {
 
 				//const obsidianJustInstalled = this.settings.previousRelease === "0.0.0"
 
-				new ReleaseNotes(
+				/*new ReleaseNotes(
 					this.app,
 					this.mediator,
 					//obsidianJustInstalled ? null :
 					PLUGIN_VERSION
-				).open();
+				).open();*/
+
+				//await this.giveStatusPoints(10000,'')
+				//await this.actualizeProfileLeave();
+				//console.log(`receivedBadges: ${this.mediator.getSettingString('receivedBadges')}`)
+				//console.log(parseBadgeCSV2Dict(this.mediator.getSettingString('receivedBadges')))
+
+
 
 				//await this.decreaseStreakbooster(50);
 				//await this.increaseStreakbooster(0.8);
@@ -1272,19 +1280,13 @@ export default class gamification extends Plugin {
 
 
 		//TODO new solution necessary how to trigger badge for certain levels
-		/*const questionToReceiveBadge: boolean | null = await this.updateAvatarPage(this.mediator.getSettingString('avatarPageName'));
-
-		if (questionToReceiveBadge !== null) {
-			return questionToReceiveBadge;
-		} else {
-			return false;
-		}*/
 		const level = getLevelForPoints(pointsTotal);
-		let receiveBadge = false
+		const receiveBadge = false
 		if ( this.mediator.getSettingNumber('statusLevel') < level.level){
-			receiveBadge = checkIfReceiveABadge(this.mediator.getSettingNumber('statusLevel'), level.level)
+			//receiveBadge = checkIfReceiveABadge(this.mediator.getSettingNumber('statusLevel'), level.level)
 			this.mediator.setSettingNumber('statusLevel', level.level)
 			new Notice(`With ${pointsTotal} points, the current level is ${level.level}.`,this.mediator.getSettingNumber('timeShowNotice') * mil2sec * 1.2)
+			await this.giveBadge2(level.level);
 		}
 
 		return receiveBadge;
@@ -1489,6 +1491,23 @@ export default class gamification extends Plugin {
 		}
 	}
 
+	async giveBadge(badge: Badge){
+		const badgeDict = parseBadgeCSV2Dict(this.mediator.getSettingString('receivedBadges'));
+		if (!badgeDict[badge.name]) {
+			await this.writeBadgeCSV(badge, window.moment().format('YYYY-MM-DD'), 'level ' + (this.mediator.getSettingNumber('statusLevel')).toString())
+
+		}
+	}
+
+	async giveBadge2(currenLevel: number){
+		const badge = getBadgeForLevel(currenLevel,true)
+		const badgeDict = parseBadgeCSV2Dict(this.mediator.getSettingString('receivedBadges'));
+		if (!badgeDict[badge.name]) {
+			await this.writeBadgeCSV(badge, window.moment().format('YYYY-MM-DD'), 'level ' + currenLevel.toString())
+
+		}
+	}
+
 	async giveSecretBadgeInProfile(avatarPageName: string, badge: Badge){
 		const badgeDict = parseBadgeCSV2Dict(this.mediator.getSettingString('receivedBadges'));
 		if (!badgeDict[badge.name]) {
@@ -1663,7 +1682,6 @@ export default class gamification extends Plugin {
 				this.mediator.setSettingBoolean('badgeBoosterState', false);
 				this.mediator.setSettingNumber('badgeBoosterFactor', 1);
 				this.writeBadgeCSV(badge, window.moment().format('YYYY-MM-DD'), 'level ' + this.mediator.getSettingNumber('statusLevel').toString())
-
 				//this.saveData(this.settings)
 			}
 		});
