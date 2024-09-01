@@ -24,6 +24,14 @@ export class GamificationMediatorImpl implements GamificationMediator {
 		this.plugin.profileLeafUpdatePicture();
 	}
 
+	updateChartWeeklyColorReceived(value: string){
+		this.plugin.updateChartWeeklyColorReceived(value);
+	}
+
+	updateChartWeeklyColorToGo(value: string){
+		this.plugin.updateChartWeeklyColorToGo(value);
+	}
+
 	getSettingString(key: string): string {
 		const decryptedValue = this.settings[key] !== undefined ? this.settings[key].toString() : ''
 		//if(debugLogs) console.debug(`String: decrypted ${key} is ${decryptString(decryptedValue)}`)

@@ -97,7 +97,9 @@ export const defaultSettings: Partial<ISettings> = {
   autoRateOnChangeDelayTime: "U2FsdGVkX1/RiGtHePLD9og+g+w+DL31vVK02vCSkQQ=",
   previousRelease: "U2FsdGVkX1+z55uCXdMxdGtgg5oBmTGQPDroIP0PDIk=",
   showReleaseNotes: "U2FsdGVkX1+7lWe/h95uqzgl27JBGW2iki7sBwk44YQ=",
-  avatarPicture: "U2FsdGVkX18zJk4m8pNboYxTAVmT5KytaqxAsTw/50I="
+  avatarPicture: "U2FsdGVkX18zJk4m8pNboYxTAVmT5KytaqxAsTw/50I=",
+  colorBarReceived: "U2FsdGVkX19GLvJtvLLriVKTDDLMVt+P7ysHKoOcIb0=",
+  colorBarToGo: "U2FsdGVkX1/8uFFZ/kZeDb2YWMKM8h8rzssbPWBGZ7c="
 };
 
 export interface DynamicSettings {
@@ -194,6 +196,8 @@ export interface ISettings extends DynamicSettings{
   previousRelease: string
   showReleaseNotes: string
   avatarPicture: string
+  colorBarReceived: string
+  colorBarToGo: string
 	//[key: string]: number | string | boolean | MomentInput;
 }
 
@@ -291,6 +295,8 @@ export class GamificationPluginSettings extends PluginSettingTab {
 	public previousRelease: string;
 	public showReleaseNotes: string;
 	public avatarPicture: string;
+	public colorBarReceived: string;
+	public colorBarToGo: string;
 
 	constructor(app: App, plugin: gamification, mediator: GamificationMediator) {
 		super(app, plugin as any);
@@ -344,6 +350,33 @@ export class GamificationPluginSettings extends PluginSettingTab {
 					.onChange(async (value) => {
 						this.mediator.setSettingString('folderExclude', value);
 						await this.mediator.saveSettings();
+					}),
+			);
+
+		new Setting(containerEl)
+			.setName('color bar received')
+			.addColorPicker((colorPicker) =>
+				colorPicker
+					.setValue(this.mediator.getSettingString('colorBarReceived'))
+					.onChange(async (value) => {
+						console.log(`colorBarReceived: ${value}`)
+						this.mediator.setSettingString('colorBarReceived', value);
+						await this.mediator.saveSettings();
+						this.mediator.updateChartWeeklyColorReceived(value);
+					}),
+			);
+
+		new Setting(containerEl)
+			.setName('color bar to go')
+			.addColorPicker((colorPicker) =>
+				colorPicker
+					.setValue(this.mediator.getSettingString('colorBarToGo'))
+					//.setValue('#ff0000')
+					.onChange(async (value) => {
+						console.log(`colorBarToGo: ${value}`)
+						this.mediator.setSettingString('colorBarToGo', value);
+						await this.mediator.saveSettings();
+						this.mediator.updateChartWeeklyColorToGo(value);
 					}),
 			);
 

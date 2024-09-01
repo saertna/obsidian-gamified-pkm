@@ -150,8 +150,6 @@ export class GamifiedPkmProfileView extends ItemView {
 					{
 						label: 'Points Reached',
 						data: [0], // Data for points reached
-						//backgroundColor: 'rgba(54, 162, 235, 0.5)',
-						//borderColor: 'rgba(54, 162, 235, 1)',
 						backgroundColor: 'rgba(0, 0, 0, 0.5)',
 						borderColor: 'rgba(0, 0, 0, 1)',
 						borderWidth: 1
@@ -159,8 +157,6 @@ export class GamifiedPkmProfileView extends ItemView {
 					{
 						label: 'Points to Earn to Level Up',
 						data: [0], // Data for points to earn to level up
-						//backgroundColor: 'rgba(255, 99, 132, 0.5)',
-						//borderColor: 'rgba(255, 99, 132, 1)',
 						backgroundColor: 'rgba(255, 255, 255, 0.5)',
 						borderColor: 'rgba(255, 255, 255, 0.5)',
 						borderWidth: 1
@@ -317,6 +313,32 @@ export class GamifiedPkmProfileView extends ItemView {
 			this.chartWeekly.data.datasets[0].data = [days];
 			this.chartWeekly.data.datasets[1].data = [7-days];
 			this.chartWeekly.update();
+		}
+	}
+
+	updateChartWeeklyColorReceived(colorReceived: string) {
+		if (this.chartWeekly) {
+			this.chartWeekly.data.datasets[0].backgroundColor = colorReceived;
+			this.chartWeekly.data.datasets[0].borderColor = colorReceived;
+			this.chartWeekly.update();
+		}
+		if (this.chart) {
+			this.chart.data.datasets[0].backgroundColor = colorReceived;
+			this.chart.data.datasets[0].borderColor = colorReceived;
+			this.chart.update();
+		}
+	}
+
+	updateChartWeeklyColorToGo(colorToGo: string) {
+		if (this.chartWeekly) {
+			this.chartWeekly.data.datasets[1].backgroundColor = colorToGo;
+			this.chartWeekly.data.datasets[1].borderColor = colorToGo;
+			this.chartWeekly.update();
+		}
+		if (this.chart) {
+			this.chart.data.datasets[1].backgroundColor = colorToGo;
+			this.chart.data.datasets[1].borderColor = colorToGo;
+			this.chart.update();
 		}
 	}
 

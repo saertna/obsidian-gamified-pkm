@@ -422,6 +422,8 @@ export default class gamification extends Plugin {
 		this.profileLeafUpdateDailyNotes(pointsForDailyChallenge * (this.mediator.getSettingNumber('badgeBoosterFactor') + this.mediator.getSettingNumber('streakbooster')) + 'EP | ' + this.mediator.getSettingNumber('dailyNoteCreationTask') + '/2')
 		this.profileLeafUpdateWeeklyNotes(pointsForWeeklyChallenge * (this.mediator.getSettingNumber('badgeBoosterFactor') + this.mediator.getSettingNumber('streakbooster')) + 'EP | ' + this.mediator.getSettingNumber('weeklyNoteCreationTask') + '/7')
 		this.profileLeafUpdateWeeklyChart(this.mediator.getSettingNumber('weeklyNoteCreationTask'));
+		this.updateChartWeeklyColorReceived(this.mediator.getSettingString('colorBarReceived'));
+		this.updateChartWeeklyColorToGo(this.mediator.getSettingString('colorBarToGo'));
 		this.profileLeafUpdateuUdateMajurityList()
 	}
 
@@ -469,6 +471,50 @@ export default class gamification extends Plugin {
 			view.updateLevel(newLevel)
 			view.updatePoints(newPoints)
 			view.updateChartMinMax(newPoints, nextLevel, min, max)
+		}else {
+			console.log('gamified-pkm-profile is not loaded yet.');
+		}
+	}
+
+	async updateChartWeeklyColorReceived(value: string) {
+		const { workspace } = this.app;
+		let leaf = null;
+		const leaves = this.app.workspace.getLeavesOfType(VIEW_TYPE_GAMIFICATION_PROFILE);
+
+		if (leaves.length > 0) {
+			leaf = leaves[0];
+		} else {
+			leaf = workspace.getRightLeaf(false);
+			// @ts-ignore
+			await leaf.setViewState({ type: VIEW_TYPE_GAMIFICATION_PROFILE, active: true });
+		}
+
+		// @ts-ignore
+		const view = leaf.view;
+		if (view instanceof GamifiedPkmProfileView) {
+			view.updateChartWeeklyColorReceived(value)
+		}else {
+			console.log('gamified-pkm-profile is not loaded yet.');
+		}
+	}
+
+	async updateChartWeeklyColorToGo(value: string) {
+		const { workspace } = this.app;
+		let leaf = null;
+		const leaves = this.app.workspace.getLeavesOfType(VIEW_TYPE_GAMIFICATION_PROFILE);
+
+		if (leaves.length > 0) {
+			leaf = leaves[0];
+		} else {
+			leaf = workspace.getRightLeaf(false);
+			// @ts-ignore
+			await leaf.setViewState({ type: VIEW_TYPE_GAMIFICATION_PROFILE, active: true });
+		}
+
+		// @ts-ignore
+		const view = leaf.view;
+		if (view instanceof GamifiedPkmProfileView) {
+			view.updateChartWeeklyColorToGo(value)
 		}else {
 			console.log('gamified-pkm-profile is not loaded yet.');
 		}
