@@ -12,11 +12,10 @@ style.textContent = `
 `;
 
 document.head.append(style);
-import {App, MarkdownView, Notice, Plugin, TFile} from 'obsidian';
+import {MarkdownView, Notice, Plugin, TFile} from 'obsidian';
 import {GamificationPluginSettings, ISettings} from './settings';
 import format from 'date-fns/format';
 import {
-	avatarInitContent,
 	chanceToEarnIngredient,
 	debugLogs,
 	PLUGIN_VERSION,
@@ -44,7 +43,7 @@ import {
 	rateOutlinks,
 	rateProgressiveSummarization
 } from './maturitycalculation'
-import {Badge, checkIfReceiveABadge, getBadge, getBadgeForInitLevel, getBadgeForLevel} from './badges'
+import {Badge, getBadge, getBadgeForInitLevel, getBadgeForLevel} from './badges'
 import {getLevelForPoints, statusPointsForLevel} from './levels'
 // import type {Moment} from 'moment';
 import { getRandomMessageWeeklyChallenge, getRandomMessageTwoNoteChallenge , getRandomMessagePoints, getRandomMessageBoosterFactor } from './randomNotificationText'
@@ -79,23 +78,9 @@ export default class gamification extends Plugin {
 	private exampleView: GamifiedPkmProfileView | null = null;
 	private lastEditTimes: Record<string, number> = {};
 	private editTimers: Record<string, ReturnType<typeof setTimeout>> = {};
-	//mediator: GamificationMediator;
 	mediator: GamificationMediatorImpl;
 
 
-
-
-	initializeAfterLayoutReady() {
-		try {
-			// Perform operations that require the layout to be ready
-			this.resetDailyGoals();
-			this.updateStatusBar(this.statusbarGamification);
-			//this.actualizeProfileLeave();
-			this.mediator.updateProfileLeaf();
-		} catch (error) {
-			console.error('Error during post-layout initialization:', error);
-		}
-	}
 	async onload() {
 		console.log('obsidian-pkm-gamification loaded!');
 
@@ -187,18 +172,7 @@ export default class gamification extends Plugin {
 		}
 
 		this.actualizeProfileLeave();
-		return true; // Successfully updated
-	}
-
-	async actualizeProfileLeave(){
-		const newPoints = this.mediator.getSettingNumber('statusPoints')
-		const level = getLevelForPoints(newPoints);
-		this.profileLeafUpdateLevel(this.mediator.getSettingNumber('statusLevel'),this.mediator.getSettingNumber('statusPoints'),this.mediator.getSettingNumber('xpForNextLevel'),level.points,level.pointsNext)
-		this.profileLeafUpdateBoosterFactor(this.mediator.getSettingNumber('streakbooster'))
-		this.profileLeafUpdateDailyNotes(pointsForDailyChallenge * (this.mediator.getSettingNumber('badgeBoosterFactor') + this.mediator.getSettingNumber('streakbooster')) + 'EP | ' + this.mediator.getSettingNumber('dailyNoteCreationTask') + '/2')
-		this.profileLeafUpdateWeeklyNotes(pointsForWeeklyChallenge * (this.mediator.getSettingNumber('badgeBoosterFactor') + this.mediator.getSettingNumber('streakbooster')) + 'EP | ' + this.mediator.getSettingNumber('weeklyNoteCreationTask') + '/7')
-		this.profileLeafUpdateWeeklyChart(this.mediator.getSettingNumber('weeklyNoteCreationTask'));
-		this.profileLeafUpdateuUdateMajurityList()
+		return true;
 	}
 
 
@@ -316,7 +290,6 @@ export default class gamification extends Plugin {
 		});
 
 
-
 		if (this.mediator.getSettingBoolean('enableInitCommand')){
 			// command Initialize gamification ratings
 			this.addCommand({
@@ -324,20 +297,6 @@ export default class gamification extends Plugin {
 				name: 'Initialize gamification ratings',
 				callback: async () => {
 					await this.initializeGame(this.statusbarGamification);
-				},
-			});
-		}
-
-		if (this.mediator.getSettingBoolean('enableInitCommand')){
-			// command create avatar profile page
-			this.addCommand({
-				id: 'create-avatar-page',
-				name: 'Create profile page',
-				callback: async () => {
-					//const { vault } = this.app;
-					await createAvatarFile(this.app, this.mediator.getSettingString('avatarPageName'))
-					//const chartString = await this.createChart(vault)
-					//await replaceChartContent(this.mediator.getSettingString('avatarPageName'), chartString)
 				},
 			});
 		}
@@ -432,7 +391,6 @@ export default class gamification extends Plugin {
 	}
 
 
-
 	onFileRenamed(oldPath: string, newPath: string) {
 		console.log(`${newPath}`);
 		const foldersToExclude = this.mediator.getSettingString('folderExclude');
@@ -458,30 +416,26 @@ export default class gamification extends Plugin {
 	}
 
 
-	async updateView(newContent: string) {
-		const leaves = this.app.workspace.getLeavesOfType(VIEW_TYPE_GAMIFICATION_PROFILE);
-
-		if (leaves.length > 0) {
-			leaves.forEach((leaf) => {
-				const view = leaf.view;
-				if (view instanceof GamifiedPkmProfileView) {
-					// Directly call the update method on the ExampleView instance
-					view.updateContent(newContent);
-				}
-			});
-		} else {
-			console.log("No leaves found of type:", VIEW_TYPE_GAMIFICATION_PROFILE);
-			// create a new leaf if none exist
-			const newLeaf = this.app.workspace.getRightLeaf(false);
-			// @ts-ignore
-			await newLeaf.setViewState({ type: VIEW_TYPE_GAMIFICATION_PROFILE, active: true });
-
-			// @ts-ignore
-			const newView = newLeaf.view;
-			if (newView instanceof GamifiedPkmProfileView) {
-				newView.updateContent("Updated content");
-			}
+	initializeAfterLayoutReady() {
+		try {
+			this.resetDailyGoals();
+			this.updateStatusBar(this.statusbarGamification);
+			this.mediator.updateProfileLeaf();
+		} catch (error) {
+			console.error('Error during post-layout initialization:', error);
 		}
+	}
+
+
+	async actualizeProfileLeave(){
+		const newPoints = this.mediator.getSettingNumber('statusPoints')
+		const level = getLevelForPoints(newPoints);
+		this.profileLeafUpdateLevel(this.mediator.getSettingNumber('statusLevel'),this.mediator.getSettingNumber('statusPoints'),this.mediator.getSettingNumber('xpForNextLevel'),level.points,level.pointsNext)
+		this.profileLeafUpdateBoosterFactor(this.mediator.getSettingNumber('streakbooster'))
+		this.profileLeafUpdateDailyNotes(pointsForDailyChallenge * (this.mediator.getSettingNumber('badgeBoosterFactor') + this.mediator.getSettingNumber('streakbooster')) + 'EP | ' + this.mediator.getSettingNumber('dailyNoteCreationTask') + '/2')
+		this.profileLeafUpdateWeeklyNotes(pointsForWeeklyChallenge * (this.mediator.getSettingNumber('badgeBoosterFactor') + this.mediator.getSettingNumber('streakbooster')) + 'EP | ' + this.mediator.getSettingNumber('weeklyNoteCreationTask') + '/7')
+		this.profileLeafUpdateWeeklyChart(this.mediator.getSettingNumber('weeklyNoteCreationTask'));
+		this.profileLeafUpdateuUdateMajurityList()
 	}
 
 
@@ -503,19 +457,12 @@ export default class gamification extends Plugin {
 		const view = leaf.view;
 		if (view instanceof GamifiedPkmProfileView) {
 			this.actualizeProfileLeave();
-			/*const newPoints = this.mediator.getSettingNumber('statusPoints');
-			const level = getLevelForPoints(newPoints);
-			this.profileLeafUpdateLevel(this.mediator.getSettingNumber('statusLevel'),this.mediator.getSettingNumber('statusPoints'),this.mediator.getSettingNumber('xpForNextLevel'),level.points,level.pointsNext);
-			this.profileLeafUpdateBoosterFactor(this.mediator.getSettingNumber('streakbooster'));
-			this.profileLeafUpdateDailyNotes(pointsForDailyChallenge * (this.mediator.getSettingNumber('badgeBoosterFactor') + this.mediator.getSettingNumber('streakbooster')) + 'EP | ' + this.mediator.getSettingNumber('dailyNoteCreationTask') + '/2');
-			this.profileLeafUpdateWeeklyNotes(pointsForWeeklyChallenge * (this.mediator.getSettingNumber('badgeBoosterFactor') + this.mediator.getSettingNumber('streakbooster')) + 'EP | ' + this.mediator.getSettingNumber('weeklyNoteCreationTask') + '/7');
-			this.profileLeafUpdateWeeklyChart(this.mediator.getSettingNumber('weeklyNoteCreationTask'));
-			this.profileLeafUpdateuUdateMajurityList();*/
 		}
 
 		// Optional: reveal the leaf if it's in a collapsed sidebar
 		// workspace.revealLeaf(leaf);
 	}
+
 	async profileLeafUpdateLevel(newLevel:number, newPoints:number, nextLevel:number, min:number, max:number) {
 		const { workspace } = this.app;
 		let leaf = null;
@@ -698,15 +645,15 @@ export default class gamification extends Plugin {
 
 	private async resetGame() {
         await this.removeKeysFromFrontmatter();
-        this.mediator.setSettingNumber('statusLevel', 1)
-        this.mediator.setSettingNumber('statusPoints', 0)
-        this.mediator.setSettingNumber('xpForNextLevel', 1000)
-        this.mediator.setSettingBoolean('badgeBoosterState', false)
-        this.mediator.setSettingNumber('badgeBoosterFactor', 1)
-        //await this.saveData(this.settings);
-        await this.giveStatusPoints(0,'')
-        await this.updateStatusBar(this.statusbarGamification)
-        new ModalInformationbox(this.app, `Game is now reseted. Please delete the Profile Page: "${this.mediator.getSettingString('avatarPageName')}.md" manually.`).open();
+        this.mediator.setSettingNumber('statusLevel', 1);
+        this.mediator.setSettingNumber('statusPoints', 0);
+        this.mediator.setSettingNumber('xpForNextLevel', 1000);
+        this.mediator.setSettingBoolean('badgeBoosterState', false);
+        this.mediator.setSettingNumber('badgeBoosterFactor', 1);
+        await this.giveStatusPoints(0,'');
+        await this.updateStatusBar(this.statusbarGamification);
+        this.mediator.updateProfileLeaf();
+		new ModalInformationbox(this.app, `Game is now reseted. Please delete the Profile Page: "${this.mediator.getSettingString('avatarPageName')}.md" manually.`).open();
     }
 
 
@@ -714,11 +661,6 @@ export default class gamification extends Plugin {
 		this.mediator.setSettingString('gamificationStartDate', format(new Date(), 'yyyy-MM-dd'));
 		await this.saveSettings();
 
-		//const {vault} = this.app;
-		await createAvatarFile(this.app, this.mediator.getSettingString('avatarPageName'))
-		//const chartString = await this.createChart(vault)
-		//await replaceChartContent(this.mediator.getSettingString('avatarPageName'), chartString)
-		await this.openAvatarFile()
 		const fileCountMap: TFile[] | null = await getFileMap(this.app, this.mediator.getSettingString('tagsExclude'), this.mediator.getSettingString('folderExclude'));
 		if (fileCountMap !== null) {
 			if(debugLogs) console.debug(`fileCountMap loaded. Number of files: ${fileCountMap.length}`);
@@ -835,8 +777,6 @@ export default class gamification extends Plugin {
 			const initBadge: Badge = getBadgeForInitLevel(this.mediator.getSettingNumber('statusLevel'));
 			new Notice(`You've earned the "${initBadge.name}" badge. ${initBadge.description}`,this.mediator.getSettingNumber('timeShowNotice') * mil2sec * 1.2)
 			if(debugLogs) console.log(`You earned ${initBadge.name} - ${initBadge.description}`)
-			await this.giveInitBadgeInProfile(this.mediator.getSettingString('avatarPageName'), initBadge);
-			await this.removeBadgesWhenInitLevelHigher(this.mediator.getSettingString('avatarPageName'), this.mediator.getSettingNumber('statusLevel'))
 			await this.boosterForInit()
 			await this.updateStatusBar(statusbarGamification)
 			this.writeBadgeCSV(initBadge, window.moment().format('YYYY-MM-DD'),'level ' + (this.mediator.getSettingNumber('statusLevel')).toString())
@@ -883,7 +823,6 @@ export default class gamification extends Plugin {
 		// get file content length
 		const activeView = this.app.workspace.getActiveViewOfType(MarkdownView);
 		const fileContents = activeView?.editor.getValue();
-		//const fileName = activeView?.file.basename;
 		const fileName = activeView?.file?.basename;
 		if (fileName === null || fileName === undefined) {
 			console.error("File name is null or undefined. Stopping further processing.");
@@ -1067,7 +1006,6 @@ export default class gamification extends Plugin {
 			reset = true;
 		}
 		if (reset){
-			//await this.updateAvatarPage(this.mediator.getSettingString('avatarPageName'));
 			await this.actualizeProfileLeave();
 		}
 
@@ -1120,8 +1058,6 @@ export default class gamification extends Plugin {
 			await this.saveSettings();
 
 			if(newDailyNoteCreationTask == 1){
-				// update Avatar Page
-				//await this.updateAvatarPage(this.mediator.getSettingString('avatarPageName'));
 				await this.actualizeProfileLeave();
 				if(debugLogs) console.debug(`${newDailyNoteCreationTask}/2 Notes created today.`)
 			} else if (newDailyNoteCreationTask == 2) {
@@ -1171,24 +1107,25 @@ export default class gamification extends Plugin {
 		}
 	}
 
+
 	private async checkForContinuouslyNoteCreation(noteCount: number){
 		if (noteCount == 30){
-			await this.giveSecretBadgeInProfile(this.mediator.getSettingString('avatarPageName'), getBadge('Consistent Lore Weaver'));
+			await this.giveSecretBadge(this.mediator.getSettingNumber('statusLevel'), getBadge('Consistent Lore Weaver'));
 		} else if (noteCount == 90){
-			await this.giveSecretBadgeInProfile(this.mediator.getSettingString('avatarPageName'), getBadge('Knowledge Artisan Stalwart'));
+			await this.giveSecretBadge(this.mediator.getSettingNumber('statusLevel'), getBadge('Knowledge Artisan Stalwart'));
 		} else if (noteCount == 180){
-			await this.giveSecretBadgeInProfile(this.mediator.getSettingString('avatarPageName'), getBadge('Wisdom Architect Virtuoso'));
+			await this.giveSecretBadge(this.mediator.getSettingNumber('statusLevel'), getBadge('Wisdom Architect Virtuoso'));
 		} else if (noteCount == 365){
-			await this.giveSecretBadgeInProfile(this.mediator.getSettingString('avatarPageName'), getBadge('Eternal Scholar Maestro'));
+			await this.giveSecretBadge(this.mediator.getSettingNumber('statusLevel'), getBadge('Eternal Scholar Maestro'));
 		} else if (noteCount == 730){
-			await this.giveSecretBadgeInProfile(this.mediator.getSettingString('avatarPageName'), getBadge('Divine Omniscience Overlord'));
+			await this.giveSecretBadge(this.mediator.getSettingNumber('statusLevel'), getBadge('Divine Omniscience Overlord'));
 		}
 	}
+
 
 	private async checkForWeeklyNoteChallengeEvaluation(newWeeklyNoteCreationTask: number) {
 		if (newWeeklyNoteCreationTask <= 6) {
 			// update Avatar Page
-			//await this.updateAvatarPage(this.mediator.getSettingString('avatarPageName'));
 			await this.actualizeProfileLeave();
 			if(debugLogs) console.debug(`${newWeeklyNoteCreationTask}/7 Notes created in a chain.`)
 		} else if (newWeeklyNoteCreationTask == 7) {
@@ -1241,8 +1178,6 @@ export default class gamification extends Plugin {
 		}
 		return progressbar;
 	}
-
-
 
 
 	async saveSettings() {
@@ -1298,7 +1233,6 @@ export default class gamification extends Plugin {
 		pointsToReceived = pointsToAdd * (boosterFactor + streakbooster + boosterFactorPerpetualProgress + boosterFactorStrategicSynapses + boosterFactorLinkersLode + boosterFactorRecursiveReflection + boosterFactorSynapticSurge + boosterFactorTitleTitan + boosterFactorPrecisionPrism + boosterFactorHyperlinkHarmony + boosterFactorEphemeralEuphoria )
 		const pointsTotal = pointsToReceived + this.mediator.getSettingNumber('statusPoints')
 		this.mediator.setSettingNumber('statusPoints', pointsTotal)
-		//await this.saveData(this.settings)
 
 
 		const level = getLevelForPoints(pointsTotal);
@@ -1307,12 +1241,13 @@ export default class gamification extends Plugin {
 			//receiveBadge = checkIfReceiveABadge(this.mediator.getSettingNumber('statusLevel'), level.level)
 			this.mediator.setSettingNumber('statusLevel', level.level)
 			new Notice(`With ${pointsTotal} points, the current level is ${level.level}.`,this.mediator.getSettingNumber('timeShowNotice') * mil2sec * 1.2)
-			await this.giveBadge2(level.level);
+			await this.giveBadge(level.level);
 		}
 
 		return receiveBadge;
 
 	}
+
 
 	async increaseStreakbooster(increaseValue: number) {
 		const oldBoosterFactor = this.mediator.getSettingNumber('streakbooster');
@@ -1338,7 +1273,6 @@ export default class gamification extends Plugin {
 	}
 
 
-
 	async decreaseStreakbooster(decreaseValue:number){
 		//let newBoosterFakfor = parseFloat((this.mediator.getSettingNumber('streakbooster') - decreaseValue * streakboosterDecrease).toFixed(1))
 		const currentValue = this.mediator.getSettingNumber('streakbooster');
@@ -1357,170 +1291,10 @@ export default class gamification extends Plugin {
 		}
 		this.mediator.setSettingNumber('streakbooster', newBoosterFakfor)
 		this.mediator.setSettingBoolean('streakboosterDate', false);
-		//await this.saveData(this.settings)
 	}
 
 
-	async updateAvatarPage(avatarPageName: string): Promise<boolean | null>{
-		try {
-			const existingFile = this.app.vault.getAbstractFileByPath(`${avatarPageName}.md`);
-			if (existingFile == null) {
-				if(debugLogs) console.debug(`File ${avatarPageName}.md does not exist`);
-				return false;
-			}
-			const file = existingFile as TFile;
-
-			const content = await this.app.vault.read(file);
-			let levelAndPointsReference: number | null = null;
-			let reference2: number | null = null;
-			let reference3: number | null = null;
-			let reference4: number | null = null;
-			let levelAndPointsEnd: number | null = null;
-			let levelAndPointsStart: number | null = null;
-			let dailyNotesChallengeEnd2: number | null = null;
-			let dailyNotesChallengeStart2: number | null = null;
-			let weeklyNotesChallengeEnd3: number | null = null;
-			let weeklyNotesChallengeStart3: number | null = null;
-			let boosterFactorEnd4: number | null = null;
-			let boosterFactorStart4: number | null = null;
-
-			const lines = content.split("\n");
-			for (let i = 0; i < lines.length; i++) {
-				const line = lines[i].trim();
-				if (line === "^levelAndPoints") {
-					if (levelAndPointsReference === null) {
-						levelAndPointsReference = i;
-					}
-				}
-				if (line === "^dailyNotesChallenge") {
-					if (reference2 === null) {
-						reference2 = i;
-					}
-				}
-				if (line === "^weeklyNotesChallenge") {
-					if (reference3 === null) {
-						reference3 = i;
-					}
-				}
-				if (line === "^boosterFactor") {
-					if (reference4 === null) {
-						reference4 = i;
-					}
-				}
-			}
-			// read current Points from settings
-			const newPoints = this.mediator.getSettingNumber('statusPoints')
-
-			const level = getLevelForPoints(newPoints);
-			let nextLevelAt = this.mediator.getSettingNumber('xpForNextLevel');
-			let receiveBadge = false
-			if (this.mediator.getSettingNumber('statusLevel') < level.level){
-				// Level Up archived
-				new Notice(`With ${newPoints} points, the current level is ${level.level}.`,this.mediator.getSettingNumber('timeShowNotice') * mil2sec * 1.2)
-				// check first if this means a new badge before it gets overwritten
-				receiveBadge = checkIfReceiveABadge(this.mediator.getSettingNumber('statusLevel'), level.level)
-				this.mediator.setSettingNumber('statusLevel', level.level);
-				nextLevelAt = level.pointsNext;
-				this.mediator.setSettingNumber('xpForNextLevel', level.pointsNext);
-				//await this.saveData(this.settings)
-			}
-
-			const progressBarEnd = nextLevelAt - newPoints;
-			const newPointsString = '  | **Level**  | **' + level.level + '** |\n  | Points | ' + newPoints + '    |\n  ^levelAndPoints\n  ```chart\n  type: bar\n  labels: [Expririence]\n  series:\n    - title: points reached\n      data: [' + newPoints + ']\n    - title: points to earn to level up\n      data: [' + progressBarEnd + ']\n  xMin: ' + level.points + '\n  xMax: ' + level.pointsNext + '\n  tension: 0.2\n  width: 70%\n  labelColors: false\n  fill: false\n  beginAtZero: false\n  bestFit: false\n  bestFitTitle: undefined\n  bestFitNumber: 0\n  stacked: true\n  indexAxis: y\n  xTitle: "progress"\n  legend: false\n```'
-			const dailyChallenge = '| **daily Notes** | *' + pointsForDailyChallenge * (this.mediator.getSettingNumber('badgeBoosterFactor') + this.mediator.getSettingNumber('streakbooster')) + 'EP* | **' + this.mediator.getSettingNumber('dailyNoteCreationTask') + '/2**   |';
-			const daysLeftInWeeklyChain : number = 7 - this.mediator.getSettingNumber('weeklyNoteCreationTask');
-			let weeklyChallenge = ''
-			if(isSameDay(window.moment(this.mediator.getSettingString('weeklyNoteCreationDate'), 'DD.MM.YYYY'))){
-				weeklyChallenge = '| **weekly Notes** | *' + pointsForWeeklyChallenge * (this.mediator.getSettingNumber('badgeBoosterFactor') + this.mediator.getSettingNumber('streakbooster')) + 'EP*     |  **' + this.mediator.getSettingNumber('weeklyNoteCreationTask') + '✔️/7**   |\n^weeklyNotesChallenge\n```chart\ntype: bar\nlabels: [days done in a row]\nseries:\n  - title: days to do in a row\n    data: [' + this.mediator.getSettingNumber('weeklyNoteCreationTask') + ']\n  - title: points to earn to level up\n    data: [' + daysLeftInWeeklyChain + ']\nxMin: 0\nxMax: 7\ntension: 0.2\nwidth: 40%\nlabelColors: false\nfill: false\nbeginAtZero: false\nbestFit: false\nbestFitTitle: undefined\nbestFitNumber: 0\nstacked: true\nindexAxis: y\nxTitle: "progress"\nlegend: false\n```';
-			} else {
-				weeklyChallenge = '| **weekly Notes** | *' + pointsForWeeklyChallenge * (this.mediator.getSettingNumber('badgeBoosterFactor') + this.mediator.getSettingNumber('streakbooster')) + 'EP*     |  **' + this.mediator.getSettingNumber('weeklyNoteCreationTask') + '/7**   |\n^weeklyNotesChallenge\n```chart\ntype: bar\nlabels: [days done in a row]\nseries:\n  - title: days to do in a row\n    data: [' + this.mediator.getSettingNumber('weeklyNoteCreationTask') + ']\n  - title: points to earn to level up\n    data: [' + daysLeftInWeeklyChain + ']\nxMin: 0\nxMax: 7\ntension: 0.2\nwidth: 40%\nlabelColors: false\nfill: false\nbeginAtZero: false\nbestFit: false\nbestFitTitle: undefined\nbestFitNumber: 0\nstacked: true\nindexAxis: y\nxTitle: "progress"\nlegend: false\n```';
-			}
-
-			const boosterFactor = '| **booster factor** | **' + this.mediator.getSettingNumber('streakbooster') + '** |'
-
-			if (levelAndPointsReference != null && reference2 != null && reference3 != null && reference4 != null){
-				levelAndPointsStart = levelAndPointsReference - 2;
-				levelAndPointsEnd = levelAndPointsReference + 24;
-				dailyNotesChallengeStart2 = reference2 - 1 - 25; // no idea why offset 25 is needed
-				dailyNotesChallengeEnd2 = reference2 - 25; // no idea why offset 25 is needed
-				weeklyNotesChallengeStart3 = reference3 - 1 -25; // no idea why offset 25 is needed
-				weeklyNotesChallengeEnd3 = reference3 + 24 -25; // no idea why offset 25 is needed
-				boosterFactorStart4 = reference4 - 1 - 25; // no idea why offset 25 is needed
-				boosterFactorEnd4 = reference4 - 25 ; // no idea why offset 25 is needed
-
-				const newLines = [...lines.slice(0, levelAndPointsStart), newPointsString, ...lines.slice(levelAndPointsEnd)];
-				const newLines2 = [...newLines.slice(0, dailyNotesChallengeStart2), dailyChallenge, ...newLines.slice(dailyNotesChallengeEnd2)];
-				const newLines3 = [...newLines2.slice(0, weeklyNotesChallengeStart3), weeklyChallenge, ...newLines2.slice(weeklyNotesChallengeEnd3)];
-				const newLines4 = [...newLines3.slice(0, boosterFactorStart4), boosterFactor, ...newLines3.slice(boosterFactorEnd4)];
-				await this.app.vault.modify(file, newLines4.join("\n"));
-			}
-			return receiveBadge
-		}
-		catch (e) {
-			console.error(e);
-			return null;
-		}
-	}
-
-
-	async giveBadgeInProfile(avatarPageName: string, badge: Badge){
-		const badgeDict = parseBadgeCSV2Dict(this.mediator.getSettingString('receivedBadges'));
-		if (!badgeDict[badge.name]) {
-			await this.writeBadgeCSV(badge, window.moment().format('YYYY-MM-DD'), 'level ' + (this.mediator.getSettingNumber('statusLevel')).toString())
-			const existingFile = this.app.vault.getAbstractFileByPath(`${avatarPageName}.md`);
-			if (existingFile == null) {
-				if (debugLogs) console.debug(`File ${avatarPageName}.md does not exist`);
-				return;
-			}
-			const file = existingFile as TFile;
-
-			const content = await this.app.vault.read(file);
-			let reference: number | null = null;
-			let reference2: number | null = null;
-			let end: number | null = null;
-			let start: number | null = null;
-			let end2: number | null = null;
-			let start2: number | null = null;
-
-			const lines = content.split("\n");
-			for (let i = 0; i < lines.length; i++) {
-				const line = lines[i].trim();
-				if (line === "#### achieved") {
-					if (reference === null) {
-						reference = i;
-					}
-				}
-				if (line === badge.level + ": *" + badge.name + "*") {
-					if (reference2 === null) {
-						reference2 = i;
-					}
-				}
-			}
-			if (reference != null && reference2 != null) {
-				end = reference + 1;
-				start = reference + 1;
-
-				end2 = reference2 + 2;
-				start2 = reference2 + 1;
-
-				const badgeString = "**" + badge.name + "** " + badge.level + "\n> " + badge.description + " - *" + window.moment().format('D.M.YY') + "*\n"
-				const newLines = [...lines.slice(0, start), badgeString, ...lines.slice(end)];
-				const newLines2 = [...newLines.slice(0, start2), ...newLines.slice(end2)]
-				await this.app.vault.modify(file, newLines2.join("\n"));
-				//if(debugLogs) console.debug(`badgeString: ${badgeString}`)
-			}
-		}
-	}
-
-	async giveBadge(badge: Badge){
-		const badgeDict = parseBadgeCSV2Dict(this.mediator.getSettingString('receivedBadges'));
-		if (!badgeDict[badge.name]) {
-			await this.writeBadgeCSV(badge, window.moment().format('YYYY-MM-DD'), 'level ' + (this.mediator.getSettingNumber('statusLevel')).toString())
-
-		}
-	}
-
-	async giveBadge2(currenLevel: number){
+	async giveBadge(currenLevel: number){
 		const badge = getBadgeForLevel(currenLevel,true)
 		const badgeDict = parseBadgeCSV2Dict(this.mediator.getSettingString('receivedBadges'));
 		if (!badgeDict[badge.name]) {
@@ -1529,169 +1303,13 @@ export default class gamification extends Plugin {
 		}
 	}
 
-	async giveSecretBadgeInProfile(avatarPageName: string, badge: Badge){
+	async giveSecretBadge(currenLevel: number, badge: Badge){
 		const badgeDict = parseBadgeCSV2Dict(this.mediator.getSettingString('receivedBadges'));
 		if (!badgeDict[badge.name]) {
-			await this.writeBadgeCSV(badge, window.moment().format('YYYY-MM-DD'), 'level ' + (this.mediator.getSettingNumber('statusLevel')).toString())
-			const existingFile = this.app.vault.getAbstractFileByPath(`${avatarPageName}.md`);
-			if (existingFile == null) {
-				if (debugLogs) console.debug(`File ${avatarPageName}.md does not exist`);
-				return;
-			}
-			const file = existingFile as TFile;
-
-			const content = await this.app.vault.read(file);
-			let reference: number | null = null;
-			let end: number | null = null;
-			let start: number | null = null;
-
-			const lines = content.split("\n");
-			for (let i = 0; i < lines.length; i++) {
-				const line = lines[i].trim();
-				if (line === "#### achieved") {
-					if (reference === null) {
-						reference = i;
-					}
-				}
-			}
-			if (reference != null) {
-				end = reference + 1;
-				start = reference + 1;
-
-				const badgeString = "**" + badge.name + "** " + "\n> " + badge.description + " - *" + window.moment().format('D.M.YY') + "*\n"
-				const newLines = [...lines.slice(0, start), badgeString, ...lines.slice(end)];
-				await this.app.vault.modify(file, newLines.join("\n"));
-				//if(debugLogs) console.debug(`badgeString: ${badgeString}`)
-			}
+			await this.writeBadgeCSV(badge, window.moment().format('YYYY-MM-DD'), 'level ' + currenLevel.toString())
 		}
 	}
 
-
-	async giveInitBadgeInProfile(avatarPageName: string, badge: Badge){
-		const existingFile = this.app.vault.getAbstractFileByPath(`${avatarPageName}.md`);
-		if (existingFile == null) {
-			if(debugLogs) console.debug(`File ${avatarPageName}.md does not exist`);
-			return;
-		}
-		const file = existingFile as TFile;
-
-		const content = await this.app.vault.read(file);
-		let reference: number | null = null;
-		let end: number | null = null;
-		let start: number | null = null;
-
-		const lines = content.split("\n");
-		for (let i = 0; i < lines.length; i++) {
-			const line = lines[i].trim();
-			if (line === "#### achieved") {
-				if (reference === null) {
-					reference = i;
-				}
-			}
-		}
-		if (reference != null ){
-			end = reference + 2;
-			start = reference + 1;
-
-			const badgeString = "**" + badge.name + "**\n> " + badge.description + " - *" + window.moment().format('D.M.YY') + "*\n"
-			const newLines = [...lines.slice(0, start), badgeString, ...lines.slice(end)];
-			await this.app.vault.modify(file, newLines.join("\n"));
-			if(debugLogs) console.debug(`badgeString: ${badgeString}`)
-		}
-	}
-
-
-	async removeBadgesWhenInitLevelHigher(avatarPageName: string, level: number){
-		const existingFile = this.app.vault.getAbstractFileByPath(`${avatarPageName}.md`);
-		if (existingFile == null) {
-			if(debugLogs) console.debug(`File ${avatarPageName}.md does not exist`);
-			return;
-		}
-		const file = existingFile as TFile;
-
-		const content = await this.app.vault.read(file);
-		let reference: number | null = null;
-		let reference2: number | null = null;
-
-		const lines = content.split("\n");
-		for (let i = 0; i < lines.length; i++) {
-			const line = lines[i].trim();
-			if (line === "#### outstanding") {
-				if (reference === null) {
-					reference = i;
-				}
-			}
-			if (reference != null && reference2 == null){
-				// Regular expression to match the level number
-				const levelRegex = /level (\d+)/;
-				// Extract the level number using the regular expression
-				const match = line.match(levelRegex);
-
-				if(match){
-					const levelNumber = parseInt(match[1], 10); // Convert the matched number to an integer
-					if (levelNumber > level) {
-						reference2 = i
-					}
-				}
-			}
-		}
-		if (reference != null && reference2 != null){
-			const newLines = [...lines.slice(0, reference + 1), ...lines.slice(reference2)];
-			await this.app.vault.modify(file, newLines.join("\n"));
-		}
-	}
-
-	/*
-	async createChart(vault: Vault): Promise<string>{
-		const files = vault.getMarkdownFiles();
-		const earliestFile = findEarliestModifiedFile(files)
-		const earliestDate = earliestFile.stat.mtime
-
-		let monthCounter = 0 //format(new Date(earliestDate), 'MM');
-		let dateCount = new Date(earliestDate); // um es hochzählen zu können
-		const fileDateMonthMapMod = new Map<string, number>();
-		const monthcount = monthsBetween(new Date(earliestDate), new Date())
-		let dateString = dateCount.getMonth()+1 + "." + dateCount.getFullYear()
-		let yLabel = ""
-
-		monthCounter = 0
-		dateCount = new Date(earliestDate); // um es hochzählen zu können
-		dateString = dateCount.getMonth()+1 + "." + dateCount.getFullYear()
-		// create Base for counting modified
-		while (monthCounter < monthcount){
-			dateString = dateCount.getMonth()+1 + "." + dateCount.getFullYear()
-			yLabel = yLabel + dateString + ", "
-			dateCount.setMonth(dateCount.getMonth() + 1)
-			monthCounter += 1;
-			fileDateMonthMapMod.set(dateString, 0)
-		}
-		yLabel = yLabel.slice(0,yLabel.length-2)
-
-		// count how many mod files in each month
-		const modificationDates = getModificationDates(files)
-		for (let i = 0; i < modificationDates.length; i++){
-			//fileDateMonthMapMod.set(format(modificationDates[i], 'M.yyyy'),fileDateMonthMapMod.get(format(modificationDates[i], 'M.yyyy'))+1)
-			const formattedDate = format(modificationDates[i], 'M.yyyy');
-			const currentCount = fileDateMonthMapMod.get(formattedDate);
-
-			if (currentCount !== undefined) {
-				fileDateMonthMapMod.set(formattedDate, currentCount + 1);
-			} else {
-				// If the key doesn't exist in the map, initialize it with a count of 1
-				fileDateMonthMapMod.set(formattedDate, 1);
-			}
-		}
-
-		let charStringModified = ""
-		for (const [value] of fileDateMonthMapMod) {
-			//if(debugLogs) console.debug(`key: ${key}, value: ${value}`);
-			charStringModified = charStringModified + value + ", "
-		}
-		charStringModified = charStringModified.slice(0,charStringModified.length-2)
-
-		return createChartFormat(yLabel, charStringModified, this.mediator.getSettingNumber('chartReduzierungMonate'))
-	}
-	*/
 
 	async decisionIfBadge(newLevel: Promise<boolean>){
 		newLevel.then((result: boolean)=> {
@@ -1699,11 +1317,9 @@ export default class gamification extends Plugin {
 				const badge : Badge = getBadgeForLevel(this.mediator.getSettingNumber('statusLevel'), false)
 				new Notice(`You've earned the "${badge.name}" badge. ${badge.description}`,this.mediator.getSettingNumber('timeShowNotice') * mil2sec * 1.2)
 				if(debugLogs) console.debug(`You've earned the "${badge.name}" badge. ${badge.description}`)
-				this.giveBadgeInProfile(this.mediator.getSettingString('avatarPageName'), badge)
 				this.mediator.setSettingBoolean('badgeBoosterState', false);
 				this.mediator.setSettingNumber('badgeBoosterFactor', 1);
 				this.writeBadgeCSV(badge, window.moment().format('YYYY-MM-DD'), 'level ' + this.mediator.getSettingNumber('statusLevel').toString())
-				//this.saveData(this.settings)
 			}
 		});
 	}
@@ -1794,17 +1410,6 @@ export default class gamification extends Plugin {
 	}
 
 
-	async openAvatarFile() {
-		const existingFile = this.app.vault.getAbstractFileByPath(`${this.mediator.getSettingString('avatarPageName')}.md`);
-		if (existingFile){
-			const sourcePath = this.app.workspace.getActiveFile()?.path || '';
-			await this.app.workspace.openLinkText(existingFile.path, sourcePath);
-		} else {
-			if(debugLogs) console.debug("File not found or unable to open.");
-		}
-	}
-
-
 	async writeBadgeCSV(newBadge: Badge, date: string, level: string){
 		// check first if badge is already in
 		const badgeDict = parseBadgeCSV2Dict(this.mediator.getSettingString('receivedBadges'));
@@ -1814,21 +1419,6 @@ export default class gamification extends Plugin {
 			console.log(`Badge "${newBadge.name}" is already received before`)
         }
 	}
-
-
-}
-
-
-async function createAvatarFile(app: App, fileName: string) {
-
-	const existingFile = this.app.vault.getAbstractFileByPath(`${fileName}.md`);
-	if (existingFile instanceof TFile) {
-		if(debugLogs) console.debug(`File ${fileName}.md already exists`);
-		return;
-	}
-	// Create the file in the root of the vault
-	await this.app.vault.create(`${fileName}.md`, avatarInitContent);
-
 }
 
 

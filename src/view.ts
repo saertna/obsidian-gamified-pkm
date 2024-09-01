@@ -34,19 +34,6 @@ export class GamifiedPkmProfileView extends ItemView {
 		const profileContainer = container.createDiv({ cls: 'avatar-profile' });
 
 		this.updateProfilePicture();
-
-		/*const imagePath = this.mediator.getSettingString('avatarPicture'); // Assuming a function to get the setting value
-
-		// Conditionally create the avatar image if the path is provided
-		if (imagePath) {
-			const fullPath = this.app.vault.adapter.getResourcePath(imagePath);
-			const avatarImage = profileContainer.createEl('img', { cls: 'avatar-image' });
-			avatarImage.src = fullPath;
-		} else {
-			// Remove the image container if no path is provided
-			profileContainer.empty();
-		}*/
-
 		const levelAndPointsContainer = profileContainer.createDiv({ cls: 'level-and-points' });
 		levelAndPointsContainer.innerHTML = `
         <p><strong>Level:</strong> <span id="level-value"></span></p>
@@ -283,8 +270,7 @@ export class GamifiedPkmProfileView extends ItemView {
       // Nothing to clean up.
     }
 
-    // Method to update content
-	updateContent(newContent: string) {
+    updateContent(newContent: string) {
 		const container = this.containerEl.children[1];
 		container.empty(); // Clear the existing content before adding new content
 		const contentDiv = container.createDiv({ cls: "my-plugin-content" });
