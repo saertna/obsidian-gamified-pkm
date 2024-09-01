@@ -33,7 +33,9 @@ export class GamifiedPkmProfileView extends ItemView {
 
 		const profileContainer = container.createDiv({ cls: 'avatar-profile' });
 
-		const imagePath = this.mediator.getSettingString('avatarPicture'); // Assuming a function to get the setting value
+		this.updateProfilePicture();
+
+		/*const imagePath = this.mediator.getSettingString('avatarPicture'); // Assuming a function to get the setting value
 
 		// Conditionally create the avatar image if the path is provided
 		if (imagePath) {
@@ -43,7 +45,7 @@ export class GamifiedPkmProfileView extends ItemView {
 		} else {
 			// Remove the image container if no path is provided
 			profileContainer.empty();
-		}
+		}*/
 
 		const levelAndPointsContainer = profileContainer.createDiv({ cls: 'level-and-points' });
 		levelAndPointsContainer.innerHTML = `
@@ -354,20 +356,25 @@ export class GamifiedPkmProfileView extends ItemView {
 
 	updateProfilePicture() {
 		const container = this.containerEl.children[1];
-		const profileContainer = container.querySelector('.avatar-profile');
+		const profileContainer = container.querySelector('.avatar-profile') as HTMLElement;
 
 		if (profileContainer) {
-			const imagePath = this.mediator.getSettingString('avatarPicture'); // Fetch the updated setting
-			const avatarImage = profileContainer.querySelector('.avatar-image') as HTMLImageElement;
+			// Clear existing profile picture
+			const existingAvatarImage = profileContainer.querySelector('.avatar-image') as HTMLImageElement;
+			if (existingAvatarImage) {
+				existingAvatarImage.remove();
+			}
 
-			if (avatarImage) {
-				avatarImage.src = this.app.vault.adapter.getResourcePath(imagePath);
-			} else {
-				// Create a new image element if it doesn't exist
-				const newAvatarImage = profileContainer.createEl('img', { cls: 'avatar-image' });
-				newAvatarImage.src = this.app.vault.adapter.getResourcePath(imagePath);
+			// Add new profile picture if path is provided
+			const imagePath = this.mediator.getSettingString('avatarPicture');
+			if (imagePath) {
+				const fullPath = this.app.vault.adapter.getResourcePath(imagePath);
+				const avatarImage = profileContainer.createEl('img', { cls: 'avatar-image' });
+				avatarImage.src = fullPath;
+				profileContainer.prepend(avatarImage); // Ensure it is added at the top
 			}
 		}
 	}
+
 
 }
