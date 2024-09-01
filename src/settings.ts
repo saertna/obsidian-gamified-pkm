@@ -202,192 +202,191 @@ export class GamificationPluginSettings extends PluginSettingTab {
 	//private readonly plugin: gamification;
 	private readonly plugin: gamification;
 	private readonly mediator: GamificationMediator;
-  public settings: ISettings;
-  public enableInitCommand: string;
-  public bindEnter: string;
-  public bindTab: string;
-  public avatarPageName: string;
-  public tagsExclude: string;
-  public folderExclude: string;
-  public progressiveSumLayer2: string;
-  public progressiveSumLayer3: string;
-  public numAllFiles: string;
-  public numAllFilesCount: string;
-  public chartReduzierungMonate: string;
-  public statusPoints: string;
-  public statusLevel: string;
-  public xpForNextLevel: string;
-  public gamificationStartDate: string;
-  public badgeBoosterState: string;
-  public badgeBoosterFactor: string;
-  public debug: string;
-  public dailyNoteCreationTask: string;
-  public dailyNoteCreationDate: string;
-  public weeklyNoteCreationTask: string;
-  public weeklyNoteCreationTaskContinuously: string;
-  public weeklyNoteCreationDate: string;
-  public streakbooster: string;
-  public streakboosterDate: string;
-  public nexusNode: string;
-  public connectionCrystal: string;
-  public masteryScroll: string;
-  public insightPrism: string;
-  public reflectiveEssence: string;
-  public amplificationCrystal: string;
-  public creativeCatalyst: string;
-  public precisionLens: string;
-  public temporalTweaker: string;
-  public perpetualProgress: string;
-  public strategicSynapses: string;
-  public acceleratedAcquisition: string;
-  public linkersLode: string;
-  public effortlessExpansion: string;
-  public recursiveReflection: string;
-  public synapticSurge: string;
-  public inspirationInfusion: string;
-  public titleTitan: string;
-  public precisionPrism: string;
-  public hyperlinkHarmony: string;
-  public ephemeralEuphoria: string;
-  public boosterFactorPerpetualProgress: string;
-  public boosterDatePerpetualProgress: string
-  public boosterFactorStrategicSynapses: string;
-  public boosterDateStrategicSynapses: string
-  public boosterFactorLinkersLode: string;
-  public boosterDateLinkersLode: string
-  public boosterFactorRecursiveReflection: string;
-  public boosterDateRecursiveReflection: string
-  public boosterFactorSynapticSurge: string;
-  public boosterDateSynapticSurge: string
-  public boosterFactorTitleTitan: string;
-  public boosterDateTitleTitan: string
-  public boosterFactorPrecisionPrism: string;
-  public boosterDatePrecisionPrism: string
-  public boosterFactorHyperlinkHarmony: string;
-  public boosterDateHyperlinkHarmony: string;
-  public boosterFactorEphemeralEuphoria: string;
-  public boosterDateEphemeralEuphoria: string;
-  public boosterUseCount: string;
-  public boosterUseCountTemporalTweaker: string;
-  public boosterUseCountPerpetualProgress: string;
-  public boosterUseCountStrategicSynapses: string;
-  public boosterUseCountAcceleratedAcquisition: string;
-  public boosterUseCountLinkersLode: string;
-  public boosterUseCountEffortlessExpansion: string;
-  public boosterUseCountrEcursiveReflection: string;
-  public boosterUseCountSynapticSurge: string;
-  public boosterUseCountInspirationInfusion: string;
-  public boosterUseCountTitleTitan: string;
-  public boosterUseCountPrecisionPrism: string;
-  public boosterUseCountHyperlinkHarmony: string;
-  public boosterUseCountEphemeralEuphoria: string;
-  public counterMajurityCalc: string;
-  public counterMajurityCalcInitial: string;
-  public delayLoadTime: string;
-  public timeShowNotice: string;
-  public receivedBadges: string;
-  public showNewVersionNotification: string;
-  public autoRateOnChange: string;
-  public autoRateOnChangeDelayTime: string;
-  public previousRelease: string;
-  public showReleaseNotes: string;
-  public avatarPicture: string;
+	public settings: ISettings;
+	public enableInitCommand: string;
+	public bindEnter: string;
+	public bindTab: string;
+	public avatarPageName: string;
+	public tagsExclude: string;
+	public folderExclude: string;
+	public progressiveSumLayer2: string;
+	public progressiveSumLayer3: string;
+	public numAllFiles: string;
+	public numAllFilesCount: string;
+	public chartReduzierungMonate: string;
+	public statusPoints: string;
+	public statusLevel: string;
+	public xpForNextLevel: string;
+	public gamificationStartDate: string;
+	public badgeBoosterState: string;
+	public badgeBoosterFactor: string;
+	public debug: string;
+	public dailyNoteCreationTask: string;
+	public dailyNoteCreationDate: string;
+	public weeklyNoteCreationTask: string;
+	public weeklyNoteCreationTaskContinuously: string;
+	public weeklyNoteCreationDate: string;
+	public streakbooster: string;
+	public streakboosterDate: string;
+	public nexusNode: string;
+	public connectionCrystal: string;
+	public masteryScroll: string;
+	public insightPrism: string;
+	public reflectiveEssence: string;
+	public amplificationCrystal: string;
+	public creativeCatalyst: string;
+	public precisionLens: string;
+	public temporalTweaker: string;
+	public perpetualProgress: string;
+	public strategicSynapses: string;
+	public acceleratedAcquisition: string;
+	public linkersLode: string;
+	public effortlessExpansion: string;
+	public recursiveReflection: string;
+	public synapticSurge: string;
+	public inspirationInfusion: string;
+	public titleTitan: string;
+	public precisionPrism: string;
+	public hyperlinkHarmony: string;
+	public ephemeralEuphoria: string;
+	public boosterFactorPerpetualProgress: string;
+	public boosterDatePerpetualProgress: string
+	public boosterFactorStrategicSynapses: string;
+	public boosterDateStrategicSynapses: string
+	public boosterFactorLinkersLode: string;
+	public boosterDateLinkersLode: string
+	public boosterFactorRecursiveReflection: string;
+	public boosterDateRecursiveReflection: string
+	public boosterFactorSynapticSurge: string;
+	public boosterDateSynapticSurge: string
+	public boosterFactorTitleTitan: string;
+	public boosterDateTitleTitan: string
+	public boosterFactorPrecisionPrism: string;
+	public boosterDatePrecisionPrism: string
+	public boosterFactorHyperlinkHarmony: string;
+	public boosterDateHyperlinkHarmony: string;
+	public boosterFactorEphemeralEuphoria: string;
+	public boosterDateEphemeralEuphoria: string;
+	public boosterUseCount: string;
+	public boosterUseCountTemporalTweaker: string;
+	public boosterUseCountPerpetualProgress: string;
+	public boosterUseCountStrategicSynapses: string;
+	public boosterUseCountAcceleratedAcquisition: string;
+	public boosterUseCountLinkersLode: string;
+	public boosterUseCountEffortlessExpansion: string;
+	public boosterUseCountrEcursiveReflection: string;
+	public boosterUseCountSynapticSurge: string;
+	public boosterUseCountInspirationInfusion: string;
+	public boosterUseCountTitleTitan: string;
+	public boosterUseCountPrecisionPrism: string;
+	public boosterUseCountHyperlinkHarmony: string;
+	public boosterUseCountEphemeralEuphoria: string;
+	public counterMajurityCalc: string;
+	public counterMajurityCalcInitial: string;
+	public delayLoadTime: string;
+	public timeShowNotice: string;
+	public receivedBadges: string;
+	public showNewVersionNotification: string;
+	public autoRateOnChange: string;
+	public autoRateOnChangeDelayTime: string;
+	public previousRelease: string;
+	public showReleaseNotes: string;
+	public avatarPicture: string;
 
-  constructor(app: App, plugin: gamification, mediator: GamificationMediator) {
-    super(app, plugin as any);
-    this.mediator = mediator;
+	constructor(app: App, plugin: gamification, mediator: GamificationMediator) {
+		super(app, plugin as any);
+		this.mediator = mediator;
 
-  // let settings = Object.assign({}, defaultSettings);
+		// let settings = Object.assign({}, defaultSettings);
 
-    /*
-    for (const key in settings) {
-      if (settings.hasOwnProperty(key)) {
-        if(typeof key === 'number'){
-          settings[key] = encryptNumber(settings[key] as number)
-        } else if (typeof key === 'string'){
-          settings[key] = encryptString(settings[key] as string)
-        } else if (typeof key === 'boolean'){
-          settings[key] = encryptBoolean(settings[key] as boolean)
-        }
-      }
-    }
-*/
-    // Save `settings` with encrypted values to your storage
+		/*
+		for (const key in settings) {
+		  if (settings.hasOwnProperty(key)) {
+			if(typeof key === 'number'){
+			  settings[key] = encryptNumber(settings[key] as number)
+			} else if (typeof key === 'string'){
+			  settings[key] = encryptString(settings[key] as string)
+			} else if (typeof key === 'boolean'){
+			  settings[key] = encryptBoolean(settings[key] as boolean)
+			}
+		  }
+		}
+	*/
+		// Save `settings` with encrypted values to your storage
 
 	}
-  
-public display(): void {
-	const { containerEl } = this;
-	containerEl.addClass("gamification-settings");
-	this.containerEl.empty();
+
+	public display(): void {
+		const {containerEl} = this;
+		containerEl.addClass("gamification-settings");
+		this.containerEl.empty();
 
 
+		//const { containerEl } = this;
+		//containerEl.empty();
 
-	//const { containerEl } = this;
-	//containerEl.empty();
-  
-	if(debugLogs) console.debug('settings called')
-	new Setting(containerEl)
-		.setName('Plugin Update Notification')
-		.setDesc('When on, you get informed at startup if there is a newer version.')
-		.addToggle((toggle) =>
-			toggle
-				.setValue(this.mediator.getSettingBoolean('showNewVersionNotification'))
-				.onChange(async (value) => {
-					this.mediator.setSettingBoolean('showNewVersionNotification', value);
-					await this.mediator.saveSettings();
-				}),
-		);
+		if (debugLogs) console.debug('settings called')
+		new Setting(containerEl)
+			.setName('Plugin Update Notification')
+			.setDesc('When on, you get informed at startup if there is a newer version.')
+			.addToggle((toggle) =>
+				toggle
+					.setValue(this.mediator.getSettingBoolean('showNewVersionNotification'))
+					.onChange(async (value) => {
+						this.mediator.setSettingBoolean('showNewVersionNotification', value);
+						await this.mediator.saveSettings();
+					}),
+			);
 
-	new Setting(containerEl)
-		.setName('#tags to ignore')
-		.setDesc('Enter tags without # and separate with ", ". Include nested tags.')
-		.addText(text =>
-			text
-				.setPlaceholder('Enter your tag1, tag2/subtag, …')
-				.setValue(this.mediator.getSettingString('tagsExclude'))
-				.onChange(async (value) => {
-					this.mediator.setSettingString('tagsExclude', value);
-					await this.mediator.saveSettings();
-				}),
-		);
+		new Setting(containerEl)
+			.setName('#tags to ignore')
+			.setDesc('Enter tags without # and separate with ", ". Include nested tags.')
+			.addText(text =>
+				text
+					.setPlaceholder('Enter your tag1, tag2/subtag, …')
+					.setValue(this.mediator.getSettingString('tagsExclude'))
+					.onChange(async (value) => {
+						this.mediator.setSettingString('tagsExclude', value);
+						await this.mediator.saveSettings();
+					}),
+			);
 
 
-	new Setting(containerEl)
-		.setName('Folder to ignore')
-		.setDesc('Enter folders whose content shall be ignored. Separate with ", ".')
-		.addText(text =>
-			text
-				.setPlaceholder('Enter your folder1, folder2, …')
-				.setValue(this.mediator.getSettingString('folderExclude'))
-				.onChange(async (value) => {
-					this.mediator.setSettingString('folderExclude', value);
-					await this.mediator.saveSettings();
-				}),
-		);
+		new Setting(containerEl)
+			.setName('Folder to ignore')
+			.setDesc('Enter folders whose content shall be ignored. Separate with ", ".')
+			.addText(text =>
+				text
+					.setPlaceholder('Enter your folder1, folder2, …')
+					.setValue(this.mediator.getSettingString('folderExclude'))
+					.onChange(async (value) => {
+						this.mediator.setSettingString('folderExclude', value);
+						await this.mediator.saveSettings();
+					}),
+			);
 
-	new Setting(containerEl)
-		.setName('Path to profile picture')
-		.setDesc('You can point here to a picture you would like to use as avatar. Include your vault path.')
-		.addText(text =>
-			text
-				.setPlaceholder('attachment/avatar.png')
-				.setValue(this.mediator.getSettingString('avatarPicture'))
-				.onChange(async (value) => {
-					this.mediator.setSettingString('avatarPicture', value);
-					await this.mediator.saveSettings();
-				}),
-		);
-				
-    containerEl.createEl('h2', { text: 'Other' });
+		new Setting(containerEl)
+			.setName('Path to profile picture')
+			.setDesc('You can point here to a picture you would like to use as avatar. Include your vault path.')
+			.addText(text =>
+				text
+					.setPlaceholder('attachment/avatar.png')
+					.setValue(this.mediator.getSettingString('avatarPicture'))
+					.onChange(async (value) => {
+						this.mediator.setSettingString('avatarPicture', value);
+						await this.mediator.saveSettings();
+					}),
+			);
+
+		containerEl.createEl('h2', {text: 'Other'});
 		new Setting(containerEl)
 			.setName('Disable init command')
 			.setDesc('You can remove the init command from command prompt by switching off.\nrestart needed.')
-			.addToggle((toggle) => 
+			.addToggle((toggle) =>
 				toggle
 					.setValue(this.mediator.getSettingBoolean('enableInitCommand'))
 					.onChange((value) => {
-						this.mediator.setSettingBoolean('enableInitCommand',value);
+						this.mediator.setSettingBoolean('enableInitCommand', value);
 						this.mediator.saveSettings();
 					}),
 			);
@@ -399,65 +398,65 @@ public display(): void {
 				toggle
 					.setValue(this.mediator.getSettingBoolean('autoRateOnChange'))
 					.onChange((value) => {
-						this.mediator.setSettingBoolean('autoRateOnChange',value);
+						this.mediator.setSettingBoolean('autoRateOnChange', value);
 						this.mediator.saveSettings();
 					}),
 			);
-	new Setting(containerEl)
-		.setName('Wait time for automatic note rating')
-		.setDesc('Enter in seconds how long to wait after a change before automatic note rating will be done')
-		.addText(text =>
-			text
-				.setPlaceholder('5')
-				.setValue(this.mediator.getSettingNumber('autoRateOnChangeDelayTime').toString())
-				.onChange(async (value) => {
-					this.mediator.setSettingNumber('autoRateOnChangeDelayTime', parseInt(value));
-					await this.mediator.saveSettings();
-				}),
-		);
+		new Setting(containerEl)
+			.setName('Wait time for automatic note rating')
+			.setDesc('Enter in seconds how long to wait after a change before automatic note rating will be done')
+			.addText(text =>
+				text
+					.setPlaceholder('5')
+					.setValue(this.mediator.getSettingNumber('autoRateOnChangeDelayTime').toString())
+					.onChange(async (value) => {
+						this.mediator.setSettingNumber('autoRateOnChangeDelayTime', parseInt(value));
+						await this.mediator.saveSettings();
+					}),
+			);
 
-  
-    new Setting(containerEl)
+
+		new Setting(containerEl)
 			.setName('Delay load settings at startup')
 			.setDesc('Enter in seconds to delay the load time. e.g. when GIT pull is performed before and settings get merge conflicts. Without GIT usage, keep it to 0.')
 			.addText(text => text
-					.setPlaceholder('0')
-					.setValue(this.mediator.getSettingNumber('delayLoadTime').toString())
-					.onChange(async (value) => {
-						this.mediator.setSettingNumber('delayLoadTime', parseInt(value));
-						this.mediator.saveSettings();
-		}));
+				.setPlaceholder('0')
+				.setValue(this.mediator.getSettingNumber('delayLoadTime').toString())
+				.onChange(async (value) => {
+					this.mediator.setSettingNumber('delayLoadTime', parseInt(value));
+					this.mediator.saveSettings();
+				}));
 
-    new Setting(containerEl)
+		new Setting(containerEl)
 			.setName('Time how long notices are shown')
 			.setDesc('Enter in seconds. 4 seconds or more is a good value')
 			.addText(text => text
-					.setPlaceholder('4')
-					.setValue(this.mediator.getSettingNumber('timeShowNotice').toString())
-					.onChange(async (value) => {
-						this.mediator.setSettingNumber('timeShowNotice', parseInt(value));
-						this.mediator.saveSettings();
-		}));
+				.setPlaceholder('4')
+				.setValue(this.mediator.getSettingNumber('timeShowNotice').toString())
+				.onChange(async (value) => {
+					this.mediator.setSettingNumber('timeShowNotice', parseInt(value));
+					this.mediator.saveSettings();
+				}));
 
 		new Setting(containerEl)
 			.setName('Progressive Summarization')
 			.setDesc('You can change which formatting you use for Layer 2 and 3.')
 			.addText(text => text
-					.setPlaceholder('Layer 2 is usually **')
-					.setValue(this.mediator.getSettingString('progressiveSumLayer2'))
-					.onChange(async (value) => {
-							// if(debugLogs) console.debug('folder to exclude: ' + value);
-							this.mediator.setSettingString('progressiveSumLayer2', value);
-							this.mediator.saveSettings();
+				.setPlaceholder('Layer 2 is usually **')
+				.setValue(this.mediator.getSettingString('progressiveSumLayer2'))
+				.onChange(async (value) => {
+					// if(debugLogs) console.debug('folder to exclude: ' + value);
+					this.mediator.setSettingString('progressiveSumLayer2', value);
+					this.mediator.saveSettings();
 				}))
 			.addText(text => text
-					.setPlaceholder('Layer 3 is usually ==')
-					.setValue(this.mediator.getSettingString('progressiveSumLayer3'))
-					.onChange(async (value) => {
-						// if(debugLogs) console.debug('folder to exclude: ' + value);
-						this.mediator.setSettingString('progressiveSumLayer3', value);
-						this.mediator.saveSettings();
-			}));
+				.setPlaceholder('Layer 3 is usually ==')
+				.setValue(this.mediator.getSettingString('progressiveSumLayer3'))
+				.onChange(async (value) => {
+					// if(debugLogs) console.debug('folder to exclude: ' + value);
+					this.mediator.setSettingString('progressiveSumLayer3', value);
+					this.mediator.saveSettings();
+				}));
 
 		new Setting(containerEl)
 			.setName('Display release notes after update')
@@ -466,21 +465,35 @@ public display(): void {
 				toggle
 					.setValue(this.mediator.getSettingBoolean('showReleaseNotes'))
 					.onChange((value) => {
-						this.mediator.setSettingBoolean('showReleaseNotes',value);
+						this.mediator.setSettingBoolean('showReleaseNotes', value);
 						this.mediator.saveSettings();
 					}),
 			);
 
-      const coffeeDiv = containerEl.createDiv("coffee");
-      coffeeDiv.addClass("ex-coffee-div");
-      const coffeeLink = coffeeDiv.createEl("a", {
-      href: "https://ko-fi.com/andreastrebing",
-      });
-      const coffeeImg = coffeeLink.createEl("img", {
-      attr: {
-        src: "https://cdn.ko-fi.com/cdn/kofi3.png?v=3",
-      },
-      });
-      coffeeImg.height = 45;
+		// Create a new container for the Ko-fi section
+		const coffeeSection = containerEl.createDiv("coffee-section");
+		coffeeSection.addClass("ex-coffee-section");
+
+		// Add the text above the image
+		const coffeeText = coffeeSection.createEl("p", {
+			text: "Like the plugin? High five me on Ko-fi! No account needed!",
+		});
+		coffeeText.addClass("ex-coffee-text");
+
+		// Create the div for the Ko-fi image and link
+		const coffeeDiv = coffeeSection.createDiv("coffee");
+		coffeeDiv.addClass("ex-coffee-div");
+
+		// Create the link element
+		const coffeeLink = coffeeDiv.createEl("a", {
+			href: "https://ko-fi.com/andreastrebing",
+		});
+
+		const coffeeImg = coffeeLink.createEl("img", {
+			attr: {
+				src: "https://cdn.ko-fi.com/cdn/kofi3.png?v=3",
+			},
+		});
+		coffeeImg.height = 45;
 	}
-  }
+}
