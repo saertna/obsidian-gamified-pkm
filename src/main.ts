@@ -27,7 +27,7 @@ import {
 	streakboosterDecrease,
 	streakboosterIncreaseDaily,
 	streakboosterIncreaseWeekly,
-	mil2sec, milliseconds, seconds, minutesTimer, badgeLevels
+	mil2sec, milliseconds, seconds, minutesTimer
 } from './constants'
 import {
 	count_inlinks,
@@ -98,16 +98,32 @@ export default class gamification extends Plugin {
 			await checkGamifiedPkmVersion(this.app);
 		}
 
-		await this.mediator.loadSettings();
+		//await this.mediator.loadSettings();
 
-		// take care to reset when opened on a new day, don't wait for trigger
+		const delayLoadTime = this.mediator.getSettingNumber('delayLoadTime') * 1000;
+
 		setTimeout(async () => {
 			// Code to execute after the delay
-			await this.mediator.loadSettings();
-			await this.resetDailyGoals()
-			await this.updateStatusBar(this.statusbarGamification)
-			await this.actualizeProfileLeave()
-		}, this.mediator.getSettingNumber('delayLoadTime')*1000); // 2000 milliseconds = 2 seconds
+			try {
+				await this.mediator.loadSettings();
+				console.log('Delay Settings loaded')
+				await this.resetDailyGoals()
+				console.log('Daylies goals settings')
+				await this.updateStatusBar(this.statusbarGamification)
+				console.log('status bar updated')
+				//await this.actualizeProfileLeave()
+				// Check for leaf readiness and retry if necessary
+				if (!this.tryUpdateLeaf()) {
+					console.warn("Leaf not ready, will retry shortly...");
+					setTimeout(() => {
+						this.tryUpdateLeaf();
+						console.log('leaf updated')
+					}, 3000); // Retry after 3 second
+				}
+			} catch (error) {
+				console.error('Error during initialization tasks:', error);
+			}
+		}, delayLoadTime);
 
 
 		// to set timer for reset daily and weekly goals
@@ -168,6 +184,16 @@ export default class gamification extends Plugin {
 
 	}
 
+	tryUpdateLeaf() {
+		const profileLeaf = this.app.workspace.getLeaf(false);
+		if (!profileLeaf || !profileLeaf.view) {
+			return false; // Leaf not ready
+		}
+
+		this.actualizeProfileLeave();
+		return true; // Successfully updated
+	}
+
 	private async actualizeProfileLeave(){
 		const newPoints = this.mediator.getSettingNumber('statusPoints')
 		const level = getLevelForPoints(newPoints);
@@ -185,9 +211,6 @@ export default class gamification extends Plugin {
 			this.activateView();
 		});
 
-		this.addRibbonIcon("chevrons-right", "update overview leaf", () => {
-			this.actualizeProfileLeave();
-		});
 
 		this.addCommand({
 			id: 'overview',
@@ -264,6 +287,10 @@ export default class gamification extends Plugin {
 				//this.mediator.setSettingNumber('streakbooster',80)
 				//await this.writeBadgeCSV(getBadgeDetails('Cerebral Maestro'), '24-01-03', 'level 21')
 
+			});
+
+			this.addRibbonIcon("chevrons-right", "update overview leaf", () => {
+				this.actualizeProfileLeave();
 			});
 		}
 
@@ -474,7 +501,7 @@ export default class gamification extends Plugin {
 		// @ts-ignore
 		const view = leaf.view;
 		if (view instanceof GamifiedPkmProfileView) {
-			//view.updateContent("Initial content");
+			this.actualizeProfileLeave();
 			/*const newPoints = this.mediator.getSettingNumber('statusPoints');
 			const level = getLevelForPoints(newPoints);
 			this.profileLeafUpdateLevel(this.mediator.getSettingNumber('statusLevel'),this.mediator.getSettingNumber('statusPoints'),this.mediator.getSettingNumber('xpForNextLevel'),level.points,level.pointsNext);
@@ -488,34 +515,6 @@ export default class gamification extends Plugin {
 		// Optional: reveal the leaf if it's in a collapsed sidebar
 		// workspace.revealLeaf(leaf);
 	}
-
-	async updateContent() {
-		const { workspace } = this.app;
-		let leaf = null;
-		const leaves = this.app.workspace.getLeavesOfType(VIEW_TYPE_GAMIFICATION_PROFILE);
-
-		if (leaves.length > 0) {
-			leaf = leaves[0];
-		} else {
-			leaf = workspace.getRightLeaf(false);
-			// @ts-ignore
-			await leaf.setViewState({ type: VIEW_TYPE_GAMIFICATION_PROFILE, active: true });
-		}
-
-		// Access and update the view content
-		// @ts-ignore
-		const view = leaf.view;
-		if (view instanceof GamifiedPkmProfileView) {
-			//view.updateLevel(34);
-			//view.updatePoints(7000000);
-			//view.updateChart(6000000,4000000)
-			view.updateChartMinMax(6530000,340000,6360000,6870000)
-			view.updateMaturityCounts()
-		}else {
-			if(debugLogs) console.log('gamified-pkm-profile is not loaded yet.');
-		}
-	}
-
 	async profileLeafUpdateLevel(newLevel:number, newPoints:number, nextLevel:number, min:number, max:number) {
 		const { workspace } = this.app;
 		let leaf = null;
@@ -1279,7 +1278,6 @@ export default class gamification extends Plugin {
 		//await this.saveData(this.settings)
 
 
-		//TODO new solution necessary how to trigger badge for certain levels
 		const level = getLevelForPoints(pointsTotal);
 		const receiveBadge = false
 		if ( this.mediator.getSettingNumber('statusLevel') < level.level){
