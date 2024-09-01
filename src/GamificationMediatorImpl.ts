@@ -2,17 +2,26 @@ import { GamificationMediator } from './GamificationMediator';
 import {decryptBoolean, decryptNumber, decryptString, encryptBoolean, encryptNumber, encryptString} from "./encryption";
 import {Badge} from "./badges";
 import {debugLogs, elements, listOfUseableIngredientsToBeShown, mil2sec} from "./constants";
-import {Notice, Plugin} from 'obsidian';
+import {Notice} from 'obsidian';
 import {concatenateStrings} from "./Utils";
 import {defaultSettings} from "./settings";
+import gamification from "./main";
 
 export class GamificationMediatorImpl implements GamificationMediator {
 	private settings: any;
-	private plugin: Plugin;
+	private plugin: gamification;
 
-	constructor(settings: any, plugin: Plugin) {
+	constructor(settings: any, plugin: gamification) {
 		this.settings = settings;
 		this.plugin = plugin;
+	}
+
+	updateProfileLeaf() {
+		this.plugin.actualizeProfileLeave();
+	}
+
+	updateProfileLeafPic() {
+		this.plugin.profileLeafUpdatePicture();
 	}
 
 	getSettingString(key: string): string {
@@ -103,5 +112,7 @@ export class GamificationMediatorImpl implements GamificationMediator {
 	getRandomInt(min: number, max: number) {
 		return Math.floor(Math.random() * (max - min + 1)) + min;
 	}
+
+
 
 }

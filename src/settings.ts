@@ -199,7 +199,6 @@ export interface ISettings extends DynamicSettings{
 
 
 export class GamificationPluginSettings extends PluginSettingTab {
-	//private readonly plugin: gamification;
 	private readonly plugin: gamification;
 	private readonly mediator: GamificationMediator;
 	public settings: ISettings;
@@ -296,24 +295,7 @@ export class GamificationPluginSettings extends PluginSettingTab {
 	constructor(app: App, plugin: gamification, mediator: GamificationMediator) {
 		super(app, plugin as any);
 		this.mediator = mediator;
-
-		// let settings = Object.assign({}, defaultSettings);
-
-		/*
-		for (const key in settings) {
-		  if (settings.hasOwnProperty(key)) {
-			if(typeof key === 'number'){
-			  settings[key] = encryptNumber(settings[key] as number)
-			} else if (typeof key === 'string'){
-			  settings[key] = encryptString(settings[key] as string)
-			} else if (typeof key === 'boolean'){
-			  settings[key] = encryptBoolean(settings[key] as boolean)
-			}
-		  }
-		}
-	*/
-		// Save `settings` with encrypted values to your storage
-
+		this.plugin = plugin
 	}
 
 	public display(): void {
@@ -375,6 +357,7 @@ export class GamificationPluginSettings extends PluginSettingTab {
 					.onChange(async (value) => {
 						this.mediator.setSettingString('avatarPicture', value);
 						await this.mediator.saveSettings();
+						this.mediator.updateProfileLeafPic();
 					}),
 			);
 

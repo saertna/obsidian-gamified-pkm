@@ -90,7 +90,8 @@ export default class gamification extends Plugin {
 			// Perform operations that require the layout to be ready
 			this.resetDailyGoals();
 			this.updateStatusBar(this.statusbarGamification);
-			this.actualizeProfileLeave();
+			//this.actualizeProfileLeave();
+			this.mediator.updateProfileLeaf();
 		} catch (error) {
 			console.error('Error during post-layout initialization:', error);
 		}
@@ -189,7 +190,7 @@ export default class gamification extends Plugin {
 		return true; // Successfully updated
 	}
 
-	private async actualizeProfileLeave(){
+	async actualizeProfileLeave(){
 		const newPoints = this.mediator.getSettingNumber('statusPoints')
 		const level = getLevelForPoints(newPoints);
 		this.profileLeafUpdateLevel(this.mediator.getSettingNumber('statusLevel'),this.mediator.getSettingNumber('statusPoints'),this.mediator.getSettingNumber('xpForNextLevel'),level.points,level.pointsNext)
@@ -199,6 +200,7 @@ export default class gamification extends Plugin {
 		this.profileLeafUpdateWeeklyChart(this.mediator.getSettingNumber('weeklyNoteCreationTask'));
 		this.profileLeafUpdateuUdateMajurityList()
 	}
+
 
 	private registerCommands(){
 
@@ -217,7 +219,7 @@ export default class gamification extends Plugin {
 
 		if (this.mediator.getSettingBoolean('debug')){
 			this.addRibbonIcon("accessibility", "Crafting", async () => {
-
+				console.log('Debug Help Funktion accessibility is called')
 				//this.mediator.acquireIngredients(1,400,500);
 				//this.resetDailyGoals();
 				//this.mediator.setSettingString('weeklyNoteCreationDate', window.moment().subtract(1, 'day').format('DD.MM.YYYY'))
@@ -276,6 +278,10 @@ export default class gamification extends Plugin {
 
 				//this.setBadgeSave(getBadgeDetails('Brainiac Trailblazer'),'23-09-07', 'level 20');
 				//this.setBadgeSave(getBadgeDetails('Savvy Scholar'), '23-08-15', 'level 15');
+
+				//this.mediator.updateProfileLeaf();
+				this.actualizeProfileLeave();
+
 			});
 
 			this.addRibbonIcon("chevrons-right", "boost", async () => {
@@ -529,6 +535,28 @@ export default class gamification extends Plugin {
 			view.updateLevel(newLevel)
 			view.updatePoints(newPoints)
 			view.updateChartMinMax(newPoints, nextLevel, min, max)
+		}else {
+			console.log('gamified-pkm-profile is not loaded yet.');
+		}
+	}
+
+	async profileLeafUpdatePicture() {
+		const { workspace } = this.app;
+		let leaf = null;
+		const leaves = this.app.workspace.getLeavesOfType(VIEW_TYPE_GAMIFICATION_PROFILE);
+
+		if (leaves.length > 0) {
+			leaf = leaves[0];
+		} else {
+			leaf = workspace.getRightLeaf(false);
+			// @ts-ignore
+			await leaf.setViewState({ type: VIEW_TYPE_GAMIFICATION_PROFILE, active: true });
+		}
+
+		// @ts-ignore
+		const view = leaf.view;
+		if (view instanceof GamifiedPkmProfileView) {
+			view.updateProfilePicture()
 		}else {
 			console.log('gamified-pkm-profile is not loaded yet.');
 		}
@@ -1775,10 +1803,6 @@ export default class gamification extends Plugin {
 			if(debugLogs) console.debug("File not found or unable to open.");
 		}
 	}
-
-
-
-
 
 
 	async writeBadgeCSV(newBadge: Badge, date: string, level: string){

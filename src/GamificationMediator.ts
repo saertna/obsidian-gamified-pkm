@@ -11,4 +11,8 @@ export interface GamificationMediator {
 	acquireIngredients(chance:number, min:number, max:number): void;
 
 	saveSettings(): Promise<void>;
+
+	updateProfileLeaf(): void;
+
+	updateProfileLeafPic(): void;
 }

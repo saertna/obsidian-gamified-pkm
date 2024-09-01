@@ -352,5 +352,22 @@ export class GamifiedPkmProfileView extends ItemView {
 		}
 	}
 
+	updateProfilePicture() {
+		const container = this.containerEl.children[1];
+		const profileContainer = container.querySelector('.avatar-profile');
+
+		if (profileContainer) {
+			const imagePath = this.mediator.getSettingString('avatarPicture'); // Fetch the updated setting
+			const avatarImage = profileContainer.querySelector('.avatar-image') as HTMLImageElement;
+
+			if (avatarImage) {
+				avatarImage.src = this.app.vault.adapter.getResourcePath(imagePath);
+			} else {
+				// Create a new image element if it doesn't exist
+				const newAvatarImage = profileContainer.createEl('img', { cls: 'avatar-image' });
+				newAvatarImage.src = this.app.vault.adapter.getResourcePath(imagePath);
+			}
+		}
+	}
 
 }
