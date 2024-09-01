@@ -28,21 +28,6 @@ import {
 	streakboosterIncreaseWeekly,
 	mil2sec, milliseconds, seconds, minutesTimer
 } from './constants'
-import {
-	count_inlinks,
-	countCharactersInActiveFile,
-	countLayer2AndLayer3Characters,
-	getFileCountMap,
-	getFileMap,
-	getNumberOfOutlinks,
-	rateDirection,
-	rateInlinks,
-	rateLengthFilename,
-	rateLevelOfMaturity,
-	rateNoteLength,
-	rateOutlinks,
-	rateProgressiveSummarization
-} from './maturitycalculation'
 import {Badge, getBadge, getBadgeForInitLevel, getBadgeForLevel} from './badges'
 import {getLevelForPoints, statusPointsForLevel} from './levels'
 // import type {Moment} from 'moment';
@@ -66,6 +51,7 @@ import {renderCodeBlockProcessor} from "./avatar/renderCodeBlockProcessor";
 import AvatarView from "./avatar/AvatarView.svelte";
 import {withCodeblockState} from "./avatar/stateProviders";
 import { GamificationMediatorImpl } from './GamificationMediatorImpl';
+import { MaturityCalculator } from './maturitycalculation'
 
 let pointsToReceived = 0;
 
@@ -79,12 +65,13 @@ export default class gamification extends Plugin {
 	private lastEditTimes: Record<string, number> = {};
 	private editTimers: Record<string, ReturnType<typeof setTimeout>> = {};
 	mediator: GamificationMediatorImpl;
-
+	private maturityCalculator: MaturityCalculator;
 
 	async onload() {
 		console.log('obsidian-pkm-gamification loaded!');
 
 		this.mediator = new GamificationMediatorImpl(this.settings, this);
+		this.maturityCalculator = new MaturityCalculator(this.app);
 
 		this.addSettingTab(new GamificationPluginSettings(this.app, this, this.mediator));
 
@@ -661,7 +648,7 @@ export default class gamification extends Plugin {
 		this.mediator.setSettingString('gamificationStartDate', format(new Date(), 'yyyy-MM-dd'));
 		await this.saveSettings();
 
-		const fileCountMap: TFile[] | null = await getFileMap(this.app, this.mediator.getSettingString('tagsExclude'), this.mediator.getSettingString('folderExclude'));
+		const fileCountMap: TFile[] | null = await this.maturityCalculator.getFileMap(this.app, this.mediator.getSettingString('tagsExclude'), this.mediator.getSettingString('folderExclude'));
 		if (fileCountMap !== null) {
 			if(debugLogs) console.debug(`fileCountMap loaded. Number of files: ${fileCountMap.length}`);
 
@@ -676,19 +663,19 @@ export default class gamification extends Plugin {
 					continue;
 				}
 				//if(debugLogs) console.debug(`fileName.basename: ${fileName.basename}`)
-				const fileLength = countCharactersInActiveFile(fileContents, fileName.basename);
-				const rateFileLength = rateNoteLength(fileLength);
+				const fileLength = this.maturityCalculator.countCharactersInActiveFile(fileContents, fileName.basename);
+				const rateFileLength = this.maturityCalculator.rateNoteLength(fileLength);
 				const {
 					charCount,
 					highlightedCount,
 					boldCount
-				} = countLayer2AndLayer3Characters(fileContents, fileName.basename, this.mediator.getSettingString('progressiveSumLayer2'), this.mediator.getSettingString('progressiveSumLayer3'));
-				const rateProgressiveSum: number = rateProgressiveSummarization(charCount, highlightedCount, boldCount);
-				const fileNameRate = rateLengthFilename(file.name);
-				const inlinkNumber = count_inlinks(file);
-				const inlinkClass = rateInlinks(inlinkNumber)//, fileCountMap.size);
-				const rateOut = rateOutlinks(getNumberOfOutlinks(file));
-				const noteMajurity = rateLevelOfMaturity(rateFileLength, fileNameRate, inlinkClass, rateOut, rateProgressiveSum);
+				} = this.maturityCalculator.countLayer2AndLayer3Characters(fileContents, fileName.basename, this.mediator.getSettingString('progressiveSumLayer2'), this.mediator.getSettingString('progressiveSumLayer3'));
+				const rateProgressiveSum: number = this.maturityCalculator.rateProgressiveSummarization(charCount, highlightedCount, boldCount);
+				const fileNameRate = this.maturityCalculator.rateLengthFilename(file.name);
+				const inlinkNumber = this.maturityCalculator.count_inlinks(file);
+				const inlinkClass = this.maturityCalculator.rateInlinks(inlinkNumber)//, fileCountMap.size);
+				const rateOut = this.maturityCalculator.rateOutlinks(this.maturityCalculator.getNumberOfOutlinks(file, this.app));
+				const noteMajurity = this.maturityCalculator.rateLevelOfMaturity(rateFileLength, fileNameRate, inlinkClass, rateOut, rateProgressiveSum);
 
 
 				if(debugLogs) console.debug(`Processing file ${fileName.basename} in path ${fileName.path}`);
@@ -788,12 +775,12 @@ export default class gamification extends Plugin {
 
 
 	private writeFrontmatter(frontmatter: any, fileNameRate: number, rateFileLength: number, inlinkClass: number, rateOut: number, rateProgressiveSum: number, noteMajurity: number) {
-		frontmatter['title-class'] = rateDirection(frontmatter['title-class'], fileNameRate)
-		frontmatter['note-length-class'] = rateDirection(frontmatter['note-length-class'], rateFileLength)
-		frontmatter['inlink-class'] = rateDirection(frontmatter['inlink-class'], inlinkClass)
-		frontmatter['outlink-class'] = rateDirection(frontmatter['outlink-class'], rateOut)
-		frontmatter['progressive-summarization-maturity'] = rateDirection(frontmatter['progressive-summarization-maturity'], rateProgressiveSum)
-		frontmatter['note-maturity'] = rateDirection(frontmatter['note-maturity'], noteMajurity)
+		frontmatter['title-class'] = this.maturityCalculator.rateDirection(frontmatter['title-class'], fileNameRate)
+		frontmatter['note-length-class'] = this.maturityCalculator.rateDirection(frontmatter['note-length-class'], rateFileLength)
+		frontmatter['inlink-class'] = this.maturityCalculator.rateDirection(frontmatter['inlink-class'], inlinkClass)
+		frontmatter['outlink-class'] = this.maturityCalculator.rateDirection(frontmatter['outlink-class'], rateOut)
+		frontmatter['progressive-summarization-maturity'] = this.maturityCalculator.rateDirection(frontmatter['progressive-summarization-maturity'], rateProgressiveSum)
+		frontmatter['note-maturity'] = this.maturityCalculator.rateDirection(frontmatter['note-maturity'], noteMajurity)
 	}
 
 
@@ -835,13 +822,13 @@ export default class gamification extends Plugin {
 		let rateProgressiveSum = 0;
 
 		if (fileContents !== undefined && fileName !== undefined) {
-			fileLength = countCharactersInActiveFile(fileContents, fileName);
-			rateFileLength = rateNoteLength(fileLength);
+			fileLength = this.maturityCalculator.countCharactersInActiveFile(fileContents, fileName);
+			rateFileLength = this.maturityCalculator.rateNoteLength(fileLength);
 
 			// Check if fileContents and fileName are not null
 			if (fileContents !== null && fileName !== null) {
-				const { charCount, highlightedCount, boldCount } = countLayer2AndLayer3Characters(fileContents, fileName, this.mediator.getSettingString('progressiveSumLayer2'), this.mediator.getSettingString('progressiveSumLayer3'));
-				rateProgressiveSum = rateProgressiveSummarization(charCount, highlightedCount, boldCount);
+				const { charCount, highlightedCount, boldCount } = this.maturityCalculator.countLayer2AndLayer3Characters(fileContents, fileName, this.mediator.getSettingString('progressiveSumLayer2'), this.mediator.getSettingString('progressiveSumLayer3'));
+				rateProgressiveSum = this.maturityCalculator.rateProgressiveSummarization(charCount, highlightedCount, boldCount);
 			}
 		}
 
@@ -851,12 +838,12 @@ export default class gamification extends Plugin {
 		let rateOut = 0;
 
 		if (file !== null) {
-			fileNameRate = rateLengthFilename(file.name ?? '');
-			inlinkNumber = count_inlinks(file);
-			inlinkClass = rateInlinks(inlinkNumber)//, numAllFiles)
-			rateOut = rateOutlinks(getNumberOfOutlinks(file));
+			fileNameRate = this.maturityCalculator.rateLengthFilename(file.name ?? '');
+			inlinkNumber = this.maturityCalculator.count_inlinks(file);
+			inlinkClass = this.maturityCalculator.rateInlinks(inlinkNumber)//, numAllFiles)
+			rateOut = this.maturityCalculator.rateOutlinks(this.maturityCalculator.getNumberOfOutlinks(file, this.app));
 
-			const noteMajurity = rateLevelOfMaturity(rateFileLength, fileNameRate, inlinkClass, rateOut, rateProgressiveSum);
+			const noteMajurity = this.maturityCalculator.rateLevelOfMaturity(rateFileLength, fileNameRate, inlinkClass, rateOut, rateProgressiveSum);
 			
 			
 			
@@ -1327,7 +1314,7 @@ export default class gamification extends Plugin {
 
 	async removeKeysFromFrontmatter() {
 		const { vault } = this.app
-		const fileCountMap = await getFileCountMap(this.app, this.mediator.getSettingString('tagsExclude'), this.mediator.getSettingString('folderExclude'));
+		const fileCountMap = await this.maturityCalculator.getFileCountMap(this.app, this.mediator.getSettingString('tagsExclude'), this.mediator.getSettingString('folderExclude'));
 		if (fileCountMap != null){
 			for (const fileName of fileCountMap.keys()) {
 				const files = vault.getFiles();
