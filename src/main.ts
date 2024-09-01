@@ -85,6 +85,16 @@ export default class gamification extends Plugin {
 
 
 
+	initializeAfterLayoutReady() {
+		try {
+			// Perform operations that require the layout to be ready
+			this.resetDailyGoals();
+			this.updateStatusBar(this.statusbarGamification);
+			this.actualizeProfileLeave();
+		} catch (error) {
+			console.error('Error during post-layout initialization:', error);
+		}
+	}
 	async onload() {
 		console.log('obsidian-pkm-gamification loaded!');
 
@@ -102,28 +112,13 @@ export default class gamification extends Plugin {
 
 		const delayLoadTime = this.mediator.getSettingNumber('delayLoadTime') * 1000;
 
-		setTimeout(async () => {
-			// Code to execute after the delay
-			try {
-				await this.mediator.loadSettings();
-				console.log('Delay Settings loaded')
-				await this.resetDailyGoals()
-				console.log('Daylies goals settings')
-				await this.updateStatusBar(this.statusbarGamification)
-				console.log('status bar updated')
-				//await this.actualizeProfileLeave()
-				// Check for leaf readiness and retry if necessary
-				if (!this.tryUpdateLeaf()) {
-					console.warn("Leaf not ready, will retry shortly...");
-					setTimeout(() => {
-						this.tryUpdateLeaf();
-						console.log('leaf updated')
-					}, 3000); // Retry after 3 second
-				}
-			} catch (error) {
-				console.error('Error during initialization tasks:', error);
-			}
-		}, delayLoadTime);
+		setTimeout(() => {
+			// Use onLayoutReady to ensure the workspace is ready
+			this.app.workspace.onLayoutReady(() => {
+				this.mediator.loadSettings();
+				this.initializeAfterLayoutReady();
+			});
+		}, 1000 + delayLoadTime);
 
 
 		// to set timer for reset daily and weekly goals
