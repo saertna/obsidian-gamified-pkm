@@ -261,8 +261,14 @@ export default class gamification extends Plugin {
 		});*/
 		this.addCommand({
 			id: 'open-gamification-profile-view',
-			name: 'Open Gamification Profile',
+			name: 'Open Profile Leaf',
 			callback: () => this.openProfileView(),
+		});
+
+		this.addCommand({
+			id: 'close-gamification-profile-view',
+			name: 'Close Profile Leaf',
+			callback: () => this.closeProfileView(),
 		});
 
 		if(this.mediator.getSettingNumber('counterMajurityCalcInitial') >= 50){
@@ -916,14 +922,19 @@ export default class gamification extends Plugin {
 			return;
 		}
 
-		// Otherwise, create a new leaf and open the view
-		const leaf = this.app.workspace.getLeaf(true);
-		await leaf.setViewState({ type: VIEW_TYPE_GAMIFICATION_PROFILE });
-		this.app.workspace.revealLeaf(leaf);
+		const leaf = this.app.workspace.getRightLeaf(false);
 
-		this.isProfileViewOpen = true; // Set the flag to indicate the view is open
+		if (leaf) {
+			await leaf.setViewState({ type: VIEW_TYPE_GAMIFICATION_PROFILE });
+			this.app.workspace.revealLeaf(leaf);
+			this.isProfileViewOpen = true; // Set the flag to indicate the view is open
 
-		// Set the setting to reflect that the profile leaf is open
+			// Set the setting to reflect that the profile leaf is open
+			this.mediator.setSettingBoolean('showProfileLeaf', true);
+		} else {
+			console.error("Failed to get a right leaf. Cannot open the profile view.");
+		}
+
 		this.mediator.setSettingBoolean('showProfileLeaf', true);
 	}
 

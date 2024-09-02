@@ -263,7 +263,7 @@ export class GamifiedPkmProfileView extends ItemView {
 
 
 	async onClose() {
-      this.mediator.setSettingBoolean('showProfileLeaf', false)
+      //this.mediator.setSettingBoolean('showProfileLeaf', false)
     }
 
     updateContent(newContent: string) {
