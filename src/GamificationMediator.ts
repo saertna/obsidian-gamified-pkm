@@ -19,4 +19,6 @@ export interface GamificationMediator {
 	updateChartWeeklyColorReceived(value: string): void
 
 	updateChartWeeklyColorToGo(value: string): void
+
+	closeProfileView(): void
 }

@@ -99,7 +99,8 @@ export const defaultSettings: Partial<ISettings> = {
   showReleaseNotes: "U2FsdGVkX1+7lWe/h95uqzgl27JBGW2iki7sBwk44YQ=",
   avatarPicture: "U2FsdGVkX18zJk4m8pNboYxTAVmT5KytaqxAsTw/50I=",
   colorBarReceived: "U2FsdGVkX19GLvJtvLLriVKTDDLMVt+P7ysHKoOcIb0=",
-  colorBarToGo: "U2FsdGVkX1/8uFFZ/kZeDb2YWMKM8h8rzssbPWBGZ7c="
+  colorBarToGo: "U2FsdGVkX1/8uFFZ/kZeDb2YWMKM8h8rzssbPWBGZ7c=",
+  showProfileLeaf: "U2FsdGVkX1+7lWe/h95uqzgl27JBGW2iki7sBwk44YQ="
 };
 
 export interface DynamicSettings {
@@ -198,6 +199,7 @@ export interface ISettings extends DynamicSettings{
   avatarPicture: string
   colorBarReceived: string
   colorBarToGo: string
+  showProfileLeaf: string
 	//[key: string]: number | string | boolean | MomentInput;
 }
 
@@ -297,6 +299,7 @@ export class GamificationPluginSettings extends PluginSettingTab {
 	public avatarPicture: string;
 	public colorBarReceived: string;
 	public colorBarToGo: string;
+    public showProfileLeaf: string;
 
 	constructor(app: App, plugin: gamification, mediator: GamificationMediator) {
 		super(app, plugin as any);
@@ -309,9 +312,6 @@ export class GamificationPluginSettings extends PluginSettingTab {
 		containerEl.addClass("gamification-settings");
 		this.containerEl.empty();
 
-
-		//const { containerEl } = this;
-		//containerEl.empty();
 
 		if (debugLogs) console.debug('settings called')
 		new Setting(containerEl)
@@ -350,6 +350,23 @@ export class GamificationPluginSettings extends PluginSettingTab {
 					.onChange(async (value) => {
 						this.mediator.setSettingString('folderExclude', value);
 						await this.mediator.saveSettings();
+					}),
+			);
+
+		new Setting(containerEl)
+			.setName('Show profile leaf')
+			.setDesc('You can switch on the leaf for the profile.')
+			.addToggle((toggle) =>
+				toggle
+					.setValue(this.mediator.getSettingBoolean('showProfileLeaf'))
+					.onChange(async (value) => {
+						this.mediator.setSettingBoolean('showProfileLeaf', value);
+						await this.mediator.saveSettings();
+						if(value) {
+							this.mediator.updateProfileLeaf();
+						} else {
+							this.mediator.closeProfileView();
+						}
 					}),
 			);
 

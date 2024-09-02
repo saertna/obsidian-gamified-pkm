@@ -66,6 +66,8 @@ export default class gamification extends Plugin {
 	private editTimers: Record<string, ReturnType<typeof setTimeout>> = {};
 	mediator: GamificationMediatorImpl;
 	private maturityCalculator: MaturityCalculator;
+	private isProfileViewOpen = false;
+
 
 	async onload() {
 		console.log('obsidian-pkm-gamification loaded!');
@@ -147,6 +149,9 @@ export default class gamification extends Plugin {
 		));
 		// import ends here
 
+		if (this.mediator.getSettingBoolean('showProfileLeaf')) {
+			this.openProfileView();
+		}
 
 		this.registerCommands();
 
@@ -164,10 +169,6 @@ export default class gamification extends Plugin {
 
 
 	private registerCommands(){
-
-		this.addRibbonIcon("target", "gamification side overview", () => {
-			this.activateView();
-		});
 
 
 		if (this.mediator.getSettingBoolean('debug')){
@@ -247,11 +248,22 @@ export default class gamification extends Plugin {
 				this.actualizeProfileLeave();
 			});
 
-			this.addCommand({ id: 'overview', name: 'open gamification side overview', callback: async () => {
-					this.activateView();
-				},
+
+			this.addRibbonIcon("target", "gamification side overview", () => {
+				this.activateView();
 			});
+
 		}
+
+		/*this.addCommand({ id: 'overview', name: 'open gamification side overview', callback: async () => {
+				this.activateView();
+			},
+		});*/
+		this.addCommand({
+			id: 'open-gamification-profile-view',
+			name: 'Open Gamification Profile',
+			callback: () => this.openProfileView(),
+		});
 
 		if(this.mediator.getSettingNumber('counterMajurityCalcInitial') >= 50){
 			this.addRibbonIcon("test-tube-2", "Boosters", async () => {
@@ -839,8 +851,41 @@ export default class gamification extends Plugin {
 		for (const timerId in this.editTimers) {
 			clearTimeout(this.editTimers[timerId]);
 		}
+
+		this.app.workspace.detachLeavesOfType(VIEW_TYPE_GAMIFICATION_PROFILE);
+		this.isProfileViewOpen = false; // Reset the flag when the plugin is unloaded
 	}
 
+	async openProfileView() {
+		if (this.isProfileViewOpen) {
+			return; // If the view is already open, don't open another one
+		}
+
+		// Check if a leaf with the same type already exists, and if so, focus it
+		const existingLeaf = this.app.workspace.getLeavesOfType(VIEW_TYPE_GAMIFICATION_PROFILE)[0];
+		if (existingLeaf) {
+			this.app.workspace.revealLeaf(existingLeaf);
+			return;
+		}
+
+		// Otherwise, create a new leaf and open the view
+		const leaf = this.app.workspace.getLeaf(true);
+		await leaf.setViewState({ type: VIEW_TYPE_GAMIFICATION_PROFILE });
+		this.app.workspace.revealLeaf(leaf);
+
+		this.isProfileViewOpen = true; // Set the flag to indicate the view is open
+
+		// Set the setting to reflect that the profile leaf is open
+		this.mediator.setSettingBoolean('showProfileLeaf', true);
+	}
+
+	closeProfileView() {
+		this.app.workspace.detachLeavesOfType(VIEW_TYPE_GAMIFICATION_PROFILE);
+		this.isProfileViewOpen = false; // Set the flag to indicate the view is closed
+
+		// Set the setting to reflect that the profile leaf is closed
+		this.mediator.setSettingBoolean('showProfileLeaf', false);
+	}
 
 	async calculateNoteMajurity(){
 		const file: TFile | null= this.app.workspace.getActiveFile();
