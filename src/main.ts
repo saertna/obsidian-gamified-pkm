@@ -12,7 +12,7 @@ style.textContent = `
 `;
 
 document.head.append(style);
-import {MarkdownView, Notice, Plugin, TFile, WorkspaceLeaf} from 'obsidian';
+import {MarkdownView, Notice, Plugin, TFile} from 'obsidian';
 import {GamificationPluginSettings, ISettings} from './settings';
 import format from 'date-fns/format';
 import {
@@ -442,43 +442,16 @@ export default class gamification extends Plugin {
 		await this.profileLeafUpdateWeeklyChart(this.mediator.getSettingNumber('weeklyNoteCreationTask'));
 		await this.updateChartWeeklyColorReceived(this.mediator.getSettingString('colorBarReceived'));
 		await this.updateChartWeeklyColorToGo(this.mediator.getSettingString('colorBarToGo'));
-		await this.profileLeafUpdateuUdateMajurityList()
+		await this.profileLeafUpdateMajurityList()
 	}
 
 
-	async activateView() {
+	async getLeafAndView() {
 		const showProfileLeaf = this.mediator.getSettingBoolean('showProfileLeaf');
 		if (!showProfileLeaf) {
-			return;
-		}
-		const { workspace } = this.app;
-		let leaf: WorkspaceLeaf | null;
-		const leaves = this.app.workspace.getLeavesOfType(VIEW_TYPE_GAMIFICATION_PROFILE);
-
-		if (leaves.length > 0) {
-			leaf = leaves[0];
-		} else {
-			leaf = workspace.getRightLeaf(false);
-			// @ts-ignore
-			await leaf.setViewState({ type: VIEW_TYPE_GAMIFICATION_PROFILE, active: true });
+			return { leaf: null, view: null };
 		}
 
-		// Access and update the view content
-		// @ts-ignore
-		const view = leaf.view;
-		if (view instanceof GamifiedPkmProfileView) {
-			this.actualizeProfileLeaf();
-		}
-
-		// Optional: reveal the leaf if it's in a collapsed sidebar
-		// workspace.revealLeaf(leaf);
-	}
-
-	async profileLeafUpdateLevel(newLevel:number, newPoints:number, nextLevel:number, min:number, max:number) {
-		const showProfileLeaf = this.mediator.getSettingBoolean('showProfileLeaf');
-		if (!showProfileLeaf) {
-			return;
-		}
 		const { workspace } = this.app;
 		let leaf = null;
 		const leaves = this.app.workspace.getLeavesOfType(VIEW_TYPE_GAMIFICATION_PROFILE);
@@ -492,7 +465,24 @@ export default class gamification extends Plugin {
 		}
 
 		// @ts-ignore
-		const view = leaf.view;
+		return leaf.view;
+	}
+
+
+	async activateView() {
+		const view = await this.getLeafAndView();
+
+		if (view instanceof GamifiedPkmProfileView) {
+			await this.actualizeProfileLeaf();
+		}
+
+		// Optional: reveal the leaf if it's in a collapsed sidebar
+		// workspace.revealLeaf(leaf);
+	}
+
+	async profileLeafUpdateLevel(newLevel:number, newPoints:number, nextLevel:number, min:number, max:number) {
+		const view = await this.getLeafAndView();
+
 		if (view instanceof GamifiedPkmProfileView) {
 			view.updateLevel(newLevel)
 			view.updatePoints(newPoints)
@@ -503,24 +493,8 @@ export default class gamification extends Plugin {
 	}
 
 	async updateChartWeeklyColorReceived(value: string) {
-		const showProfileLeaf = this.mediator.getSettingBoolean('showProfileLeaf');
-		if (!showProfileLeaf) {
-			return;
-		}
-		const { workspace } = this.app;
-		let leaf = null;
-		const leaves = this.app.workspace.getLeavesOfType(VIEW_TYPE_GAMIFICATION_PROFILE);
+		const view = await this.getLeafAndView();
 
-		if (leaves.length > 0) {
-			leaf = leaves[0];
-		} else {
-			leaf = workspace.getRightLeaf(false);
-			// @ts-ignore
-			await leaf.setViewState({ type: VIEW_TYPE_GAMIFICATION_PROFILE, active: true });
-		}
-
-		// @ts-ignore
-		const view = leaf.view;
 		if (view instanceof GamifiedPkmProfileView) {
 			view.updateChartWeeklyColorReceived(value)
 		}else {
@@ -529,24 +503,8 @@ export default class gamification extends Plugin {
 	}
 
 	async updateChartWeeklyColorToGo(value: string) {
-		const showProfileLeaf = this.mediator.getSettingBoolean('showProfileLeaf');
-		if (!showProfileLeaf) {
-			return;
-		}
-		const { workspace } = this.app;
-		let leaf = null;
-		const leaves = this.app.workspace.getLeavesOfType(VIEW_TYPE_GAMIFICATION_PROFILE);
+		const view = await this.getLeafAndView();
 
-		if (leaves.length > 0) {
-			leaf = leaves[0];
-		} else {
-			leaf = workspace.getRightLeaf(false);
-			// @ts-ignore
-			await leaf.setViewState({ type: VIEW_TYPE_GAMIFICATION_PROFILE, active: true });
-		}
-
-		// @ts-ignore
-		const view = leaf.view;
 		if (view instanceof GamifiedPkmProfileView) {
 			view.updateChartWeeklyColorToGo(value)
 		}else {
@@ -555,24 +513,8 @@ export default class gamification extends Plugin {
 	}
 
 	async profileLeafUpdatePicture() {
-		const showProfileLeaf = this.mediator.getSettingBoolean('showProfileLeaf');
-		if (!showProfileLeaf) {
-			return;
-		}
-		const { workspace } = this.app;
-		let leaf = null;
-		const leaves = this.app.workspace.getLeavesOfType(VIEW_TYPE_GAMIFICATION_PROFILE);
+		const view = await this.getLeafAndView();
 
-		if (leaves.length > 0) {
-			leaf = leaves[0];
-		} else {
-			leaf = workspace.getRightLeaf(false);
-			// @ts-ignore
-			await leaf.setViewState({ type: VIEW_TYPE_GAMIFICATION_PROFILE, active: true });
-		}
-
-		// @ts-ignore
-		const view = leaf.view;
 		if (view instanceof GamifiedPkmProfileView) {
 			view.updateProfilePicture()
 		}else {
@@ -581,24 +523,8 @@ export default class gamification extends Plugin {
 	}
 
 	async profileLeafUpdatePoints(newPoints:number, nextLevel: number) {
-		const showProfileLeaf = this.mediator.getSettingBoolean('showProfileLeaf');
-		if (!showProfileLeaf) {
-			return;
-		}
-		const { workspace } = this.app;
-		let leaf = null;
-		const leaves = this.app.workspace.getLeavesOfType(VIEW_TYPE_GAMIFICATION_PROFILE);
+		const view = await this.getLeafAndView();
 
-		if (leaves.length > 0) {
-			leaf = leaves[0];
-		} else {
-			leaf = workspace.getRightLeaf(false);
-			// @ts-ignore
-			await leaf.setViewState({ type: VIEW_TYPE_GAMIFICATION_PROFILE, active: true });
-		}
-
-		// @ts-ignore
-		const view = leaf.view;
 		if (view instanceof GamifiedPkmProfileView) {
 			view.updatePoints(newPoints)
 			view.updateChart(newPoints,nextLevel-newPoints)
@@ -608,24 +534,8 @@ export default class gamification extends Plugin {
 	}
 
 	async profileLeafUpdateBoosterFactor(newFactor:number) {
-		const showProfileLeaf = this.mediator.getSettingBoolean('showProfileLeaf');
-		if (!showProfileLeaf) {
-			return;
-		}
-		const { workspace } = this.app;
-		let leaf = null;
-		const leaves = this.app.workspace.getLeavesOfType(VIEW_TYPE_GAMIFICATION_PROFILE);
+		const view = await this.getLeafAndView();
 
-		if (leaves.length > 0) {
-			leaf = leaves[0];
-		} else {
-			leaf = workspace.getRightLeaf(false);
-			// @ts-ignore
-			await leaf.setViewState({ type: VIEW_TYPE_GAMIFICATION_PROFILE, active: true });
-		}
-
-		// @ts-ignore
-		const view = leaf.view;
 		if (view instanceof GamifiedPkmProfileView) {
 			view.updateBoosterFactor(newFactor)
 		}else {
@@ -634,24 +544,8 @@ export default class gamification extends Plugin {
 	}
 
 	async profileLeafUpdateDailyNotes(dailyString:string) {
-		const showProfileLeaf = this.mediator.getSettingBoolean('showProfileLeaf');
-		if (!showProfileLeaf) {
-			return;
-		}
-		const { workspace } = this.app;
-		let leaf = null;
-		const leaves = this.app.workspace.getLeavesOfType(VIEW_TYPE_GAMIFICATION_PROFILE);
+		const view = await this.getLeafAndView();
 
-		if (leaves.length > 0) {
-			leaf = leaves[0];
-		} else {
-			leaf = workspace.getRightLeaf(false);
-			// @ts-ignore
-			await leaf.setViewState({ type: VIEW_TYPE_GAMIFICATION_PROFILE, active: true });
-		}
-
-		// @ts-ignore
-		const view = leaf.view;
 		if (view instanceof GamifiedPkmProfileView) {
 			view.updateDailyNotes(dailyString)
 		}else {
@@ -660,24 +554,8 @@ export default class gamification extends Plugin {
 	}
 
 	async profileLeafUpdateWeeklyNotes(weeklyString:string) {
-		const showProfileLeaf = this.mediator.getSettingBoolean('showProfileLeaf');
-		if (!showProfileLeaf) {
-			return;
-		}
-		const { workspace } = this.app;
-		let leaf = null;
-		const leaves = this.app.workspace.getLeavesOfType(VIEW_TYPE_GAMIFICATION_PROFILE);
+		const view = await this.getLeafAndView();
 
-		if (leaves.length > 0) {
-			leaf = leaves[0];
-		} else {
-			leaf = workspace.getRightLeaf(false);
-			// @ts-ignore
-			await leaf.setViewState({ type: VIEW_TYPE_GAMIFICATION_PROFILE, active: true });
-		}
-
-		// @ts-ignore
-		const view = leaf.view;
 		if (view instanceof GamifiedPkmProfileView) {
 			view.updateWeeklyNotes(weeklyString)
 		}else {
@@ -686,24 +564,8 @@ export default class gamification extends Plugin {
 	}
 
 	async profileLeafUpdateWeeklyChart(days:number) {
-		const showProfileLeaf = this.mediator.getSettingBoolean('showProfileLeaf');
-		if (!showProfileLeaf) {
-			return;
-		}
-		const { workspace } = this.app;
-		let leaf = null;
-		const leaves = this.app.workspace.getLeavesOfType(VIEW_TYPE_GAMIFICATION_PROFILE);
+		const view = await this.getLeafAndView();
 
-		if (leaves.length > 0) {
-			leaf = leaves[0];
-		} else {
-			leaf = workspace.getRightLeaf(false);
-			// @ts-ignore
-			await leaf.setViewState({ type: VIEW_TYPE_GAMIFICATION_PROFILE, active: true });
-		}
-
-		// @ts-ignore
-		const view = leaf.view;
 		if (view instanceof GamifiedPkmProfileView) {
 			view.updateChartWeekly(days)
 		}else {
@@ -711,31 +573,16 @@ export default class gamification extends Plugin {
 		}
 	}
 
-	async profileLeafUpdateuUdateMajurityList() {
-		const showProfileLeaf = this.mediator.getSettingBoolean('showProfileLeaf');
-		if (!showProfileLeaf) {
-			return;
-		}
-		const { workspace } = this.app;
-		let leaf = null;
-		const leaves = this.app.workspace.getLeavesOfType(VIEW_TYPE_GAMIFICATION_PROFILE);
+	async profileLeafUpdateMajurityList() {
+		const view = await this.getLeafAndView();
 
-		if (leaves.length > 0) {
-			leaf = leaves[0];
-		} else {
-			leaf = workspace.getRightLeaf(false);
-			// @ts-ignore
-			await leaf.setViewState({ type: VIEW_TYPE_GAMIFICATION_PROFILE, active: true });
-		}
-
-		// @ts-ignore
-		const view = leaf.view;
 		if (view instanceof GamifiedPkmProfileView) {
-			view.updateMaturityCounts()
-		}else {
-			if(debugLogs) console.log('gamified-pkm-profile is not loaded yet.');
+			view.updateMaturityCounts();
+		} else {
+			if (debugLogs) console.log('gamified-pkm-profile is not loaded yet.');
 		}
 	}
+
 
 
 	private async resetGame() {
@@ -874,7 +721,7 @@ export default class gamification extends Plugin {
 			if(debugLogs) console.log(`You earned ${initBadge.name} - ${initBadge.description}`)
 			await this.boosterForInit()
 			await this.updateStatusBar(statusbarGamification)
-			this.writeBadgeCSV(initBadge, window.moment().format('YYYY-MM-DD'),'level ' + (this.mediator.getSettingNumber('statusLevel')).toString())
+			await this.writeBadgeCSV(initBadge, window.moment().format('YYYY-MM-DD'),'level ' + (this.mediator.getSettingNumber('statusLevel')).toString())
 		}, 2000); // 2000 milliseconds = 2 seconds
 
 			new ModalInformationbox(this.app, `Finallized gamification initialistation!\nCongratulation, you earned ${pointsReceived} Points!\n\nCheck the Profile Page: "${this.mediator.getSettingString('avatarPageName')}.md"\n\nYou received an initialisation Booster aktiv for your first level ups. Game on!`).open();
@@ -1125,7 +972,7 @@ export default class gamification extends Plugin {
 			this.mediator.setSettingNumber('weeklyNoteCreationTask', 0);
 			this.mediator.setSettingNumber('weeklyNoteCreationTaskContinuously', 0);
 			this.mediator.setSettingString('weeklyNoteCreationDate', window.moment().subtract(1, 'day').format('DD.MM.YYYY'))
-			await this.decreaseStreakbooster(daysPassed)
+			await this.decreaseStreakbooster();
 			if(debugLogs) console.debug(`${daysPassed} days passed`)
 			await this.saveSettings();
 			await this.updateStatusBar(this.statusbarGamification)
@@ -1406,7 +1253,7 @@ export default class gamification extends Plugin {
 	}
 
 
-	async decreaseStreakbooster(decreaseValue:number){
+	async decreaseStreakbooster(){
 		//let newBoosterFakfor = parseFloat((this.mediator.getSettingNumber('streakbooster') - decreaseValue * streakboosterDecrease).toFixed(1))
 		const currentValue = this.mediator.getSettingNumber('streakbooster');
 		let newBoosterFakfor;
