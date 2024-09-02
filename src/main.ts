@@ -163,7 +163,7 @@ export default class gamification extends Plugin {
 			return false; // Leaf not ready
 		}
 
-		this.actualizeProfileLeave();
+		this.actualizeProfileLeaf();
 		return true;
 	}
 
@@ -234,7 +234,7 @@ export default class gamification extends Plugin {
 				//this.setBadgeSave(getBadgeDetails('Savvy Scholar'), '23-08-15', 'level 15');
 
 				//this.mediator.updateProfileLeaf();
-				this.actualizeProfileLeave();
+				this.actualizeProfileLeaf();
 
 			});
 
@@ -245,7 +245,7 @@ export default class gamification extends Plugin {
 			});
 
 			this.addRibbonIcon("chevrons-right", "update overview leaf", () => {
-				this.actualizeProfileLeave();
+				this.actualizeProfileLeaf();
 			});
 
 
@@ -423,21 +423,29 @@ export default class gamification extends Plugin {
 	}
 
 
-	async actualizeProfileLeave(){
+	async actualizeProfileLeaf(){
+		const showProfileLeaf = this.mediator.getSettingBoolean('showProfileLeaf');
+		if (!showProfileLeaf) {
+			return;
+		}
 		const newPoints = this.mediator.getSettingNumber('statusPoints')
 		const level = getLevelForPoints(newPoints);
-		this.profileLeafUpdateLevel(this.mediator.getSettingNumber('statusLevel'),this.mediator.getSettingNumber('statusPoints'),this.mediator.getSettingNumber('xpForNextLevel'),level.points,level.pointsNext)
-		this.profileLeafUpdateBoosterFactor(this.mediator.getSettingNumber('streakbooster'))
-		this.profileLeafUpdateDailyNotes(pointsForDailyChallenge * (this.mediator.getSettingNumber('badgeBoosterFactor') + this.mediator.getSettingNumber('streakbooster')) + 'EP | ' + this.mediator.getSettingNumber('dailyNoteCreationTask') + '/2')
-		this.profileLeafUpdateWeeklyNotes(pointsForWeeklyChallenge * (this.mediator.getSettingNumber('badgeBoosterFactor') + this.mediator.getSettingNumber('streakbooster')) + 'EP | ' + this.mediator.getSettingNumber('weeklyNoteCreationTask') + '/7')
-		this.profileLeafUpdateWeeklyChart(this.mediator.getSettingNumber('weeklyNoteCreationTask'));
-		this.updateChartWeeklyColorReceived(this.mediator.getSettingString('colorBarReceived'));
-		this.updateChartWeeklyColorToGo(this.mediator.getSettingString('colorBarToGo'));
-		this.profileLeafUpdateuUdateMajurityList()
+		await this.profileLeafUpdateLevel(this.mediator.getSettingNumber('statusLevel'),this.mediator.getSettingNumber('statusPoints'),this.mediator.getSettingNumber('xpForNextLevel'),level.points,level.pointsNext)
+		await this.profileLeafUpdateBoosterFactor(this.mediator.getSettingNumber('streakbooster'))
+		await this.profileLeafUpdateDailyNotes(pointsForDailyChallenge * (this.mediator.getSettingNumber('badgeBoosterFactor') + this.mediator.getSettingNumber('streakbooster')) + 'EP | ' + this.mediator.getSettingNumber('dailyNoteCreationTask') + '/2')
+		await this.profileLeafUpdateWeeklyNotes(pointsForWeeklyChallenge * (this.mediator.getSettingNumber('badgeBoosterFactor') + this.mediator.getSettingNumber('streakbooster')) + 'EP | ' + this.mediator.getSettingNumber('weeklyNoteCreationTask') + '/7')
+		await this.profileLeafUpdateWeeklyChart(this.mediator.getSettingNumber('weeklyNoteCreationTask'));
+		await this.updateChartWeeklyColorReceived(this.mediator.getSettingString('colorBarReceived'));
+		await this.updateChartWeeklyColorToGo(this.mediator.getSettingString('colorBarToGo'));
+		await this.profileLeafUpdateuUdateMajurityList()
 	}
 
 
 	async activateView() {
+		const showProfileLeaf = this.mediator.getSettingBoolean('showProfileLeaf');
+		if (!showProfileLeaf) {
+			return;
+		}
 		const { workspace } = this.app;
 		let leaf = null;
 		const leaves = this.app.workspace.getLeavesOfType(VIEW_TYPE_GAMIFICATION_PROFILE);
@@ -454,7 +462,7 @@ export default class gamification extends Plugin {
 		// @ts-ignore
 		const view = leaf.view;
 		if (view instanceof GamifiedPkmProfileView) {
-			this.actualizeProfileLeave();
+			this.actualizeProfileLeaf();
 		}
 
 		// Optional: reveal the leaf if it's in a collapsed sidebar
@@ -462,6 +470,10 @@ export default class gamification extends Plugin {
 	}
 
 	async profileLeafUpdateLevel(newLevel:number, newPoints:number, nextLevel:number, min:number, max:number) {
+		const showProfileLeaf = this.mediator.getSettingBoolean('showProfileLeaf');
+		if (!showProfileLeaf) {
+			return;
+		}
 		const { workspace } = this.app;
 		let leaf = null;
 		const leaves = this.app.workspace.getLeavesOfType(VIEW_TYPE_GAMIFICATION_PROFILE);
@@ -486,6 +498,10 @@ export default class gamification extends Plugin {
 	}
 
 	async updateChartWeeklyColorReceived(value: string) {
+		const showProfileLeaf = this.mediator.getSettingBoolean('showProfileLeaf');
+		if (!showProfileLeaf) {
+			return;
+		}
 		const { workspace } = this.app;
 		let leaf = null;
 		const leaves = this.app.workspace.getLeavesOfType(VIEW_TYPE_GAMIFICATION_PROFILE);
@@ -508,6 +524,10 @@ export default class gamification extends Plugin {
 	}
 
 	async updateChartWeeklyColorToGo(value: string) {
+		const showProfileLeaf = this.mediator.getSettingBoolean('showProfileLeaf');
+		if (!showProfileLeaf) {
+			return;
+		}
 		const { workspace } = this.app;
 		let leaf = null;
 		const leaves = this.app.workspace.getLeavesOfType(VIEW_TYPE_GAMIFICATION_PROFILE);
@@ -530,6 +550,10 @@ export default class gamification extends Plugin {
 	}
 
 	async profileLeafUpdatePicture() {
+		const showProfileLeaf = this.mediator.getSettingBoolean('showProfileLeaf');
+		if (!showProfileLeaf) {
+			return;
+		}
 		const { workspace } = this.app;
 		let leaf = null;
 		const leaves = this.app.workspace.getLeavesOfType(VIEW_TYPE_GAMIFICATION_PROFILE);
@@ -552,6 +576,10 @@ export default class gamification extends Plugin {
 	}
 
 	async profileLeafUpdatePoints(newPoints:number, nextLevel: number) {
+		const showProfileLeaf = this.mediator.getSettingBoolean('showProfileLeaf');
+		if (!showProfileLeaf) {
+			return;
+		}
 		const { workspace } = this.app;
 		let leaf = null;
 		const leaves = this.app.workspace.getLeavesOfType(VIEW_TYPE_GAMIFICATION_PROFILE);
@@ -575,6 +603,10 @@ export default class gamification extends Plugin {
 	}
 
 	async profileLeafUpdateBoosterFactor(newFactor:number) {
+		const showProfileLeaf = this.mediator.getSettingBoolean('showProfileLeaf');
+		if (!showProfileLeaf) {
+			return;
+		}
 		const { workspace } = this.app;
 		let leaf = null;
 		const leaves = this.app.workspace.getLeavesOfType(VIEW_TYPE_GAMIFICATION_PROFILE);
@@ -597,6 +629,10 @@ export default class gamification extends Plugin {
 	}
 
 	async profileLeafUpdateDailyNotes(dailyString:string) {
+		const showProfileLeaf = this.mediator.getSettingBoolean('showProfileLeaf');
+		if (!showProfileLeaf) {
+			return;
+		}
 		const { workspace } = this.app;
 		let leaf = null;
 		const leaves = this.app.workspace.getLeavesOfType(VIEW_TYPE_GAMIFICATION_PROFILE);
@@ -619,6 +655,10 @@ export default class gamification extends Plugin {
 	}
 
 	async profileLeafUpdateWeeklyNotes(weeklyString:string) {
+		const showProfileLeaf = this.mediator.getSettingBoolean('showProfileLeaf');
+		if (!showProfileLeaf) {
+			return;
+		}
 		const { workspace } = this.app;
 		let leaf = null;
 		const leaves = this.app.workspace.getLeavesOfType(VIEW_TYPE_GAMIFICATION_PROFILE);
@@ -641,6 +681,10 @@ export default class gamification extends Plugin {
 	}
 
 	async profileLeafUpdateWeeklyChart(days:number) {
+		const showProfileLeaf = this.mediator.getSettingBoolean('showProfileLeaf');
+		if (!showProfileLeaf) {
+			return;
+		}
 		const { workspace } = this.app;
 		let leaf = null;
 		const leaves = this.app.workspace.getLeavesOfType(VIEW_TYPE_GAMIFICATION_PROFILE);
@@ -663,6 +707,10 @@ export default class gamification extends Plugin {
 	}
 
 	async profileLeafUpdateuUdateMajurityList() {
+		const showProfileLeaf = this.mediator.getSettingBoolean('showProfileLeaf');
+		if (!showProfileLeaf) {
+			return;
+		}
 		const { workspace } = this.app;
 		let leaf = null;
 		const leaves = this.app.workspace.getLeavesOfType(VIEW_TYPE_GAMIFICATION_PROFILE);
@@ -1040,14 +1088,14 @@ export default class gamification extends Plugin {
 			new Notice('note majurity updated!');
 			if(debugLogs) console.debug('note majurity updated!')
 			await this.updateStatusBar(this.statusbarGamification)
-			await this.actualizeProfileLeave();
+			await this.actualizeProfileLeaf();
 		} else {
 			console.error('file was not found to calculate majurities. Make sure one is active.')
 		}
 		if (detectIfNoteIsFirstTimeRated){
 			await this.increaseDailyCreatedNoteCount();
 			await this.increaseWeeklyCreatedNoteCount();
-			await this.actualizeProfileLeave();
+			await this.actualizeProfileLeaf();
 		}
 	}
 
@@ -1081,7 +1129,7 @@ export default class gamification extends Plugin {
 			reset = true;
 		}
 		if (reset){
-			await this.actualizeProfileLeave();
+			await this.actualizeProfileLeaf();
 		}
 
 		// deactivate boosters
@@ -1133,7 +1181,7 @@ export default class gamification extends Plugin {
 			await this.saveSettings();
 
 			if(newDailyNoteCreationTask == 1){
-				await this.actualizeProfileLeave();
+				await this.actualizeProfileLeaf();
 				if(debugLogs) console.debug(`${newDailyNoteCreationTask}/2 Notes created today.`)
 			} else if (newDailyNoteCreationTask == 2) {
 				await this.increaseStreakbooster(streakboosterIncreaseDaily)
@@ -1201,7 +1249,7 @@ export default class gamification extends Plugin {
 	private async checkForWeeklyNoteChallengeEvaluation(newWeeklyNoteCreationTask: number) {
 		if (newWeeklyNoteCreationTask <= 6) {
 			// update Avatar Page
-			await this.actualizeProfileLeave();
+			await this.actualizeProfileLeaf();
 			if(debugLogs) console.debug(`${newWeeklyNoteCreationTask}/7 Notes created in a chain.`)
 		} else if (newWeeklyNoteCreationTask == 7) {
 			await this.increaseStreakbooster(streakboosterIncreaseWeekly);

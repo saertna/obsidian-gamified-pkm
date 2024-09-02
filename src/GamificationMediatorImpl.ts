@@ -21,7 +21,7 @@ export class GamificationMediatorImpl implements GamificationMediator {
 	}
 
 	updateProfileLeaf() {
-		this.plugin.actualizeProfileLeave();
+		this.plugin.actualizeProfileLeaf();
 	}
 
 	updateProfileLeafPic() {
