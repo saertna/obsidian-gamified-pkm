@@ -156,23 +156,13 @@ export default class gamification extends Plugin {
 
 	}
 
-	tryUpdateLeaf() {
-		const profileLeaf = this.app.workspace.getLeaf(false);
-		if (!profileLeaf || !profileLeaf.view) {
-			return false; // Leaf not ready
-		}
-
-		this.actualizeProfileLeaf();
-		return true;
-	}
-
 
 	private registerCommands(){
 
 
 		if (this.mediator.getSettingBoolean('debug')){
 			this.addRibbonIcon("accessibility", "Crafting", async () => {
-				console.log('Debug Help Funktion accessibility is called')
+				console.log('Debug Help Function accessibility is called')
 				//this.mediator.acquireIngredients(1,400,500);
 				//this.resetDailyGoals();
 				//this.mediator.setSettingString('weeklyNoteCreationDate', window.moment().subtract(1, 'day').format('DD.MM.YYYY'))
@@ -233,7 +223,7 @@ export default class gamification extends Plugin {
 				//this.setBadgeSave(getBadgeDetails('Savvy Scholar'), '23-08-15', 'level 15');
 
 				//this.mediator.updateProfileLeaf();
-				this.actualizeProfileLeaf();
+				await this.actualizeProfileLeaf();
 
 			});
 
@@ -244,12 +234,12 @@ export default class gamification extends Plugin {
 			});
 
 			this.addRibbonIcon("chevrons-right", "update overview leaf", () => {
-				this.actualizeProfileLeaf();
+				this.actualizeProfileLeaf().then(() => {if(debugLogs) console.log('Profile updated successfully')});
 			});
 
 
 			this.addRibbonIcon("target", "gamification side overview", () => {
-				this.activateView();
+				this.activateView().then(() => {if(debugLogs) console.log('Profile view activated')});
 			});
 
 		}
@@ -324,7 +314,7 @@ export default class gamification extends Plugin {
 				const view = this.app.workspace.getActiveViewOfType(MarkdownView);
 				if (view) {
 					if (!checking) {
-						this.calculateNoteMajurity();
+						this.calculateNoteMajurity().then(() => {if(debugLogs) console.log('Note Maturity calculated')});
 					}
 					return true;
 				}
@@ -341,7 +331,9 @@ export default class gamification extends Plugin {
 				const view = this.app.workspace.getActiveViewOfType(MarkdownView);
 				if (view) {
 					if (!checking) {
-						replaceFormatStrings(this.mediator.getSettingString('progressiveSumLayer2'), this.mediator.getSettingString('progressiveSumLayer3'));
+						replaceFormatStrings(this.mediator.getSettingString('progressiveSumLayer2'),
+							this.mediator.getSettingString('progressiveSumLayer3')).then(() =>
+						{if(debugLogs) console.log('Format Strings replaced for prog. sum.')});
 					}
 					return true;
 				}
@@ -392,16 +384,16 @@ export default class gamification extends Plugin {
 	}
 
 
-	onFileRenamed(oldPath: string, newPath: string) {
-		console.log(`${newPath}`);
+	onFileRenamed(newPath: string) {
+		if(debugLogs) console.log(`${newPath}`);
 		const foldersToExclude = this.mediator.getSettingString('folderExclude');
-		console.log(`foldersToExclude: ${foldersToExclude}`);
+		if(debugLogs) console.log(`foldersToExclude: ${foldersToExclude}`);
 		const folderNames = foldersToExclude.split(',').map(folder => folder.trim() + '/');
 
 		const isInExcludedFolder = folderNames.some(folderName => newPath.includes(folderName));
 
 		if (isInExcludedFolder) {
-			console.log(isInExcludedFolder);
+			if(debugLogs) console.log(isInExcludedFolder);
 			return;
 		}
 
@@ -419,8 +411,9 @@ export default class gamification extends Plugin {
 
 	initializeAfterLayoutReady() {
 		try {
-			this.resetDailyGoals();
-			this.updateStatusBar(this.statusbarGamification);
+			this.resetDailyGoals().then(() => {if(debugLogs) console.log('Daily Goals resetted')});
+			this.updateStatusBar(this.statusbarGamification).then(() =>
+				{if(debugLogs) console.log('Daily Goal status bar resettet')});
 			this.mediator.updateProfileLeaf();
 		} catch (error) {
 			console.error('Error during post-layout initialization:', error);
@@ -814,12 +807,11 @@ export default class gamification extends Plugin {
 		let fileLength = 0;
 		let rateProgressiveSum = 0;
 
-		if (fileContents !== undefined && fileName !== undefined) {
+		if (fileContents !== undefined) {
 			fileLength = this.maturityCalculator.countCharactersInActiveFile(fileContents, fileName);
 			rateFileLength = this.maturityCalculator.rateNoteLength(fileLength);
 
-			// Check if fileContents and fileName are not null
-			if (fileContents !== null && fileName !== null) {
+			if (fileContents !== null) {
 				const { charCount, highlightedCount, boldCount } = this.maturityCalculator.countLayer2AndLayer3Characters(fileContents, fileName, this.mediator.getSettingString('progressiveSumLayer2'), this.mediator.getSettingString('progressiveSumLayer3'));
 				rateProgressiveSum = this.maturityCalculator.rateProgressiveSummarization(charCount, highlightedCount, boldCount);
 			}
