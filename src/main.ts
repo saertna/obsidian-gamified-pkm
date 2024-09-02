@@ -170,14 +170,6 @@ export default class gamification extends Plugin {
 		});
 
 
-		this.addCommand({
-			id: 'overview',
-			name: 'open gamification side overview',
-			callback: async () => {
-				this.activateView();
-			},
-		});
-
 		if (this.mediator.getSettingBoolean('debug')){
 			this.addRibbonIcon("accessibility", "Crafting", async () => {
 				console.log('Debug Help Funktion accessibility is called')
@@ -253,6 +245,11 @@ export default class gamification extends Plugin {
 
 			this.addRibbonIcon("chevrons-right", "update overview leaf", () => {
 				this.actualizeProfileLeave();
+			});
+
+			this.addCommand({ id: 'overview', name: 'open gamification side overview', callback: async () => {
+					this.activateView();
+				},
 			});
 		}
 
