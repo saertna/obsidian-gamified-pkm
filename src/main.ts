@@ -12,7 +12,7 @@ style.textContent = `
 `;
 
 document.head.append(style);
-import {MarkdownView, Notice, Plugin, TFile} from 'obsidian';
+import {MarkdownView, Notice, Plugin, TFile, WorkspaceLeaf} from 'obsidian';
 import {GamificationPluginSettings, ISettings} from './settings';
 import format from 'date-fns/format';
 import {
@@ -61,7 +61,6 @@ export default class gamification extends Plugin {
 	private statusBarItem = this.addStatusBarItem();
 	private statusbarGamification = this.statusBarItem.createEl("span", { text: "" });
 	public settings: ISettings;
-	private exampleView: GamifiedPkmProfileView | null = null;
 	private lastEditTimes: Record<string, number> = {};
 	private editTimers: Record<string, ReturnType<typeof setTimeout>> = {};
 	mediator: GamificationMediatorImpl;
@@ -150,7 +149,7 @@ export default class gamification extends Plugin {
 		// import ends here
 
 		if (this.mediator.getSettingBoolean('showProfileLeaf')) {
-			this.openProfileView();
+			await this.openProfileView();
 		}
 
 		this.registerCommands();
@@ -387,7 +386,7 @@ export default class gamification extends Plugin {
 			// Check if no further edits happened within the delay
 			if (this.lastEditTimes[activeFile.path] === currentTime) {
 				// Trigger your action here
-				this.triggerAction(activeFile.path);
+				this.triggerAction();
 			}
 		}, this.mediator.getSettingNumber('autoRateOnChangeDelayTime') * mil2sec);
 	}
@@ -406,11 +405,11 @@ export default class gamification extends Plugin {
 			return;
 		}
 
-		this.triggerAction(newPath);
+		this.triggerAction();
 	}
 
 
-	triggerAction(filePath: string) {
+	triggerAction() {
 		if(this.mediator.getSettingBoolean('autoRateOnChange')){
 			this.calculateNoteMajurity().then(r => console.log(r));
 			//if(debugLogs) console.log(`File ${filePath} was edited and no further changes occurred.`);
@@ -453,7 +452,7 @@ export default class gamification extends Plugin {
 			return;
 		}
 		const { workspace } = this.app;
-		let leaf = null;
+		let leaf: WorkspaceLeaf | null;
 		const leaves = this.app.workspace.getLeavesOfType(VIEW_TYPE_GAMIFICATION_PROFILE);
 
 		if (leaves.length > 0) {

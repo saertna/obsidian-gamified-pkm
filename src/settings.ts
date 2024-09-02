@@ -302,7 +302,7 @@ export class GamificationPluginSettings extends PluginSettingTab {
     public showProfileLeaf: string;
 
 	constructor(app: App, plugin: gamification, mediator: GamificationMediator) {
-		super(app, plugin as any);
+		super(app, plugin as never);
 		this.mediator = mediator;
 		this.plugin = plugin
 	}

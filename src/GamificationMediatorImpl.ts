@@ -103,8 +103,7 @@ export class GamificationMediatorImpl implements GamificationMediator {
 				const elementCount = this.getSettingNumber(earnedIngredient.varName);
 				earnedIngredientToShow.push(earnedIngredient.name);
 
-				// Perform a null check
-				if (elementCount !== null && typeof elementCount === 'number') {
+				if (elementCount !== null) {
 					this.setSettingNumber(earnedIngredient.varName, elementCount + 1);
 					await this.saveSettings();
 
