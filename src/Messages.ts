@@ -21,6 +21,11 @@ It would mean a lot to me.
   - Enable through settings or with command 'Open Profile Leaf'
   - Set a picture from vault as Avatar Profile picture
   - adjust in Settings with Color Picker bar colors to layout
+  
+<div class="gPKM-videoWrapper"><div>
+<iframe></iframe>
+</div></div>
+  
 ## Changed
 - Avatar Markdown File is obsolete and is not actualized anymore
 - Badges are not shown anymore. They are still saved and be shown again in a later release`,
@@ -28,7 +33,7 @@ It would mean a lot to me.
 ## New
 - added an avatar picture field (contribution goes to the obsidian-avatar plugin from froehlichA). When creating the avatar page it will be there. Bellow the code how to exchange in existing profile pages.
 
-<div class="excalidraw-videoWrapper"><div>
+<div class="gPKM-videoWrapper"><div>
 <iframe width="560" height="315" src="https://www.youtube.com/embed/BOc5jzh_WtM?si=861K3FNrfAu0jJNI" title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 </div></div>
 
