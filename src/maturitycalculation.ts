@@ -1,8 +1,10 @@
 import { TFile, App, } from 'obsidian';
 import {debugLogs} from "./constants";
+import { DataviewApi} from "obsidian-dataview";
 
 export class MaturityCalculator {
 	private app: App;
+	dataview: DataviewApi | null;
 
 	constructor(app: App) {
 		this.app = app;
@@ -328,12 +330,20 @@ export class MaturityCalculator {
 
 
 	public getNumberOfOutlinks(activeFile: TFile, app: App = this.app): number {
-		// const activeFile: TFile | null = app.workspace.getActiveFile();
-		if (!activeFile) {
-			return 0;
+		if (!this.dataview) {
+			if (!activeFile) {
+				return 0;
+			}
+			const inlinks = this.app.metadataCache.getFileCache(activeFile)?.links;
+			return inlinks ? Object.keys(inlinks).length : 0;
 		}
-		const inlinks = this.app.metadataCache.getFileCache(activeFile)?.links;
-		return inlinks ? Object.keys(inlinks).length : 0;
+
+		const page = this.dataview.page(activeFile.path);
+		if (page && page.file.outlinks) {
+			return page.file.outlinks.length;
+		}
+
+		return 0;
 	}
 
 
@@ -390,17 +400,27 @@ export class MaturityCalculator {
 
 
 	public count_inlinks(file: TFile): number {
-		const {app: {metadataCache: {resolvedLinks}}} = this;
-		const {path} = file;
+		if (!this.dataview) {
+			const {app: {metadataCache: {resolvedLinks}}} = this;
+			const {path} = file;
 
-		if (debugLogs) console.log('Resolved Links Data:', resolvedLinks); // Add this line
+			if (debugLogs) console.log('Resolved Links Data:', resolvedLinks); // Add this line
 
-		const sumInlinks = Object.values(resolvedLinks)
-			.map((val: { [key: string]: number }) => val[path] ?? 0)
-			.reduce((left, right) => left + right, 0);
+			const sumInlinks = Object.values(resolvedLinks)
+				.map((val: { [key: string]: number }) => val[path] ?? 0)
+				.reduce((left, right) => left + right, 0);
 
-		return sumInlinks;
+			return sumInlinks;
+		}
+
+		const page = this.dataview.page(file.path);
+		if (page && page.file.inlinks) {
+			return page.file.inlinks.length;
+		}
+
+		return 0;
 	}
+
 
 
 	public getFileCountMap = async (app: App, excludeTag: string, excludeFolder: string): Promise<Map<string, number> | null> => {
