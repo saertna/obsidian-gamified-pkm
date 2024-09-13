@@ -28,7 +28,8 @@ It would mean a lot to me.
   
 ## Changed
 - Avatar Markdown File is obsolete and is not actualized anymore
-- Badges are not shown anymore. They are still saved and be shown again in a later release`,
+- Badges are not shown anymore. They are still saved and be shown again in a later release
+- In- and Out-Links will be counted with Dataview when Dataview is installed`,
 "0.0.90": `
 ## New
 - added an avatar picture field (contribution goes to the obsidian-avatar plugin from froehlichA). When creating the avatar page it will be there. Bellow the code how to exchange in existing profile pages.
