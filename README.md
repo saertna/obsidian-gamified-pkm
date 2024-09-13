@@ -35,9 +35,8 @@ Follow the steps below to install 'Gamificate your PKM'.
 1. Search for "Gamificate your PKM" in Obsidian's community plugins browser
 2. Enable the plugin in your Obsidian settings (find "Gamificate your PKM" under "Community plugins").
 3. Check the settings. Maybe you would like to exclute TAGs (more about it below).
-4. plugins needed to be installed and configured for fully operational 
+4. plugin needed to be installed and enabled for fully operational 
   -  `dataview`
-  -  `obsidian-charts`
 5. in Obsidian hit `CTRL+P` and run command `Initialize gamification ratings`
 6. create and improve notes and rate again to increase points
 
