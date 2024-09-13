@@ -27,6 +27,7 @@ It would mean a lot to me.
 </div></div>
   
 ## Changed
+- In Dataview plugin Settings 'Inline Queries', 'JavaScript Queries' and 'Inline JavaScript Queries' can be disabled. They are not needed anymore to display the maturity count table. 
 - Avatar Markdown File is obsolete and is not actualized anymore
 - Badges are not shown anymore. They are still saved and be shown again in a later release
 - In- and Out-Links will be counted with Dataview when Dataview is installed`,
