@@ -117,6 +117,7 @@ export class GamifiedPkmProfileView extends ItemView {
 
 	updateMaturityCounts() {
 		if (!this.dataview) {
+			console.log('dataview plugin is not available to update maturity counts')
 			return;
 		}
 
