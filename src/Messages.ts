@@ -11,17 +11,40 @@ export const RELEASE_NOTES: { [k: string]: string } = {
 
 I develop this plugin as a hobby, spending my free time doing this. If you find it valuable, then please say THANK YOU or...
 
-<div class="ex-coffee-div"><a href="https://ko-fi.com/andreastrebing"><img src="https://cdn.ko-fi.com/cdn/kofi3.png?v=3" height=45></a></div>
+<div class="ex-coffee-div"><a href="https://ko-fi.com/andreastrebing"><img src="https://cdn.ko-fi.com/cdn/kofi3.png?v=3" height=45 alt="Support me on Ko-fi (https://ko-fi.com/andreastrebing)"></a></div>
+
+It would mean a lot to me.
+`,
+"0.0.91": `
+## New
+- Profile is transferred to right side leaf
+  - Enable through settings or with command 'Open Profile Leaf'
+  - Set a picture from vault as Avatar Profile picture
+  - adjust in Settings with Color Picker bar colors to layout
+  
+<div class="gPKM-videoWrapper">
+  <div>
+    <iframe width="560" height="315" src="https://www.youtube.com/embed/S8SZ2iUeiUg?si=yZeUGEBSFyj7_MnS" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+  </div>
+</div>
+
+<!-- Add a blank line here -->
+  
+## Changed
+- In Dataview plugin Settings 'Inline Queries', 'JavaScript Queries' and 'Inline JavaScript Queries' can be disabled. They are not needed anymore to display the maturity count table. 
+- Avatar Markdown File is obsolete and is not actualized anymore
+- Badges are not shown anymore. They are still saved and be shown again in a later release
+- In- and Out-Links will be counted with Dataview when Dataview is installed
 `,
 "0.0.90": `
 ## New
 - added an avatar picture field (contribution goes to the obsidian-avatar plugin from froehlichA). When creating the avatar page it will be there. Bellow the code how to exchange in existing profile pages.
 
-<div class="excalidraw-videoWrapper"><div>
-<iframe width="560" height="315" src="https://www.youtube.com/embed/BOc5jzh_WtM?si=861K3FNrfAu0jJNI" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+<div class="gPKM-videoWrapper"><div>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/BOc5jzh_WtM?si=861K3FNrfAu0jJNI" title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 </div></div>
 
-Replace the first table and bar graph with this and you get the new layout. (don't worry, the data will update with the next received poits):
+Replace the first table and bar graph with this and you get the new layout. (don't worry, the data will update with the next received points):
 \`\`\`
 \`\`\`gamification-avatar
 image: 
@@ -33,7 +56,7 @@ description: |-2
   ^levelAndPoints
   \`\`\`chart
   type: bar
-  labels: [Expririence]
+  labels: [Experience]
   series:
     - title: points reached
       data: [0]
@@ -77,7 +100,7 @@ description: |-2
 - Store received Badges for recover possibility`,
 "0.0.84":`
 ## Improved 
-- Formating booster board by`,
+- Formatting booster board by`,
 "0.0.8":`
 ## Start 
 - First Release for the gamified personal knowledge management in Obsidian!`,

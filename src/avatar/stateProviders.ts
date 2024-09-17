@@ -22,13 +22,13 @@ export function withCodeblockState<T>(): StateProvider<T> {
 		} catch (_) {}
 
 		const setState: SetState<T> = (stateSetter) => {
-			let newState = { ...state };
+			const newState = { ...state };
 			stateSetter(newState);
 			const newStateStr: string = stringifyYaml(newState);
 
 			const info = ctx.getSectionInfo(node);
 			if(info) {
-				app.workspace.activeEditor?.editor?.replaceRange(
+				this.app.workspace.activeEditor?.editor?.replaceRange(
 					newStateStr + "```",
 					{ line: info.lineStart + 1, ch: 0 },
 					{ line: info.lineEnd, ch: 3 }

@@ -46,3 +46,28 @@
 .modal-button {
     margin-right: 10px; 
 }
+
+.avatar-profile {
+	padding: 20px;
+	border-radius: 8px;
+	text-align: center;
+}
+
+.avatar-profile img {
+	max-width: 150px;
+	max-height: 120px;
+	border-radius: 50%;
+	margin-bottom: 15px;
+}
+
+.level-and-points, .booster-factor, .daily-notes, .weekly-notes {
+	margin-top: 10px;
+	font-size: 18px;
+	text-align: center;
+}
+
+.chart-container {
+	width: 80%;
+	height: 50px;
+	margin-bottom: 20px;
+}
