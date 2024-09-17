@@ -22,15 +22,20 @@ It would mean a lot to me.
   - Set a picture from vault as Avatar Profile picture
   - adjust in Settings with Color Picker bar colors to layout
   
-<div class="gPKM-videoWrapper"><div>
-<iframe width="560" height="315" src="https://www.youtube.com/embed/S8SZ2iUeiUg?si=yZeUGEBSFyj7_MnS" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-</div></div>
+<div class="gPKM-videoWrapper">
+  <div>
+    <iframe width="560" height="315" src="https://www.youtube.com/embed/S8SZ2iUeiUg?si=yZeUGEBSFyj7_MnS" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+  </div>
+</div>
+
+<!-- Add a blank line here -->
   
 ## Changed
 - In Dataview plugin Settings 'Inline Queries', 'JavaScript Queries' and 'Inline JavaScript Queries' can be disabled. They are not needed anymore to display the maturity count table. 
 - Avatar Markdown File is obsolete and is not actualized anymore
 - Badges are not shown anymore. They are still saved and be shown again in a later release
-- In- and Out-Links will be counted with Dataview when Dataview is installed`,
+- In- and Out-Links will be counted with Dataview when Dataview is installed
+`,
 "0.0.90": `
 ## New
 - added an avatar picture field (contribution goes to the obsidian-avatar plugin from froehlichA). When creating the avatar page it will be there. Bellow the code how to exchange in existing profile pages.
