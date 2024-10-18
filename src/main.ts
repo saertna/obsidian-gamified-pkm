@@ -12,7 +12,7 @@ style.textContent = `
 `;
 
 document.head.append(style);
-import {MarkdownView, Notice, Plugin, TFile} from 'obsidian';
+import {MarkdownView, Notice, Plugin, TFile, requireApiVersion} from 'obsidian';
 import {GamificationPluginSettings, ISettings} from './settings';
 import format from 'date-fns/format';
 import {
@@ -82,7 +82,6 @@ export default class gamification extends Plugin {
 			await checkGamifiedPkmVersion(this.app);
 		}
 
-		//await this.mediator.loadSettings();
 
 		const delayLoadTime = this.mediator.getSettingNumber('delayLoadTime') * 1000;
 
@@ -111,7 +110,6 @@ export default class gamification extends Plugin {
 			VIEW_TYPE_GAMIFICATION_PROFILE,
 			(leaf) => new GamifiedPkmProfileView(leaf, this.mediator)
 		);
-
 
 
 		// This portion of code is adapted from the following source under the MIT License:
@@ -149,7 +147,9 @@ export default class gamification extends Plugin {
 		// import ends here
 
 		if (this.mediator.getSettingBoolean('showProfileLeaf')) {
-			await this.openProfileView();
+			this.app.workspace.onLayoutReady(async () => {
+				await this.openProfileView();
+			});
 		}
 
 		this.registerCommands();
@@ -236,7 +236,6 @@ export default class gamification extends Plugin {
 			this.addRibbonIcon("chevrons-right", "update overview leaf", () => {
 				this.actualizeProfileLeaf().then(() => {if(debugLogs) console.log('Profile updated successfully')});
 			});
-
 
 			this.addRibbonIcon("target", "gamification side overview", () => {
 				this.activateView().then(() => {if(debugLogs) console.log('Profile view activated')});
@@ -473,6 +472,7 @@ export default class gamification extends Plugin {
 		// workspace.revealLeaf(leaf);
 	}
 
+
 	async profileLeafUpdateLevel(newLevel:number, newPoints:number, nextLevel:number, min:number, max:number) {
 		const view = await this.getLeafAndView();
 
@@ -485,6 +485,7 @@ export default class gamification extends Plugin {
 		}
 	}
 
+
 	async updateChartWeeklyColorReceived(value: string) {
 		const view = await this.getLeafAndView();
 
@@ -494,6 +495,7 @@ export default class gamification extends Plugin {
 			console.log('gamified-pkm-profile is not loaded yet.');
 		}
 	}
+
 
 	async updateChartWeeklyColorToGo(value: string) {
 		const view = await this.getLeafAndView();
@@ -505,6 +507,7 @@ export default class gamification extends Plugin {
 		}
 	}
 
+
 	async profileLeafUpdatePicture() {
 		const view = await this.getLeafAndView();
 
@@ -514,6 +517,7 @@ export default class gamification extends Plugin {
 			console.log('gamified-pkm-profile is not loaded yet.');
 		}
 	}
+
 
 	async profileLeafUpdatePoints(newPoints:number, nextLevel: number) {
 		const view = await this.getLeafAndView();
@@ -526,6 +530,7 @@ export default class gamification extends Plugin {
 		}
 	}
 
+
 	async profileLeafUpdateBoosterFactor(newFactor:number) {
 		const view = await this.getLeafAndView();
 
@@ -535,6 +540,7 @@ export default class gamification extends Plugin {
 			if(debugLogs) console.log('gamified-pkm-profile is not loaded yet.');
 		}
 	}
+
 
 	async profileLeafUpdateDailyNotes(dailyString:string) {
 		const view = await this.getLeafAndView();
@@ -546,6 +552,7 @@ export default class gamification extends Plugin {
 		}
 	}
 
+
 	async profileLeafUpdateWeeklyNotes(weeklyString:string) {
 		const view = await this.getLeafAndView();
 
@@ -555,6 +562,7 @@ export default class gamification extends Plugin {
 			if(debugLogs) console.log('gamified-pkm-profile is not loaded yet.');
 		}
 	}
+
 
 	async profileLeafUpdateWeeklyChart(days:number) {
 		const view = await this.getLeafAndView();
@@ -566,6 +574,7 @@ export default class gamification extends Plugin {
 		}
 	}
 
+
 	async profileLeafUpdateMajurityList() {
 		const view = await this.getLeafAndView();
 
@@ -575,7 +584,6 @@ export default class gamification extends Plugin {
 			if (debugLogs) console.log('gamified-pkm-profile is not loaded yet.');
 		}
 	}
-
 
 
 	private async resetGame() {
@@ -749,33 +757,47 @@ export default class gamification extends Plugin {
 		this.isProfileViewOpen = false; // Reset the flag when the plugin is unloaded
 	}
 
+
 	async openProfileView() {
 		if (this.isProfileViewOpen) {
-			return; // If the view is already open, don't open another one
+			return;
 		}
 
-		// Check if a leaf with the same type already exists, and if so, focus it
 		const existingLeaf = this.app.workspace.getLeavesOfType(VIEW_TYPE_GAMIFICATION_PROFILE)[0];
+
 		if (existingLeaf) {
-			this.app.workspace.revealLeaf(existingLeaf);
-			return;
+			await this.app.workspace.revealLeaf(existingLeaf);
+			if (requireApiVersion("1.7.2")) {
+				await existingLeaf.loadIfDeferred();
+			}
+			if (existingLeaf.view instanceof GamifiedPkmProfileView) {
+				this.isProfileViewOpen = true;
+				this.mediator.setSettingBoolean('showProfileLeaf', true);
+				return;
+			}
 		}
 
 		const leaf = this.app.workspace.getRightLeaf(false);
 
-		if (leaf) {
-			await leaf.setViewState({ type: VIEW_TYPE_GAMIFICATION_PROFILE });
-			this.app.workspace.revealLeaf(leaf);
-			this.isProfileViewOpen = true; // Set the flag to indicate the view is open
-
-			// Set the setting to reflect that the profile leaf is open
-			this.mediator.setSettingBoolean('showProfileLeaf', true);
-		} else {
+		if (!leaf) {
 			console.error("Failed to get a right leaf. Cannot open the profile view.");
+			return;
 		}
 
-		this.mediator.setSettingBoolean('showProfileLeaf', true);
+		await leaf.setViewState({ type: VIEW_TYPE_GAMIFICATION_PROFILE });
+
+		if (requireApiVersion("1.7.2")) {
+			await leaf.loadIfDeferred();
+		}
+
+		await this.app.workspace.revealLeaf(leaf);
+
+		if (leaf.view instanceof GamifiedPkmProfileView) {
+			this.isProfileViewOpen = true;
+			this.mediator.setSettingBoolean('showProfileLeaf', true);
+		}
 	}
+
 
 	closeProfileView() {
 		this.app.workspace.detachLeavesOfType(VIEW_TYPE_GAMIFICATION_PROFILE);
@@ -784,6 +806,7 @@ export default class gamification extends Plugin {
 		// Set the setting to reflect that the profile leaf is closed
 		this.mediator.setSettingBoolean('showProfileLeaf', false);
 	}
+
 
 	async calculateNoteMajurity(){
 		const file: TFile | null= this.app.workspace.getActiveFile();
