@@ -148,7 +148,9 @@ export default class gamification extends Plugin {
 		// import ends here
 
 		if (this.mediator.getSettingBoolean('showProfileLeaf')) {
-			await this.openProfileView();
+			this.app.workspace.onLayoutReady(async () => {
+				await this.openProfileView();
+			});
 		}
 
 		this.registerCommands();
@@ -766,7 +768,7 @@ export default class gamification extends Plugin {
 			}
 		}
 
-		let leaf = this.app.workspace.getRightLeaf(false);
+		const leaf = this.app.workspace.getRightLeaf(false);
 
 		if (!leaf) {
 			console.error("Failed to get a right leaf. Cannot open the profile view.");
