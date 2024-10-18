@@ -82,7 +82,6 @@ export default class gamification extends Plugin {
 			await checkGamifiedPkmVersion(this.app);
 		}
 
-		//await this.mediator.loadSettings();
 
 		const delayLoadTime = this.mediator.getSettingNumber('delayLoadTime') * 1000;
 
@@ -236,7 +235,6 @@ export default class gamification extends Plugin {
 			this.addRibbonIcon("chevrons-right", "update overview leaf", () => {
 				this.actualizeProfileLeaf().then(() => {if(debugLogs) console.log('Profile updated successfully')});
 			});
-
 
 			this.addRibbonIcon("target", "gamification side overview", () => {
 				this.activateView().then(() => {if(debugLogs) console.log('Profile view activated')});
@@ -756,26 +754,31 @@ export default class gamification extends Plugin {
 
 		// Check if a leaf with the same type already exists, and if so, focus it
 		const existingLeaf = this.app.workspace.getLeavesOfType(VIEW_TYPE_GAMIFICATION_PROFILE)[0];
+
 		if (existingLeaf) {
-			this.app.workspace.revealLeaf(existingLeaf);
-			return;
+			await this.app.workspace.revealLeaf(existingLeaf); // Ensure the view is fully loaded and visible
+			if (existingLeaf.view instanceof GamifiedPkmProfileView) {
+				this.isProfileViewOpen = true;
+				this.mediator.setSettingBoolean('showProfileLeaf', true);
+				return;
+			}
 		}
 
 		const leaf = this.app.workspace.getRightLeaf(false);
 
 		if (leaf) {
 			await leaf.setViewState({ type: VIEW_TYPE_GAMIFICATION_PROFILE });
+			await leaf.loadIfDeferred(); // Ensure the view is fully loaded if deferred
 			this.app.workspace.revealLeaf(leaf);
-			this.isProfileViewOpen = true; // Set the flag to indicate the view is open
-
-			// Set the setting to reflect that the profile leaf is open
-			this.mediator.setSettingBoolean('showProfileLeaf', true);
+			if (leaf.view instanceof GamifiedPkmProfileView) {
+				this.isProfileViewOpen = true;
+				this.mediator.setSettingBoolean('showProfileLeaf', true);
+			}
 		} else {
 			console.error("Failed to get a right leaf. Cannot open the profile view.");
 		}
-
-		this.mediator.setSettingBoolean('showProfileLeaf', true);
 	}
+
 
 	closeProfileView() {
 		this.app.workspace.detachLeavesOfType(VIEW_TYPE_GAMIFICATION_PROFILE);
