@@ -749,14 +749,15 @@ export default class gamification extends Plugin {
 
 	async openProfileView() {
 		if (this.isProfileViewOpen) {
-			return; // If the view is already open, don't open another one
+			return;
 		}
 
 		// Check if a leaf with the same type already exists, and if so, focus it
 		const existingLeaf = this.app.workspace.getLeavesOfType(VIEW_TYPE_GAMIFICATION_PROFILE)[0];
 
 		if (existingLeaf) {
-			await this.app.workspace.revealLeaf(existingLeaf); // Ensure the view is fully loaded and visible
+			await this.app.workspace.revealLeaf(existingLeaf);
+			await existingLeaf.loadIfDeferred();
 			if (existingLeaf.view instanceof GamifiedPkmProfileView) {
 				this.isProfileViewOpen = true;
 				this.mediator.setSettingBoolean('showProfileLeaf', true);
@@ -768,8 +769,9 @@ export default class gamification extends Plugin {
 
 		if (leaf) {
 			await leaf.setViewState({ type: VIEW_TYPE_GAMIFICATION_PROFILE });
-			await leaf.loadIfDeferred(); // Ensure the view is fully loaded if deferred
-			this.app.workspace.revealLeaf(leaf);
+			await leaf.loadIfDeferred();
+			await this.app.workspace.revealLeaf(leaf);
+
 			if (leaf.view instanceof GamifiedPkmProfileView) {
 				this.isProfileViewOpen = true;
 				this.mediator.setSettingBoolean('showProfileLeaf', true);
@@ -778,6 +780,7 @@ export default class gamification extends Plugin {
 			console.error("Failed to get a right leaf. Cannot open the profile view.");
 		}
 	}
+
 
 
 	closeProfileView() {
