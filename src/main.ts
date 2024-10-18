@@ -12,7 +12,7 @@ style.textContent = `
 `;
 
 document.head.append(style);
-import {MarkdownView, Notice, Plugin, TFile} from 'obsidian';
+import {MarkdownView, Notice, Plugin, TFile, requireApiVersion} from 'obsidian';
 import {GamificationPluginSettings, ISettings} from './settings';
 import format from 'date-fns/format';
 import {
@@ -752,12 +752,13 @@ export default class gamification extends Plugin {
 			return;
 		}
 
-		// Check if a leaf with the same type already exists, and if so, focus it
 		const existingLeaf = this.app.workspace.getLeavesOfType(VIEW_TYPE_GAMIFICATION_PROFILE)[0];
 
 		if (existingLeaf) {
 			await this.app.workspace.revealLeaf(existingLeaf);
-			await existingLeaf.loadIfDeferred();
+			if (requireApiVersion("1.7.2")) {
+				await existingLeaf.loadIfDeferred();
+			}
 			if (existingLeaf.view instanceof GamifiedPkmProfileView) {
 				this.isProfileViewOpen = true;
 				this.mediator.setSettingBoolean('showProfileLeaf', true);
@@ -765,22 +766,26 @@ export default class gamification extends Plugin {
 			}
 		}
 
-		const leaf = this.app.workspace.getRightLeaf(false);
+		let leaf = this.app.workspace.getRightLeaf(false);
 
-		if (leaf) {
-			await leaf.setViewState({ type: VIEW_TYPE_GAMIFICATION_PROFILE });
-			await leaf.loadIfDeferred();
-			await this.app.workspace.revealLeaf(leaf);
-
-			if (leaf.view instanceof GamifiedPkmProfileView) {
-				this.isProfileViewOpen = true;
-				this.mediator.setSettingBoolean('showProfileLeaf', true);
-			}
-		} else {
+		if (!leaf) {
 			console.error("Failed to get a right leaf. Cannot open the profile view.");
+			return;
+		}
+
+		await leaf.setViewState({ type: VIEW_TYPE_GAMIFICATION_PROFILE });
+
+		if (requireApiVersion("1.7.2")) {
+			await leaf.loadIfDeferred();
+		}
+
+		await this.app.workspace.revealLeaf(leaf);
+
+		if (leaf.view instanceof GamifiedPkmProfileView) {
+			this.isProfileViewOpen = true;
+			this.mediator.setSettingBoolean('showProfileLeaf', true);
 		}
 	}
-
 
 
 	closeProfileView() {
