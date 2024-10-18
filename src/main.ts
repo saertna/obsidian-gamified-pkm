@@ -112,7 +112,6 @@ export default class gamification extends Plugin {
 		);
 
 
-
 		// This portion of code is adapted from the following source under the MIT License:
 		// https://github.com/zsviczian/obsidian-excalidraw-plugin
 		// Copyright (c) [2024], [zsviczian]
@@ -473,6 +472,7 @@ export default class gamification extends Plugin {
 		// workspace.revealLeaf(leaf);
 	}
 
+
 	async profileLeafUpdateLevel(newLevel:number, newPoints:number, nextLevel:number, min:number, max:number) {
 		const view = await this.getLeafAndView();
 
@@ -485,6 +485,7 @@ export default class gamification extends Plugin {
 		}
 	}
 
+
 	async updateChartWeeklyColorReceived(value: string) {
 		const view = await this.getLeafAndView();
 
@@ -494,6 +495,7 @@ export default class gamification extends Plugin {
 			console.log('gamified-pkm-profile is not loaded yet.');
 		}
 	}
+
 
 	async updateChartWeeklyColorToGo(value: string) {
 		const view = await this.getLeafAndView();
@@ -505,6 +507,7 @@ export default class gamification extends Plugin {
 		}
 	}
 
+
 	async profileLeafUpdatePicture() {
 		const view = await this.getLeafAndView();
 
@@ -514,6 +517,7 @@ export default class gamification extends Plugin {
 			console.log('gamified-pkm-profile is not loaded yet.');
 		}
 	}
+
 
 	async profileLeafUpdatePoints(newPoints:number, nextLevel: number) {
 		const view = await this.getLeafAndView();
@@ -526,6 +530,7 @@ export default class gamification extends Plugin {
 		}
 	}
 
+
 	async profileLeafUpdateBoosterFactor(newFactor:number) {
 		const view = await this.getLeafAndView();
 
@@ -535,6 +540,7 @@ export default class gamification extends Plugin {
 			if(debugLogs) console.log('gamified-pkm-profile is not loaded yet.');
 		}
 	}
+
 
 	async profileLeafUpdateDailyNotes(dailyString:string) {
 		const view = await this.getLeafAndView();
@@ -546,6 +552,7 @@ export default class gamification extends Plugin {
 		}
 	}
 
+
 	async profileLeafUpdateWeeklyNotes(weeklyString:string) {
 		const view = await this.getLeafAndView();
 
@@ -555,6 +562,7 @@ export default class gamification extends Plugin {
 			if(debugLogs) console.log('gamified-pkm-profile is not loaded yet.');
 		}
 	}
+
 
 	async profileLeafUpdateWeeklyChart(days:number) {
 		const view = await this.getLeafAndView();
@@ -566,6 +574,7 @@ export default class gamification extends Plugin {
 		}
 	}
 
+
 	async profileLeafUpdateMajurityList() {
 		const view = await this.getLeafAndView();
 
@@ -575,7 +584,6 @@ export default class gamification extends Plugin {
 			if (debugLogs) console.log('gamified-pkm-profile is not loaded yet.');
 		}
 	}
-
 
 
 	private async resetGame() {
@@ -749,6 +757,7 @@ export default class gamification extends Plugin {
 		this.isProfileViewOpen = false; // Reset the flag when the plugin is unloaded
 	}
 
+
 	async openProfileView() {
 		if (this.isProfileViewOpen) {
 			return;
@@ -797,6 +806,7 @@ export default class gamification extends Plugin {
 		// Set the setting to reflect that the profile leaf is closed
 		this.mediator.setSettingBoolean('showProfileLeaf', false);
 	}
+
 
 	async calculateNoteMajurity(){
 		const file: TFile | null= this.app.workspace.getActiveFile();
