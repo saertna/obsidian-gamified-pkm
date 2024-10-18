@@ -15,6 +15,10 @@ I develop this plugin as a hobby, spending my free time doing this. If you find 
 
 It would mean a lot to me.
 `,
+"0.0.92": `
+## Fixed
+- when starting obsidian plugin not loading correctly [#77](https://github.com/saertna/obsidian-gamified-pkm/issues/77)
+`,
 "0.0.91": `
 ## New
 - Profile is transferred to right side leaf
