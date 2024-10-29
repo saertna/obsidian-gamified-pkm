@@ -284,7 +284,7 @@ export class GamifiedPkmProfileView extends ItemView {
 	updatePoints(newPoints: number) {
 		const pointsValue = this.containerEl.querySelector('#points-value');
 		if (pointsValue) {
-			pointsValue.textContent = newPoints.toString();
+			pointsValue.textContent = Math.round(newPoints).toString();
 		}
 	}
 
