@@ -218,21 +218,21 @@ const boosterFactorMessage : string[] = [
 export function getRandomMessageWeeklyChallenge(points: number): string {
 	const randomIndex = Math.floor(Math.random() * messagesWeeklyChallenge.length);
 	const message = messagesWeeklyChallenge[randomIndex];
-	return message.replace("[X]", points.toString());
+	return message.replace("[X]", Math.round(points).toString());
 }
 
 
 export function getRandomMessageTwoNoteChallenge(points: number): string {
 	const randomIndex = Math.floor(Math.random() * twoNoteMessages.length);
 	const message = twoNoteMessages[randomIndex];
-	return message.replace("[X]", points.toString());
+	return message.replace("[X]", Math.round(points).toString());
 }
 
 
 export function getRandomMessagePoints(points: number): string {
 	const randomIndex = Math.floor(Math.random() * randomPointNotices.length);
 	const message = randomPointNotices[randomIndex];
-	return message.replace("[X]", points.toString());
+	return message.replace("[X]", Math.round(points).toString());
 }
 
 export function getRandomMessageBoosterFactor(): string {
