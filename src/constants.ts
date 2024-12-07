@@ -199,8 +199,8 @@ export const craftingItems = [
   { name: 'Hyperlink Harmony', incredients: ['20xS2', '10xS6'] },
 ];
 
-export const listOfUseableBoostersToBeShown = ['Perpetual Progress', 'Title Titan', 'Precision Prism']
-export const listOfUseableIngredientsToBeShown = ['Connection Crystal', 'Insight Prism', 'Creative Catalyst', 'Precision Lens']
+export const listOfUseableBoostersToBeShown = ['Perpetual Progress', 'Title Titan', 'Precision Prism', 'Temporal Tweaker', 'Strategic Synapses', 'Accelerated Acquisition', 'Linkers Lode', 'Effortless Expansion', 'Recursive Reflection', 'Synaptic Surge', 'Inspiration Infusion', 'Hyperlink Harmony']
+export const listOfUseableIngredientsToBeShown = ['Connection Crystal', 'Insight Prism', 'Creative Catalyst', 'Precision Lens', 'Nexus Node', 'Mastery Scroll', 'Reflective Essence', 'Amplification Crystal']
 export const chanceToEarnIngredient = 0.5;
 
 export const elements = [
