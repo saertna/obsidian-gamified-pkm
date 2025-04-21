@@ -60,20 +60,27 @@ export class MultiSelectModal extends Modal {
 		this.selectedItems = [];
 	}
 
-	private boosterAvailableForUse(item: string) {
-		if(debugLogs) console.debug(`boosterAvailableForUse: ${item}`)
-		let found = false;
-		listOfUseableBoostersToBeShown.forEach(element => {
-			if (item == element) {
-				if (!found) {
-					found = true;
-				}
-
+	private boosterAvailableForUse(item: string, level: number) {
+		if (debugLogs) console.debug(`boosterAvailableForUse: ${item}, level: ${level}`);
+	
+		const boosterThresholds = [
+			{ minLevel: 0, count: 3 },
+			{ minLevel: 5, count: 3 },
+			{ minLevel: 6, count: 3 },
+		];
+	
+		let availableCount = 0;
+		for (const threshold of boosterThresholds) {
+			if (level >= threshold.minLevel) {
+				availableCount += threshold.count;
 			}
-
-		});
-		return found;
+		}
+	
+		const currentlyAvailableBoosters = listOfUseableBoostersToBeShown.slice(0, availableCount);
+	
+		return currentlyAvailableBoosters.includes(item);
 	}
+	
 
 	setUseBooster(useBooster: boolean) {
 		this.useBooster = useBooster;
