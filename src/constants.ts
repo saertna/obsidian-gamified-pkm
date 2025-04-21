@@ -204,14 +204,14 @@ export const listOfUseableIngredientsToBeShown = ['Connection Crystal', 'Insight
 export const chanceToEarnIngredient = 0.5;
 
 export const elements = [
-  { shortName: 'S2', name: 'Connection Crystal', varName: 'connectionCrystal' },
-  { shortName: 'S4', name: 'Insight Prism', varName: 'insightPrism' },
-  { shortName: 'S7', name: 'Creative Catalyst', varName: 'creativeCatalyst' },
-  { shortName: 'S8', name: 'Precision Lens', varName: 'precisionLens' },
-  { shortName: 'S1', name: 'Nexus Node', varName: 'nexusNode' },
-  { shortName: 'S3', name: 'Mastery Scroll', varName: 'masteryScroll' },
-  { shortName: 'S5', name: 'Reflective Essence', varName: 'reflectiveEssence' },
-  { shortName: 'S6', name: 'Amplification Crystal', varName: 'amplificationCrystal' }
+	{ shortName: 'S2', name: 'Connection Crystal', varName: 'connectionCrystal', level: 4 },
+	{ shortName: 'S4', name: 'Insight Prism', varName: 'insightPrism', level: 4 },
+	{ shortName: 'S7', name: 'Creative Catalyst', varName: 'creativeCatalyst', level: 4 },
+	{ shortName: 'S8', name: 'Precision Lens', varName: 'precisionLens', level: 4 },
+	{ shortName: 'S1', name: 'Nexus Node', varName: 'nexusNode', level: 5 },
+	{ shortName: 'S3', name: 'Mastery Scroll', varName: 'masteryScroll', level: 5 },
+	{ shortName: 'S5', name: 'Reflective Essence', varName: 'reflectiveEssence', level: 5 },
+	{ shortName: 'S6', name: 'Amplification Crystal', varName: 'amplificationCrystal', level: 6 }
 ];
 
 export const boosterRecipes = [
