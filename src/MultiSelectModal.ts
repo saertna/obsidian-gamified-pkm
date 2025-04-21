@@ -219,6 +219,10 @@ export class MultiSelectModal extends Modal {
 			}
 		});
 
+		const listOfUseableIngredientsToBeShown = elements
+			.filter(item => item.level <= this.mediator.getSettingNumber('statusLevel'))
+			.map(item => item.name);
+
 		listOfUseableIngredientsToBeShown.forEach(element => {
 			const increment = this.getIngerementFromName(element);
 			const shortName = increment.shortName;
