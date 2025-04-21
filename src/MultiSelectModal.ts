@@ -61,7 +61,6 @@ export class MultiSelectModal extends Modal {
 		this.selectedItems = [];
 	}
 
-	//ToDo: take care to only enable getting incredements in appropriate level
 	private boosterAvailableForUse(item: string, level: number) {
 		if (debugLogs) console.debug(`boosterAvailableForUse: ${item}, level: ${level}`);
 	
