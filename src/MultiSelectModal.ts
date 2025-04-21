@@ -23,6 +23,7 @@ export class MultiSelectModal extends Modal {
 	private useBooster = false;
 	private remainingBoosterStock: Record<string, number> = {};
 	private readonly mediator: GamificationMediator;
+	private level: number;
 
 	constructor(app: App, items: string[], buttonText: string, mediator: GamificationMediator) {
 		super(app);
@@ -39,7 +40,7 @@ export class MultiSelectModal extends Modal {
 		// take care only to run several times through when boosters are used
 		if (this.useBooster) {
 			boosterRecipes.forEach(item => {
-				if (this.boosterAvailableForUse(item.name)) {
+				if (this.boosterAvailableForUse(item.name,this.mediator.getSettingNumber('statusLevel'))) {
 					const listItem = this.createItemContainer(item.name);
 					contentEl.appendChild(listItem);
 				}
@@ -60,6 +61,7 @@ export class MultiSelectModal extends Modal {
 		this.selectedItems = [];
 	}
 
+	//ToDo: take care to only enable getting incredements in appropriate level
 	private boosterAvailableForUse(item: string, level: number) {
 		if (debugLogs) console.debug(`boosterAvailableForUse: ${item}, level: ${level}`);
 	
@@ -200,7 +202,7 @@ export class MultiSelectModal extends Modal {
 		stockInfo.style.display = 'flex'; // Set display to flex to make items side by side
 
 		boosterRecipes.forEach(recipe => {
-			if (this.boosterAvailableForUse(recipe.name)) {
+			if (this.boosterAvailableForUse(recipe.name,this.mediator.getSettingNumber('statusLevel'))) {
 				const itemContainer = stockContainer.createEl('div');
 				itemContainer.className = 'crafting-item-container';
 
