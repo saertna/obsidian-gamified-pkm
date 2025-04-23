@@ -19,6 +19,14 @@ It would mean a lot to me.
 Special shout out for lulunac27a, who stayed tuned and asked to enable the new boosters and ingredients. 
 ## New
 - Introducing new boosters and ingredients when reaching certain level
+
+<div class="gPKM-videoWrapper">
+  <div>
+    <iframe width="560" height="315" src="https://youtu.be/SK7pYCiXTFs?si=xujLlJ8BuYjY3Gja" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+  </div>
+</div>
+
+<!-- Add a blank line here -->
 `,
 "0.0.92": `
 ## Fixed
