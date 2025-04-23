@@ -202,12 +202,12 @@ export default class gamification extends Plugin {
 
 				//const obsidianJustInstalled = this.settings.previousRelease === "0.0.0"
 
-				/*new ReleaseNotes(
+				new ReleaseNotes(
 					this.app,
 					this.mediator,
 					//obsidianJustInstalled ? null :
 					PLUGIN_VERSION
-				).open();*/
+				).open();
 
 				//await this.giveStatusPoints(10000,'')
 				//await this.actualizeProfileLeave();
@@ -224,10 +224,12 @@ export default class gamification extends Plugin {
 
 				//this.mediator.updateProfileLeaf();
 				//await this.actualizeProfileLeaf();
-				//this.mediator.setSettingNumber('statusPoints',29999)
-				//this.mediator.setSettingNumber('statusLevel',5)
-				//this.mediator.setSettingNumber('xpForNextLevel',30000)
-				//this.mediator.setSettingNumber('streakbooster',2)
+				/*
+				this.mediator.setSettingNumber('statusPoints',29999)
+				this.mediator.setSettingNumber('statusLevel',5)
+				this.mediator.setSettingNumber('xpForNextLevel',30000)
+				this.mediator.setSettingNumber('streakbooster',0)
+				 */
 
 
 			});
