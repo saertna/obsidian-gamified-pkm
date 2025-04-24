@@ -1,5 +1,5 @@
 import { Badge } from './badges'
-export const PLUGIN_VERSION = '0.0.92';
+export const PLUGIN_VERSION = '0.0.93';
 export const pointsNoteMajurity = 100;
 export const pointsMajurity = 10;
 export const pointsForDailyChallenge = 500;
@@ -199,19 +199,19 @@ export const craftingItems = [
   { name: 'Hyperlink Harmony', incredients: ['20xS2', '10xS6'] },
 ];
 
-export const listOfUseableBoostersToBeShown = ['Perpetual Progress', 'Title Titan', 'Precision Prism']
-export const listOfUseableIngredientsToBeShown = ['Connection Crystal', 'Insight Prism', 'Creative Catalyst', 'Precision Lens']
+export const listOfUseableBoostersToBeShown = ['Perpetual Progress', 'Title Titan', 'Precision Prism','Accelerated Acquisition','Recursive Reflection','Synaptic Surge','Effortless Expansion','Hyperlink Harmony','Temporal Tweaker']
+export const listOfUseableIngredientsToBeShown = ['Connection Crystal', 'Insight Prism', 'Creative Catalyst', 'Precision Lens','Nexus Node','Mastery Scroll','Reflective Essence','Amplification Crystal']
 export const chanceToEarnIngredient = 0.5;
 
 export const elements = [
-  { shortName: 'S2', name: 'Connection Crystal', varName: 'connectionCrystal' },
-  { shortName: 'S4', name: 'Insight Prism', varName: 'insightPrism' },
-  { shortName: 'S7', name: 'Creative Catalyst', varName: 'creativeCatalyst' },
-  { shortName: 'S8', name: 'Precision Lens', varName: 'precisionLens' },
-  { shortName: 'S1', name: 'Nexus Node', varName: 'nexusNode' },
-  { shortName: 'S3', name: 'Mastery Scroll', varName: 'masteryScroll' },
-  { shortName: 'S5', name: 'Reflective Essence', varName: 'reflectiveEssence' },
-  { shortName: 'S6', name: 'Amplification Crystal', varName: 'amplificationCrystal' }
+	{ shortName: 'S2', name: 'Connection Crystal', varName: 'connectionCrystal', level: 4 },
+	{ shortName: 'S4', name: 'Insight Prism', varName: 'insightPrism', level: 4 },
+	{ shortName: 'S7', name: 'Creative Catalyst', varName: 'creativeCatalyst', level: 4 },
+	{ shortName: 'S8', name: 'Precision Lens', varName: 'precisionLens', level: 4 },
+	{ shortName: 'S1', name: 'Nexus Node', varName: 'nexusNode', level: 5 },
+	{ shortName: 'S3', name: 'Mastery Scroll', varName: 'masteryScroll', level: 5 },
+	{ shortName: 'S5', name: 'Reflective Essence', varName: 'reflectiveEssence', level: 5 },
+	{ shortName: 'S6', name: 'Amplification Crystal', varName: 'amplificationCrystal', level: 6 }
 ];
 
 export const boosterRecipes = [

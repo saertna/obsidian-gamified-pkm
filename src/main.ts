@@ -202,12 +202,12 @@ export default class gamification extends Plugin {
 
 				//const obsidianJustInstalled = this.settings.previousRelease === "0.0.0"
 
-				/*new ReleaseNotes(
+				new ReleaseNotes(
 					this.app,
 					this.mediator,
 					//obsidianJustInstalled ? null :
 					PLUGIN_VERSION
-				).open();*/
+				).open();
 
 				//await this.giveStatusPoints(10000,'')
 				//await this.actualizeProfileLeave();
@@ -223,7 +223,14 @@ export default class gamification extends Plugin {
 				//this.setBadgeSave(getBadgeDetails('Savvy Scholar'), '23-08-15', 'level 15');
 
 				//this.mediator.updateProfileLeaf();
-				await this.actualizeProfileLeaf();
+				//await this.actualizeProfileLeaf();
+				/*
+				this.mediator.setSettingNumber('statusPoints',29999)
+				this.mediator.setSettingNumber('statusLevel',5)
+				this.mediator.setSettingNumber('xpForNextLevel',30000)
+				this.mediator.setSettingNumber('streakbooster',0)
+				 */
+
 
 			});
 
@@ -1236,6 +1243,11 @@ export default class gamification extends Plugin {
 			//receiveBadge = checkIfReceiveABadge(this.mediator.getSettingNumber('statusLevel'), level.level)
 			this.mediator.setSettingNumber('statusLevel', level.level)
 			new Notice(`With ${pointsTotal} points, the current level is ${level.level}.`,this.mediator.getSettingNumber('timeShowNotice') * mil2sec * 1.2)
+			if(level.level == 5) {
+				new ModalInformationbox(this.app, `🚀 New Boosters received! Check out your crafting area!`).open();
+			} else if (level.level == 6){
+				new ModalInformationbox(this.app, `🚀 New Boosters received! Check out your crafting area!`).open();
+			}
 			await this.giveBadge(level.level);
 		}
 

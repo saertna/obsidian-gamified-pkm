@@ -23,6 +23,7 @@ export class MultiSelectModal extends Modal {
 	private useBooster = false;
 	private remainingBoosterStock: Record<string, number> = {};
 	private readonly mediator: GamificationMediator;
+	private level: number;
 
 	constructor(app: App, items: string[], buttonText: string, mediator: GamificationMediator) {
 		super(app);
@@ -39,7 +40,7 @@ export class MultiSelectModal extends Modal {
 		// take care only to run several times through when boosters are used
 		if (this.useBooster) {
 			boosterRecipes.forEach(item => {
-				if (this.boosterAvailableForUse(item.name)) {
+				if (this.boosterAvailableForUse(item.name,this.mediator.getSettingNumber('statusLevel'))) {
 					const listItem = this.createItemContainer(item.name);
 					contentEl.appendChild(listItem);
 				}
@@ -60,20 +61,27 @@ export class MultiSelectModal extends Modal {
 		this.selectedItems = [];
 	}
 
-	private boosterAvailableForUse(item: string) {
-		if(debugLogs) console.debug(`boosterAvailableForUse: ${item}`)
-		let found = false;
-		listOfUseableBoostersToBeShown.forEach(element => {
-			if (item == element) {
-				if (!found) {
-					found = true;
-				}
-
+	private boosterAvailableForUse(item: string, level: number) {
+		if (debugLogs) console.debug(`boosterAvailableForUse: ${item}, level: ${level}`);
+	
+		const boosterThresholds = [
+			{ minLevel: 0, count: 3 },
+			{ minLevel: 5, count: 3 },
+			{ minLevel: 6, count: 3 },
+		];
+	
+		let availableCount = 0;
+		for (const threshold of boosterThresholds) {
+			if (level >= threshold.minLevel) {
+				availableCount += threshold.count;
 			}
-
-		});
-		return found;
+		}
+	
+		const currentlyAvailableBoosters = listOfUseableBoostersToBeShown.slice(0, availableCount);
+	
+		return currentlyAvailableBoosters.includes(item);
 	}
+	
 
 	setUseBooster(useBooster: boolean) {
 		this.useBooster = useBooster;
@@ -193,7 +201,7 @@ export class MultiSelectModal extends Modal {
 		stockInfo.style.display = 'flex'; // Set display to flex to make items side by side
 
 		boosterRecipes.forEach(recipe => {
-			if (this.boosterAvailableForUse(recipe.name)) {
+			if (this.boosterAvailableForUse(recipe.name,this.mediator.getSettingNumber('statusLevel'))) {
 				const itemContainer = stockContainer.createEl('div');
 				itemContainer.className = 'crafting-item-container';
 
@@ -210,6 +218,10 @@ export class MultiSelectModal extends Modal {
 				container.appendChild(itemContainer);
 			}
 		});
+
+		const listOfUseableIngredientsToBeShown = elements
+			.filter(item => item.level <= this.mediator.getSettingNumber('statusLevel'))
+			.map(item => item.name);
 
 		listOfUseableIngredientsToBeShown.forEach(element => {
 			const increment = this.getIngerementFromName(element);
