@@ -436,8 +436,8 @@ export default class gamification extends Plugin {
 		const level = getLevelForPoints(newPoints);
 		await this.profileLeafUpdateLevel(this.mediator.getSettingNumber('statusLevel'),this.mediator.getSettingNumber('statusPoints'),this.mediator.getSettingNumber('xpForNextLevel'),level.points,level.pointsNext)
 		await this.profileLeafUpdateBoosterFactor(this.mediator.getSettingNumber('streakbooster'))
-		await this.profileLeafUpdateDailyNotes(pointsForDailyChallenge * (this.mediator.getSettingNumber('badgeBoosterFactor') + this.mediator.getSettingNumber('streakbooster')) + 'EP | ' + this.mediator.getSettingNumber('dailyNoteCreationTask') + '/2')
-		await this.profileLeafUpdateWeeklyNotes(pointsForWeeklyChallenge * (this.mediator.getSettingNumber('badgeBoosterFactor') + this.mediator.getSettingNumber('streakbooster')) + 'EP | ' + this.mediator.getSettingNumber('weeklyNoteCreationTask') + '/7')
+		await this.profileLeafUpdateDailyNotes(Math.round(pointsForDailyChallenge * (this.mediator.getSettingNumber('badgeBoosterFactor') + this.mediator.getSettingNumber('streakbooster'))) + 'EP | ' + this.mediator.getSettingNumber('dailyNoteCreationTask') + '/2')
+		await this.profileLeafUpdateWeeklyNotes(Math.round(pointsForWeeklyChallenge * (this.mediator.getSettingNumber('badgeBoosterFactor') + this.mediator.getSettingNumber('streakbooster'))) + 'EP | ' + this.mediator.getSettingNumber('weeklyNoteCreationTask') + '/7')
 		await this.profileLeafUpdateWeeklyChart(this.mediator.getSettingNumber('weeklyNoteCreationTask'));
 		await this.updateChartWeeklyColorReceived(this.mediator.getSettingString('colorBarReceived'));
 		await this.updateChartWeeklyColorToGo(this.mediator.getSettingString('colorBarToGo'));
@@ -1232,7 +1232,7 @@ export default class gamification extends Plugin {
 			boosterFactorEphemeralEuphoria = 80;
 		}
 		
-		pointsToReceived = pointsToAdd * (boosterFactor + streakbooster + boosterFactorPerpetualProgress + boosterFactorStrategicSynapses + boosterFactorLinkersLode + boosterFactorRecursiveReflection + boosterFactorSynapticSurge + boosterFactorTitleTitan + boosterFactorPrecisionPrism + boosterFactorHyperlinkHarmony + boosterFactorEphemeralEuphoria )
+		pointsToReceived = Math.round(pointsToAdd * (boosterFactor + streakbooster + boosterFactorPerpetualProgress + boosterFactorStrategicSynapses + boosterFactorLinkersLode + boosterFactorRecursiveReflection + boosterFactorSynapticSurge + boosterFactorTitleTitan + boosterFactorPrecisionPrism + boosterFactorHyperlinkHarmony + boosterFactorEphemeralEuphoria ))
 		const pointsTotal = pointsToReceived + this.mediator.getSettingNumber('statusPoints')
 		this.mediator.setSettingNumber('statusPoints', pointsTotal)
 
