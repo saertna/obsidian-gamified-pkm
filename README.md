@@ -9,7 +9,7 @@ Imagine transforming your knowledge management into an adventure where every ste
 
 This plugin reimagines the way we interact with our knowledge base. By integrating game-like elements, it offers rewards for your progress, nurtures consistency, and makes the journey of learning a truly motivating experience. From achieving milestones to conquering challenges that shape your learning path, this plugin adds a layer of excitement to your knowledge management process.
 
-The purpose of this plugin is to support you to foster you personal knowledge. The principle idea is to have a positive impact on society by connecting ideas across your knowledge, work and personal life through better thinking. This is a big thing to say and still I believe in. This is relevant whether your knowledge management is for personal improvement, for business reasons or for charity. With better thinking comes better outcomes. Personal knowledge management takes time to pay out, and this plugin will help you bridge the time till then. It generates fun and excitement, maintaining high motivation even long after your PKM has started to provide a returns on the time you've invested.
+The purpose of this plugin is to support you to foster your personal knowledge. The principal idea is to have a positive impact on society by connecting ideas across your knowledge, work, and personal life through better thinking. This is a big thing to say, and I still believe in it. This is relevant whether your knowledge management is for personal improvement, for business reasons or for charity. With better thinking comes better outcomes. Personal knowledge management takes time to pay out, and this plugin will help you bridge the time till then. It generates fun and excitement, maintaining high motivation even long after your PKM has started to provide returns on the time you've invested.
 
 **Why Support on Ko-Fi is Vital?**
 
@@ -35,55 +35,55 @@ Follow the steps below to install 'Gamificate your PKM'.
 1. Search for "Gamificate your PKM" in Obsidian's community plugins browser
 2. Enable the plugin in your Obsidian settings (find "Gamificate your PKM" under "Community plugins").
 3. Check the settings. Maybe you would like to exclute TAGs (more about it below).
-4. plugin needed to be installed and enabled for fully operational 
-  -  `dataview`
-5. in Obsidian hit `CTRL+P` and run command `Initialize gamification ratings`
-6. create and improve notes and rate again to increase points
+4. The plugin needed to be installed and enabled to be fully operational 
+  -  `dataview` for the number of notes in specified note maturity (0-5)
+5. In Obsidian, hit `CTRL+P` and run the command `Initialize gamification ratings`
+6. Create and improve notes and rate them again to increase points
 
 **Embark on a Motivational Journey!**
 
 ### Additional config informations
 
-In some cases the same vault is used vor other activities as well an the knowledge management shall stay separated. Then you can exclude #tags and/or folders, which shall not be used when initialized. By default the folder 'Excalidraw' is entered. You can ignore this setting if you want to use all files in you vault for you pkm.
+In some cases, the same vault is used for other activities as well as the knowledge management shall stay separated. Then you can exclude #tags and/or folders, which shall not be used when initialized. By default, the folder 'Excalidraw' is entered. You can ignore this setting if you want to use all files in your vault for your pkm.
 ![Settings for exclude TAGs and folders](/docs/images/SettingsExcludeTagsFolders.png)
 
 ## Getting Started
 
 ### initialise game
 
-When not already done during installation, hit `CTRL+P` and run command `Initialize gamification ratings`. This command will create you profile, rate you existing notes and give you a starting level. On the profile you can get informations to you current level, points, badges and see the distribution of you note maturitys.
+When not already done during installation, hit `CTRL+P` and run the command `Initialize gamification ratings`. This command will create your profile, rate your existing notes, and give you a starting level. On the profile, you can get information about your current level, points, badges, and see the distribution of your note maturitys.
 
 ![Gamification Initialization Command](/docs/images/GamificationInitializationCommand.png)
 
-### next steps
+### Next steps
 
-create a new note and use the plant-icon on the side or `CTRL+P` and ran command `Rate note maturity`.
+Create a new note and use the plant-icon on the side or `CTRL+P` and run the command `Rate note maturity`.
 ![Rate Note First Time](/docs/images/RateNoteFirstTime.png)
 
-work on an existing note, improve you thougts, you title, link it to other fitting notes and run `CTRL+P` and ran command `Rate note maturity`, or use the plant-icon.
+work on an existing note, improve your thoughts, your title, link it to other fitting notes, and run `CTRL+P` and run the command `Rate note maturity`, or use the plant-icon.
 ![Rate again after improving](/docs/images/RateAfterImprovement.png)
 
 ## More information and Help
-You can use the Discussion Area here at GitHub to speak about issues, ideas and ask questions. For issues, use the issues area to raise them.
+You can use the Discussion Area here at GitHub to speak about issues, ideas, and ask questions. For issues, use the issues area to raise them.
 
 ## Roadmap
 Upcoming developments are in store for the Gamification Plugin! Here's a glimpse into the future:
 
 - further metrics to generate points
 	- points for index/MOC creation & quality levels
-	- points for chain of thoughts
-- overview in sidebar for game elements
-	- challenge status
+	- points for the chain of thoughts
+- overview in the sidebar for game elements
+	- Challenge status
 	- active boosters
 	- crafted boosters
 	- ingredients overview
 - boosters
 	- icons and full names for ingredients to craft
-	- icons for booster potions
+	- Icons for booster potions
 	- additional boosters
 - badges
 	- link to open-badges
-	- add further badges for achievements
-- implement check if update of plugin is available
+	- Add further badges for achievements
+- Implement a check if the update of the plugin is available
 - new challenges
 - Quests to follow and fulfill
