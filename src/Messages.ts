@@ -15,6 +15,10 @@ I develop this plugin as a hobby, spending my free time doing this. If you find 
 
 It would mean a lot to me.
 `,
+"0.0.94": `
+## Fixed
+- display points correctly, avoid rounding errors
+`,
 "0.0.93": `
 Special shout out for lulunac27a, who stayed tuned and asked to enable the new boosters and ingredients. 
 ## New
