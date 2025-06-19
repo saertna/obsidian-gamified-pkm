@@ -15,6 +15,10 @@ I develop this plugin as a hobby, spending my free time doing this. If you find 
 
 It would mean a lot to me.
 `,
+"0.0.95": `
+## Fixed
+- not showing amount of ingredients on booster crafting table when below level 4 but enabled achieved boosters.
+`,
 "0.0.94": `
 ## Fixed
 - display points correctly, avoid rounding errors
