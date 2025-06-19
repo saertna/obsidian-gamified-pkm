@@ -10,7 +10,7 @@ export const streakboosterIncreaseWeekly = 1;
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 export const CryptoJS = require("crypto-js");
 export const secretKey = "2ZU^12y#QmNB5$yEin5^";
-export const debugLogs = true;
+export const debugLogs = false;
 export const mil2sec = 1000;
 export const milliseconds = 1000;
 export const seconds = 1000;
