@@ -2,6 +2,7 @@
 // properties. This allows them to inherit the `color` CSS property from their parent
 // element, making them easy to style dynamically with CSS or JavaScript.
 // I've also set default width/height to 24 for better icon sizing.
+import { boosterRecipes } from './constants';
 
 export const connectionCrystalSvg = `
   <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
@@ -110,6 +111,22 @@ export function createResourceDisplay(containerEl: HTMLElement, resourceName: st
 			break;
 		// Add more cases for other resources
 	}
+
+	return wrapper;
+}
+
+
+export function createBoosterDisplay(containerEl: HTMLElement, booster: typeof boosterRecipes[0]): HTMLElement {
+	const wrapper = containerEl.createDiv({ cls: 'gamified-pkm-booster-item' });
+
+	const iconHolder = wrapper.createDiv({ cls: 'gamified-pkm-booster-icon-holder' });
+	iconHolder.innerHTML = booster.svg; // Directly use the SVG from the booster object
+	iconHolder.setAttribute('title', booster.name + ": " + booster.description); // Enhanced tooltip
+
+	iconHolder.style.color = booster.color; // Directly apply the color from the booster object
+
+	// Example: Add status or cooldown if relevant for display
+	// const statusSpan = wrapper.createSpan({ text: `Cooldown: ${booster.boosterCooldown/60}h`, cls: 'gamified-pkm-booster-status' });
 
 	return wrapper;
 }
