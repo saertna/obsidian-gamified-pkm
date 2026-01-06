@@ -9,7 +9,7 @@ import {
 import { ModalInformationbox } from 'ModalInformationbox';
 import { GamificationMediator } from './GamificationMediator';
 import {hoursUntilMinutesPassed, isMinutesPassed} from "./Utils";
-
+import {createResourceIcon} from './resourceIcons';
 
 
 
