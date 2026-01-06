@@ -19,11 +19,14 @@ export const nexusNodeSvg = `
 
 export const masteryScrollSvg = `
 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-  <path d="M4 2v20l8-4 8 4V2z"/>
-  <path d="M12 4L12 18" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-  <rect x="10" y="3" width="4" height="18" fill="white"/>
-  <path d="M4 2v20l8-4 8 4V2z" fill="currentColor"/>
-  <path d="M12 4v16" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+  <!-- The main shape defines the entire scroll outline, including the rolled ends.
+       The inner rectangle is 'cut out' using fill-rule="evenodd" to represent the paper. -->
+  <path fill-rule="evenodd" d="M6 3 H 18 Q 19.5 3 20 5 V 19 Q 19.5 21 18 21 H 6 Q 4.5 21 4 19 V 5 Q 4.5 3 6 3 Z M7 5 V 19 H 17 V 5 H 7 Z"/>
+  
+  <!-- Lines within the "paper" area to suggest ancient text or knowledge. -->
+  <path d="M8 7h8" stroke="currentColor" stroke-width="1" stroke-linecap="round"/>
+  <path d="M8 11h8" stroke="currentColor" stroke-width="1" stroke-linecap="round"/>
+  <path d="M8 15h6" stroke="currentColor" stroke-width="1" stroke-linecap="round"/>
 </svg>`;
 export const insightPrismSvg = `
 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
