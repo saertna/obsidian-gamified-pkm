@@ -709,7 +709,7 @@ export default class gamification extends Plugin {
 					});
 				} catch (e) {
 					if (e?.name === 'YAMLParseError') {
-						const errorMessage = `Update majuritys failed Malformed frontamtter on this file : ${file.path} ${e.message}`;
+						const errorMessage = `Update maturity failed Malformed frontmatter on this file : ${file.path} ${e.message}`;
 						new Notice(errorMessage, this.mediator.getSettingNumber('timeShowNotice') * mil2sec);
 						console.error(errorMessage);
 					}
@@ -732,7 +732,7 @@ export default class gamification extends Plugin {
 			await this.writeBadgeCSV(initBadge, window.moment().format('YYYY-MM-DD'),'level ' + (this.mediator.getSettingNumber('statusLevel')).toString())
 		}, 2000); // 2000 milliseconds = 2 seconds
 
-			new ModalInformationbox(this.app, `Finallized gamification initialistation!\nCongratulation, you earned ${pointsReceived} Points!\n\nCheck the Profile Page: "${this.mediator.getSettingString('avatarPageName')}.md"\n\nYou received an initialisation Booster aktiv for your first level ups. Game on!`).open();
+			new ModalInformationbox(this.app, `Finalized gamification initialization\nCongratulation, you earned ${pointsReceived} Points!\n\nCheck the Profile Leave\n\nYou received an initialisation Booster active for your first level ups. Game on!`).open();
 		}
 	}
 
@@ -818,7 +818,7 @@ export default class gamification extends Plugin {
 	async calculateNoteMajurity(){
 		const file: TFile | null= this.app.workspace.getActiveFile();
 		if (file == null) {
-			console.error('got no file, propably none is active')
+			console.error('got no file, probably none is active')
 		}
 
 		let detectIfNoteIsFirstTimeRated = false;
@@ -959,17 +959,17 @@ export default class gamification extends Plugin {
 				});
 			} catch (e) {
 				if (e?.name === 'YAMLParseError') {
-					const errorMessage = `Update majuritys failed Malformed frontamtter on this file : ${file.path} ${e.message}`;
+					const errorMessage = `Update maturity failed Malformed frontmatter on this file : ${file.path} ${e.message}`;
 					new Notice(errorMessage, this.mediator.getSettingNumber('timeShowNotice') * mil2sec);
 					console.error(errorMessage);
 				}
 			}
-			new Notice('note majurity updated!');
-			if(debugLogs) console.debug('note majurity updated!')
+			new Notice('note maturity updated!');
+			if(debugLogs) console.debug('note maturity updated!')
 			await this.updateStatusBar(this.statusbarGamification)
 			await this.actualizeProfileLeaf();
 		} else {
-			console.error('file was not found to calculate majurities. Make sure one is active.')
+			console.error('file was not found to calculate maturity. Make sure one is active.')
 		}
 		if (detectIfNoteIsFirstTimeRated){
 			await this.increaseDailyCreatedNoteCount();
@@ -1355,7 +1355,7 @@ export default class gamification extends Plugin {
 					});
 				} catch (e) {
 					if (e?.name === 'YAMLParseError') {
-						const errorMessage = `Update majuritys failed Malformed frontmatter ${e.message}`;
+						const errorMessage = `Update maturity failed Malformed frontmatter ${e.message}`;
 						new Notice(errorMessage, this.mediator.getSettingNumber('timeShowNotice') * mil2sec);
 						console.error(errorMessage);
 					}
