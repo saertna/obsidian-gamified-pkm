@@ -11,6 +11,7 @@ import { GamificationMediator } from './GamificationMediator';
 import {hoursUntilMinutesPassed, isMinutesPassed} from "./Utils";
 import {
 	createResourceDisplay,
+	createBoosterDisplay,
 	connectionCrystalSvg,
 	nexusNodeSvg,
 	masteryScrollSvg,
@@ -20,7 +21,8 @@ import {
 	creativeCatalystSvg,
 	precisionLensSvg
 } from './resourceIcons';
-
+//import { Booster } from './interfaces/Booster'
+import { getBoosterByName, allBoosters} from './data/boosterDefinitions';
 
 
 export class MultiSelectModal extends Modal {
@@ -36,6 +38,7 @@ export class MultiSelectModal extends Modal {
 	private level: number;
 
 	private resourceSvgMap: Record<string, string>;
+	private boosterSvgMap: Record<string, string>;
 
 	constructor(app: App, items: string[], buttonText: string, mediator: GamificationMediator) {
 		super(app);
@@ -56,24 +59,30 @@ export class MultiSelectModal extends Modal {
 
 	onOpen() {
 		const { contentEl } = this;
-		contentEl.empty();
+		contentEl.empty(); // Clears any existing content
 
 		this.readBoostersStock();
-		// take care only to run several times through when boosters are used
+
 		if (this.useBooster) {
-			boosterRecipes.forEach(item => {
-				if (this.boosterAvailableForUse(item.name,this.mediator.getSettingNumber('statusLevel'))) {
-					const listItem = this.createItemContainer(item.name);
-					contentEl.appendChild(listItem);
+			// Iterate over all boosters from the new centralized 'allBoosters' object
+			Object.values(allBoosters).forEach(booster => { // Changed from boosterRecipes
+				if (this.boosterAvailableForUse(booster.name, this.mediator.getSettingNumber('statusLevel'))) {
+					const listItem = this.createItemContainer(booster.name); // createItemContainer returns HTMLDivElement | undefined
+					if (listItem) { // Add this check! Only append if listItem is not undefined
+						contentEl.appendChild(listItem);
+					}
 				}
 			});
-			const fortuneInfusionBooster = boosterRecipes.find(entry => entry.varname === 'fortuneInfusion');
-			if (fortuneInfusionBooster){
+
+			const fortuneInfusionBooster = getBoosterByName('Fortune Infusion'); // Use the exact name
+			if (fortuneInfusionBooster) { // Check if the booster was found
 				const listItem = this.createItemContainer(fortuneInfusionBooster.name);
-				contentEl.appendChild(listItem);
+				if (listItem) { // Add this check!
+					contentEl.appendChild(listItem);
+				}
 			}
 		} else {
-			const craftingLayout = this.createCraftingLayout();
+			const craftingLayout = this.createCraftingLayout(); // Assuming this always returns an HTMLElement
 			contentEl.appendChild(craftingLayout);
 		}
 	}
@@ -110,14 +119,14 @@ export class MultiSelectModal extends Modal {
 	}
 
 
-	private createItemContainer(labelText: string) {
+	private createItemContainer(labelText: string): HTMLDivElement | undefined {
 		if (this.useBooster) {
 			return this.createBoosterList(labelText);
 		}
-		// If not `useBooster`, this function should ideally not be called or return an empty div as a fallback.
 		console.warn("createItemContainer called with useBooster=false. This path should be unreachable if onOpen is correct.");
 		return document.createElement('div');
 	}
+
 
 	updateIncrementStock(increment: string, stock: number) {
 		if(debugLogs) console.debug(`increment "${increment}" new value ${stock}`);
@@ -274,49 +283,62 @@ export class MultiSelectModal extends Modal {
 
 
 	private createBoosterList(labelText: string) {
+		const boosterDefinition = getBoosterByName(labelText);
+
+		if (!boosterDefinition) {
+			console.warn(`Booster definition not found for: ${labelText}. Skipping display.`);
+			return;
+		}
+
 		const container = this.containerEl.createEl('div');
 		container.className = 'modal-checkbox-container';
 
-		const stock = this.boosters[labelText];
+		const stock = this.boosters[labelText] || 0; // Ensure stock defaults to 0 if not found
 
-		// Use regex to replace all spaces for CSS class/ID naming
-		const label = container.createEl('div', { cls: `${labelText.replace(/ /g, '-')}` });
+		const label = container.createEl('div', { cls: `booster-item-${boosterDefinition.id}` }); // Use the ID here
 
 		const useButton = container.createEl('button');
-		const momentDate = this.mediator.getSettingString(this.getBoosterDateFromName(labelText));
+		useButton.id = `use-button-${boosterDefinition.id}`; // Also use the ID for the button
 
-		if (momentDate && isMinutesPassed(window.moment(momentDate, 'YYYY-MM-DD HH:mm:ss'), this.getBoosterCooldownFromName(labelText)) == false) {
-			if(debugLogs) console.debug(`Booster ${labelText} is still in cooldown for ${hoursUntilMinutesPassed(window.moment(momentDate, 'YYYY-MM-DD HH:mm:ss'), this.getBoosterCooldownFromName(labelText))} hours`);
-			if(debugLogs) console.log(`createBoosterList: Stock amount ${stock}`)
+		const cooldownDurationSeconds = boosterDefinition.cooldown;
+		const cooldownDurationMinutes = cooldownDurationSeconds / 60;
 
-			// OPTIONAL: Add booster icons here as well if you have them
-			// const boosterSvg = this.boosterSvgMap[labelText]; // You'd need a separate map for booster SVGs
-			// if (boosterSvg) {
-			//     createResourceDisplay(label, labelText, stock, boosterSvg).addClass('booster-list-item-icon');
-			// } else {
-			label.createEl('div', { text: `${labelText} : (${stock})` });
-			// }
+		const momentDateString = this.mediator.getSettingString(boosterDefinition.boosterDateSettingKey);
 
-			useButton.innerText = `cooldown ${hoursUntilMinutesPassed(window.moment(momentDate, 'YYYY-MM-DD HH:mm:ss'), this.getBoosterCooldownFromName(labelText))} hours`;
-			useButton.id = `use-button-${labelText.replace(/ /g, '-')}`;
-			useButton.onclick = () => {
-				new ModalInformationbox(this.app, `${labelText} is for ${hoursUntilMinutesPassed(window.moment(momentDate, 'YYYY-MM-DD HH:mm:ss'), this.getBoosterCooldownFromName(labelText))} hours in cooldown and can only then be used again.`).open();
-			};
+		if (momentDateString) {
+			const momentDate = window.moment(momentDateString, 'YYYY-MM-DD HH:mm:ss');
+
+			if (!isMinutesPassed(momentDate, cooldownDurationMinutes)) { // Still in cooldown
+				const hoursRemaining = hoursUntilMinutesPassed(momentDate, cooldownDurationMinutes);
+				if (debugLogs) console.debug(`Booster ${labelText} is still in cooldown for ${hoursRemaining.toFixed(1)} hours`);
+				if (debugLogs) console.log(`createBoosterList: Stock amount ${stock}`);
+
+				createBoosterDisplay(label, boosterDefinition, stock).addClass('booster-list-item-icon');
+
+				useButton.innerText = `cooldown ${hoursRemaining.toFixed(1)} hours`; // Display with one decimal
+				useButton.disabled = true;
+				useButton.onclick = () => {
+					new ModalInformationbox(this.app, `${labelText} is for ${hoursRemaining.toFixed(1)} hours in cooldown and can only then be used again.`).open();
+				};
+			} else {
+				createBoosterDisplay(label, boosterDefinition, stock).addClass('booster-list-item-icon');
+
+				useButton.innerText = 'Use';
+				useButton.disabled = false;
+				useButton.onclick = () => {
+					this.useBoosterItem(labelText);
+				};
+			}
 		} else {
-			// TODO: add booster icons here as soon as they are ready
-			// const boosterSvg = this.boosterSvgMap[labelText];
-			// if (boosterSvg) {
-			//     createResourceDisplay(label, labelText, stock, boosterSvg).addClass('booster-list-item-icon');
-			// } else {
-			label.createEl('div', { text: `${labelText} : (${stock})` });
-			// }
+			createBoosterDisplay(label, boosterDefinition, stock).addClass('booster-list-item-icon');
 
 			useButton.innerText = 'Use';
-			useButton.id = `use-button-${labelText.replace(/ /g, '-')}`;
+			useButton.disabled = false;
 			useButton.onclick = () => {
 				this.useBoosterItem(labelText);
 			};
 		}
+
 
 		const useInfoButton = container.createEl('button', { text: '?' });
 		useInfoButton.id = `information-${labelText.replace(/ /g, '-')}`;
@@ -324,7 +346,6 @@ export class MultiSelectModal extends Modal {
 			new ModalInformationbox(this.app, this.getBoosterInforFromFromName(labelText)).open();
 		};
 
-		// Append elements to container in the desired order
 		container.appendChild(label);
 		container.appendChild(useButton);
 		container.appendChild(useInfoButton);
@@ -411,40 +432,78 @@ export class MultiSelectModal extends Modal {
 
 
 	private updateQuantityDisplay(labelText: string) {
-		const stock = this.boosters[labelText];
-		const stockInfo = this.containerEl.querySelector(`.${labelText.replace(/ /g, '-')}`); // Use regex for all spaces
+		// 1. Get the full booster definition using the labelText (booster name)
+		const boosterDefinition = getBoosterByName(labelText);
+
+		if (!boosterDefinition) {
+			console.warn(`Booster definition not found for: ${labelText}. Cannot display.`);
+			return;
+		}
+
+		const stock = this.boosters[labelText] || 0; // Get current stock, default to 0 if not found
+
+		// Use the booster's 'id' for a consistent DOM element selector
+		const stockInfoSelector = `.booster-item-${boosterDefinition.id}`; // Example class: 'booster-item-temporalTweaker'
+		const stockInfo = this.containerEl.querySelector(stockInfoSelector) as HTMLElement;
 
 		if (stockInfo) {
 			stockInfo.empty(); // Clear current content
 
-			// TODO: add booster SVGs as soon when ready
-			// const boosterSvg = this.boosterSvgMap[labelText];
-			// if (boosterSvg) {
-			//     createResourceDisplay(stockInfo, labelText, stock, boosterSvg).addClass('booster-list-item-icon');
-			// } else {
-			stockInfo.createEl('div', { text: `${labelText} : (${stock})` });
-			// }
+			// 2. Pass the booster definition and stock to the display function
+			createBoosterDisplay(stockInfo, boosterDefinition, stock).addClass('booster-list-item-icon');
+		} else {
+			console.warn(`Display element (selector: ${stockInfoSelector}) not found for booster: ${labelText}. Ensure it's rendered.`);
+			// You might need to create the element here if it's not dynamically generated elsewhere
+			// For example:
+			// const newStockInfo = this.containerEl.createDiv({ cls: `booster-item-${boosterDefinition.id}` });
+			// createBoosterDisplay(newStockInfo, boosterDefinition, stock).addClass('booster-list-item-icon');
 		}
 
-		const buttonUse: HTMLButtonElement | null = this.containerEl.querySelector(`#use-button-${labelText.replace(/ /g, '-')}`);
+		// --- Cooldown Button Logic ---
+		// Ensure the button's ID also uses the consistent booster ID
+		const buttonUseId = `#use-button-${boosterDefinition.id}`;
+		const buttonUse: HTMLButtonElement | null = this.containerEl.querySelector(buttonUseId);
 
 		if (buttonUse !== null) {
-			const momentDate = this.mediator.getSettingString(this.getBoosterDateFromName(labelText));
+			// Cooldown is now in SECONDS in your Booster definition
+			const cooldownDurationSeconds = boosterDefinition.cooldown;
 
-			if (momentDate && isMinutesPassed(window.moment(momentDate, 'YYYY-MM-DD HH:mm:ss'), this.getBoosterCooldownFromName(labelText)) == false) {
-				buttonUse.setText(`cooldown ${hoursUntilMinutesPassed(window.moment(momentDate, 'YYYY-MM-DD HH:mm:ss'), this.getBoosterCooldownFromName(labelText))} hours`);
-				buttonUse.onclick = () => {
-					new ModalInformationbox(this.app, `${labelText} is for ${hoursUntilMinutesPassed(window.moment(momentDate, 'YYYY-MM-DD HH:mm:ss'), this.getBoosterCooldownFromName(labelText))} hours in cooldown and can only then be used again.`).open();
-				};
+			// Get the last used date from your settings/state using the booster's specific setting key
+			const lastUsedSettingKey = boosterDefinition.boosterDateSettingKey;
+			const momentDateString = this.mediator.getSettingString(lastUsedSettingKey);
+
+			if (momentDateString) { // If a last used date exists
+				const lastUsedMoment = window.moment(momentDateString, 'YYYY-MM-DD HH:mm:ss');
+
+				// Convert cooldown to minutes for your helper functions if they expect minutes
+				const cooldownDurationMinutes = cooldownDurationSeconds / 60;
+
+				if (!isMinutesPassed(lastUsedMoment, cooldownDurationMinutes)) {
+					const hoursRemaining = hoursUntilMinutesPassed(lastUsedMoment, cooldownDurationMinutes);
+					buttonUse.setText(`Cooldown: ${hoursRemaining.toFixed(1)}h`);
+					buttonUse.disabled = true; // Disable the button during cooldown
+					buttonUse.onclick = () => {
+						new ModalInformationbox(this.app, `${labelText} is in cooldown for ${hoursRemaining.toFixed(1)} hours.`).open();
+					};
+				} else {
+					// Cooldown has passed
+					buttonUse.setText('Use');
+					buttonUse.disabled = false;
+					buttonUse.onclick = () => {
+						this.useBoosterItem(labelText); // Pass the original labelText (booster name) or boosterDefinition.name
+					};
+				}
 			} else {
+				// No cooldown date found, booster is available
 				buttonUse.setText('Use');
+				buttonUse.disabled = false;
 				buttonUse.onclick = () => {
 					this.useBoosterItem(labelText);
 				};
 			}
 		}
 	}
-	
+
 
 
 	private checkIngredientsAvailability(incredients: { name: string; incredients: string[]; }) {
@@ -639,40 +698,27 @@ export class MultiSelectModal extends Modal {
 		return ''; // Return null if no matching element is found
 	}
 
-	private getBoosterSwitchFromName(boosterName: string) {
-		for (const element of boosterRecipes) {
-			if (element.name === boosterName) {
-				return element.boosterSwitch;
-			}
-		}
-		return ''; // Return null if no matching element is found
+	private getBoosterSwitchFromName(boosterName: string): string {
+		const booster = getBoosterByName(boosterName);
+		return booster ? booster.boosterFactorSwitchSettingKey : '';
 	}
 
-	private getBoosterDateFromName(boosterName: string) {
-		for (const element of boosterRecipes) {
-			if (element.name === boosterName) {
-				return element.boosterDate as string;
-			}
-		}
-		return ''; // Return null if no matching element is found
+	private getBoosterDateFromName(boosterName: string): string {
+		const booster = getBoosterByName(boosterName);
+		return booster ? booster.boosterDateSettingKey : `boosterDateUnknown-${boosterName}`;
 	}
 
 	private getBoosterCooldownFromName(boosterName: string) {
-		for (const element of boosterRecipes) {
-			if (element.name === boosterName) {
-				return element.boosterCooldown;
-			}
-		}
-		return 0; // Return null if no matching element is found
+		const booster = getBoosterByName(boosterName);
+		return booster ? booster.cooldown / 60 : 0;
 	}
 
-	private getBoosterUseFromName(boosterName: string) {
-		for (const element of boosterRecipes) {
-			if (element.name === boosterName) {
-				return element.boosterUseCountName as string;
-			}
-		}
-		return ''; // Return null if no matching element is found
+	private getBoosterUseFromName(boosterName: string): string {
+		const booster = getBoosterByName(boosterName);
+		// If a booster is found, return its boosterUseCountName.
+		// Otherwise, return an empty string as per your original logic.
+		return booster ? booster.boosterUseCountName : '';
 	}
+
 
 }
