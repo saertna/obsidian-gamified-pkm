@@ -15,6 +15,13 @@ I develop this plugin as a hobby, spending my free time doing this. If you find 
 
 It would mean a lot to me.
 `,
+"0.0.96": `
+## New
+- asking for confirmation before reset game.
+## Fixed
+- init and reset command is only shown when enabled in settings.
+- some spelling corrections
+`,
 "0.0.95": `
 ## Fixed
 - not showing amount of ingredients on booster crafting table when below level 4 but enabled achieved boosters.
