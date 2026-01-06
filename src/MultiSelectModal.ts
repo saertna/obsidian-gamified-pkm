@@ -282,29 +282,46 @@ export class MultiSelectModal extends Modal {
 
 
 
-	private createBoosterList(labelText: string) {
+	private createBoosterList(labelText: string): HTMLDivElement | undefined { // Added explicit return type
 		const boosterDefinition = getBoosterByName(labelText);
 
 		if (!boosterDefinition) {
 			console.warn(`Booster definition not found for: ${labelText}. Skipping display.`);
-			return;
+			return undefined; // Explicitly return undefined
 		}
 
+		// 1. Create the outer container for the entire booster list item
 		const container = this.containerEl.createEl('div');
-		container.className = 'modal-checkbox-container';
+		container.className = 'modal-checkbox-container'; // This class gets 'display: flex; justify-content: space-between;'
 
-		const stock = this.boosters[labelText] || 0; // Ensure stock defaults to 0 if not found
+		const stock = this.boosters[labelText] || 0;
 
-		const label = container.createEl('div', { cls: `booster-item-${boosterDefinition.id}` }); // Use the ID here
+		// 2. Create the inner div that will hold the icon, name, and stock information.
+		// This div will become the 'div:first-child' of 'modal-checkbox-container'
+		// and thus receive 'display: flex; align-items: center; gap: 10px; flex-grow: 1;' from your CSS.
+		const boosterDetailsContainer = container.createEl('div', { cls: `booster-item-${boosterDefinition.id}` });
 
+		// APPLY THE CLASS HERE, directly to the element that createBoosterDisplay will populate
+		boosterDetailsContainer.addClass('booster-list-item-icon');
+
+
+		// 3. Create the 'Use' button
 		const useButton = container.createEl('button');
-		useButton.id = `use-button-${boosterDefinition.id}`; // Also use the ID for the button
+		useButton.id = `use-button-${boosterDefinition.id}`;
+
+		// 4. Create the 'Info' button
+		const useInfoButton = container.createEl('button', { text: '?' });
+		useInfoButton.id = `information-${labelText.replace(/ /g, '-')}`;
+		useInfoButton.onclick = () => {
+			new ModalInformationbox(this.app, this.getBoosterInforFromFromName(labelText)).open();
+		};
 
 		const cooldownDurationSeconds = boosterDefinition.cooldown;
 		const cooldownDurationMinutes = cooldownDurationSeconds / 60;
-
 		const momentDateString = this.mediator.getSettingString(boosterDefinition.boosterDateSettingKey);
 
+		// Call the updated createBoosterDisplay to populate the boosterDetailsContainer
+		// It now takes boosterDetailsContainer as its first argument and returns void.
 		if (momentDateString) {
 			const momentDate = window.moment(momentDateString, 'YYYY-MM-DD HH:mm:ss');
 
@@ -313,15 +330,16 @@ export class MultiSelectModal extends Modal {
 				if (debugLogs) console.debug(`Booster ${labelText} is still in cooldown for ${hoursRemaining.toFixed(1)} hours`);
 				if (debugLogs) console.log(`createBoosterList: Stock amount ${stock}`);
 
-				createBoosterDisplay(label, boosterDefinition, stock).addClass('booster-list-item-icon');
+				createBoosterDisplay(boosterDetailsContainer, boosterDefinition, stock); // Populate the inner div
 
-				useButton.innerText = `cooldown ${hoursRemaining.toFixed(1)} hours`; // Display with one decimal
+				useButton.innerText = `cooldown ${hoursRemaining.toFixed(1)} hours`;
 				useButton.disabled = true;
+				useButton.addClass('cooldown'); // Add a class for specific cooldown styling
 				useButton.onclick = () => {
 					new ModalInformationbox(this.app, `${labelText} is for ${hoursRemaining.toFixed(1)} hours in cooldown and can only then be used again.`).open();
 				};
 			} else {
-				createBoosterDisplay(label, boosterDefinition, stock).addClass('booster-list-item-icon');
+				createBoosterDisplay(boosterDetailsContainer, boosterDefinition, stock); // Populate the inner div
 
 				useButton.innerText = 'Use';
 				useButton.disabled = false;
@@ -330,7 +348,7 @@ export class MultiSelectModal extends Modal {
 				};
 			}
 		} else {
-			createBoosterDisplay(label, boosterDefinition, stock).addClass('booster-list-item-icon');
+			createBoosterDisplay(boosterDetailsContainer, boosterDefinition, stock); // Populate the inner div
 
 			useButton.innerText = 'Use';
 			useButton.disabled = false;
@@ -339,16 +357,7 @@ export class MultiSelectModal extends Modal {
 			};
 		}
 
-
-		const useInfoButton = container.createEl('button', { text: '?' });
-		useInfoButton.id = `information-${labelText.replace(/ /g, '-')}`;
-		useInfoButton.onclick = () => {
-			new ModalInformationbox(this.app, this.getBoosterInforFromFromName(labelText)).open();
-		};
-
-		container.appendChild(label);
-		container.appendChild(useButton);
-		container.appendChild(useInfoButton);
+		// No need for explicit appendChild calls here, createEl already does it.
 
 		return container;
 	}
@@ -440,61 +449,49 @@ export class MultiSelectModal extends Modal {
 			return;
 		}
 
-		const stock = this.boosters[labelText] || 0; // Get current stock, default to 0 if not found
+		const stock = this.boosters[labelText] || 0;
 
 		// Use the booster's 'id' for a consistent DOM element selector
 		const stockInfoSelector = `.booster-item-${boosterDefinition.id}`; // Example class: 'booster-item-temporalTweaker'
 		const stockInfo = this.containerEl.querySelector(stockInfoSelector) as HTMLElement;
 
 		if (stockInfo) {
-			stockInfo.empty(); // Clear current content
+			stockInfo.empty();
 
 			// 2. Pass the booster definition and stock to the display function
-			createBoosterDisplay(stockInfo, boosterDefinition, stock).addClass('booster-list-item-icon');
+			createBoosterDisplay(stockInfo, boosterDefinition, stock);
 		} else {
 			console.warn(`Display element (selector: ${stockInfoSelector}) not found for booster: ${labelText}. Ensure it's rendered.`);
-			// You might need to create the element here if it's not dynamically generated elsewhere
-			// For example:
-			// const newStockInfo = this.containerEl.createDiv({ cls: `booster-item-${boosterDefinition.id}` });
-			// createBoosterDisplay(newStockInfo, boosterDefinition, stock).addClass('booster-list-item-icon');
 		}
 
-		// --- Cooldown Button Logic ---
-		// Ensure the button's ID also uses the consistent booster ID
 		const buttonUseId = `#use-button-${boosterDefinition.id}`;
 		const buttonUse: HTMLButtonElement | null = this.containerEl.querySelector(buttonUseId);
 
 		if (buttonUse !== null) {
-			// Cooldown is now in SECONDS in your Booster definition
 			const cooldownDurationSeconds = boosterDefinition.cooldown;
-
-			// Get the last used date from your settings/state using the booster's specific setting key
 			const lastUsedSettingKey = boosterDefinition.boosterDateSettingKey;
 			const momentDateString = this.mediator.getSettingString(lastUsedSettingKey);
 
-			if (momentDateString) { // If a last used date exists
+			if (momentDateString) {
 				const lastUsedMoment = window.moment(momentDateString, 'YYYY-MM-DD HH:mm:ss');
 
-				// Convert cooldown to minutes for your helper functions if they expect minutes
 				const cooldownDurationMinutes = cooldownDurationSeconds / 60;
 
 				if (!isMinutesPassed(lastUsedMoment, cooldownDurationMinutes)) {
 					const hoursRemaining = hoursUntilMinutesPassed(lastUsedMoment, cooldownDurationMinutes);
 					buttonUse.setText(`Cooldown: ${hoursRemaining.toFixed(1)}h`);
-					buttonUse.disabled = true; // Disable the button during cooldown
+					buttonUse.disabled = true;
 					buttonUse.onclick = () => {
 						new ModalInformationbox(this.app, `${labelText} is in cooldown for ${hoursRemaining.toFixed(1)} hours.`).open();
 					};
 				} else {
-					// Cooldown has passed
 					buttonUse.setText('Use');
 					buttonUse.disabled = false;
 					buttonUse.onclick = () => {
-						this.useBoosterItem(labelText); // Pass the original labelText (booster name) or boosterDefinition.name
+						this.useBoosterItem(labelText);
 					};
 				}
 			} else {
-				// No cooldown date found, booster is available
 				buttonUse.setText('Use');
 				buttonUse.disabled = false;
 				buttonUse.onclick = () => {

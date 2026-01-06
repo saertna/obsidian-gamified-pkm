@@ -116,16 +116,28 @@ export function createResourceDisplay(containerEl: HTMLElement, resourceName: st
 }
 
 
-export function createBoosterDisplay(containerEl: HTMLElement, booster: Booster, quantity: number): HTMLElement {
-	const wrapper = containerEl.createDiv({ cls: 'gamified-pkm-booster-item' });
+export function createBoosterDisplay(containerEl: HTMLElement, booster: Booster, quantity: number): void {
+	/**
+	 * Populates a given container element with the booster's icon, name, and quantity.
+	 * The container is expected to have 'display: flex' and 'gap' styles applied by its parent.
+	 *
+	 * @param containerEl The HTMLElement to which the booster display elements will be appended.
+	 * @param booster The Booster definition object.
+	 * @param quantity The stock quantity of the booster.
+	 */
 
-	const iconHolder = wrapper.createDiv({ cls: 'gamified-pkm-booster-icon-holder' });
+	// 1. Booster Icon
+	const iconHolder = containerEl.createDiv({ cls: 'gamified-pkm-booster-icon-holder' });
 	iconHolder.innerHTML = booster.svg;
-	iconHolder.setAttribute('title', `${booster.name}: ${booster.description}`);
-
+	iconHolder.setAttribute('title', `${booster.description}`);
 	iconHolder.style.color = booster.color;
 
-	const quantitySpan = wrapper.createSpan({ text: `[${quantity}]`, cls: 'gamified-pkm-booster-quantity' });
+	// 2. Booster Name
+	const nameSpan = containerEl.createSpan({ text: booster.name, cls: 'gamified-pkm-booster-name' });
+	nameSpan.setAttribute('title', `${booster.description}`); // Optionally add description as tooltip for the name too
 
-	return wrapper;
+	// 3. Stock Information (Quantity)
+	const quantitySpan = containerEl.createSpan({ text: `[${quantity}]`, cls: 'gamified-pkm-booster-quantity' });
+
 }
+
