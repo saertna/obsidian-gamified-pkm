@@ -9,7 +9,17 @@ import {
 import { ModalInformationbox } from 'ModalInformationbox';
 import { GamificationMediator } from './GamificationMediator';
 import {hoursUntilMinutesPassed, isMinutesPassed} from "./Utils";
-import {createResourceIcon} from './resourceIcons';
+import {
+	createResourceDisplay,
+	connectionCrystalSvg,
+	nexusNodeSvg,
+	masteryScrollSvg,
+	insightPrismSvg,
+	reflectiveEssenceSvg,
+	amplificationCrystalSvg,
+	creativeCatalystSvg,
+	precisionLensSvg
+} from './resourceIcons';
 
 
 
@@ -30,6 +40,16 @@ export class MultiSelectModal extends Modal {
 		this.items = items;
 		this.buttonText = buttonText;
 		this.mediator = mediator;
+		this.resourceSvgMap = {
+			'Nexus Node': nexusNodeSvg,
+			'Connection Crystal': connectionCrystalSvg,
+			'Mastery Scroll': masteryScrollSvg,
+			'Insight Prism': insightPrismSvg,
+			'Reflective Essence': reflectiveEssenceSvg,
+			'Amplification Crystal': amplificationCrystalSvg,
+			'Creative Catalyst': creativeCatalystSvg,
+			'Precision Lens': precisionLensSvg,
+		};
 	}
 
 	onOpen() {
