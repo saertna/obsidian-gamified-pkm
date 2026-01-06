@@ -52,6 +52,7 @@ import AvatarView from "./avatar/AvatarView.svelte";
 import {withCodeblockState} from "./avatar/stateProviders";
 import { GamificationMediatorImpl } from './GamificationMediatorImpl';
 import { MaturityCalculator } from './maturitycalculation'
+import { ConfirmationModal } from './ConfirmationModal';
 
 let pointsToReceived = 0;
 
@@ -305,9 +306,16 @@ export default class gamification extends Plugin {
 				id: 'reset-game',
 				name: 'Reset game',
 				callback: async () => {
-					await this.resetGame();
+					// Use your custom ConfirmationModal
+					new ConfirmationModal(
+						this.app, // Pass the Obsidian app instance
+						"Are you absolutely sure you want to reset your gamification progress? This action is irreversible!",
+						"Confirm to reset",
+						async () => {
+							await this.resetGame();
+						}
+					).open();
 				},
-
 			});
 		}
 
@@ -732,7 +740,7 @@ export default class gamification extends Plugin {
 			await this.writeBadgeCSV(initBadge, window.moment().format('YYYY-MM-DD'),'level ' + (this.mediator.getSettingNumber('statusLevel')).toString())
 		}, 2000); // 2000 milliseconds = 2 seconds
 
-			new ModalInformationbox(this.app, `Finalized gamification initialization\nCongratulation, you earned ${pointsReceived} Points!\n\nCheck the Profile Leave\n\nYou received an initialisation Booster active for your first level ups. Game on!`).open();
+			new ModalInformationbox(this.app, `Finalized gamification initialization. \nCongratulation, you earned ${pointsReceived} Points! \n\nCheck the Profile Leave. \n\nYou received an initialisation Booster active for your first level ups. Game on!`).open();
 		}
 	}
 
