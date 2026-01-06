@@ -287,7 +287,7 @@ export default class gamification extends Plugin {
 		});
 
 
-		if (this.mediator.getSettingBoolean('enableInitCommand')){
+		if (!this.mediator.getSettingBoolean('enableInitCommand')){
 			// command Initialize gamification ratings
 			this.addCommand({
 				id: 'init-rate-gamification',
@@ -299,7 +299,7 @@ export default class gamification extends Plugin {
 		}
 
 
-		if (this.mediator.getSettingBoolean('enableInitCommand')) {
+		if (!this.mediator.getSettingBoolean('enableInitCommand')) {
 			// command: reset game
 			this.addCommand({
 				id: 'reset-game',
@@ -603,7 +603,7 @@ export default class gamification extends Plugin {
         await this.giveStatusPoints(0,'');
         await this.updateStatusBar(this.statusbarGamification);
         this.mediator.updateProfileLeaf();
-		new ModalInformationbox(this.app, `Game is now reseted. Please delete the Profile Page: "${this.mediator.getSettingString('avatarPageName')}.md" manually.`).open();
+		new ModalInformationbox(this.app, `The Game is now reset.`).open();
     }
 
 
