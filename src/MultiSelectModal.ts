@@ -35,6 +35,8 @@ export class MultiSelectModal extends Modal {
 	private readonly mediator: GamificationMediator;
 	private level: number;
 
+	private resourceSvgMap: Record<string, string>;
+
 	constructor(app: App, items: string[], buttonText: string, mediator: GamificationMediator) {
 		super(app);
 		this.items = items;
@@ -71,8 +73,8 @@ export class MultiSelectModal extends Modal {
 				contentEl.appendChild(listItem);
 			}
 		} else {
-			const listItem = this.createItemContainer("");
-			contentEl.appendChild(listItem);
+			const craftingLayout = this.createCraftingLayout();
+			contentEl.appendChild(craftingLayout);
 		}
 	}
 
@@ -108,22 +110,21 @@ export class MultiSelectModal extends Modal {
 	}
 
 
-	// Updated createItemContainer method
 	private createItemContainer(labelText: string) {
 		if (this.useBooster) {
 			return this.createBoosterList(labelText);
-		} else {
-			//return this.createCheckbox(labelText);
-			return this.createCraftingLayout();
 		}
+		// If not `useBooster`, this function should ideally not be called or return an empty div as a fallback.
+		console.warn("createItemContainer called with useBooster=false. This path should be unreachable if onOpen is correct.");
+		return document.createElement('div');
 	}
 
 	updateIncrementStock(increment: string, stock: number) {
 		if(debugLogs) console.debug(`increment "${increment}" new value ${stock}`);
 		this.remainingStock[increment] = stock;
-		//this.gamificationInstance.setSettingNumber(this.getIngerementVarNameFromName(increment) || '', stock);
 		this.mediator.setSettingNumber(this.getIngerementVarNameFromName(increment) || '', stock);
 	}
+
 
 
 	updateBoosterStock(booster: string, stockIncrease: number) {
@@ -133,40 +134,31 @@ export class MultiSelectModal extends Modal {
 	decrementBooster(booster: string, stockIncrease: number) {
 		const stock = this.boosters[booster];
 		const boosterLastUsedDate = this.mediator.getSettingString(this.getBoosterDateFromName(booster));
+		// Added null check for momentDate
 		if (typeof boosterLastUsedDate === 'string' && boosterLastUsedDate !== null) {
 			const momentDate = window.moment(boosterLastUsedDate, 'YYYY-MM-DD HH:mm:ss');
 			if (stock > 0 && isMinutesPassed(momentDate, this.getBoosterCooldownFromName(booster))) {
 				this.boosters[booster] -= stockIncrease;
-				//this.gamificationInstance.setSettingNumber(this.getBoosterVarNameFromName(booster), this.boosters[booster]);
 				this.mediator.setSettingNumber(this.getBoosterVarNameFromName(booster), this.boosters[booster]);
-				//this.gamificationInstance.setSettingBoolean(this.getBoosterSwitchFromName(booster), true);
 				this.mediator.setSettingBoolean(this.getBoosterSwitchFromName(booster), true);
-				//this.gamificationInstance.setSettingString(this.getBoosterDateFromName(booster), window.moment().format('YYYY-MM-DD HH:mm:ss'));
 				this.mediator.setSettingString(this.getBoosterDateFromName(booster), window.moment().format('YYYY-MM-DD HH:mm:ss'))
-				//const boosterOverallUse = this.gamificationInstance.getSettingNumber('boosterUseCount')
 				const boosterOverallUse = this.mediator.getSettingNumber('boosterUseCount')
 				if (typeof boosterOverallUse === 'number' && boosterOverallUse !== null) {
-					// Now you can safely assign boosterLastUsedDate to boosterLastUsedDate.
 					this.mediator.setSettingNumber('boosterUseCount',boosterOverallUse + 1)
 				} else {
-					// Handle the case where boosterLastUsedDate is not a valid string.
 					if(debugLogs) console.debug(`decrementBooster: "boosterUseCount" could not got read.`)
 				}
 				const boosterUse = this.mediator.getSettingNumber(this.getBoosterUseFromName(booster))
 				if (typeof boosterUse === 'number' && boosterUse !== null) {
-					// Now you can safely assign boosterLastUsedDate to boosterLastUsedDate.
 					this.mediator.setSettingNumber(this.getBoosterUseFromName(booster),boosterUse + 1)
 				} else {
-					// Handle the case where boosterLastUsedDate is not a valid string.
 					if(debugLogs) console.debug(`decrementBooster: "${this.getBoosterUseFromName(booster)}" could not got read.`)
 				}
 				this.updateQuantityDisplay(booster);
 			}
 		} else {
-			// Handle the case where boosterLastUsedDate is not a valid string.
 			console.error(`value from ${this.getBoosterVarNameFromName(booster)} could not be read from Settings in decrementBooster()`)
 		}
-
 	}
 
 
@@ -210,61 +202,73 @@ export class MultiSelectModal extends Modal {
 
 	private createCraftingLayout() {
 		this.readIngrementStock();
-		const container = this.containerEl.createEl('div');
-		container.className = 'modal-crafting-container';
+		const mainContent = this.containerEl.createEl('div'); // A wrapper for the entire crafting area
+		mainContent.className = 'modal-crafting-wrapper';
 
-		const stockContainer = container.createEl('div');
-		stockContainer.className = 'stock-container';
+		// 1. Section for displaying available ingredient stock
+		const stockSection = mainContent.createDiv({ cls: 'crafting-stock-section' });
+		stockSection.createEl('h3', { text: 'Your Ingredients' });
 
-		const stockInfo = stockContainer.createEl('div');
-		stockInfo.className = 'stock-info';
-		stockInfo.style.display = 'flex'; // Set display to flex to make items side by side
-
-		boosterRecipes.forEach(recipe => {
-			if (this.boosterAvailableForUse(recipe.name,this.mediator.getSettingNumber('statusLevel'))) {
-				const itemContainer = stockContainer.createEl('div');
-				itemContainer.className = 'crafting-item-container';
-
-				const button = itemContainer.createEl('button', { text: 'Craft' });
-				button.onclick = () => this.craftBoosterItem(recipe);
-
-				const useInfoButton = itemContainer.createEl('button', { text: '?' });
-				useInfoButton.onclick = () => {
-					new ModalInformationbox(this.app, this.getBoosterInforFromFromName(recipe.name)).open();
-				};
-
-				const itemText = itemContainer.createEl('span', { text: `${recipe.name} ⇒ ${recipe.incredients.join('    ')}` });
-
-				container.appendChild(itemContainer);
-			}
-		});
-
+		// const stockDisplayGrid = stockSection.createDiv({ cls: 'stock-display-grid' });
+		const stockDisplayGrid = stockSection.createDiv({ cls: 'stock-display-grid' }) as HTMLElement;
 		const listOfUseableIngredientsToBeShown = elements
 			.filter(item => item.level <= this.mediator.getSettingNumber('statusLevel'))
 			.map(item => item.name);
 
-		listOfUseableIngredientsToBeShown.forEach(element => {
-			const increment = this.getIngerementFromName(element);
-			const shortName = increment.shortName;
+		listOfUseableIngredientsToBeShown.forEach(elementName => {
+			const increment = this.getIngerementFromName(elementName);
 			const remainingStock = this.remainingStock[increment.name] || 0;
+			const svgContent = this.resourceSvgMap[increment.name]; // Look up the SVG
 
-			const stockDiv = stockInfo.createEl('div');
-			stockDiv.innerText = `${shortName} [${remainingStock}]`;
-
-			// Adding margin for spacing between stock items
-			stockDiv.style.marginRight = '20px';
+			if (svgContent) {
+				// Use the helper to display the icon and quantity
+				createResourceDisplay(stockDisplayGrid, increment.name, remainingStock, svgContent);
+			} else {
+				// Fallback to text if no SVG is defined
+				stockDisplayGrid.createEl('div', { text: `${increment.shortName} [${remainingStock}]`, cls: 'resource-text-fallback' });
+			}
 		});
 
-		stockContainer.appendChild(stockInfo);
+		// 2. Section for displaying craftable booster recipes
+		const recipesSection = mainContent.createDiv({ cls: 'crafting-recipes-section' });
+		recipesSection.createEl('h3', { text: 'Craft Boosters' });
 
-		container.appendChild(stockContainer);
+		boosterRecipes.forEach(recipe => {
+			if (this.boosterAvailableForUse(recipe.name, this.mediator.getSettingNumber('statusLevel'))) {
+				const recipeItem = recipesSection.createDiv({ cls: 'crafting-booster-item' });
 
-		return container;
+				const recipeDetails = recipeItem.createDiv({ cls: 'crafting-booster-details' });
+				recipeDetails.createEl('span', { text: `${recipe.name}` });
+				recipeDetails.createEl('span', { text: ` ⇒ ` }); // Arrow separator
+
+				// Display ingredients required for the recipe with icons
+				recipe.incredients.forEach(ingredientText => {
+					const [quantityStr, shortName] = ingredientText.split('x');
+					const quantity = parseInt(quantityStr);
+					const ingredient = elements.find(el => el.shortName === shortName); // Find the full ingredient object
+
+					if (ingredient && this.resourceSvgMap[ingredient.name]) {
+						// Use the helper, adding a class for specific recipe item styling
+						createResourceDisplay(recipeDetails, ingredient.name, quantity, this.resourceSvgMap[ingredient.name]).addClass('recipe-ingredient-small');
+					} else {
+						// Fallback to text if no SVG or ingredient found
+						recipeDetails.createSpan({ text: `${shortName} [${quantity}]`, cls: 'recipe-ingredient-text-fallback' });
+					}
+				});
+
+				const buttonGroup = recipeItem.createDiv({ cls: 'crafting-booster-actions' });
+				const craftButton = buttonGroup.createEl('button', { text: 'Craft' });
+				craftButton.onclick = () => this.craftBoosterItem(recipe);
+
+				const useInfoButton = buttonGroup.createEl('button', { text: '?' });
+				useInfoButton.onclick = () => {
+					new ModalInformationbox(this.app, this.getBoosterInforFromFromName(recipe.name)).open();
+				};
+			}
+		});
+
+		return mainContent; // Return the full crafting layout wrapper
 	}
-
-
-
-
 
 
 
@@ -272,44 +276,57 @@ export class MultiSelectModal extends Modal {
 		const container = this.containerEl.createEl('div');
 		container.className = 'modal-checkbox-container';
 
-		//const stock = this.remainingStock[labelText] || 0;
-		if(debugLogs) console.log(`createBoosterList: labelText: ${labelText}`)
 		const stock = this.boosters[labelText];
 
-		const label = container.createEl('div', { cls: `${labelText.replace(' ', '-')}` });
+		// Use regex to replace all spaces for CSS class/ID naming
+		const label = container.createEl('div', { cls: `${labelText.replace(/ /g, '-')}` });
 
 		const useButton = container.createEl('button');
 		const momentDate = this.mediator.getSettingString(this.getBoosterDateFromName(labelText));
 
-		if (isMinutesPassed(window.moment(momentDate as string, 'YYYY-MM-DD HH:mm:ss'), this.getBoosterCooldownFromName(labelText)) == false) {
-			if(debugLogs) console.debug(`Booster ${labelText} is still in cooldown for ${window.moment(momentDate as string, 'YYYY-MM-DD HH:mm:ss'), this.getBoosterCooldownFromName(labelText) / 60} hours`);
+		if (momentDate && isMinutesPassed(window.moment(momentDate, 'YYYY-MM-DD HH:mm:ss'), this.getBoosterCooldownFromName(labelText)) == false) {
+			if(debugLogs) console.debug(`Booster ${labelText} is still in cooldown for ${hoursUntilMinutesPassed(window.moment(momentDate, 'YYYY-MM-DD HH:mm:ss'), this.getBoosterCooldownFromName(labelText))} hours`);
 			if(debugLogs) console.log(`createBoosterList: Stock amount ${stock}`)
-			label.createEl('div', { text: `${labelText} : (${stock})` });
 
-			useButton.innerText = `cooldown ${hoursUntilMinutesPassed(window.moment(momentDate as string, 'YYYY-MM-DD HH:mm:ss'), this.getBoosterCooldownFromName(labelText))} hours`;
-			useButton.id = `use-button-${labelText.replace(' ', '-')}`;
+			// OPTIONAL: Add booster icons here as well if you have them
+			// const boosterSvg = this.boosterSvgMap[labelText]; // You'd need a separate map for booster SVGs
+			// if (boosterSvg) {
+			//     createResourceDisplay(label, labelText, stock, boosterSvg).addClass('booster-list-item-icon');
+			// } else {
+			label.createEl('div', { text: `${labelText} : (${stock})` });
+			// }
+
+			useButton.innerText = `cooldown ${hoursUntilMinutesPassed(window.moment(momentDate, 'YYYY-MM-DD HH:mm:ss'), this.getBoosterCooldownFromName(labelText))} hours`;
+			useButton.id = `use-button-${labelText.replace(/ /g, '-')}`;
 			useButton.onclick = () => {
-				new ModalInformationbox(this.app, `${labelText} is for ${hoursUntilMinutesPassed(window.moment(momentDate as string, 'YYYY-MM-DD HH:mm:ss'), this.getBoosterCooldownFromName(labelText))} hours in cooldown and can only then be used again.`).open();
+				new ModalInformationbox(this.app, `${labelText} is for ${hoursUntilMinutesPassed(window.moment(momentDate, 'YYYY-MM-DD HH:mm:ss'), this.getBoosterCooldownFromName(labelText))} hours in cooldown and can only then be used again.`).open();
 			};
 		} else {
+			// TODO: add booster icons here as soon as they are ready
+			// const boosterSvg = this.boosterSvgMap[labelText];
+			// if (boosterSvg) {
+			//     createResourceDisplay(label, labelText, stock, boosterSvg).addClass('booster-list-item-icon');
+			// } else {
 			label.createEl('div', { text: `${labelText} : (${stock})` });
+			// }
 
 			useButton.innerText = 'Use';
-			useButton.id = `use-button-${labelText.replace(' ', '-')}`;
+			useButton.id = `use-button-${labelText.replace(/ /g, '-')}`;
 			useButton.onclick = () => {
 				this.useBoosterItem(labelText);
 			};
 		}
 
 		const useInfoButton = container.createEl('button', { text: '?' });
-		useInfoButton.id = `information-${labelText.replace(' ', '-')}`;
+		useInfoButton.id = `information-${labelText.replace(/ /g, '-')}`;
 		useInfoButton.onclick = () => {
 			new ModalInformationbox(this.app, this.getBoosterInforFromFromName(labelText)).open();
 		};
 
+		// Append elements to container in the desired order
+		container.appendChild(label);
 		container.appendChild(useButton);
 		container.appendChild(useInfoButton);
-		container.appendChild(label);
 
 		return container;
 	}
@@ -394,25 +411,34 @@ export class MultiSelectModal extends Modal {
 
 	private updateQuantityDisplay(labelText: string) {
 		const stock = this.boosters[labelText];
-		const stockInfo = this.containerEl.querySelector(`.${labelText.replace(' ', '-')}`);
-		
-		if (stockInfo) {
-			// Clear the current content
-			stockInfo.empty();
-	
-			// Create and set the new content
-			stockInfo.createEl('div', { text: `${labelText} : (${stock})` });
-		}
-	
-		const buttonUse: HTMLButtonElement | null = this.containerEl.querySelector(`#use-button-${labelText.replace(' ', '-')}`);
-	
-		if (buttonUse !== null) {
-			const momentDate = window.moment(this.mediator.getSettingString(this.getBoosterDateFromName(labelText)), 'YYYY-MM-DD HH:mm:ss');
+		const stockInfo = this.containerEl.querySelector(`.${labelText.replace(/ /g, '-')}`); // Use regex for all spaces
 
-			if (isMinutesPassed(momentDate, this.getBoosterCooldownFromName(labelText)) == false) {
-				buttonUse.setText(`cooldown ${hoursUntilMinutesPassed(momentDate, this.getBoosterCooldownFromName(labelText))} hours`);
+		if (stockInfo) {
+			stockInfo.empty(); // Clear current content
+
+			// TODO: add booster SVGs as soon when ready
+			// const boosterSvg = this.boosterSvgMap[labelText];
+			// if (boosterSvg) {
+			//     createResourceDisplay(stockInfo, labelText, stock, boosterSvg).addClass('booster-list-item-icon');
+			// } else {
+			stockInfo.createEl('div', { text: `${labelText} : (${stock})` });
+			// }
+		}
+
+		const buttonUse: HTMLButtonElement | null = this.containerEl.querySelector(`#use-button-${labelText.replace(/ /g, '-')}`);
+
+		if (buttonUse !== null) {
+			const momentDate = this.mediator.getSettingString(this.getBoosterDateFromName(labelText));
+
+			if (momentDate && isMinutesPassed(window.moment(momentDate, 'YYYY-MM-DD HH:mm:ss'), this.getBoosterCooldownFromName(labelText)) == false) {
+				buttonUse.setText(`cooldown ${hoursUntilMinutesPassed(window.moment(momentDate, 'YYYY-MM-DD HH:mm:ss'), this.getBoosterCooldownFromName(labelText))} hours`);
 				buttonUse.onclick = () => {
-					new ModalInformationbox(this.app, `${labelText} is for ${hoursUntilMinutesPassed(momentDate, this.getBoosterCooldownFromName(labelText))} hours in cooldown and can only then be used again.`).open();
+					new ModalInformationbox(this.app, `${labelText} is for ${hoursUntilMinutesPassed(window.moment(momentDate, 'YYYY-MM-DD HH:mm:ss'), this.getBoosterCooldownFromName(labelText))} hours in cooldown and can only then be used again.`).open();
+				};
+			} else {
+				buttonUse.setText('Use');
+				buttonUse.onclick = () => {
+					this.useBoosterItem(labelText);
 				};
 			}
 		}
@@ -490,20 +516,28 @@ export class MultiSelectModal extends Modal {
 
 
 	private updateStockInformation() {
-		const stockInfo = this.containerEl.querySelector('.stock-info');
+		const stockInfo = this.containerEl.querySelector('.stock-display-grid');
 
 		if (stockInfo) {
-			// Clear the current content
-			stockInfo.empty();
+			// Assert that stockInfo is an HTMLElement for TypeScript
+			const stockInfoElement = stockInfo as HTMLElement;
 
-			listOfUseableIngredientsToBeShown.forEach(element => {
-				const increment = this.getIngerementFromName(element);
-				const shortName = increment.shortName;
+			stockInfoElement.empty(); // Now TypeScript knows `empty()` exists
+
+			const listOfUseableIngredientsToBeShown = elements
+				.filter(item => item.level <= this.mediator.getSettingNumber('statusLevel'))
+				.map(item => item.name);
+
+			listOfUseableIngredientsToBeShown.forEach(elementName => {
+				const increment = this.getIngerementFromName(elementName);
 				const remainingStock = this.remainingStock[increment.name] || 0;
+				const svgContent = this.resourceSvgMap[increment.name];
 
-				// Create and append the short name and remaining stock
-				const stockDiv = stockInfo.createEl('div', { text: `${shortName} [${remainingStock}]` });
-				stockDiv.style.marginRight = '20px';
+				if (svgContent) {
+					createResourceDisplay(stockInfoElement, increment.name, remainingStock, svgContent); // Use the asserted element
+				} else {
+					stockInfoElement.createEl('div', { text: `${increment.shortName} [${remainingStock}]`, cls: 'resource-text-fallback' });
+				}
 			});
 		}
 	}
@@ -522,7 +556,7 @@ export class MultiSelectModal extends Modal {
 				new ModalInformationbox(this.app, `Not enough ingrediments available for '${selectedItems.name}'. Craft more Notes to collect new ingrediments.`).open();
 			}
 		} else if(selectedItems.name == 'Fortune Infusion'){
-
+			new ModalInformationbox(this.app, `'${selectedItems.name}' cannot be crafted. It is acquired through special means.`).open();
 		} else {
 			if (this.checkIngredientsAvailability(selectedItems)) {
 				if(debugLogs) console.debug(`craft booster ${selectedItems.name}`);
@@ -563,7 +597,8 @@ export class MultiSelectModal extends Modal {
 				return element;
 			}
 		}
-		return { shortName: '', name: '', varName: '' }; // Return null if no matching element is found
+		// Fallback for when an element isn't found
+		return { name: name, shortName: '?', varName: '' };
 	}
 
 
