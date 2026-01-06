@@ -1,5 +1,5 @@
 import { Badge } from './badges'
-export const PLUGIN_VERSION = '0.0.95';
+export const PLUGIN_VERSION = '0.0.96';
 export const pointsNoteMajurity = 100;
 export const pointsMajurity = 10;
 export const pointsForDailyChallenge = 500;
