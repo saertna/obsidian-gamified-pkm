@@ -1,4 +1,4 @@
-import { App, Modal } from 'obsidian';
+import {App, Modal, Notice} from 'obsidian';
 import {
 	elements,
 	boosterRecipes,
@@ -129,6 +129,7 @@ export class MultiSelectModal extends Modal {
 
 	updateBoosterStock(booster: string, stockIncrease: number) {
 		this.boosters[booster] += stockIncrease;
+		new Notice(`Booster "${booster}" crafted`,5000);
 	}
 
 	decrementBooster(booster: string, stockIncrease: number) {
