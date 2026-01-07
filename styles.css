@@ -105,7 +105,7 @@
 /* Grid for displaying available ingredient stock */
 .stock-display-grid {
 	display: grid;
-	grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); /* Responsive grid for resource items */
+	grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); /* Responsive grid for resource items */
 	gap: 12px; /* Space between grid items */
 }
 
@@ -142,6 +142,11 @@
 }
 
 .gamified-pkm-resource-quantity {
+	font-size: 0.9em;
+	color: var(--text-muted);
+}
+
+.gamified-pkm-resource-title {
 	font-size: 0.9em;
 	color: var(--text-muted);
 }
@@ -200,8 +205,8 @@
 }
 
 .crafting-booster-details .gamified-pkm-resource-item.recipe-ingredient-small .gamified-pkm-resource-icon-holder {
-	width: 18px; /* Slightly smaller icons for recipe ingredients */
-	height: 18px;
+	width: 16px; /* Slightly smaller icons for recipe ingredients */
+	height: 16px;
 }
 
 .crafting-booster-details .gamified-pkm-resource-item.recipe-ingredient-small .gamified-pkm-resource-quantity {

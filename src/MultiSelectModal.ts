@@ -19,7 +19,7 @@ import {
 	reflectiveEssenceSvg,
 	amplificationCrystalSvg,
 	creativeCatalystSvg,
-	precisionLensSvg
+	precisionLensSvg, createRecipeDisplay
 } from './resourceIcons';
 import { Booster } from './interfaces/Booster'
 import { getBoosterByName, allBoosters} from './data/boosterDefinitions';
@@ -283,7 +283,7 @@ export class MultiSelectModal extends Modal {
 						// However, we want just the icon and quantity here, so let's adjust createResourceDisplay or make a new one.
 						// For now, let's assume createResourceDisplay handles it and you might need a wrapper div for the icon and quantity
 						const ingredientWrapper = recipeDetails.createDiv({ cls: 'recipe-ingredient-small' }); // Wrapper for individual ingredient display
-						createResourceDisplay(ingredientWrapper, fullIngredient.name, ingredient.quantity, this.resourceSvgMap[fullIngredient.name]);
+						createRecipeDisplay(ingredientWrapper, fullIngredient.name, ingredient.quantity, this.resourceSvgMap[fullIngredient.name]);
 					} else {
 						// Fallback to text if no SVG or ingredient found
 						recipeDetails.createSpan({ text: `${ingredient.type} [${ingredient.quantity}]`, cls: 'recipe-ingredient-text-fallback' });

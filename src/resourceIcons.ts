@@ -79,11 +79,10 @@ export function createResourceDisplay(containerEl: HTMLElement, resourceName: st
 	iconHolder.innerHTML = svgContent;
 	iconHolder.setAttribute('title', resourceName); // Tooltip on hover
 
-	const quantitySpan = wrapper.createSpan({ text: `[${quantity}]`, cls: 'gamified-pkm-resource-quantity' });
+	wrapper.createSpan({text: `${resourceName}`, cls: 'gamified-pkm-resource-title' });
+	// const quantitySpan = wrapper.createSpan({ text: `[${quantity}]`, cls: 'gamified-pkm-resource-quantity' });
+	wrapper.createSpan({ text: `[${quantity}]`, cls: 'gamified-pkm-resource-quantity' });
 
-	// Apply specific colors directly to the icon holder.
-	// Since the SVG uses `currentColor`, this will automatically color the SVG.
-	// Adjust these colors to fit your desired aesthetic for each resource!
 	switch (resourceName) {
 		case 'Connection Crystal':
 			iconHolder.style.color = '#00CED1'; // Dark Turquoise
@@ -109,12 +108,50 @@ export function createResourceDisplay(containerEl: HTMLElement, resourceName: st
 		case 'Precision Lens':
 			iconHolder.style.color = '#6A5ACD'; // Slate Blue
 			break;
-		// Add more cases for other resources
 	}
 
 	return wrapper;
 }
 
+export function createRecipeDisplay(containerEl: HTMLElement, resourceName: string, quantity: number, svgContent: string): HTMLElement {
+	const wrapper = containerEl.createDiv({ cls: 'gamified-pkm-resource-item' });
+
+	const iconHolder = wrapper.createDiv({ cls: 'gamified-pkm-resource-icon-holder' });
+	iconHolder.innerHTML = svgContent;
+	iconHolder.setAttribute('title', resourceName); // Tooltip on hover
+
+	// const quantitySpan = wrapper.createSpan({ text: `[${quantity}]`, cls: 'gamified-pkm-resource-quantity' });
+	wrapper.createSpan({ text: `[${quantity}]`, cls: 'gamified-pkm-resource-quantity' });
+
+	switch (resourceName) {
+		case 'Connection Crystal':
+			iconHolder.style.color = '#00CED1'; // Dark Turquoise
+			break;
+		case 'Nexus Node':
+			iconHolder.style.color = '#8A2BE2'; // Blue Violet
+			break;
+		case 'Mastery Scroll':
+			iconHolder.style.color = '#FFD700'; // Gold
+			break;
+		case 'Insight Prism':
+			iconHolder.style.color = '#FF6347'; // Tomato
+			break;
+		case 'Reflective Essence':
+			iconHolder.style.color = '#ADD8E6'; // Light Blue
+			break;
+		case 'Amplification Crystal':
+			iconHolder.style.color = '#EE82EE'; // Violet
+			break;
+		case 'Creative Catalyst':
+			iconHolder.style.color = '#32CD32'; // Lime Green
+			break;
+		case 'Precision Lens':
+			iconHolder.style.color = '#6A5ACD'; // Slate Blue
+			break;
+	}
+
+	return wrapper;
+}
 
 export function createBoosterDisplay(containerEl: HTMLElement, booster: Booster, quantity: number): void {
 	/**
