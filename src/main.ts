@@ -164,7 +164,7 @@ export default class gamification extends Plugin {
 		if (this.mediator.getSettingBoolean('debug')){
 			this.addRibbonIcon("accessibility", "Crafting", async () => {
 				console.log('Debug Help Function accessibility is called')
-				//this.mediator.acquireIngredients(1,400,500);
+				//this.mediator.acquireIngredients(1,10,15);
 				//this.resetDailyGoals();
 				//this.mediator.setSettingString('weeklyNoteCreationDate', window.moment().subtract(1, 'day').format('DD.MM.YYYY'))
 				//this.mediator.setSettingString('weeklyNoteCreationDate', window.moment().subtract(1, 'day').format('DD.MM.YYYY'))
@@ -203,12 +203,14 @@ export default class gamification extends Plugin {
 
 				//const obsidianJustInstalled = this.settings.previousRelease === "0.0.0"
 
+
 				new ReleaseNotes(
 					this.app,
 					this.mediator,
 					//obsidianJustInstalled ? null :
 					PLUGIN_VERSION
 				).open();
+
 
 				//await this.giveStatusPoints(10000,'')
 				//await this.actualizeProfileLeave();

@@ -16,8 +16,11 @@ I develop this plugin as a hobby, spending my free time doing this. If you find 
 It would mean a lot to me.
 `,
 "0.0.97": `
+This release deals fully with the representation of the boosters and ingredients. Beside adding graphical representations for them, also the style is now improved. Have a look at the crafting table!
 ## New
 - Introducing ingredient symbols
+	- displayed in crafting table
+	- displayed in notice when received
 - Introducing booster symbols`,
 "0.0.96": `
 ## New

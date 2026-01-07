@@ -1,5 +1,5 @@
 import { Badge } from './badges'
-export const PLUGIN_VERSION = '0.0.96';
+export const PLUGIN_VERSION = '0.0.97';
 export const pointsNoteMajurity = 100;
 export const pointsMajurity = 10;
 export const pointsForDailyChallenge = 500;
@@ -16,194 +16,18 @@ export const milliseconds = 1000;
 export const seconds = 1000;
 export const minutesTimer = 1000;
 
-export const avatarInitContent =  `# Avatar
-
-
-\`\`\`gamification-avatar
-image: 
-description: |-2
-  |           |         | 
-  | --------- | ------- |
-  | **Level**  | **1** |
-  | Points | 0    |
-  ^levelAndPoints
-  \`\`\`chart
-  type: bar
-  labels: [Expririence]
-  series:
-    - title: points reached
-      data: [0]
-    - title: points to earn to level up
-      data: [1000]
-  xMin: 0
-  xMax: 1000
-  tension: 0.2
-  width: 40%
-  labelColors: false
-  fill: false
-  beginAtZero: false
-  bestFit: false
-  bestFitTitle: undefined
-  bestFitNumber: 0
-  stacked: true
-  indexAxis: y
-  xTitle: "progress"
-  legend: false
-\`\`\`
-
-|                  |       |
-| ---------------- | ----- |
-| **booster factor** | **0** |
-^boosterFactor
-
-|                 |         |         | 
-| --------------- | ------- | ------- |
-| **daily Notes** | *500EP* | **0/2**   |
-^dailyNotesChallenge
-
-|                  |          |         | 
-| ---------------- | -------- | ------- |
-| **weekly Notes** | *2000EP*     |  **0/7**   |
-^weeklyNotesChallenge
-\`\`\`chart
-type: bar
-labels: [days done in a row]
-series:
-  - title: days to do in a row
-    data: [0]
-  - title: points to earn to level up
-    data: [7]
-xMin: 0
-xMax: 7
-tension: 0.2
-width: 40%
-labelColors: false
-fill: false
-beginAtZero: false
-bestFit: false
-bestFitTitle: undefined
-bestFitNumber: 0
-stacked: true
-indexAxis: y
-xTitle: "progress"
-legend: false
-\`\`\`
-
-| Level | Count |
-| :---: | :---: |
-| Maturity 5 |\`$=dv.pages().where(p => [5, '5', '5➡️', '5⬇️', '5⬆️'].includes(p.file.frontmatter['note-maturity'])).length\`|
-| Maturity 4 |\`$=dv.pages().where(p => [4, '4', '4➡️', '4⬇️', '4⬆️'].includes(p.file.frontmatter['note-maturity'])).length\`|
-| Maturity 3 |\`$=dv.pages().where(p => [3, '3', '3➡️', '3⬇️', '3⬆️'].includes(p.file.frontmatter['note-maturity'])).length\`|
-| Maturity 2 |\`$=dv.pages().where(p => [2, '2', '2➡️', '2⬇️', '2⬆️'].includes(p.file.frontmatter['note-maturity'])).length\`|
-| Maturity 1 |\`$=dv.pages().where(p => [1, '1', '1➡️', '1⬇️', '1⬆️'].includes(p.file.frontmatter['note-maturity'])).length\`|
-| Maturity 0 |\`$=dv.pages().where(p => [0, '0', '0➡️', '0⬇️', '0⬆️'].includes(p.file.frontmatter['note-maturity'])).length\`|
-
-
-
-### Badges
-#### achieved
-
-
-#### outstanding
-level 5: *Enlightened Novice*
-level 10: *Curious Connoisseur*
-level 20: *Brainiac Trailblazer*
-level 27: *Scholarly Trailblazer*
-level 35: *Info Ninja Master*
-level 42: *Wise Owl Guru*
-level 50: *Einstein Incarnate*
-level 60: *Mastermind Sage*
-level 75: *Cerebral Maestro*
-level 82: *Zen Knowledge Keeper*
-level 90: *Grand Archivist Overlord*
-level 100: *Omniscient Sage of Everything*
-
-
-
-### **note-maturity = 5**
-\`\`\`dataview
-List NoteMaturityCount
-from ""
-Where note-maturity = 5 or note-maturity = "5" or note-maturity = "5➡️" or note-maturity = "5⬆️" or note-maturity = "5⬇️"
-\`\`\`
-
-### **note-maturity = 4**
-\`\`\`dataview
-List NoteMaturityCount
-from ""
-Where note-maturity = 4 or note-maturity = "4" or note-maturity = "4➡️" or note-maturity = "4⬆️" or note-maturity = "4⬇️"
-\`\`\`
-
-### note-maturity = 3
-\`\`\`dataview
-List NoteMaturityCount
-from ""
-Where note-maturity = 3 or note-maturity = "3" or note-maturity = "3➡️" or note-maturity = "3⬆️" or note-maturity = "3⬇️"
-\`\`\`
-
-### note-maturity = 2
-\`\`\`dataview
-List NoteMaturityCount
-from ""
-Where note-maturity = 2 or note-maturity = "2" or note-maturity = "2➡️" or note-maturity = "2⬆️" or note-maturity = "2⬇️"
-\`\`\`
-
-### note-maturity = 1
-\`\`\`dataview
-List NoteMaturityCount
-from ""
-Where note-maturity = 1 or note-maturity = "1" or note-maturity = "1➡️" or note-maturity = "1⬆️" or note-maturity = "1⬇️"
-\`\`\`
-
-### note-maturity = 0
-\`\`\`dataview
-List NoteMaturityCount
-from ""
-Where note-maturity = 0 or note-maturity = "0" or note-maturity = "0➡️" or note-maturity = "0⬆️" or note-maturity = "0⬇️"
-\`\`\`
-`;
-export const incrediments = [
-  'Nexus Node',
-  'Connection Crystal',
-  'Mastery Scroll',
-  'Insight Prism',
-  'Reflective Essence',
-  'Amplification Crystal',
-  'Creative Catalyst',
-  'Precision Lens'
-];
-
-export const incredimentsDataName = [
-  'nexusNode',
-  'connectionCrystal',
-  'masteryScroll',
-  'insightPrism',
-  'reflectiveEssence',
-  'amplificationCrystal',
-  'creativeCatalyst',
-  'precisionLens'
-];
-
-export const craftingItems = [
-  { name: 'Temporal Tweaker', incredients: ['20xS1', '10xS6'] },
-  { name: 'Perpetual Progress', incredients: ['20xS2', '10xS4'] },
-  { name: 'Strategic Synapses', incredients: ['30xS1', '20xS2'] },
-  { name: 'Accelerated Acquisition', incredients: ['10xS3', '20xS4'] },
-  { name: 'Linkers Lode', incredients: ['30xS2', '10xS1'] },
-  { name: 'Effortless Expansion', incredients: ['20xS3', '10xS6'] },
-  { name: 'Recursive Reflection', incredients: ['20xS4', '10xS5'] },
-  { name: 'Synaptic Surge', incredients: ['20xS2', '10xS1'] },
-  { name: 'Inspiration Infusion', incredients: ['20xS7', '10xS1'] },
-  { name: 'Title Titan', incredients: ['20xS8', '10xS7'] },
-  { name: 'Precision Prism', incredients: ['20xS8', '10xS2'] },
-  { name: 'Hyperlink Harmony', incredients: ['20xS2', '10xS6'] },
-];
-
 export const listOfUseableBoostersToBeShown = ['Perpetual Progress', 'Title Titan', 'Precision Prism','Accelerated Acquisition','Recursive Reflection','Synaptic Surge','Effortless Expansion','Hyperlink Harmony','Temporal Tweaker']
 export const listOfUseableIngredientsToBeShown = ['Connection Crystal', 'Insight Prism', 'Creative Catalyst', 'Precision Lens','Nexus Node','Mastery Scroll','Reflective Essence','Amplification Crystal']
 export const chanceToEarnIngredient = 0.5;
 
-export const elements = [
+export interface IngredientElement {
+	shortName: string;
+	name: string;
+	varName: string;
+	level: number;
+}
+
+export const elements: IngredientElement[] = [
 	{ shortName: 'S2', name: 'Connection Crystal', varName: 'connectionCrystal', level: 0 },
 	{ shortName: 'S4', name: 'Insight Prism', varName: 'insightPrism', level: 0 },
 	{ shortName: 'S7', name: 'Creative Catalyst', varName: 'creativeCatalyst', level: 0 },
@@ -214,7 +38,7 @@ export const elements = [
 	{ shortName: 'S6', name: 'Amplification Crystal', varName: 'amplificationCrystal', level: 6 }
 ];
 
-//TODO: rewirte all usages pointing to here to data/boosterDefinctions.ts instead.
+//TODO: rewrite all usages pointing to here to data/boosterDefinitions.ts instead.
 export const boosterRecipes = [
   { boosterUseCountName: 'boosterUseCountTemporalTweaker', boosterRunTime: 0, boosterCooldown: 0, boosterDate: 'boosterDateTemporalTweaker', boosterSwitch: '', varname: 'temporalTweaker' ,name: 'Temporal Tweaker', incredients: ['20xS1', '10xS6'], color: '#4CAF50', svg:`<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
   <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/>
@@ -293,7 +117,7 @@ export const boosterRecipes = [
   <path d="M17 7h-4V4H7v10h4v3h7v-7h-4zM7 7h2v2H7V7zm4 10H9v-2h2v2zm0-6H9V9h2v2zm0-4H9V5h2v2zm4 4h-2V9h2v2zm0-4h-2V5h2v2zM15 13h2v-2h-2v2zM10 13c0 1.1-.9 2-2 2H4v2h4c2.21 0 4-1.79 4-4V7h2v6zm4-6V4h-4C9.79 4 8 5.79 8 8v2H6V8c0-1.1.9-2 2-2h6z" fill="currentColor"/>
   <path d="M10 13c0 1.1-.9 2-2 2H4v2h4c2.21 0 4-1.79 4-4V7h2v6zm4-6V4h-4C9.79 4 8 5.79 8 8v2H6V8c0-1.1.9-2 2-2h6z" fill="currentColor"/>
 </svg>
-`, description: 'Hyperlink Harmony: Get for "Inlink majurity" AND "outlink majurity" improvements 5 times the point the next 3 hours.' },
+`, description: 'Hyperlink Harmony: Get for "Inlink maturity" AND "outlink maturity" improvements 5 times the point the next 3 hours.' },
 
   { boosterUseCountName: 'boosterUseCountEphemeralEuphoria', boosterRunTime: 2*60, boosterCooldown: 2160*60, boosterDate: 'boosterDateEphemeralEuphoria', boosterSwitch: 'boosterFactorEphemeralEuphoria', varname: 'ephemeralEuphoria' ,name: 'Ephemeral Euphoria', incredients: ['1000xSX'], color: '#4CAF50', svg:`<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
   <path d="M12 1L9 9l-8 1 7 7-2 8 8-2 7 2-2-8 7-7-8-1L12 1z"/>
