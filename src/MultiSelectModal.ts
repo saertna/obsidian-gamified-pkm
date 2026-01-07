@@ -21,7 +21,7 @@ import {
 	creativeCatalystSvg,
 	precisionLensSvg
 } from './resourceIcons';
-//import { Booster } from './interfaces/Booster'
+import { Booster } from './interfaces/Booster'
 import { getBoosterByName, allBoosters} from './data/boosterDefinitions';
 
 
@@ -210,7 +210,7 @@ export class MultiSelectModal extends Modal {
 	}
 
 
-	private createCraftingLayout() {
+	private createCraftingLayout(): HTMLDivElement {
 		this.readIngrementStock();
 		const mainContent = this.containerEl.createEl('div'); // A wrapper for the entire crafting area
 		mainContent.className = 'modal-crafting-wrapper';
@@ -219,19 +219,18 @@ export class MultiSelectModal extends Modal {
 		const stockSection = mainContent.createDiv({ cls: 'crafting-stock-section' });
 		stockSection.createEl('h3', { text: 'Your Ingredients' });
 
-		// const stockDisplayGrid = stockSection.createDiv({ cls: 'stock-display-grid' });
 		const stockDisplayGrid = stockSection.createDiv({ cls: 'stock-display-grid' }) as HTMLElement;
 		const listOfUseableIngredientsToBeShown = elements
 			.filter(item => item.level <= this.mediator.getSettingNumber('statusLevel'))
 			.map(item => item.name);
 
 		listOfUseableIngredientsToBeShown.forEach(elementName => {
-			const increment = this.getIngerementFromName(elementName);
+			const increment = this.getIngerementFromName(elementName); // Assuming this returns the full ingredient object
 			const remainingStock = this.remainingStock[increment.name] || 0;
-			const svgContent = this.resourceSvgMap[increment.name]; // Look up the SVG
+			const svgContent = this.resourceSvgMap[increment.name]; // Look up the SVG for the resource
 
 			if (svgContent) {
-				// Use the helper to display the icon and quantity
+				// Use the helper to display the icon and quantity for resources
 				createResourceDisplay(stockDisplayGrid, increment.name, remainingStock, svgContent);
 			} else {
 				// Fallback to text if no SVG is defined
@@ -243,41 +242,66 @@ export class MultiSelectModal extends Modal {
 		const recipesSection = mainContent.createDiv({ cls: 'crafting-recipes-section' });
 		recipesSection.createEl('h3', { text: 'Craft Boosters' });
 
-		boosterRecipes.forEach(recipe => {
-			if (this.boosterAvailableForUse(recipe.name, this.mediator.getSettingNumber('statusLevel'))) {
+		// Iterate over the new allBoosters array
+		Object.values(allBoosters).forEach(booster => { // Changed from boosterRecipes.forEach
+			if (this.boosterAvailableForUse(booster.name, this.mediator.getSettingNumber('statusLevel'))) {
 				const recipeItem = recipesSection.createDiv({ cls: 'crafting-booster-item' });
 
 				const recipeDetails = recipeItem.createDiv({ cls: 'crafting-booster-details' });
-				recipeDetails.createEl('span', { text: `${recipe.name}` });
-				recipeDetails.createEl('span', { text: ` ⇒ ` }); // Arrow separator
+
+				// --- ADD BOOSTER ICON HERE ---
+				const boosterIconHolder = recipeDetails.createDiv({ cls: 'gamified-pkm-booster-icon-holder' });
+				boosterIconHolder.innerHTML = booster.svg;
+				boosterIconHolder.style.color = booster.color;
+				boosterIconHolder.setAttribute('title', booster.description); // Tooltip for the icon
+
+				// --- ADD BOOSTER NAME HERE ---
+				recipeDetails.createEl('span', { text: booster.name, cls: 'booster-name' }); // Added a class for potential specific styling
+
+				recipeDetails.createEl('span', { text: ` ⇒ `, cls: 'separator' }); // Arrow separator
 
 				// Display ingredients required for the recipe with icons
-				recipe.incredients.forEach(ingredientText => {
-					const [quantityStr, shortName] = ingredientText.split('x');
-					const quantity = parseInt(quantityStr);
-					const ingredient = elements.find(el => el.shortName === shortName); // Find the full ingredient object
+				booster.ingredients.forEach(ingredient => { // Changed from recipe.incredients to booster.ingredients
+					const fullIngredient = elements.find(el => el.shortName === ingredient.type); // Find the full ingredient object
 
-					if (ingredient && this.resourceSvgMap[ingredient.name]) {
-						// Use the helper, adding a class for specific recipe item styling
-						createResourceDisplay(recipeDetails, ingredient.name, quantity, this.resourceSvgMap[ingredient.name]).addClass('recipe-ingredient-small');
+					// If specialIngredientRequirement is present, handle it
+					if (booster.specialIngredientRequirement === 'free all 22h' && booster.id === 'fortuneInfusion') {
+						// Display specific text for Fortune Infusion instead of ingredients
+						recipeDetails.createSpan({ text: '(Free every 22h)', cls: 'recipe-ingredient-text-free' });
+						return; // Skip displaying other ingredients for this booster
+					}
+					if (booster.specialIngredientRequirement === 'all pots' && booster.id === 'ephemeralEuphoria') {
+						// Display specific text for Ephemeral Euphoria
+						recipeDetails.createSpan({ text: '(1000 total from all pots)', cls: 'recipe-ingredient-text-all-pots' });
+						return; // Skip displaying other ingredients for this booster
+					}
+
+
+					if (fullIngredient && this.resourceSvgMap[fullIngredient.name]) {
+						// Use createResourceDisplay, adding a class for specific recipe item styling
+						// The createResourceDisplay function expects the main container, the resource name, quantity, and SVG
+						// However, we want just the icon and quantity here, so let's adjust createResourceDisplay or make a new one.
+						// For now, let's assume createResourceDisplay handles it and you might need a wrapper div for the icon and quantity
+						const ingredientWrapper = recipeDetails.createDiv({ cls: 'recipe-ingredient-small' }); // Wrapper for individual ingredient display
+						createResourceDisplay(ingredientWrapper, fullIngredient.name, ingredient.quantity, this.resourceSvgMap[fullIngredient.name]);
 					} else {
 						// Fallback to text if no SVG or ingredient found
-						recipeDetails.createSpan({ text: `${shortName} [${quantity}]`, cls: 'recipe-ingredient-text-fallback' });
+						recipeDetails.createSpan({ text: `${ingredient.type} [${ingredient.quantity}]`, cls: 'recipe-ingredient-text-fallback' });
 					}
 				});
 
 				const buttonGroup = recipeItem.createDiv({ cls: 'crafting-booster-actions' });
 				const craftButton = buttonGroup.createEl('button', { text: 'Craft' });
-				craftButton.onclick = () => this.craftBoosterItem(recipe);
+				craftButton.onclick = () => this.craftBoosterItem(booster); // Pass the full booster object
 
 				const useInfoButton = buttonGroup.createEl('button', { text: '?' });
 				useInfoButton.onclick = () => {
-					new ModalInformationbox(this.app, this.getBoosterInforFromFromName(recipe.name)).open();
+					new ModalInformationbox(this.app, booster.description).open(); // Use booster.description directly
 				};
 			}
 		});
 
-		return mainContent; // Return the full crafting layout wrapper
+		return mainContent;
 	}
 
 
@@ -297,8 +321,6 @@ export class MultiSelectModal extends Modal {
 		const stock = this.boosters[labelText] || 0;
 
 		// 2. Create the inner div that will hold the icon, name, and stock information.
-		// This div will become the 'div:first-child' of 'modal-checkbox-container'
-		// and thus receive 'display: flex; align-items: center; gap: 10px; flex-grow: 1;' from your CSS.
 		const boosterDetailsContainer = container.createEl('div', { cls: `booster-item-${boosterDefinition.id}` });
 
 		// APPLY THE CLASS HERE, directly to the element that createBoosterDisplay will populate
@@ -320,8 +342,6 @@ export class MultiSelectModal extends Modal {
 		const cooldownDurationMinutes = cooldownDurationSeconds / 60;
 		const momentDateString = this.mediator.getSettingString(boosterDefinition.boosterDateSettingKey);
 
-		// Call the updated createBoosterDisplay to populate the boosterDetailsContainer
-		// It now takes boosterDetailsContainer as its first argument and returns void.
 		if (momentDateString) {
 			const momentDate = window.moment(momentDateString, 'YYYY-MM-DD HH:mm:ss');
 
@@ -356,8 +376,6 @@ export class MultiSelectModal extends Modal {
 				this.useBoosterItem(labelText);
 			};
 		}
-
-		// No need for explicit appendChild calls here, createEl already does it.
 
 		return container;
 	}
@@ -502,22 +520,14 @@ export class MultiSelectModal extends Modal {
 	}
 
 
-
-	private checkIngredientsAvailability(incredients: { name: string; incredients: string[]; }) {
-		for (const ingredient of incredients.incredients) {
-			const [quantity, shortName] = ingredient.split('x');
-			if(debugLogs) console.debug(`quantity: ${quantity}\tshortName: ${shortName}`)
-			const requiredQuantity = parseInt(quantity);
-			const availableStock = this.remainingStock[this.getIngerementNameFromShortName(shortName) || 0];
-			if(debugLogs) console.debug(`requiredQuantity: ${requiredQuantity}\tavailableStock: ́${availableStock}`)
-			if (requiredQuantity > availableStock) {
-				return false; // Not enough stock for this ingredient
+	private checkIngredientsAvailability(booster: Booster): boolean {
+		for (const ingredient of booster.ingredients) {
+			if ((this.remainingStock[ingredient.type] || 0) < ingredient.quantity) {
+				return false;
 			}
 		}
-
 		return true;
 	}
-
 
 	private check1000IngredientsAvailableAndBurn() {
 		let totalAvailableIngredients = 0;
@@ -554,21 +564,13 @@ export class MultiSelectModal extends Modal {
 	
 		return false;
 	}
-	
-
-	
 
 
-	private useIngrediments(incredients: { name: string; incredients: string[]; }) {
-		for (const ingredient of incredients.incredients) {
-			const [quantity, shortName] = ingredient.split('x');
-			const requiredQuantity = parseInt(quantity);
-			const availableStock = this.remainingStock[this.getIngerementNameFromShortName(shortName) || 0];
-			const ingrementName = this.getIngerementNameFromShortName(shortName) || '';
-			this.updateIncrementStock(ingrementName, availableStock - requiredQuantity);
+	private useIngrediments(booster: Booster) {
+		for (const ingredient of booster.ingredients) {
+			this.remainingStock[ingredient.type] = (this.remainingStock[ingredient.type] || 0) - ingredient.quantity;
+			this.updateStockInformation();
 		}
-
-		return true;
 	}
 
 
@@ -576,10 +578,8 @@ export class MultiSelectModal extends Modal {
 		const stockInfo = this.containerEl.querySelector('.stock-display-grid');
 
 		if (stockInfo) {
-			// Assert that stockInfo is an HTMLElement for TypeScript
 			const stockInfoElement = stockInfo as HTMLElement;
-
-			stockInfoElement.empty(); // Now TypeScript knows `empty()` exists
+			stockInfoElement.empty();
 
 			const listOfUseableIngredientsToBeShown = elements
 				.filter(item => item.level <= this.mediator.getSettingNumber('statusLevel'))
@@ -591,7 +591,7 @@ export class MultiSelectModal extends Modal {
 				const svgContent = this.resourceSvgMap[increment.name];
 
 				if (svgContent) {
-					createResourceDisplay(stockInfoElement, increment.name, remainingStock, svgContent); // Use the asserted element
+					createResourceDisplay(stockInfoElement, increment.name, remainingStock, svgContent);
 				} else {
 					stockInfoElement.createEl('div', { text: `${increment.shortName} [${remainingStock}]`, cls: 'resource-text-fallback' });
 				}
@@ -601,30 +601,36 @@ export class MultiSelectModal extends Modal {
 
 
 
-	private craftBoosterItem(selectedItems: { name: string; incredients: string[]; }) {
-		// call here the recipe logic and reduce the stock
-		if(selectedItems.name == 'Ephemeral Euphoria'){
-			if(this.check1000IngredientsAvailableAndBurn()){
-				this.updateBoosterStock(selectedItems.name, 1);
-				this.mediator.setSettingNumber(this.getBoosterVarNameFromName(selectedItems.name), this.boosters[selectedItems.name]);
-				if(debugLogs) console.debug(`craft booster ${selectedItems.name}`);
+	private craftBoosterItem(selectedBooster: Booster) {
+		const boosterName = selectedBooster.name;
+		//const boosterId = selectedBooster.id;
+
+		if (boosterName === 'Ephemeral Euphoria') {
+			if (this.check1000IngredientsAvailableAndBurn()) {
+				this.updateBoosterStock(boosterName, 1);
+				this.mediator.setSettingNumber(this.getBoosterVarNameFromName(boosterName), this.boosters[boosterName]); // Adjust getBoosterVarNameFromName if it needs boosterId
+				if (debugLogs) console.debug(`craft booster ${boosterName}`);
 			} else {
-				if(debugLogs) console.debug(`not enough ingredients for booster ${selectedItems.name} in stock`);
-				new ModalInformationbox(this.app, `Not enough ingrediments available for '${selectedItems.name}'. Craft more Notes to collect new ingrediments.`).open();
+				if (debugLogs) console.debug(`not enough ingredients for booster ${boosterName} in stock`);
+				new ModalInformationbox(this.app, `Not enough ingredients available for '${boosterName}'. Craft more Notes to collect new ingredients.`).open();
 			}
-		} else if(selectedItems.name == 'Fortune Infusion'){
-			new ModalInformationbox(this.app, `'${selectedItems.name}' cannot be crafted. It is acquired through special means.`).open();
+		} else if (boosterName === 'Fortune Infusion') {
+			new ModalInformationbox(this.app, `'${boosterName}' cannot be crafted. It is acquired through special means.`).open();
 		} else {
-			if (this.checkIngredientsAvailability(selectedItems)) {
-				if(debugLogs) console.debug(`craft booster ${selectedItems.name}`);
-				this.updateBoosterStock(selectedItems.name, 1);
-				this.mediator.setSettingNumber(this.getBoosterVarNameFromName(selectedItems.name), this.boosters[selectedItems.name]);
-				this.useIngrediments(selectedItems);
-				//this.updateQuantityDisplay(selectedItems.name)
-				this.updateStockInformation();
+			// --- IMPORTANT: Update checkIngredientsAvailability and useIngrediments ---
+			// These functions will now receive `selectedBooster` (type Booster)
+			// or specifically `selectedBooster.ingredients` (type Ingredient[]).
+			// You'll need to adapt their implementation to work with the `Ingredient[]` structure
+			// instead of the old `string[]` format.
+			if (this.checkIngredientsAvailability(selectedBooster)) { // Pass the Booster object
+				if (debugLogs) console.debug(`craft booster ${boosterName}`);
+				this.updateBoosterStock(boosterName, 1);
+				this.mediator.setSettingNumber(this.getBoosterVarNameFromName(boosterName), this.boosters[boosterName]); // Adjust getBoosterVarNameFromName if it needs boosterId
+				this.useIngrediments(selectedBooster); // Pass the Booster object
+				this.updateStockInformation(); // Assuming this refreshes ingredient displays
 			} else {
-				if(debugLogs) console.debug(`not enough ingredients for booster ${selectedItems.name} in stock`);
-				new ModalInformationbox(this.app, `Not enough ingrediments available for '${selectedItems.name}'. Craft more Notes to collect new ingrediments.`).open();
+				if (debugLogs) console.debug(`not enough ingredients for booster ${boosterName} in stock`);
+				new ModalInformationbox(this.app, `Not enough ingredients available for '${boosterName}'. Craft more Notes to collect new ingredients.`).open();
 			}
 		}
 	}
@@ -677,13 +683,9 @@ export class MultiSelectModal extends Modal {
 		return null; // Return null if no matching element is found
 	}
 
-	private getBoosterVarNameFromName(boosterName: string) {
-		for (const element of boosterRecipes) {
-			if (element.name === boosterName) {
-				return element.varname;
-			}
-		}
-		return ''; // Return null if no matching element is found
+	private getBoosterVarNameFromName(boosterName: string): string {
+		const booster = getBoosterByName(boosterName);
+		return booster ? booster.id : '';
 	}
 
 	private getBoosterInforFromFromName(boosterName: string) {
@@ -692,7 +694,7 @@ export class MultiSelectModal extends Modal {
 				return element.description;
 			}
 		}
-		return ''; // Return null if no matching element is found
+		return '';
 	}
 
 	private getBoosterSwitchFromName(boosterName: string): string {
