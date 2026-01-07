@@ -3,7 +3,7 @@ import {decryptBoolean, decryptNumber, decryptString, encryptBoolean, encryptNum
 import {Badge} from "./badges";
 import {debugLogs, elements, listOfUseableIngredientsToBeShown, mil2sec, IngredientElement} from "./constants";
 import {Notice} from 'obsidian';
-import {concatenateStrings} from "./Utils";
+//import {concatenateStrings} from "./Utils";
 import {defaultSettings} from "./settings";
 import gamification from "./main";
 import { createEarnedIngredientHtml } from './ui/noticeUtils';
@@ -14,6 +14,7 @@ export class GamificationMediatorImpl implements GamificationMediator {
 	private settings: any;
 	private plugin: gamification;
 	public resourceSvgMap: Record<string, string>;
+	private remainingStock: Record<string, number> = {};
 
 	constructor(settings: any, plugin: gamification) {
 		this.settings = settings;
@@ -161,6 +162,21 @@ export class GamificationMediatorImpl implements GamificationMediator {
 
 	getRandomInt(min: number, max: number) {
 		return Math.floor(Math.random() * (max - min + 1)) + min;
+	}
+
+	async updateIngredientStock(ingredientName: string, newAmount: number): Promise<void> {
+		const ingredient = elements.find(el => el.name === ingredientName);
+		if (!ingredient) {
+			console.error(`Ingredient not found for name: ${ingredientName}. Cannot update stock.`);
+			return;
+		}
+
+		// Update in-memory cache
+		this.remainingStock[ingredientName] = newAmount;
+
+		// Update persistent setting
+		this.setSettingNumber(ingredient.varName, newAmount);
+		await this.saveSettings(); // Save immediately after each change
 	}
 
 }

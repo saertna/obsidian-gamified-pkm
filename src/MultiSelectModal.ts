@@ -24,7 +24,7 @@ import {
 } from './resourceIcons';
 import { Booster } from './interfaces/Booster'
 import { getBoosterByName, allBoosters} from './data/boosterDefinitions';
-
+//import {updateIngredientStock} from './GamificationMediatorImpl';
 
 export class MultiSelectModal extends Modal {
 	private items: string[];
@@ -534,39 +534,46 @@ export class MultiSelectModal extends Modal {
 		return true;
 	}
 
-	private check1000IngredientsAvailableAndBurn() {
+	private async check1000IngredientsAvailableAndBurn(): Promise<boolean> {
 		let totalAvailableIngredients = 0;
-	
-		// Calculate the total number of available ingredients
-		//elements.forEach(increment => {
-		listOfUseableIngredientsToBeShown.forEach(increment => {
-			totalAvailableIngredients += this.remainingStock[this.getIngerementFromName(increment).name] || 0;
+		const ingredientsToUpdate: { name: string; newAmount: number }[] = [];
+
+		// First pass: calculate total available ingredients (using in-memory remainingStock)
+		// Note: listOfUseableIngredientsToBeShown should contain full ingredient names
+		listOfUseableIngredientsToBeShown.forEach(ingredientName => {
+			totalAvailableIngredients += this.remainingStock[ingredientName] || 0;
 		});
-	
-		if(debugLogs) console.debug(`total amount of ingrediments: ${totalAvailableIngredients}`)
-		// If at least 1000 ingredients are available
+
+		if(debugLogs) console.debug(`total amount of ingredients: ${totalAvailableIngredients}`)
+
 		if (totalAvailableIngredients >= 1000) {
-			// Burn ingredients proportionally
-			//elements.forEach(increment => {
-			listOfUseableIngredientsToBeShown.forEach(increment => {
-				if (this.remainingStock[this.getIngerementFromName(increment).name]) {
-					const proportionalAmount = Math.ceil((this.remainingStock[this.getIngerementFromName(increment).name] / totalAvailableIngredients) * 1000);
-					//const rest = this.remainingStock[this.getIngerementFromName(increment).name] - proportionalAmount;
-					//if(debugLogs) console.debug(`${this.getIngerementFromName(increment).shortName} ${this.remainingStock[this.getIngerementFromName(increment).name]} shall be ${this.remainingStock[this.getIngerementFromName(increment).name] - rest} = ${this.remainingStock[this.getIngerementFromName(increment).name]} - ${rest}`)
-					//this.remainingStock[this.getIngerementFromName(increment).name] = this.remainingStock[this.getIngerementFromName(increment).name] - proportionalAmount;
-					//this.updateIncrementStock(this.getIngerementFromName(increment).varName, this.remainingStock[this.getIngerementFromName(increment).name])
-					this.updateIncrementStock(this.getIngerementFromName(increment).name, this.remainingStock[this.getIngerementFromName(increment).name] - proportionalAmount)
+			// Second pass: identify proportional amounts to burn
+			listOfUseableIngredientsToBeShown.forEach(ingredientName => {
+				const currentStock = this.remainingStock[ingredientName] || 0;
+				if (currentStock > 0) {
+					// Calculate proportional amount to burn
+					// Ensure proportionalAmount does not exceed currentStock
+					const rawProportionalAmount = (currentStock / totalAvailableIngredients) * 1000;
+					const proportionalAmountToBurn = Math.min(
+						currentStock, // Do not burn more than is available
+						Math.ceil(rawProportionalAmount) // Round up to ensure at least 1000 are burnt total
+					);
+
+					const newAmount = currentStock - proportionalAmountToBurn;
+					ingredientsToUpdate.push({ name: ingredientName, newAmount: newAmount });
 				}
 			});
-	
-			//save new stock
 
-			// Update the stock information display
-			this.updateStockInformation();
-	
+			// Execute all updates concurrently and wait for them to finish
+			const updatePromises = ingredientsToUpdate.map(item =>
+				this.mediator.updateIngredientStock(item.name, item.newAmount)
+			);
+			await Promise.all(updatePromises); // Wait for all individual ingredient updates to save
+
+			this.updateStockInformation(); // Refresh modal display after all burns are complete
 			return true;
 		}
-	
+
 		return false;
 	}
 
@@ -633,12 +640,12 @@ export class MultiSelectModal extends Modal {
 
 
 
-	private craftBoosterItem(selectedBooster: Booster) {
+	private async craftBoosterItem(selectedBooster: Booster) {
 		const boosterName = selectedBooster.name;
 		//const boosterId = selectedBooster.id;
 
 		if (boosterName === 'Ephemeral Euphoria') {
-			if (this.check1000IngredientsAvailableAndBurn()) {
+			if (await this.check1000IngredientsAvailableAndBurn()) {
 				this.updateBoosterStock(boosterName, 1);
 				this.mediator.setSettingNumber(this.getBoosterVarNameFromName(boosterName), this.boosters[boosterName]); // Adjust getBoosterVarNameFromName if it needs boosterId
 				if (debugLogs) console.debug(`craft booster ${boosterName}`);
