@@ -212,7 +212,7 @@ export class MultiSelectModal extends Modal {
 
 	private createCraftingLayout(): HTMLDivElement {
 		this.readIngrementStock();
-		const mainContent = this.containerEl.createEl('div'); // A wrapper for the entire crafting area
+		const mainContent = this.containerEl.createEl('div');
 		mainContent.className = 'modal-crafting-wrapper';
 
 		// 1. Section for displaying available ingredient stock
@@ -225,15 +225,13 @@ export class MultiSelectModal extends Modal {
 			.map(item => item.name);
 
 		listOfUseableIngredientsToBeShown.forEach(elementName => {
-			const increment = this.getIngerementFromName(elementName); // Assuming this returns the full ingredient object
+			const increment = this.getIngerementFromName(elementName);
 			const remainingStock = this.remainingStock[increment.name] || 0;
-			const svgContent = this.resourceSvgMap[increment.name]; // Look up the SVG for the resource
+			const svgContent = this.resourceSvgMap[increment.name];
 
 			if (svgContent) {
-				// Use the helper to display the icon and quantity for resources
 				createResourceDisplay(stockDisplayGrid, increment.name, remainingStock, svgContent);
 			} else {
-				// Fallback to text if no SVG is defined
 				stockDisplayGrid.createEl('div', { text: `${increment.shortName} [${remainingStock}]`, cls: 'resource-text-fallback' });
 			}
 		});
@@ -242,61 +240,56 @@ export class MultiSelectModal extends Modal {
 		const recipesSection = mainContent.createDiv({ cls: 'crafting-recipes-section' });
 		recipesSection.createEl('h3', { text: 'Craft Boosters' });
 
-		// Iterate over the new allBoosters array
-		Object.values(allBoosters).forEach(booster => { // Changed from boosterRecipes.forEach
+		Object.values(allBoosters).forEach(booster => {
 			if (this.boosterAvailableForUse(booster.name, this.mediator.getSettingNumber('statusLevel'))) {
 				const recipeItem = recipesSection.createDiv({ cls: 'crafting-booster-item' });
 
-				const recipeDetails = recipeItem.createDiv({ cls: 'crafting-booster-details' });
+				// flex container to hold two main columns: Booster Identity and Ingredients List
+				const boosterDisplayArea = recipeItem.createDiv({ cls: 'booster-display-area' });
 
-				// --- ADD BOOSTER ICON HERE ---
-				const boosterIconHolder = recipeDetails.createDiv({ cls: 'gamified-pkm-booster-icon-holder' });
+				// Wrapper for Booster Icon and Name
+				const boosterIdentity = boosterDisplayArea.createDiv({ cls: 'booster-identity' });
+
+				// Booster Icon
+				const boosterIconHolder = boosterIdentity.createDiv({ cls: 'gamified-pkm-booster-icon-holder' });
 				boosterIconHolder.innerHTML = booster.svg;
 				boosterIconHolder.style.color = booster.color;
-				boosterIconHolder.setAttribute('title', booster.description); // Tooltip for the icon
+				boosterIconHolder.setAttribute('title', booster.description);
 
-				// --- ADD BOOSTER NAME HERE ---
-				recipeDetails.createEl('span', { text: booster.name, cls: 'booster-name' }); // Added a class for potential specific styling
+				// Booster Name
+				boosterIdentity.createEl('span', { text: booster.name, cls: 'booster-name' });
 
-				recipeDetails.createEl('span', { text: ` ⇒ `, cls: 'separator' }); // Arrow separator
+				// Wrapper for Ingredients
+				const boosterRecipeIngredients = boosterDisplayArea.createDiv({ cls: 'booster-recipe-ingredients' });
 
 				// Display ingredients required for the recipe with icons
-				booster.ingredients.forEach(ingredient => { // Changed from recipe.incredients to booster.ingredients
-					const fullIngredient = elements.find(el => el.shortName === ingredient.type); // Find the full ingredient object
+				if (booster.specialIngredientRequirement === 'free all 22h' && booster.id === 'fortuneInfusion') {
+					boosterRecipeIngredients.createSpan({ text: '(Free every 22h)', cls: 'recipe-ingredient-text-free' });
+				} else if (booster.specialIngredientRequirement === 'all pots' && booster.id === 'ephemeralEuphoria') {
+					boosterRecipeIngredients.createSpan({ text: '(1000 total from all pots)', cls: 'recipe-ingredient-text-all-pots' });
+				} else if (booster.ingredients.length > 0) { // Only show separator if there are ingredients
+					boosterRecipeIngredients.createEl('span', { text: ` -- `, cls: 'booster-ingredients-separator' });
+					booster.ingredients.forEach(ingredient => {
+						const fullIngredient = elements.find(el => el.shortName === ingredient.type);
 
-					// If specialIngredientRequirement is present, handle it
-					if (booster.specialIngredientRequirement === 'free all 22h' && booster.id === 'fortuneInfusion') {
-						// Display specific text for Fortune Infusion instead of ingredients
-						recipeDetails.createSpan({ text: '(Free every 22h)', cls: 'recipe-ingredient-text-free' });
-						return; // Skip displaying other ingredients for this booster
-					}
-					if (booster.specialIngredientRequirement === 'all pots' && booster.id === 'ephemeralEuphoria') {
-						// Display specific text for Ephemeral Euphoria
-						recipeDetails.createSpan({ text: '(1000 total from all pots)', cls: 'recipe-ingredient-text-all-pots' });
-						return; // Skip displaying other ingredients for this booster
-					}
+						if (fullIngredient && this.resourceSvgMap[fullIngredient.name]) {
+							const ingredientWrapper = boosterRecipeIngredients.createDiv({ cls: 'recipe-ingredient-small' });
+							createRecipeDisplay(ingredientWrapper, fullIngredient.name, ingredient.quantity, this.resourceSvgMap[fullIngredient.name]);
+						} else {
+							boosterRecipeIngredients.createSpan({ text: `${ingredient.type} [${ingredient.quantity}]`, cls: 'recipe-ingredient-text-fallback' });
+						}
+					});
+				}
 
 
-					if (fullIngredient && this.resourceSvgMap[fullIngredient.name]) {
-						// Use createResourceDisplay, adding a class for specific recipe item styling
-						// The createResourceDisplay function expects the main container, the resource name, quantity, and SVG
-						// However, we want just the icon and quantity here, so let's adjust createResourceDisplay or make a new one.
-						// For now, let's assume createResourceDisplay handles it and you might need a wrapper div for the icon and quantity
-						const ingredientWrapper = recipeDetails.createDiv({ cls: 'recipe-ingredient-small' }); // Wrapper for individual ingredient display
-						createRecipeDisplay(ingredientWrapper, fullIngredient.name, ingredient.quantity, this.resourceSvgMap[fullIngredient.name]);
-					} else {
-						// Fallback to text if no SVG or ingredient found
-						recipeDetails.createSpan({ text: `${ingredient.type} [${ingredient.quantity}]`, cls: 'recipe-ingredient-text-fallback' });
-					}
-				});
-
+				// Crafting Actions (buttons)
 				const buttonGroup = recipeItem.createDiv({ cls: 'crafting-booster-actions' });
 				const craftButton = buttonGroup.createEl('button', { text: 'Craft' });
-				craftButton.onclick = () => this.craftBoosterItem(booster); // Pass the full booster object
+				craftButton.onclick = () => this.craftBoosterItem(booster);
 
 				const useInfoButton = buttonGroup.createEl('button', { text: '?' });
 				useInfoButton.onclick = () => {
-					new ModalInformationbox(this.app, booster.description).open(); // Use booster.description directly
+					new ModalInformationbox(this.app, booster.description).open();
 				};
 			}
 		});
@@ -306,7 +299,7 @@ export class MultiSelectModal extends Modal {
 
 
 
-	private createBoosterList(labelText: string): HTMLDivElement | undefined { // Added explicit return type
+	private createBoosterList(labelText: string): HTMLDivElement | undefined {
 		const boosterDefinition = getBoosterByName(labelText);
 
 		if (!boosterDefinition) {
@@ -316,14 +309,13 @@ export class MultiSelectModal extends Modal {
 
 		// 1. Create the outer container for the entire booster list item
 		const container = this.containerEl.createEl('div');
-		container.className = 'modal-checkbox-container'; // This class gets 'display: flex; justify-content: space-between;'
+		container.className = 'modal-checkbox-container';
 
 		const stock = this.boosters[labelText] || 0;
 
 		// 2. Create the inner div that will hold the icon, name, and stock information.
 		const boosterDetailsContainer = container.createEl('div', { cls: `booster-item-${boosterDefinition.id}` });
 
-		// APPLY THE CLASS HERE, directly to the element that createBoosterDisplay will populate
 		boosterDetailsContainer.addClass('booster-list-item-icon');
 
 
@@ -345,21 +337,21 @@ export class MultiSelectModal extends Modal {
 		if (momentDateString) {
 			const momentDate = window.moment(momentDateString, 'YYYY-MM-DD HH:mm:ss');
 
-			if (!isMinutesPassed(momentDate, cooldownDurationMinutes)) { // Still in cooldown
+			if (!isMinutesPassed(momentDate, cooldownDurationMinutes)) {
 				const hoursRemaining = hoursUntilMinutesPassed(momentDate, cooldownDurationMinutes);
 				if (debugLogs) console.debug(`Booster ${labelText} is still in cooldown for ${hoursRemaining.toFixed(1)} hours`);
 				if (debugLogs) console.log(`createBoosterList: Stock amount ${stock}`);
 
-				createBoosterDisplay(boosterDetailsContainer, boosterDefinition, stock); // Populate the inner div
+				createBoosterDisplay(boosterDetailsContainer, boosterDefinition, stock);
 
 				useButton.innerText = `cooldown ${hoursRemaining.toFixed(1)} hours`;
 				useButton.disabled = true;
-				useButton.addClass('cooldown'); // Add a class for specific cooldown styling
+				useButton.addClass('cooldown');
 				useButton.onclick = () => {
 					new ModalInformationbox(this.app, `${labelText} is for ${hoursRemaining.toFixed(1)} hours in cooldown and can only then be used again.`).open();
 				};
 			} else {
-				createBoosterDisplay(boosterDetailsContainer, boosterDefinition, stock); // Populate the inner div
+				createBoosterDisplay(boosterDetailsContainer, boosterDefinition, stock);
 
 				useButton.innerText = 'Use';
 				useButton.disabled = false;
@@ -368,7 +360,7 @@ export class MultiSelectModal extends Modal {
 				};
 			}
 		} else {
-			createBoosterDisplay(boosterDetailsContainer, boosterDefinition, stock); // Populate the inner div
+			createBoosterDisplay(boosterDetailsContainer, boosterDefinition, stock);
 
 			useButton.innerText = 'Use';
 			useButton.disabled = false;

@@ -75,11 +75,15 @@
 
 /* Overall Modal Layout for Crafting */
 .modal-crafting-wrapper {
+	max-width: 700px; /* Adjust this value as needed, e.g., 700px or 800px */
+	/* You might need to adjust the modal-container itself if this is too small */
+	width: 100%; /* Make it take full width of its container up to max-width */
+	/* Other properties already defined */
 	display: flex;
 	flex-direction: column;
-	gap: 20px; /* Space between the ingredients section and recipes section */
+	gap: 20px;
 	padding: 15px;
-	max-height: 80vh; /* Make modal content scrollable if it gets too long */
+	max-height: 80vh;
 	overflow-y: auto;
 }
 
@@ -163,13 +167,13 @@
 /* Styles for individual craftable booster recipe items */
 .crafting-booster-item {
 	display: flex;
-	align-items: center;
-	justify-content: space-between; /* Distribute details and buttons */
+	align-items: center; /* Vertically center the display area and buttons */
+	justify-content: space-between; /* Pushes booster-display-area to left, actions to right */
 	padding: 12px 15px;
 	margin-bottom: 10px;
 	border: 1px solid var(--background-modifier-border-hover);
 	border-radius: var(--radius-m);
-	background-color: var(--background-secondary); /* Slightly different background for recipes */
+	background-color: var(--background-secondary);
 	box-shadow: var(--shadow-s);
 	transition: background-color 0.2s ease-in-out;
 }
@@ -204,6 +208,15 @@
 	gap: 4px; /* Tighter spacing for icon and quantity */
 }
 
+.crafting-booster-details .gamified-pkm-resource-item.recipe-ingredient-small {
+	/* Special styling for ingredients listed within a recipe */
+	background-color: transparent; /* No background for individual ingredients in recipe */
+	border: none;
+	padding: 0;
+	gap: 4px; /* Tighter spacing for icon and quantity */
+	flex-shrink: 0;
+}
+
 .crafting-booster-details .gamified-pkm-resource-item.recipe-ingredient-small .gamified-pkm-resource-icon-holder {
 	width: 16px; /* Slightly smaller icons for recipe ingredients */
 	height: 16px;
@@ -211,13 +224,16 @@
 
 .crafting-booster-details .gamified-pkm-resource-item.recipe-ingredient-small .gamified-pkm-resource-quantity {
 	font-size: 0.8em;
+	white-space: nowrap;
 }
 
 /* Buttons for crafting actions */
 .crafting-booster-actions {
 	display: flex;
-	gap: 8px;
+	flex-direction: column; /* CRUCIAL: Stacks buttons vertically */
+	gap: 5px; /* Space between stacked buttons */
 	flex-shrink: 0; /* Prevent buttons from shrinking */
+	margin-left: 10px; /* Add some space between ingredients and buttons */
 }
 
 .crafting-booster-actions button {
@@ -230,6 +246,7 @@
 	font-size: 0.9em;
 	font-weight: 500;
 	transition: background-color 0.2s ease-in-out;
+	white-space: nowrap; /* Prevent button text from wrapping */
 }
 
 .crafting-booster-actions button:hover {
@@ -300,4 +317,84 @@
 	background-color: var(--background-modifier-error); /* Reddish for cooldown */
 	color: var(--text-on-danger);
 	cursor: not-allowed;
+}
+
+.booster-identity {
+	display: flex;
+	align-items: center;
+	gap: 8px; /* Space between icon and name */
+	flex-shrink: 0; /* Prevents booster name from shrinking */
+	white-space: nowrap; /* Ensures booster icon and name stay on one line */
+}
+
+.booster-ingredients-separator {
+	margin: 0 5px; /* Adjust spacing around the separator */
+	color: var(--text-muted);
+	font-weight: normal;
+	font-size: 0.9em;
+}
+
+.booster-recipe-ingredients {
+	display: flex;
+	align-items: center; /* Vertically center individual ingredient items */
+	flex-wrap: wrap; /* CRUCIAL: Allows ingredients to wrap to new lines *within this container* */
+	gap: 8px; /* Space between individual ingredient items */
+	flex-grow: 1; /* Allows ingredients to take up available horizontal space */
+	/* Remove overflow-x: auto and related scrollbar styling if you want wrapping instead */
+	/* You might want a min-width here if you want a certain baseline */
+	min-width: 150px; /* Example: ensure enough space for a few ingredients before wrapping */
+}
+
+.booster-name {
+	font-weight: bold;
+	font-size: 1.05em;
+	color: var(--text-highlight-bg); /* Highlight booster names */
+	white-space: nowrap; /* Ensures booster name stays on one line */
+}
+
+.booster-identity .gamified-pkm-booster-icon-holder {
+	width: 24px;   /* Consistent icon size */
+	height: 24px;
+	flex-shrink: 0;
+}
+
+.crafting-booster-primary-info {
+	display: flex;
+	align-items: center;
+	flex-grow: 1; /* Allows it to take available space */
+	gap: 15px; /* Space between booster identity and ingredients list */
+	/* Remove flex-wrap: wrap here */
+	color: var(--text-normal);
+	font-weight: 500;
+}
+
+.booster-display-area {
+	display: flex; /* Makes booster-identity and booster-recipe-ingredients align horizontally */
+	align-items: center; /* Vertically center items */
+	flex-grow: 1; /* Allows it to take up available horizontal space */
+	/* Adjust gap here if you want space between booster name/icon block and ingredient block */
+	gap: 15px; /* Space between booster identity and ingredients list */
+}
+
+
+.booster-recipe-ingredients .recipe-ingredient-small {
+	/* Special styling for ingredients listed within a recipe */
+	display: flex; /* Each individual ingredient (icon+qty) is a flex item */
+	align-items: center;
+	background-color: transparent; /* No background for individual ingredients in recipe */
+	border: none;
+	padding: 0;
+	gap: 4px; /* Tighter spacing for icon and quantity */
+	flex-shrink: 0; /* Prevent individual ingredient items from shrinking */
+}
+
+.booster-recipe-ingredients .recipe-ingredient-small .gamified-pkm-resource-icon-holder {
+	width: 16px; /* Slightly smaller icons for recipe ingredients */
+	height: 16px;
+	flex-shrink: 0;
+}
+
+.booster-recipe-ingredients .recipe-ingredient-small .gamified-pkm-resource-quantity {
+	font-size: 0.8em;
+	white-space: nowrap; /* Ensure quantity stays on one line */
 }
