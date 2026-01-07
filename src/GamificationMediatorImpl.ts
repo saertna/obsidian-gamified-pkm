@@ -1,19 +1,24 @@
 import { GamificationMediator } from './GamificationMediator';
 import {decryptBoolean, decryptNumber, decryptString, encryptBoolean, encryptNumber, encryptString} from "./encryption";
 import {Badge} from "./badges";
-import {debugLogs, elements, listOfUseableIngredientsToBeShown, mil2sec} from "./constants";
+import {debugLogs, elements, listOfUseableIngredientsToBeShown, mil2sec, IngredientElement} from "./constants";
 import {Notice} from 'obsidian';
 import {concatenateStrings} from "./Utils";
 import {defaultSettings} from "./settings";
 import gamification from "./main";
+import { createEarnedIngredientHtml } from './ui/noticeUtils';
+import { resourceSvgMap } from './resourceIcons';
+
 
 export class GamificationMediatorImpl implements GamificationMediator {
 	private settings: any;
 	private plugin: gamification;
+	public resourceSvgMap: Record<string, string>;
 
 	constructor(settings: any, plugin: gamification) {
 		this.settings = settings;
 		this.plugin = plugin;
+		this.resourceSvgMap = resourceSvgMap;
 	}
 
 	closeProfileView(){
@@ -93,37 +98,69 @@ export class GamificationMediatorImpl implements GamificationMediator {
 		this.settings = Object.assign({}, defaultSettings, await this.plugin.loadData());
 		if(debugLogs) console.debug('loadSettings()')
 	}
+
 	async acquireIngredients(chance:number, min:number, max:number) {
-		const earnedIngredientToShow = [];
+		const earnedIngredientCounts = new Map<string, { ingredient: IngredientElement, count: number }>();
+		let anyIngredientEarned = false;
+
+		const minNoticeDurationSeconds = 4; // seconds
+		const userConfiguredDuration = this.getSettingNumber('timeShowNotice');
+		const actualNoticeDurationMs = Math.max(userConfiguredDuration, minNoticeDurationSeconds) * mil2sec;
+
 		if (Math.random() < chance) {
 			const randomAmount = this.getRandomInt(min,max);
+			if (randomAmount > 0) {
+				anyIngredientEarned = true;
+			}
+
 			for (let i=1;i<=randomAmount;i++){
 				const randomIngredientIndex = this.getRandomInt(0, listOfUseableIngredientsToBeShown.length-1);
 				const earnedIngredient = elements[randomIngredientIndex];
 				const elementCount = this.getSettingNumber(earnedIngredient.varName);
-				earnedIngredientToShow.push(earnedIngredient.name);
+
+				if (earnedIngredientCounts.has(earnedIngredient.name)) {
+					earnedIngredientCounts.get(earnedIngredient.name)!.count++;
+				} else {
+					earnedIngredientCounts.set(earnedIngredient.name, { ingredient: earnedIngredient, count: 1 });
+				}
 
 				if (elementCount !== null) {
 					this.setSettingNumber(earnedIngredient.varName, elementCount + 1);
-					await this.saveSettings();
-
 				} else {
 					console.error(`Invalid element count for ${earnedIngredient.varName}`);
 				}
 			}
-			if(debugLogs) console.debug(`You earned: ${concatenateStrings(earnedIngredientToShow)}`);
-			new Notice(`You earned ${concatenateStrings(earnedIngredientToShow)}`,this.getSettingNumber('timeShowNotice') * mil2sec)
+			await this.saveSettings();
+
+			if (anyIngredientEarned) {
+				const uniqueEarnedIngredients = Array.from(earnedIngredientCounts.values());
+
+				// Construct the HTML message for the Notice
+				const messageFragment = document.createDocumentFragment();
+				messageFragment.appendChild(document.createTextNode('You earned:\n'));
+
+				uniqueEarnedIngredients.forEach((item, index) => {
+					const ingredientHtml = createEarnedIngredientHtml(item.ingredient, item.count);
+					messageFragment.appendChild(ingredientHtml);
+					if (index < uniqueEarnedIngredients.length - 1) {
+						messageFragment.appendChild(document.createTextNode('\n'));
+					}
+				});
+
+				if(debugLogs) console.debug(`You earned: ${uniqueEarnedIngredients.map(item => `${item.ingredient.name} x${item.count}`).join(', ')}`);
+				new Notice(messageFragment, actualNoticeDurationMs);
+			} else {
+				new Notice(`You didn't find any ingredients this time, but better luck next time!`, this.getSettingNumber('timeShowNotice') * mil2sec);
+				if(debugLogs) console.debug('You did not earn an ingredient this time (random amount was 0).');
+			}
 		} else {
 			new Notice(`This time you didn't earn an ingredient.`,this.getSettingNumber('timeShowNotice') * mil2sec)
 			if(debugLogs) console.debug('You did not earn an ingredient this time.');
 		}
-
 	}
 
 	getRandomInt(min: number, max: number) {
 		return Math.floor(Math.random() * (max - min + 1)) + min;
 	}
-
-
 
 }

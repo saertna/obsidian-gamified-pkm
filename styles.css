@@ -71,3 +71,404 @@
 	height: 50px;
 	margin-bottom: 20px;
 }
+
+
+/* Overall Modal Layout for Crafting */
+.modal-crafting-wrapper {
+	max-width: 750px;
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+	gap: 20px;
+	padding: 15px;
+	max-height: 80vh;
+	overflow-y: auto;
+}
+
+/* Sections for Stock and Recipes */
+.crafting-stock-section,
+.crafting-recipes-section {
+	border: 1px solid var(--background-modifier-border);
+	border-radius: var(--radius-l); /* Rounded corners for sections */
+	padding: 15px;
+	background-color: var(--background-primary-alt); /* Slightly different background */
+	box-shadow: var(--shadow-s); /* Subtle shadow for depth */
+}
+
+.crafting-stock-section h3,
+.crafting-recipes-section h3 {
+	margin-top: 0;
+	margin-bottom: 15px; /* More space below titles */
+	color: var(--text-normal);
+	font-size: 1.2em;
+	font-weight: 600;
+}
+
+/* Grid for displaying available ingredient stock */
+.stock-display-grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); /* Responsive grid for resource items */
+	gap: 12px; /* Space between grid items */
+}
+
+/* Styling for individual resource items (icon + quantity) */
+.gamified-pkm-resource-item {
+	display: flex;
+	align-items: center;
+	gap: 8px; /* Space between icon and quantity text */
+	padding: 8px 10px;
+	border-radius: var(--radius-m);
+	background-color: var(--background-secondary-alt); /* Background for each resource entry */
+	color: var(--text-normal); /* Default text color, overridden by iconHolder.style.color */
+	font-size: 0.95em;
+	white-space: nowrap; /* Prevent wrapping within one resource item */
+}
+
+/* Icon container within the resource item */
+.gamified-pkm-resource-icon-holder {
+	width: 24px;   /* Consistent icon size */
+	height: 24px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-shrink: 0; /* Prevent icon from shrinking when space is tight */
+}
+
+.gamified-pkm-resource-icon-holder svg {
+	max-width: 100%;
+	max-height: 100%;
+	stroke: currentColor; /* Important: this makes the SVG inherit color from its parent */
+	fill: none; /* Ensure no fill by default, you can add fill="currentColor" in SVG if desired */
+	/* You can add a transition for color changes if you like */
+	transition: stroke 0.2s ease-in-out;
+}
+
+.gamified-pkm-resource-quantity {
+	font-size: 0.9em;
+	color: var(--text-muted);
+}
+
+.gamified-pkm-resource-title {
+	font-size: 0.9em;
+	color: var(--text-muted);
+}
+
+/* Fallback for resources without a defined SVG */
+.resource-text-fallback {
+	color: var(--text-muted);
+	font-style: italic;
+	padding: 8px;
+	background-color: var(--background-secondary-alt);
+	border-radius: var(--radius-m);
+}
+
+/* Styles for individual craftable booster recipe items */
+.crafting-booster-item {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 12px 15px;
+	margin-bottom: 10px;
+	border: 1px solid var(--background-modifier-border-hover);
+	border-radius: var(--radius-m);
+	background-color: var(--background-secondary);
+	box-shadow: var(--shadow-s);
+	transition: background-color 0.2s ease-in-out;
+	min-height: auto;
+}
+
+.crafting-booster-item:hover {
+	background-color: var(--background-secondary-hover);
+}
+
+/* Details section of a recipe (booster name + ingredients) */
+/*.crafting-booster-details {
+	display: flex;
+	align-items: center;
+	flex-wrap: wrap;
+	gap: 8px;
+	flex-grow: 1;
+	margin-right: 10px;
+	color: var(--text-normal);
+	font-weight: 500;
+}
+*/
+
+.crafting-booster-details > span:first-child { /* The booster name itself */
+	font-weight: bold;
+	font-size: 1.05em;
+	color: var(--text-highlight-bg); /* Highlight booster names */
+}
+
+.crafting-booster-details .gamified-pkm-resource-item {
+	/* Special styling for ingredients listed within a recipe */
+	background-color: transparent; /* No background for individual ingredients in recipe */
+	border: none;
+	padding: 0;
+	gap: 4px; /* Tighter spacing for icon and quantity */
+}
+
+.crafting-booster-details .gamified-pkm-resource-item.recipe-ingredient-small {
+	/* Special styling for ingredients listed within a recipe */
+	background-color: transparent; /* No background for individual ingredients in recipe */
+	border: none;
+	padding: 0;
+	gap: 4px; /* Tighter spacing for icon and quantity */
+	flex-shrink: 0;
+}
+
+.crafting-booster-details .gamified-pkm-resource-item.recipe-ingredient-small .gamified-pkm-resource-icon-holder {
+	width: 16px; /* Slightly smaller icons for recipe ingredients */
+	height: 16px;
+}
+
+.crafting-booster-details .gamified-pkm-resource-item.recipe-ingredient-small .gamified-pkm-resource-quantity {
+	font-size: 0.8em;
+	white-space: nowrap;
+}
+
+/* Buttons for crafting actions */
+.crafting-booster-actions {
+	display: flex;
+	flex-direction: column;
+	gap: 5px;
+	flex-shrink: 0;
+	margin-left: 15px;
+}
+
+.crafting-booster-actions button {
+	padding: 8px 15px;
+	border-radius: var(--radius-s);
+	background-color: var(--interactive-accent);
+	color: var(--text-on-accent);
+	cursor: pointer;
+	border: none;
+	font-size: 0.9em;
+	font-weight: 500;
+	transition: background-color 0.2s ease-in-out;
+	white-space: nowrap;
+}
+
+.crafting-booster-actions button:hover {
+	background-color: var(--interactive-accent-hover);
+}
+
+.crafting-booster-actions button:last-child { /* The '?' button for information */
+	background-color: var(--background-modifier-border);
+	color: var(--text-muted);
+}
+
+.crafting-booster-actions button:last-child:hover {
+	background-color: var(--background-modifier-border-hover);
+	color: var(--text-normal);
+}
+
+/* Styling for booster list (when useBooster is true in modal) */
+.modal-checkbox-container {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 10px 15px;
+	margin-bottom: 10px;
+	border: 1px solid var(--background-modifier-border);
+	border-radius: var(--radius-m);
+	background-color: var(--background-secondary-alt);
+	box-shadow: var(--shadow-s);
+}
+
+.modal-checkbox-container > div:first-child { /* The div holding booster name/icon */
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	flex-grow: 1;
+	font-size: 1.1em;
+	font-weight: bold;
+}
+
+.modal-checkbox-container button {
+	padding: 8px 15px;
+	border-radius: var(--radius-s);
+	background-color: var(--interactive-accent);
+	color: var(--text-on-accent);
+	cursor: pointer;
+	border: none;
+	font-size: 0.9em;
+	font-weight: 500;
+	transition: background-color 0.2s ease-in-out;
+}
+
+.modal-checkbox-container button:hover {
+	background-color: var(--interactive-accent-hover);
+}
+
+.modal-checkbox-container button#information {
+	background-color: var(--background-modifier-border);
+	color: var(--text-muted);
+}
+
+.modal-checkbox-container button#information:hover {
+	background-color: var(--background-modifier-border-hover);
+	color: var(--text-normal);
+}
+
+/* Optional: styling for cooldown text */
+.modal-checkbox-container button[id^="use-button-"][disabled],
+.modal-checkbox-container button[id^="use-button-"][class*="cooldown"] {
+	background-color: var(--background-modifier-error); /* Reddish for cooldown */
+	color: var(--text-on-danger);
+	cursor: not-allowed;
+}
+
+.booster-identity {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	flex-shrink: 0;
+	white-space: nowrap;
+}
+
+.booster-ingredients-separator {
+	margin: 0 5px; /* Adjust spacing around the separator */
+	color: var(--text-muted);
+	font-weight: normal;
+	font-size: 0.9em;
+}
+
+.booster-name {
+	font-weight: bold;
+	font-size: 1.05em;
+	color: var(--text-highlight-bg);
+	white-space: nowrap;
+}
+
+.booster-identity .gamified-pkm-booster-icon-holder {
+	width: 24px;
+	height: 24px;
+	flex-shrink: 0;
+}
+
+.crafting-booster-primary-info {
+	display: flex;
+	align-items: center;
+	flex-grow: 1; /* Allows it to take available space */
+	gap: 15px; /* Space between booster identity and ingredients list */
+	/* Remove flex-wrap: wrap here */
+	color: var(--text-normal);
+	font-weight: 500;
+}
+
+.booster-display-area {
+	display: flex; /* Makes booster-identity and booster-recipe-ingredients align horizontally */
+	align-items: center; /* Vertically center items */
+	flex-grow: 1; /* Allows it to take up available horizontal space */
+	/* Adjust gap here if you want space between booster name/icon block and ingredient block */
+	gap: 15px; /* Space between booster identity and ingredients list */
+}
+
+
+.booster-recipe-ingredients {
+	display: flex;
+	flex-direction: column;
+	gap: 5px;
+	flex-grow: 1;
+	min-width: 60px;
+	max-width: 100px;
+	margin-left: 15px;
+	padding-left: 10px;
+	border-left: 1px solid var(--background-modifier-border-hover);
+	max-height: none;
+	overflow-y: visible;
+}
+
+.booster-recipe-ingredients {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-end; /* CRITICAL: Align contents of this flex container to the right */
+	gap: 5px;
+	flex-grow: 1;
+	min-width: 100px; /* Give it a bit more minimum room to work with */
+	/* max-width: 80px;  <-- REMOVE THIS LINE ENTIRELY */
+	margin-left: auto; /* CRITICAL: Pushes this whole block to the right within its parent */
+	padding-left: 10px;
+	border-left: 1px solid var(--background-modifier-border-hover);
+	max-height: none;
+	overflow-y: visible;
+}
+
+.booster-recipe-ingredients .recipe-ingredient-small .gamified-pkm-resource-quantity {
+	font-size: 0.8em;
+	white-space: nowrap; /* Ensure quantity stays on one line */
+}
+
+.booster-info-and-ingredients {
+	display: flex;
+	align-items: center;
+	flex-grow: 1;
+	gap: 15px;
+	min-width: 0;
+}
+
+.booster-recipe-ingredients .recipe-ingredient-item {
+	display: flex;
+	align-items: center;
+	gap: 4px;
+	flex-shrink: 0;
+	width: auto;
+	padding: 4px 8px;
+	border-radius: var(--radius-s);
+	background-color: var(--background-secondary-alt);
+	font-size: 0.9em;
+	color: var(--text-muted);
+	white-space: nowrap;
+}
+
+.booster-recipe-ingredients .recipe-ingredient-item .gamified-pkm-resource-icon-holder {
+	width: 16px;
+	height: 16px;
+	flex-shrink: 0;
+}
+.booster-recipe-ingredients .recipe-ingredient-item .gamified-pkm-resource-quantity {
+	font-size: 0.9em;
+	color: var(--text-normal);
+	font-weight: 500;
+}
+
+.gamified-pkm-resource-item .gamified-pkm-resource-title {
+	font-weight: normal;
+	font-size: 1em; /* Adjust as needed */
+	color: var(--text-normal);
+}
+
+.gamified-pkm-notice-ingredient-wrapper {
+	display: inline-flex; /* Use inline-flex to align icon and text horizontally */
+	align-items: center;
+	gap: 4px; /* Space between icon and name */
+	margin: 0 4px; /* Space between different earned ingredients */
+	padding: 2px 6px; /* Small padding around each ingredient entry */
+	border-radius: var(--radius-s); /* Slightly rounded corners */
+	background-color: var(--background-modifier-hover); /* A subtle background to make them stand out */
+	color: var(--text-normal);
+}
+
+.gamified-pkm-notice-icon {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 16px;
+	height: 16px;
+	flex-shrink: 0;
+}
+
+
+.gamified-pkm-notice-icon svg {
+	max-width: 100%;
+	max-height: 100%;
+	stroke: currentColor;
+	fill: none;
+}
+
+.gamified-pkm-notice-name {
+	font-size: 0.85em;
+	color: var(--text-normal);
+	white-space: nowrap;
+}
