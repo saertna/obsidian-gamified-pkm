@@ -21,4 +21,6 @@ export interface GamificationMediator {
 	updateChartWeeklyColorToGo(value: string): void
 
 	closeProfileView(): void
+
+	updateIngredientStock(ingredientName: string, newAmount: number ):  void
 }

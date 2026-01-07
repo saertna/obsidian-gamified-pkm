@@ -1,6 +1,7 @@
 import {App, Modal, Notice} from 'obsidian';
 import {
 	elements,
+	IngredientElement,
 	boosterRecipes,
 	listOfUseableBoostersToBeShown,
 	listOfUseableIngredientsToBeShown,
@@ -23,7 +24,7 @@ import {
 } from './resourceIcons';
 import { Booster } from './interfaces/Booster'
 import { getBoosterByName, allBoosters} from './data/boosterDefinitions';
-
+//import {updateIngredientStock} from './GamificationMediatorImpl';
 
 export class MultiSelectModal extends Modal {
 	private items: string[];
@@ -512,56 +513,103 @@ export class MultiSelectModal extends Modal {
 
 
 	private checkIngredientsAvailability(booster: Booster): boolean {
-		for (const ingredient of booster.ingredients) {
-			if ((this.remainingStock[ingredient.type] || 0) < ingredient.quantity) {
+		if(debugLogs) console.log(`Checking ingredients for Booster: ${booster.name}`);
+
+		for (const requiredIngredient of booster.ingredients) {
+			const fullIngredientDefinition: IngredientElement | undefined = elements.find(el => el.shortName === requiredIngredient.type);
+
+			if (!fullIngredientDefinition) {
+				if(debugLogs) console.error(`Ingredient definition not found for shortName: ${requiredIngredient.type}. Cannot check availability for ${booster.name}.`);
+				return false;
+			}
+
+			const currentStock = this.remainingStock[fullIngredientDefinition.name] || 0;
+
+			if (currentStock < requiredIngredient.quantity) {
+				if(debugLogs) console.log(`Not enough ${fullIngredientDefinition.name} for ${booster.name}. Needed: ${requiredIngredient.quantity}, Have: ${currentStock}.`);
 				return false;
 			}
 		}
+
 		return true;
 	}
 
-	private check1000IngredientsAvailableAndBurn() {
+	private async check1000IngredientsAvailableAndBurn(): Promise<boolean> {
 		let totalAvailableIngredients = 0;
-	
-		// Calculate the total number of available ingredients
-		//elements.forEach(increment => {
-		listOfUseableIngredientsToBeShown.forEach(increment => {
-			totalAvailableIngredients += this.remainingStock[this.getIngerementFromName(increment).name] || 0;
+		const ingredientsToUpdate: { name: string; newAmount: number }[] = [];
+
+		// First pass: calculate total available ingredients (using in-memory remainingStock)
+		// Note: listOfUseableIngredientsToBeShown should contain full ingredient names
+		listOfUseableIngredientsToBeShown.forEach(ingredientName => {
+			totalAvailableIngredients += this.remainingStock[ingredientName] || 0;
 		});
-	
-		if(debugLogs) console.debug(`total amount of ingrediments: ${totalAvailableIngredients}`)
-		// If at least 1000 ingredients are available
+
+		if(debugLogs) console.debug(`total amount of ingredients: ${totalAvailableIngredients}`)
+
 		if (totalAvailableIngredients >= 1000) {
-			// Burn ingredients proportionally
-			//elements.forEach(increment => {
-			listOfUseableIngredientsToBeShown.forEach(increment => {
-				if (this.remainingStock[this.getIngerementFromName(increment).name]) {
-					const proportionalAmount = Math.ceil((this.remainingStock[this.getIngerementFromName(increment).name] / totalAvailableIngredients) * 1000);
-					//const rest = this.remainingStock[this.getIngerementFromName(increment).name] - proportionalAmount;
-					//if(debugLogs) console.debug(`${this.getIngerementFromName(increment).shortName} ${this.remainingStock[this.getIngerementFromName(increment).name]} shall be ${this.remainingStock[this.getIngerementFromName(increment).name] - rest} = ${this.remainingStock[this.getIngerementFromName(increment).name]} - ${rest}`)
-					//this.remainingStock[this.getIngerementFromName(increment).name] = this.remainingStock[this.getIngerementFromName(increment).name] - proportionalAmount;
-					//this.updateIncrementStock(this.getIngerementFromName(increment).varName, this.remainingStock[this.getIngerementFromName(increment).name])
-					this.updateIncrementStock(this.getIngerementFromName(increment).name, this.remainingStock[this.getIngerementFromName(increment).name] - proportionalAmount)
+			// Second pass: identify proportional amounts to burn
+			listOfUseableIngredientsToBeShown.forEach(ingredientName => {
+				const currentStock = this.remainingStock[ingredientName] || 0;
+				if (currentStock > 0) {
+					// Calculate proportional amount to burn
+					// Ensure proportionalAmount does not exceed currentStock
+					const rawProportionalAmount = (currentStock / totalAvailableIngredients) * 1000;
+					const proportionalAmountToBurn = Math.min(
+						currentStock, // Do not burn more than is available
+						Math.ceil(rawProportionalAmount) // Round up to ensure at least 1000 are burnt total
+					);
+
+					const newAmount = currentStock - proportionalAmountToBurn;
+					ingredientsToUpdate.push({ name: ingredientName, newAmount: newAmount });
 				}
 			});
-	
-			//save new stock
 
-			// Update the stock information display
-			this.updateStockInformation();
-	
+			// Execute all updates concurrently and wait for them to finish
+			const updatePromises = ingredientsToUpdate.map(item =>
+				this.mediator.updateIngredientStock(item.name, item.newAmount)
+			);
+			await Promise.all(updatePromises); // Wait for all individual ingredient updates to save
+
+			this.updateStockInformation(); // Refresh modal display after all burns are complete
 			return true;
 		}
-	
+
 		return false;
 	}
 
 
-	private useIngrediments(booster: Booster) {
-		for (const ingredient of booster.ingredients) {
-			this.remainingStock[ingredient.type] = (this.remainingStock[ingredient.type] || 0) - ingredient.quantity;
-			this.updateStockInformation();
+	private async useIngrediments(booster: Booster): Promise<void> {
+		console.log(`Using ingredients for Booster: ${booster.name}`);
+
+		let changesMade = false;
+
+		for (const requiredIngredient of booster.ingredients) {
+			const fullIngredientDefinition: IngredientElement | undefined = elements.find(el => el.shortName === requiredIngredient.type);
+
+			if (!fullIngredientDefinition) {
+				console.error(`Ingredient definition not found for shortName: ${requiredIngredient.type}. Cannot reduce stock for ${booster.name}.`);
+				continue;
+			}
+
+			const currentStockInSettings = this.mediator.getSettingNumber(fullIngredientDefinition.varName);
+			const currentStock = currentStockInSettings !== null ? currentStockInSettings : (this.remainingStock[fullIngredientDefinition.name] || 0);
+			const newStock = Math.max(0, currentStock - requiredIngredient.quantity); // Ensure stock doesn't go below 0
+
+			if (newStock !== currentStock) {
+				this.remainingStock[fullIngredientDefinition.name] = newStock;
+
+				this.mediator.setSettingNumber(fullIngredientDefinition.varName, newStock);
+				changesMade = true;
+				console.log(`Reduced ${fullIngredientDefinition.name} by ${requiredIngredient.quantity}. New stock: ${newStock}`);
+			} else if (newStock === currentStock && requiredIngredient.quantity > 0) {
+				console.warn(`Attempted to reduce ${fullIngredientDefinition.name} by ${requiredIngredient.quantity}, but stock did not change from ${currentStock}.`);
+			}
 		}
+
+		if (changesMade) {
+			await this.mediator.saveSettings();
+		}
+		this.updateStockInformation();
 	}
 
 
@@ -592,12 +640,12 @@ export class MultiSelectModal extends Modal {
 
 
 
-	private craftBoosterItem(selectedBooster: Booster) {
+	private async craftBoosterItem(selectedBooster: Booster) {
 		const boosterName = selectedBooster.name;
 		//const boosterId = selectedBooster.id;
 
 		if (boosterName === 'Ephemeral Euphoria') {
-			if (this.check1000IngredientsAvailableAndBurn()) {
+			if (await this.check1000IngredientsAvailableAndBurn()) {
 				this.updateBoosterStock(boosterName, 1);
 				this.mediator.setSettingNumber(this.getBoosterVarNameFromName(boosterName), this.boosters[boosterName]); // Adjust getBoosterVarNameFromName if it needs boosterId
 				if (debugLogs) console.debug(`craft booster ${boosterName}`);
@@ -608,17 +656,12 @@ export class MultiSelectModal extends Modal {
 		} else if (boosterName === 'Fortune Infusion') {
 			new ModalInformationbox(this.app, `'${boosterName}' cannot be crafted. It is acquired through special means.`).open();
 		} else {
-			// --- IMPORTANT: Update checkIngredientsAvailability and useIngrediments ---
-			// These functions will now receive `selectedBooster` (type Booster)
-			// or specifically `selectedBooster.ingredients` (type Ingredient[]).
-			// You'll need to adapt their implementation to work with the `Ingredient[]` structure
-			// instead of the old `string[]` format.
-			if (this.checkIngredientsAvailability(selectedBooster)) { // Pass the Booster object
+			if (this.checkIngredientsAvailability(selectedBooster)) {
 				if (debugLogs) console.debug(`craft booster ${boosterName}`);
 				this.updateBoosterStock(boosterName, 1);
 				this.mediator.setSettingNumber(this.getBoosterVarNameFromName(boosterName), this.boosters[boosterName]); // Adjust getBoosterVarNameFromName if it needs boosterId
-				this.useIngrediments(selectedBooster); // Pass the Booster object
-				this.updateStockInformation(); // Assuming this refreshes ingredient displays
+				this.useIngrediments(selectedBooster);
+				this.updateStockInformation();
 			} else {
 				if (debugLogs) console.debug(`not enough ingredients for booster ${boosterName} in stock`);
 				new ModalInformationbox(this.app, `Not enough ingredients available for '${boosterName}'. Craft more Notes to collect new ingredients.`).open();
@@ -633,7 +676,7 @@ export class MultiSelectModal extends Modal {
 				return element.name;
 			}
 		}
-		return null; // Return null if no matching element is found
+		return null;
 	}
 
 	private getIngerementShortNameFromName(name: string) {
@@ -642,7 +685,7 @@ export class MultiSelectModal extends Modal {
 				return element.shortName;
 			}
 		}
-		return null; // Return null if no matching element is found
+		return null;
 	}
 
 	private getIngerementFromName(name: string) {
@@ -662,7 +705,7 @@ export class MultiSelectModal extends Modal {
 				return element.varName;
 			}
 		}
-		return null; // Return null if no matching element is found
+		return null;
 	}
 
 	private getIngerementVarNameFromName(name: string) {
@@ -671,7 +714,7 @@ export class MultiSelectModal extends Modal {
 				return element.varName;
 			}
 		}
-		return null; // Return null if no matching element is found
+		return null;
 	}
 
 	private getBoosterVarNameFromName(boosterName: string): string {
