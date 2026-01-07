@@ -15,6 +15,10 @@ I develop this plugin as a hobby, spending my free time doing this. If you find 
 
 It would mean a lot to me.
 `,
+"0.0.97": `
+## New
+- Introducing ingredient symbols
+- Introducing booster symbols`,
 "0.0.96": `
 ## New
 - asking for confirmation before reset game.
