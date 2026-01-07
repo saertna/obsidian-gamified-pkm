@@ -174,7 +174,7 @@
 	background-color: var(--background-secondary);
 	box-shadow: var(--shadow-s);
 	transition: background-color 0.2s ease-in-out;
-	min-height: 70px;
+	min-height: auto;
 }
 
 .crafting-booster-item:hover {
@@ -368,24 +368,15 @@
 
 .booster-recipe-ingredients {
 	display: flex;
-	flex-direction: column; /* CRUCIAL: Stacks ingredient items vertically */
-	/* align-items: flex-start; /* Align individual ingredient items to the left within the column */
-	gap: 5px; /* Vertical space between individual ingredient items */
-	flex-grow: 1; /* Allows ingredients block to take up available horizontal space */
-	min-width: 100px; /* Smaller min-width needed as items are now stacked */
+	flex-direction: column;
+	gap: 5px;
+	flex-grow: 1;
+	min-width: 100px;
 	margin-left: 15px;
 	padding-left: 10px;
-	border-left: 1px solid var(--background-modifier-border-hover); /* The thin vertical separator */
-
-	/* CRITICAL: Enforce max-height for two lines and enable scrolling */
-	/* Calculate based on recipe-ingredient-item's expected height.
-	   Let's assume a recipe-ingredient-item is ~28px tall (16px icon + 4px padding * 2)
-	   So 2 items + 1 gap: 28px * 2 + 5px = 61px */
-	max-height: 61px;
-	overflow-y: auto; /* Show scrollbar if content exceeds max-height */
-	/* Optional: Hide scrollbar if you prefer */
-	/* scrollbar-width: none; /* Firefox */
-	/* -ms-overflow-style: none;  IE and Edge */ /* visual separator line */
+	border-left: 1px solid var(--background-modifier-border-hover);
+	max-height: none;
+	overflow-y: visible;
 }
 
 .booster-recipe-ingredients .recipe-ingredient-small .gamified-pkm-resource-icon-holder {
@@ -412,7 +403,7 @@
 	align-items: center;
 	gap: 4px;
 	flex-shrink: 0;
-	width: auto; /* Allow content to define width in a column layout */
+	width: auto;
 	padding: 4px 8px;
 	border-radius: var(--radius-s);
 	background-color: var(--background-secondary-alt);

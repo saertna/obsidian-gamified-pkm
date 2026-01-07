@@ -195,7 +195,7 @@ export const allBoosters: Booster[] = [
 	{
 		id: 'precisionPrism',
 		name: 'Precision Prism',
-		description: 'Precision Prism: 4 times the points when increasing the "note length majurity" for a note the next 3 hours.',
+		description: 'Precision Prism: 4 times the points when increasing the "note length maturity" for a note the next 3 hours.',
 		runtime: 3 * 60 * 60,
 		cooldown: 36 * 60 * 60,
 		boosterUseCountName: 'boosterUseCountPrecisionPrism',
@@ -211,7 +211,7 @@ export const allBoosters: Booster[] = [
 	{
 		id: 'hyperlinkHarmony',
 		name: 'Hyperlink Harmony',
-		description: 'Hyperlink Harmony: Get for "Inlink majurity" AND "outlink majurity" improvements 5 times the point the next 3 hours.',
+		description: 'Hyperlink Harmony: Get for "Inlink maturity" AND "outlink maturity" improvements 5 times the point the next 3 hours.',
 		runtime: 3 * 60 * 60,
 		cooldown: 36 * 60 * 60,
 		boosterUseCountName: 'boosterUseCountHyperlinkHarmony',
