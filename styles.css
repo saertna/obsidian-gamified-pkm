@@ -75,10 +75,8 @@
 
 /* Overall Modal Layout for Crafting */
 .modal-crafting-wrapper {
-	max-width: 700px; /* Adjust this value as needed, e.g., 700px or 800px */
-	/* You might need to adjust the modal-container itself if this is too small */
-	width: 100%; /* Make it take full width of its container up to max-width */
-	/* Other properties already defined */
+	max-width: 750px;
+	width: 100%;
 	display: flex;
 	flex-direction: column;
 	gap: 20px;
@@ -167,8 +165,8 @@
 /* Styles for individual craftable booster recipe items */
 .crafting-booster-item {
 	display: flex;
-	align-items: center; /* Vertically center the display area and buttons */
-	justify-content: space-between; /* Pushes booster-display-area to left, actions to right */
+	align-items: center;
+	justify-content: space-between;
 	padding: 12px 15px;
 	margin-bottom: 10px;
 	border: 1px solid var(--background-modifier-border-hover);
@@ -176,6 +174,7 @@
 	background-color: var(--background-secondary);
 	box-shadow: var(--shadow-s);
 	transition: background-color 0.2s ease-in-out;
+	min-height: 70px;
 }
 
 .crafting-booster-item:hover {
@@ -183,16 +182,17 @@
 }
 
 /* Details section of a recipe (booster name + ingredients) */
-.crafting-booster-details {
+/*.crafting-booster-details {
 	display: flex;
 	align-items: center;
-	flex-wrap: wrap; /* Allow ingredients to wrap if the line is too long */
-	gap: 8px; /* Space between elements in the details line */
-	flex-grow: 1; /* Allows it to take available space */
-	margin-right: 10px; /* Space before the action buttons */
+	flex-wrap: wrap;
+	gap: 8px;
+	flex-grow: 1;
+	margin-right: 10px;
 	color: var(--text-normal);
 	font-weight: 500;
 }
+*/
 
 .crafting-booster-details > span:first-child { /* The booster name itself */
 	font-weight: bold;
@@ -230,10 +230,10 @@
 /* Buttons for crafting actions */
 .crafting-booster-actions {
 	display: flex;
-	flex-direction: column; /* CRUCIAL: Stacks buttons vertically */
-	gap: 5px; /* Space between stacked buttons */
-	flex-shrink: 0; /* Prevent buttons from shrinking */
-	margin-left: 10px; /* Add some space between ingredients and buttons */
+	flex-direction: column;
+	gap: 5px;
+	flex-shrink: 0;
+	margin-left: 15px;
 }
 
 .crafting-booster-actions button {
@@ -246,7 +246,7 @@
 	font-size: 0.9em;
 	font-weight: 500;
 	transition: background-color 0.2s ease-in-out;
-	white-space: nowrap; /* Prevent button text from wrapping */
+	white-space: nowrap;
 }
 
 .crafting-booster-actions button:hover {
@@ -322,9 +322,9 @@
 .booster-identity {
 	display: flex;
 	align-items: center;
-	gap: 8px; /* Space between icon and name */
-	flex-shrink: 0; /* Prevents booster name from shrinking */
-	white-space: nowrap; /* Ensures booster icon and name stay on one line */
+	gap: 8px;
+	flex-shrink: 0;
+	white-space: nowrap;
 }
 
 .booster-ingredients-separator {
@@ -334,26 +334,15 @@
 	font-size: 0.9em;
 }
 
-.booster-recipe-ingredients {
-	display: flex;
-	align-items: center; /* Vertically center individual ingredient items */
-	flex-wrap: wrap; /* CRUCIAL: Allows ingredients to wrap to new lines *within this container* */
-	gap: 8px; /* Space between individual ingredient items */
-	flex-grow: 1; /* Allows ingredients to take up available horizontal space */
-	/* Remove overflow-x: auto and related scrollbar styling if you want wrapping instead */
-	/* You might want a min-width here if you want a certain baseline */
-	min-width: 150px; /* Example: ensure enough space for a few ingredients before wrapping */
-}
-
 .booster-name {
 	font-weight: bold;
 	font-size: 1.05em;
-	color: var(--text-highlight-bg); /* Highlight booster names */
-	white-space: nowrap; /* Ensures booster name stays on one line */
+	color: var(--text-highlight-bg);
+	white-space: nowrap;
 }
 
 .booster-identity .gamified-pkm-booster-icon-holder {
-	width: 24px;   /* Consistent icon size */
+	width: 24px;
 	height: 24px;
 	flex-shrink: 0;
 }
@@ -377,15 +366,26 @@
 }
 
 
-.booster-recipe-ingredients .recipe-ingredient-small {
-	/* Special styling for ingredients listed within a recipe */
-	display: flex; /* Each individual ingredient (icon+qty) is a flex item */
-	align-items: center;
-	background-color: transparent; /* No background for individual ingredients in recipe */
-	border: none;
-	padding: 0;
-	gap: 4px; /* Tighter spacing for icon and quantity */
-	flex-shrink: 0; /* Prevent individual ingredient items from shrinking */
+.booster-recipe-ingredients {
+	display: flex;
+	flex-direction: column; /* CRUCIAL: Stacks ingredient items vertically */
+	/* align-items: flex-start; /* Align individual ingredient items to the left within the column */
+	gap: 5px; /* Vertical space between individual ingredient items */
+	flex-grow: 1; /* Allows ingredients block to take up available horizontal space */
+	min-width: 100px; /* Smaller min-width needed as items are now stacked */
+	margin-left: 15px;
+	padding-left: 10px;
+	border-left: 1px solid var(--background-modifier-border-hover); /* The thin vertical separator */
+
+	/* CRITICAL: Enforce max-height for two lines and enable scrolling */
+	/* Calculate based on recipe-ingredient-item's expected height.
+	   Let's assume a recipe-ingredient-item is ~28px tall (16px icon + 4px padding * 2)
+	   So 2 items + 1 gap: 28px * 2 + 5px = 61px */
+	max-height: 61px;
+	overflow-y: auto; /* Show scrollbar if content exceeds max-height */
+	/* Optional: Hide scrollbar if you prefer */
+	/* scrollbar-width: none; /* Firefox */
+	/* -ms-overflow-style: none;  IE and Edge */ /* visual separator line */
 }
 
 .booster-recipe-ingredients .recipe-ingredient-small .gamified-pkm-resource-icon-holder {
@@ -397,4 +397,43 @@
 .booster-recipe-ingredients .recipe-ingredient-small .gamified-pkm-resource-quantity {
 	font-size: 0.8em;
 	white-space: nowrap; /* Ensure quantity stays on one line */
+}
+
+.booster-info-and-ingredients {
+	display: flex;
+	align-items: center;
+	flex-grow: 1;
+	gap: 15px;
+	min-width: 0;
+}
+
+.booster-recipe-ingredients .recipe-ingredient-item {
+	display: flex;
+	align-items: center;
+	gap: 4px;
+	flex-shrink: 0;
+	width: auto; /* Allow content to define width in a column layout */
+	padding: 4px 8px;
+	border-radius: var(--radius-s);
+	background-color: var(--background-secondary-alt);
+	font-size: 0.9em;
+	color: var(--text-muted);
+	white-space: nowrap;
+}
+
+.booster-recipe-ingredients .recipe-ingredient-item .gamified-pkm-resource-icon-holder {
+	width: 16px;
+	height: 16px;
+	flex-shrink: 0;
+}
+.booster-recipe-ingredients .recipe-ingredient-item .gamified-pkm-resource-quantity {
+	font-size: 0.9em;
+	color: var(--text-normal);
+	font-weight: 500;
+}
+
+.gamified-pkm-resource-item .gamified-pkm-resource-title {
+	font-weight: normal;
+	font-size: 1em; /* Adjust as needed */
+	color: var(--text-normal);
 }

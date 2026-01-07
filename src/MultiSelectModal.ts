@@ -215,7 +215,7 @@ export class MultiSelectModal extends Modal {
 		const mainContent = this.containerEl.createEl('div');
 		mainContent.className = 'modal-crafting-wrapper';
 
-		// 1. Section for displaying available ingredient stock
+		// 1. Section for displaying available ingredient stock (no change here)
 		const stockSection = mainContent.createDiv({ cls: 'crafting-stock-section' });
 		stockSection.createEl('h3', { text: 'Your Ingredients' });
 
@@ -244,11 +244,11 @@ export class MultiSelectModal extends Modal {
 			if (this.boosterAvailableForUse(booster.name, this.mediator.getSettingNumber('statusLevel'))) {
 				const recipeItem = recipesSection.createDiv({ cls: 'crafting-booster-item' });
 
-				// flex container to hold two main columns: Booster Identity and Ingredients List
-				const boosterDisplayArea = recipeItem.createDiv({ cls: 'booster-display-area' });
+				// This container will hold Booster Identity and the Ingredients block
+				const boosterInfoAndIngredients = recipeItem.createDiv({ cls: 'booster-info-and-ingredients' }); // NEW WRAPPER
 
 				// Wrapper for Booster Icon and Name
-				const boosterIdentity = boosterDisplayArea.createDiv({ cls: 'booster-identity' });
+				const boosterIdentity = boosterInfoAndIngredients.createDiv({ cls: 'booster-identity' });
 
 				// Booster Icon
 				const boosterIconHolder = boosterIdentity.createDiv({ cls: 'gamified-pkm-booster-icon-holder' });
@@ -259,28 +259,27 @@ export class MultiSelectModal extends Modal {
 				// Booster Name
 				boosterIdentity.createEl('span', { text: booster.name, cls: 'booster-name' });
 
-				// Wrapper for Ingredients
-				const boosterRecipeIngredients = boosterDisplayArea.createDiv({ cls: 'booster-recipe-ingredients' });
+				// Wrapper for Ingredients (two line display)
+				const boosterRecipeIngredients = boosterInfoAndIngredients.createDiv({ cls: 'booster-recipe-ingredients' });
 
 				// Display ingredients required for the recipe with icons
 				if (booster.specialIngredientRequirement === 'free all 22h' && booster.id === 'fortuneInfusion') {
 					boosterRecipeIngredients.createSpan({ text: '(Free every 22h)', cls: 'recipe-ingredient-text-free' });
 				} else if (booster.specialIngredientRequirement === 'all pots' && booster.id === 'ephemeralEuphoria') {
 					boosterRecipeIngredients.createSpan({ text: '(1000 total from all pots)', cls: 'recipe-ingredient-text-all-pots' });
-				} else if (booster.ingredients.length > 0) { // Only show separator if there are ingredients
-					boosterRecipeIngredients.createEl('span', { text: ` -- `, cls: 'booster-ingredients-separator' });
+				} else if (booster.ingredients.length > 0) {
 					booster.ingredients.forEach(ingredient => {
 						const fullIngredient = elements.find(el => el.shortName === ingredient.type);
 
 						if (fullIngredient && this.resourceSvgMap[fullIngredient.name]) {
-							const ingredientWrapper = boosterRecipeIngredients.createDiv({ cls: 'recipe-ingredient-small' });
+							// Create a wrapper for each ingredient item for precise styling
+							const ingredientWrapper = boosterRecipeIngredients.createDiv({ cls: 'recipe-ingredient-item' }); // NEW CLASS
 							createRecipeDisplay(ingredientWrapper, fullIngredient.name, ingredient.quantity, this.resourceSvgMap[fullIngredient.name]);
 						} else {
 							boosterRecipeIngredients.createSpan({ text: `${ingredient.type} [${ingredient.quantity}]`, cls: 'recipe-ingredient-text-fallback' });
 						}
 					});
 				}
-
 
 				// Crafting Actions (buttons)
 				const buttonGroup = recipeItem.createDiv({ cls: 'crafting-booster-actions' });
