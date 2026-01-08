@@ -1,5 +1,5 @@
-import { getResourceColor, resourceSvgMap } from '../resourceIcons'; // Adjust path
-import { IngredientElement } from '../constants'; // Assuming this is where IngredientElement is defined
+import { getResourceColor, resourceSvgMap } from '../data/resourceIcons'; // Adjust path
+import { IngredientElement } from '../data/constants'; // Assuming this is where IngredientElement is defined
 
 /**
  * Creates an HTMLElement containing an ingredient's icon, name, and quantity, styled for an Obsidian Notice.

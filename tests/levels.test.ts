@@ -1,4 +1,4 @@
-import {getLevelForPoints, statusPointsForLevel} from '../src/levels'
+import {getLevelForPoints, statusPointsForLevel} from '../src/data/levels'
 import { describe } from 'node:test';
 
 

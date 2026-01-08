@@ -1,6 +1,6 @@
 import {App, Notice, request} from 'obsidian';
 import type {Moment} from "moment/moment";
-import {boosterRecipes, PLUGIN_VERSION} from "./constants"
+import {boosterRecipes, PLUGIN_VERSION} from "./data/constants"
 
 
 let versionUpdateChecked = false;

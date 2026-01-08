@@ -18,10 +18,20 @@ It would mean a lot to me.
 "0.0.97": `
 This release deals fully with the representation of the boosters and ingredients. Beside adding graphical representations for them, also the style is now improved. Have a look at the crafting table!
 ## New
+- visual redesigned booster area with symbols
 - Introducing ingredient symbols
 	- displayed in crafting table
 	- displayed in notice when received
-- Introducing booster symbols`,
+- Introducing booster symbols
+
+<div class="gPKM-videoWrapper">
+  <div>
+    <iframe width="560" height="315" src="https://www.youtube.com/embed/QOpUJlLL64A?si=o4RhysQ5JZAEofya" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+  </div>
+</div>
+
+<!-- Add a blank line here -->
+`,
 "0.0.96": `
 ## New
 - asking for confirmation before reset game.

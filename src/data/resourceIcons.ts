@@ -2,7 +2,7 @@
 // properties. This allows them to inherit the `color` CSS property from their parent
 // element, making them easy to style dynamically with CSS or JavaScript.
 // I've also set default width/height to 24 for better icon sizing.
-import { Booster } from './interfaces/Booster'
+import { Booster } from '../interfaces/Booster'
 
 export const connectionCrystalSvg = `
   <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor">

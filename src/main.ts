@@ -27,9 +27,9 @@ import {
 	streakboosterIncreaseDaily,
 	streakboosterIncreaseWeekly,
 	mil2sec, milliseconds, seconds, minutesTimer
-} from './constants'
+} from './data/constants'
 import {Badge, getBadge, getBadgeForInitLevel, getBadgeForLevel} from './badges'
-import {getLevelForPoints, statusPointsForLevel} from './levels'
+import {getLevelForPoints, statusPointsForLevel} from './data/levels'
 // import type {Moment} from 'moment';
 import { getRandomMessageWeeklyChallenge, getRandomMessageTwoNoteChallenge , getRandomMessagePoints, getRandomMessageBoosterFactor } from './randomNotificationText'
 import { ModalInformationbox } from 'ModalInformationbox';

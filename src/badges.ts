@@ -1,4 +1,4 @@
-import { badgeLevels, badgeNames, badgeInitLevels, badgeNamesInit , badges} from './constants'
+import { badgeLevels, badgeNames, badgeInitLevels, badgeNamesInit , badges} from './data/constants'
 export interface Badge {
     name: string;
     description: string;

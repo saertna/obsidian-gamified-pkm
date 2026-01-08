@@ -1,7 +1,7 @@
 import {
 	CryptoJS,
 	secretKey
-} from './constants';
+} from './data/constants';
 //import CryptoJS from 'crypto-js';
 // Function to encrypt a string
 export function encryptValue(data: string) {

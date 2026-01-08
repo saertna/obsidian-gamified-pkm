@@ -1,5 +1,5 @@
 import {TFile} from 'obsidian';
-import { debugLogs } from './constants';
+import { debugLogs } from './data/constants';
 
 export interface AbstractFile {
 	path: string;

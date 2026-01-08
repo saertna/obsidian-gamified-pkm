@@ -1,5 +1,5 @@
 import { TFile, App, } from 'obsidian';
-import {debugLogs} from "./constants";
+import {debugLogs} from "./data/constants";
 import { DataviewApi} from "obsidian-dataview";
 
 export class MaturityCalculator {

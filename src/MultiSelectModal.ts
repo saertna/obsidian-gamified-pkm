@@ -6,7 +6,7 @@ import {
 	listOfUseableBoostersToBeShown,
 	listOfUseableIngredientsToBeShown,
 	debugLogs
-} from './constants';
+} from './data/constants';
 import { ModalInformationbox } from 'ModalInformationbox';
 import { GamificationMediator } from './GamificationMediator';
 import {hoursUntilMinutesPassed, isMinutesPassed} from "./Utils";
@@ -21,7 +21,7 @@ import {
 	amplificationCrystalSvg,
 	creativeCatalystSvg,
 	precisionLensSvg, createRecipeDisplay
-} from './resourceIcons';
+} from './data/resourceIcons';
 import { Booster } from './interfaces/Booster'
 import { getBoosterByName, allBoosters} from './data/boosterDefinitions';
 //import {updateIngredientStock} from './GamificationMediatorImpl';
