@@ -1,5 +1,5 @@
 import { App, PluginSettingTab, Setting } from 'obsidian';
-import { debugLogs } from './constants';
+import { debugLogs } from './data/constants';
 import { GamificationMediator } from './GamificationMediator';
 import gamification from './main'
 

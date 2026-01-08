@@ -1,13 +1,13 @@
 import { GamificationMediator } from './GamificationMediator';
 import {decryptBoolean, decryptNumber, decryptString, encryptBoolean, encryptNumber, encryptString} from "./encryption";
 import {Badge} from "./badges";
-import {debugLogs, elements, listOfUseableIngredientsToBeShown, mil2sec, IngredientElement} from "./constants";
+import {debugLogs, elements, listOfUseableIngredientsToBeShown, mil2sec, IngredientElement} from "./data/constants";
 import {Notice} from 'obsidian';
 //import {concatenateStrings} from "./Utils";
 import {defaultSettings} from "./settings";
 import gamification from "./main";
 import { createEarnedIngredientHtml } from './ui/noticeUtils';
-import { resourceSvgMap } from './resourceIcons';
+import { resourceSvgMap } from './data/resourceIcons';
 
 
 export class GamificationMediatorImpl implements GamificationMediator {

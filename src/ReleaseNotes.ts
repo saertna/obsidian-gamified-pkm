@@ -2,7 +2,7 @@ import { App, MarkdownRenderer, Modal, Component  } from "obsidian";
 import { isVersionNewerThanOther } from "./Utils";
 import { GamificationMediatorImpl } from "./GamificationMediatorImpl"; // Import the new mediator implementation
 import { RELEASE_NOTES, FIRST_TIME } from "./Messages";
-import { PLUGIN_VERSION } from "./constants";
+import { PLUGIN_VERSION } from "./data/constants";
 
 export class ReleaseNotes extends Modal {
 	private mediator: GamificationMediatorImpl; // Use the mediator implementation

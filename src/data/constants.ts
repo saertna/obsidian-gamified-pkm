@@ -1,4 +1,4 @@
-import { Badge } from './badges'
+import { Badge } from '../badges'
 export const PLUGIN_VERSION = '0.0.97';
 export const pointsNoteMajurity = 100;
 export const pointsMajurity = 10;
