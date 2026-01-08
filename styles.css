@@ -472,3 +472,77 @@
 	color: var(--text-normal);
 	white-space: nowrap;
 }
+
+
+
+.modal-hub-header {
+	text-align: center;
+	margin-bottom: 25px; /* Space before the choice cards */
+	padding-bottom: 15px;
+	border-bottom: 1px solid var(--background-modifier-border); /* Subtle separator */
+}
+.modal-hub-title {
+	font-size: 1.8em; /* Larger, more impactful title */
+	font-weight: 700;
+	color: var(--interactive-accent); /* Using a theme accent color */
+	margin-bottom: 5px;
+	text-shadow: 1px 1px 2px rgba(0,0,0,0.3); /* Subtle shadow for depth */
+}
+.modal-hub-subtitle {
+	font-size: 0.9em;
+	color: var(--text-muted);
+}
+
+
+/* --- Booster Modal Start --- */
+.modal-choices-container {
+	display: flex;
+	justify-content: center;
+	gap: 20px;
+	padding: 20px;
+	flex-wrap: wrap;
+}
+.choice-card {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	width: 200px;
+	height: 200px;
+	padding: 15px;
+	border: 1px solid var(--background-modifier-border);
+	border-radius: var(--radius-l);
+	background-color: var(--background-secondary-alt);
+	cursor: pointer;
+	transition: background-color 0.2s ease-in-out, transform 0.1s ease-in-out, box-shadow 0.2s ease-in-out;
+	box-shadow: var(--shadow-s);
+}
+.choice-card:hover {
+	background-color: var(--background-secondary-hover);
+	transform: translateY(-3px);
+	box-shadow: var(--shadow-m);
+}
+.choice-card-icon {
+	width: 128px; /* Larger, more prominent icons */
+	height: 128px;
+	margin-top: 10px;
+	margin-bottom: 10px;
+	color: var(--text-accent); /* Icon color, can use a specific color for each card if desired */
+	display: flex;
+	align-items: center;   /* Vertically centers the SVG */
+	justify-content: center; /* Horizontally centers the SVG */
+}
+.choice-card-icon svg {
+	max-width: 100%;
+	max-height: 100%;
+	stroke: currentColor;
+	fill: none;
+}
+.choice-card-title {
+	font-size: 1.2em;
+	font-weight: 600;
+	color: var(--text-normal);
+	text-align: center;
+	line-height: 1.2;
+}
+/* --- Booster Modal End --- */
