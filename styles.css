@@ -508,7 +508,7 @@
 	align-items: center;
 	justify-content: center;
 	width: 200px;
-	height: 140px;
+	height: 200px;
 	padding: 15px;
 	border: 1px solid var(--background-modifier-border);
 	border-radius: var(--radius-l);
@@ -523,8 +523,8 @@
 	box-shadow: var(--shadow-m);
 }
 .choice-card-icon {
-	width: 64px; /* Larger, more prominent icons */
-	height: 64px;
+	width: 128px; /* Larger, more prominent icons */
+	height: 128px;
 	margin-top: 10px;
 	margin-bottom: 10px;
 	color: var(--text-accent); /* Icon color, can use a specific color for each card if desired */
