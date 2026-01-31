@@ -34,7 +34,7 @@ Follow the steps below to install 'Gamificate your PKM'.
 
 1. Search for "Gamificate your PKM" in Obsidian's community plugins browser
 2. Enable the plugin in your Obsidian settings (find "Gamificate your PKM" under "Community plugins").
-3. Check the settings. Maybe you would like to exclute TAGs (more about it below).
+3. Check the settings. Maybe you would like to exclude TAGs (more about it below).
 4. The plugin needed to be installed and enabled to be fully operational 
   -  `dataview` for the number of notes in specified note maturity (0-5)
 5. In Obsidian, hit `CTRL+P` and run the command `Initialize gamification ratings`
@@ -49,19 +49,62 @@ In some cases, the same vault is used for other activities as well as the knowle
 
 ## Getting Started
 
-### initialise game
+### Initialise game
 
-When not already done during installation, hit `CTRL+P` and run the command `Initialize gamification ratings`. This command will create your profile, rate your existing notes, and give you a starting level. On the profile, you can get information about your current level, points, badges, and see the distribution of your note maturitys.
+When not already done during installation, hit `CTRL+P` and run the command `Initialize gamification ratings`. 
+This command will rate all you notes (the ones which are not excluded by TAG and/or folder). You will be informed when the initialisation is finished.
+The resulting points, level, and distribution of note ratings will be displayed in the leaf. When the leaf is not open, you can open it with the command `Open Profile Leave`.
 
 ![Gamification Initialization Command](/docs/images/GamificationInitializationCommand.png)
 
 ### Next steps
 
-Create a new note and use the plant-icon on the side or `CTRL+P` and run the command `Rate note maturity`.
+Create a new note and use the plant-icon on the side or `CTRL+P` or and the command `Rate note maturity`.
 ![Rate Note First Time](/docs/images/RateNoteFirstTime.png)
 
 work on an existing note, improve your thoughts, your title, link it to other fitting notes, and run `CTRL+P` and run the command `Rate note maturity`, or use the plant-icon.
 ![Rate again after improving](/docs/images/RateAfterImprovement.png)
+
+### Boosters
+
+When you have progressed for a while (rated several new notes) boosters will be enabled. You will be informed with a message when you have archived them. 
+The boosters can be opened with the `test tube` icon or with the command `Open booster pallete`. (When you don't like to see the icon, all icons can be controlled directly in Obsidian if they shall be shown or not. Just do a right click on the icon area.)
+Rating of a new note will bring you a chance to collect ingredients, with which you can craft boosters to speed up your progress.
+
+![Booster Menu](docs/images/GamificteYourPKM-Boosters.png)
+
+For each booster you can display a description by using the `?` button, or just hoovering above the icon. Hoovering with the mouse over the ingredient icon will show also show its name.
+
+### Ractings
+
+There are four rating categorties with which your note will be rated
+- title
+- note length
+- inklinks
+- outlinks
+  Out of this four categories, an overall rating will be calculated (`note-maturity`).
+
+The ratings are based on statistics, so it's a pure calculation. There's no reflection on the content itself.
+
+###### Title
+A very short or a very long title (filename) will get a low rating. When you have a meaningful and to the point title expressing the core of your thought, the title will have a certain range of length. This leads to a high rating.
+On the other hand, when you need a long title to express what's your note about, you should work at it to increase the rating.
+
+This said, when you feel pretty fine with your title, but it's a low rating, don't mind and keep it as it is. The rating is based on character length, not content.
+
+###### Note length / summarization
+
+A very short note (a sentence) get's a low rating. A long text about several pages will get a low rating as well.
+A note which has roughly the length of an A5 index card will get a high rating.
+###### Inklinks
+A good amount of links from other notes to the rated one will increase the rating. Overlinking will decrease it.
+
+(It's on the roadmap to deal with Hub/MOC notes which have by nature high link numbers)
+###### Outlinks
+A good amount of links from the rated one to  other notes will increase the rating. Overlinking will decrease it.
+
+(It's on the roadmap to deal with Hub/MOC notes which have by nature high link numbers)
+
 
 ## More information and Help
 You can use the Discussion Area here at GitHub to speak about issues, ideas, and ask questions. For issues, use the issues area to raise them.
@@ -75,15 +118,10 @@ Upcoming developments are in store for the Gamification Plugin! Here's a glimpse
 - overview in the sidebar for game elements
 	- Challenge status
 	- active boosters
-	- crafted boosters
-	- ingredients overview
 - boosters
-	- icons and full names for ingredients to craft
-	- Icons for booster potions
 	- additional boosters
 - badges
 	- link to open-badges
 	- Add further badges for achievements
-- Implement a check if the update of the plugin is available
 - new challenges
 - Quests to follow and fulfill
