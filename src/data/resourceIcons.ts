@@ -147,3 +147,24 @@ export function createBoosterDisplay(containerEl: HTMLElement, booster: Booster,
 
 }
 
+export function createStatusBarBoosterDisplay(containerEl: HTMLElement, booster: Booster): void {
+	/**
+	 * Populates a given container element with the booster's icon, name, and quantity.
+	 * The container is expected to have 'display: flex' and 'gap' styles applied by its parent.
+	 *
+	 * @param containerEl The HTMLElement to which the booster display elements will be appended.
+	 * @param booster The Booster definition object.
+	 * @param quantity The stock quantity of the booster.
+	 */
+
+		// 1. Booster Icon
+	const iconHolder = containerEl.createDiv({ cls: 'gamified-pkm-booster-icon-holder' });
+	iconHolder.innerHTML = booster.svg;
+	iconHolder.setAttribute('title', `${booster.description}`);
+	iconHolder.style.color = booster.color;
+
+	// 2. Booster Name
+	const nameSpan = containerEl.createSpan({ text: booster.name, cls: 'gamified-pkm-booster-name' });
+	nameSpan.setAttribute('title', `${booster.description}`); // Optionally add description as tooltip for the name too
+
+}

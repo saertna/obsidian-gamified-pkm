@@ -2,8 +2,7 @@ import { App, Modal } from 'obsidian';
 import { GamificationMediatorImpl } from './GamificationMediatorImpl';
 import { MultiSelectModal } from './MultiSelectModal';
 
-const craftingIconSvg = `
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+const craftingIconSvg = `<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <svg
    viewBox="0 0 1024 1024"
    fill="none"
@@ -132,8 +131,7 @@ const craftingIconSvg = `
 </svg>
 `;
 
-const boosterIconSvg = `
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+const boosterIconSvg = `<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <svg
    viewBox="0 0 1024 1024"
    fill="none"
