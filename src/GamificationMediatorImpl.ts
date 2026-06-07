@@ -69,10 +69,10 @@ export class GamificationMediatorImpl implements GamificationMediator {
 
 	setBadgeSave(newBadge: Badge, date: string, level: string){
 		const currentBadgeString:string = this.getSettingString('receivedBadges');
-		if(debugLogs) console.log(`currentBadgeString: ${currentBadgeString}`)
+		if(debugLogs) console.debug(`currentBadgeString: ${currentBadgeString}`)
 		const newBadgeString = currentBadgeString + newBadge.name + ',' + date + ',' + level + '##';
 		//window.moment().format('YYYY-MM-DD') + ',' + this.getSettingNumber('statusLevel') + '\n';
-		if(debugLogs) console.log(`newBadgeString: ${newBadgeString}`)
+		if(debugLogs) console.debug(`newBadgeString: ${newBadgeString}`)
 		this.setSettingString('receivedBadges',newBadgeString);
 		this.saveSettings();
 	}

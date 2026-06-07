@@ -56,7 +56,7 @@ export default class gamification extends Plugin {
 
 
 	async onload() {
-		console.log('obsidian-pkm-gamification loaded!');
+		console.debug('obsidian-pkm-gamification loaded!');
 
 		this.mediator = new GamificationMediatorImpl(this.settings, this);
 		this.maturityCalculator = new MaturityCalculator(this.app);
@@ -106,13 +106,9 @@ export default class gamification extends Plugin {
 		let obsidianJustInstalled = false;
 
 		if (this.mediator.getSettingBoolean('showReleaseNotes')) {
-			if(debugLogs) console.log(`show release note`)
-			if(debugLogs) console.log(`current entry ${this.mediator.getSettingString('previousRelease')}`)
-			//I am repurposing imageElementNotice, if the value is true, this means the plugin was just newly installed to Obsidian.
 			obsidianJustInstalled = this.mediator.getSettingString('previousRelease')  === "0.0.0";
 
 			if (isVersionNewerThanOther(PLUGIN_VERSION, this.mediator.getSettingString('previousRelease'))) {
-				if(debugLogs) console.log(`${PLUGIN_VERSION} newer than ${this.mediator.getSettingString('previousRelease')}`)
 				new ReleaseNotes(
 					this.app,
 					this.mediator,
@@ -149,7 +145,7 @@ export default class gamification extends Plugin {
 
 		if (this.mediator.getSettingBoolean('debug')){
 			this.addRibbonIcon("accessibility", "Crafting", async () => {
-				console.log('Debug Help Function accessibility is called')
+				console.debug('Debug Help Function accessibility is called')
 				//this.mediator.acquireIngredients(1,10,15);
 				//this.resetDailyGoals();
 				//this.mediator.setSettingString('weeklyNoteCreationDate', window.moment().subtract(1, 'day').format('DD.MM.YYYY'))
@@ -169,17 +165,17 @@ export default class gamification extends Plugin {
 				// Parse the CSV string
 				//const badgeDict = parseBadgeCSV(csvString);
 				//const badgeDict = parseBadgeCSV2Dict(this.mediator.getSettingString('receivedBadges'))
-				//console.log(`badgeDict: ${badgeDict}`)
+				//console.debug(`badgeDict: ${badgeDict}`)
 
 				// Access badge information
-				//console.log(badgeDict["Brainiac Trailblazer"]);
+				//console.debug(badgeDict["Brainiac Trailblazer"]);
 
 				/*
 				for (const badgeName in badgeDict) {
 					if (badgeDict.hasOwnProperty(badgeName)) {
 						const badgeInfo = badgeDict[badgeName];
 						const badgeDetails = getBadgeDetails(badgeName)
-						console.log(`Badge: ${badgeName}, Date: ${badgeInfo.date}, Level: ${badgeInfo.level}, Description: ${badgeDetails.name}`);
+						console.debug(`Badge: ${badgeName}, Date: ${badgeInfo.date}, Level: ${badgeInfo.level}, Description: ${badgeDetails.name}`);
 					}
 				}
 
@@ -200,8 +196,8 @@ export default class gamification extends Plugin {
 
 				//await this.giveStatusPoints(10000,'')
 				//await this.actualizeProfileLeave();
-				//console.log(`receivedBadges: ${this.mediator.getSettingString('receivedBadges')}`)
-				//console.log(parseBadgeCSV2Dict(this.mediator.getSettingString('receivedBadges')))
+				//console.debug(`receivedBadges: ${this.mediator.getSettingString('receivedBadges')}`)
+				//console.debug(parseBadgeCSV2Dict(this.mediator.getSettingString('receivedBadges')))
 
 
 
@@ -230,11 +226,11 @@ export default class gamification extends Plugin {
 			});
 
 			this.addRibbonIcon("chevrons-right", "update overview leaf", () => {
-				this.actualizeProfileLeaf().then(() => {if(debugLogs) console.log('Profile updated successfully')});
+				this.actualizeProfileLeaf().then(() => {if(debugLogs) console.debug('Profile updated successfully')});
 			});
 
 			this.addRibbonIcon("target", "gamification side overview", () => {
-				this.activateView().then(() => {if(debugLogs) console.log('Profile view activated')});
+				this.activateView().then(() => {if(debugLogs) console.debug('Profile view activated')});
 			});
 
 		}
@@ -316,7 +312,7 @@ export default class gamification extends Plugin {
 				const view = this.app.workspace.getActiveViewOfType(MarkdownView);
 				if (view) {
 					if (!checking) {
-						this.calculateNoteMajurity().then(() => {if(debugLogs) console.log('Note Maturity calculated')});
+						this.calculateNoteMajurity().then(() => {if(debugLogs) console.debug('Note Maturity calculated')});
 					}
 					return true;
 				}
@@ -335,7 +331,7 @@ export default class gamification extends Plugin {
 					if (!checking) {
 						replaceFormatStrings(this.mediator.getSettingString('progressiveSumLayer2'),
 							this.mediator.getSettingString('progressiveSumLayer3')).then(() =>
-						{if(debugLogs) console.log('Format Strings replaced for prog. sum.')});
+						{if(debugLogs) console.debug('Format Strings replaced for prog. sum.')});
 					}
 					return true;
 				}
@@ -387,15 +383,12 @@ export default class gamification extends Plugin {
 
 
 	onFileRenamed(newPath: string) {
-		if(debugLogs) console.log(`${newPath}`);
 		const foldersToExclude = this.mediator.getSettingString('folderExclude');
-		if(debugLogs) console.log(`foldersToExclude: ${foldersToExclude}`);
 		const folderNames = foldersToExclude.split(',').map(folder => folder.trim() + '/');
 
 		const isInExcludedFolder = folderNames.some(folderName => newPath.includes(folderName));
 
 		if (isInExcludedFolder) {
-			if(debugLogs) console.log(isInExcludedFolder);
 			return;
 		}
 
@@ -405,17 +398,16 @@ export default class gamification extends Plugin {
 
 	triggerAction() {
 		if(this.mediator.getSettingBoolean('autoRateOnChange')){
-			this.calculateNoteMajurity().then(r => console.log(r));
-			//if(debugLogs) console.log(`File ${filePath} was edited and no further changes occurred.`);
+			this.calculateNoteMajurity().then(r => console.debug(r));
 		}
 	}
 
 
 	initializeAfterLayoutReady() {
 		try {
-			this.resetDailyGoals().then(() => {if(debugLogs) console.log('Daily Goals resetted')});
+			this.resetDailyGoals().then(() => {if(debugLogs) console.debug('Daily Goals resetted')});
 			this.updateStatusBar(this.statusbarGamification).then(() =>
-				{if(debugLogs) console.log('Daily Goal status bar resettet')});
+				{if(debugLogs) console.debug('Daily Goal status bar resettet')});
 			this.mediator.updateProfileLeaf();
 		} catch (error) {
 			console.error('Error during post-layout initialization:', error);
@@ -484,7 +476,7 @@ export default class gamification extends Plugin {
 			view.updatePoints(newPoints)
 			view.updateChartMinMax(newPoints, nextLevel, min, max)
 		}else {
-			console.log('gamified-pkm-profile is not loaded yet.');
+			console.debug('gamified-pkm-profile is not loaded yet.');
 		}
 	}
 
@@ -495,7 +487,7 @@ export default class gamification extends Plugin {
 		if (view instanceof GamifiedPkmProfileView) {
 			view.updateChartWeeklyColorReceived(value)
 		}else {
-			console.log('gamified-pkm-profile is not loaded yet.');
+			console.debug('gamified-pkm-profile is not loaded yet.');
 		}
 	}
 
@@ -506,7 +498,7 @@ export default class gamification extends Plugin {
 		if (view instanceof GamifiedPkmProfileView) {
 			view.updateChartWeeklyColorToGo(value)
 		}else {
-			console.log('gamified-pkm-profile is not loaded yet.');
+			console.debug('gamified-pkm-profile is not loaded yet.');
 		}
 	}
 
@@ -517,7 +509,7 @@ export default class gamification extends Plugin {
 		if (view instanceof GamifiedPkmProfileView) {
 			view.updateProfilePicture()
 		}else {
-			console.log('gamified-pkm-profile is not loaded yet.');
+			console.debug('gamified-pkm-profile is not loaded yet.');
 		}
 	}
 
@@ -528,8 +520,6 @@ export default class gamification extends Plugin {
 		if (view instanceof GamifiedPkmProfileView) {
 			view.updatePoints(newPoints)
 			view.updateChart(newPoints,nextLevel-newPoints)
-		}else {
-			if(debugLogs) console.log('gamified-pkm-profile is not loaded yet.');
 		}
 	}
 
@@ -539,8 +529,6 @@ export default class gamification extends Plugin {
 
 		if (view instanceof GamifiedPkmProfileView) {
 			view.updateBoosterFactor(newFactor)
-		}else {
-			if(debugLogs) console.log('gamified-pkm-profile is not loaded yet.');
 		}
 	}
 
@@ -550,8 +538,6 @@ export default class gamification extends Plugin {
 
 		if (view instanceof GamifiedPkmProfileView) {
 			view.updateDailyNotes(dailyString)
-		}else {
-			if(debugLogs) console.log('gamified-pkm-profile is not loaded yet.');
 		}
 	}
 
@@ -561,8 +547,6 @@ export default class gamification extends Plugin {
 
 		if (view instanceof GamifiedPkmProfileView) {
 			view.updateWeeklyNotes(weeklyString)
-		}else {
-			if(debugLogs) console.log('gamified-pkm-profile is not loaded yet.');
 		}
 	}
 
@@ -572,8 +556,6 @@ export default class gamification extends Plugin {
 
 		if (view instanceof GamifiedPkmProfileView) {
 			view.updateChartWeekly(days)
-		}else {
-			if(debugLogs) console.log('gamified-pkm-profile is not loaded yet.');
 		}
 	}
 
@@ -583,8 +565,6 @@ export default class gamification extends Plugin {
 
 		if (view instanceof GamifiedPkmProfileView) {
 			view.updateMaturityCounts();
-		} else {
-			if (debugLogs) console.log('gamified-pkm-profile is not loaded yet.');
 		}
 	}
 
@@ -609,8 +589,6 @@ export default class gamification extends Plugin {
 
 		const fileCountMap: TFile[] | null = await this.maturityCalculator.getFileMap(this.app, this.mediator.getSettingString('tagsExclude'), this.mediator.getSettingString('folderExclude'));
 		if (fileCountMap !== null) {
-			if(debugLogs) console.debug(`fileCountMap loaded. Number of files: ${fileCountMap.length}`);
-
 			let pointsReceived = 0; // to have one message at the end how many points received
 
 			for (const fileName of fileCountMap) {
@@ -621,7 +599,6 @@ export default class gamification extends Plugin {
 					console.warn(`File ${file.path} is currently open. Skipping.`);
 					continue;
 				}
-				//if(debugLogs) console.debug(`fileName.basename: ${fileName.basename}`)
 				const fileLength = this.maturityCalculator.countCharactersInActiveFile(fileContents, fileName.basename);
 				const rateFileLength = this.maturityCalculator.rateNoteLength(fileLength);
 				const {
@@ -635,9 +612,6 @@ export default class gamification extends Plugin {
 				const inlinkClass = this.maturityCalculator.rateInlinks(inlinkNumber)//, fileCountMap.size);
 				const rateOut = this.maturityCalculator.rateOutlinks(this.maturityCalculator.getNumberOfOutlinks(file, this.app));
 				const noteMajurity = this.maturityCalculator.rateLevelOfMaturity(rateFileLength, fileNameRate, inlinkClass, rateOut, rateProgressiveSum);
-
-
-				if(debugLogs) console.debug(`Processing file ${fileName.basename} in path ${fileName.path}`);
 
 				try {
 					await this.app.fileManager.processFrontMatter(file, (frontmatter) => {
@@ -713,7 +687,6 @@ export default class gamification extends Plugin {
 			}
 			if (pointsReceived > 0) {
 				new Notice(`${pointsReceived} Points received`,this.mediator.getSettingNumber('timeShowNotice') * mil2sec)
-				if(debugLogs) console.debug(`${pointsReceived} Points received`)
 			}
 
 
@@ -722,7 +695,6 @@ export default class gamification extends Plugin {
 			// Code that you want to execute after the delay
 			const initBadge: Badge = getBadgeForInitLevel(this.mediator.getSettingNumber('statusLevel'));
 			new Notice(`You've earned the "${initBadge.name}" badge. ${initBadge.description}`,this.mediator.getSettingNumber('timeShowNotice') * mil2sec * 1.2)
-			if(debugLogs) console.log(`You earned ${initBadge.name} - ${initBadge.description}`)
 			await this.boosterForInit()
 			await this.updateStatusBar(statusbarGamification)
 			await this.writeBadgeCSV(initBadge, window.moment().format('YYYY-MM-DD'),'level ' + (this.mediator.getSettingNumber('statusLevel')).toString())
@@ -744,7 +716,7 @@ export default class gamification extends Plugin {
 
 
 	onunload() {
-		console.log('obsidian-pkm-gamification unloaded!');
+		console.debug('obsidian-pkm-gamification unloaded!');
 
 		// Clear the timer when the plugin is unloaded
 		if (this.timerId !== null) {
@@ -1266,7 +1238,7 @@ export default class gamification extends Plugin {
 		if (oldBoosterFactor <= 80 && newBoosterFactor <= 80 && newBoosterFactor > oldBoosterFactor &&
 			newIntegerPart !== oldIntegerPart && newIntegerPart % 5 === 0) {
 			new Notice(getRandomMessageBoosterFactor(),this.mediator.getSettingNumber('timeShowNotice') * mil2sec * 1.2)
-			console.log(`${getRandomMessageBoosterFactor()} : ${newBoosterFactor}`)
+			console.debug(`${getRandomMessageBoosterFactor()} : ${newBoosterFactor}`)
 		}
 
 		if (debugLogs) console.debug(`newBoosterFakfor: ${newBoosterFactor}`);
@@ -1419,7 +1391,7 @@ export default class gamification extends Plugin {
         if (!badgeDict[newBadge.name]) {
 			this.mediator.setBadgeSave(newBadge, date, level);
 		} else {
-			console.log(`Badge "${newBadge.name}" is already received before`)
+			console.debug(`Badge "${newBadge.name}" is already received before`)
         }
 	}
 }

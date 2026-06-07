@@ -384,7 +384,7 @@ export class GamificationPluginSettings extends PluginSettingTab {
 				colorPicker
 					.setValue(this.mediator.getSettingString('colorBarReceived'))
 					.onChange(async (value) => {
-						console.log(`colorBarReceived: ${value}`)
+						console.debug(`colorBarReceived: ${value}`)
 						this.mediator.setSettingString('colorBarReceived', value);
 						await this.mediator.saveSettings();
 						this.mediator.updateChartWeeklyColorReceived(value);
@@ -398,7 +398,7 @@ export class GamificationPluginSettings extends PluginSettingTab {
 					.setValue(this.mediator.getSettingString('colorBarToGo'))
 					//.setValue('#ff0000')
 					.onChange(async (value) => {
-						console.log(`colorBarToGo: ${value}`)
+						console.debug(`colorBarToGo: ${value}`)
 						this.mediator.setSettingString('colorBarToGo', value);
 						await this.mediator.saveSettings();
 						this.mediator.updateChartWeeklyColorToGo(value);

@@ -340,7 +340,7 @@ export class MultiSelectModal extends Modal {
 			if (!isMinutesPassed(momentDate, cooldownDurationMinutes)) {
 				const hoursRemaining = hoursUntilMinutesPassed(momentDate, cooldownDurationMinutes);
 				if (debugLogs) console.debug(`Booster ${labelText} is still in cooldown for ${hoursRemaining.toFixed(1)} hours`);
-				if (debugLogs) console.log(`createBoosterList: Stock amount ${stock}`);
+				if (debugLogs) console.debug(`createBoosterList: Stock amount ${stock}`);
 
 				createBoosterDisplay(boosterDetailsContainer, boosterDefinition, stock);
 
@@ -513,7 +513,7 @@ export class MultiSelectModal extends Modal {
 
 
 	private checkIngredientsAvailability(booster: Booster): boolean {
-		if(debugLogs) console.log(`Checking ingredients for Booster: ${booster.name}`);
+		if(debugLogs) console.debug(`Checking ingredients for Booster: ${booster.name}`);
 
 		for (const requiredIngredient of booster.ingredients) {
 			const fullIngredientDefinition: IngredientElement | undefined = elements.find(el => el.shortName === requiredIngredient.type);
@@ -526,7 +526,7 @@ export class MultiSelectModal extends Modal {
 			const currentStock = this.remainingStock[fullIngredientDefinition.name] || 0;
 
 			if (currentStock < requiredIngredient.quantity) {
-				if(debugLogs) console.log(`Not enough ${fullIngredientDefinition.name} for ${booster.name}. Needed: ${requiredIngredient.quantity}, Have: ${currentStock}.`);
+				if(debugLogs) console.debug(`Not enough ${fullIngredientDefinition.name} for ${booster.name}. Needed: ${requiredIngredient.quantity}, Have: ${currentStock}.`);
 				return false;
 			}
 		}
@@ -579,7 +579,7 @@ export class MultiSelectModal extends Modal {
 
 
 	private async useIngrediments(booster: Booster): Promise<void> {
-		console.log(`Using ingredients for Booster: ${booster.name}`);
+		console.debug(`Using ingredients for Booster: ${booster.name}`);
 
 		let changesMade = false;
 
@@ -600,7 +600,7 @@ export class MultiSelectModal extends Modal {
 
 				this.mediator.setSettingNumber(fullIngredientDefinition.varName, newStock);
 				changesMade = true;
-				console.log(`Reduced ${fullIngredientDefinition.name} by ${requiredIngredient.quantity}. New stock: ${newStock}`);
+				console.debug(`Reduced ${fullIngredientDefinition.name} by ${requiredIngredient.quantity}. New stock: ${newStock}`);
 			} else if (newStock === currentStock && requiredIngredient.quantity > 0) {
 				console.warn(`Attempted to reduce ${fullIngredientDefinition.name} by ${requiredIngredient.quantity}, but stock did not change from ${currentStock}.`);
 			}
