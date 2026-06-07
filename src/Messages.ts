@@ -15,6 +15,12 @@ I develop this plugin as a hobby, spending my free time doing this. If you find 
 
 It would mean a lot to me.
 `,
+"0.0.98": `
+## Fixed Risks
+- Unsafe assignment to innerHTML5
+- Unsafe assignment to innerHTML 
+- Creating and attaching "style" elements is not allowed. 
+`,
 "0.0.97": `
 This release deals fully with the representation of the boosters and ingredients. Beside adding graphical representations for them, also the style is now improved. Have a look at the crafting table!
 ## New
@@ -26,7 +32,7 @@ This release deals fully with the representation of the boosters and ingredients
 
 <div class="gPKM-videoWrapper">
   <div>
-    <iframe width="560" height="315" src="https://www.youtube.com/embed/QOpUJlLL64A?si=o4RhysQ5JZAEofya" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+    <iframe width="560" height="315" src="https://www.youtube.com/embed/QOpUJlLL64A?si=o4RhysQ5JZAEofya" title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
   </div>
 </div>
 
@@ -54,7 +60,7 @@ Special shout out for lulunac27a, who stayed tuned and asked to enable the new b
 
 <div class="gPKM-videoWrapper">
   <div>
-    <iframe width="560" height="315" src="https://www.youtube.com/embed/SK7pYCiXTFs?si=xAwKfg_x0IR_w_Sr" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+    <iframe width="560" height="315" src="https://www.youtube.com/embed/SK7pYCiXTFs?si=xAwKfg_x0IR_w_Sr" title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
   </div>
 </div>
 
@@ -73,7 +79,7 @@ Special shout out for lulunac27a, who stayed tuned and asked to enable the new b
   
 <div class="gPKM-videoWrapper">
   <div>
-    <iframe width="560" height="315" src="https://www.youtube.com/embed/S8SZ2iUeiUg?si=yZeUGEBSFyj7_MnS" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+    <iframe width="560" height="315" src="https://www.youtube.com/embed/S8SZ2iUeiUg?si=yZeUGEBSFyj7_MnS" title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
   </div>
 </div>
 

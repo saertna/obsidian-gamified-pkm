@@ -91,7 +91,7 @@ def main(new_version):
     readme_path = os.path.join(plugin_folder, 'README.md')
     manifest_path = os.path.join(plugin_folder, 'manifest.json')
     package_path = os.path.join(plugin_folder, 'package.json')
-    constants_path = os.path.join(plugin_folder, 'src', 'constants.ts')
+    constants_path = os.path.join(plugin_folder, 'src/data', 'constants.ts')
 
 
     # Update README.md
