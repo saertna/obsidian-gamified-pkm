@@ -176,19 +176,19 @@ export class MultiSelectModal extends Modal {
 	readBoostersStock() {
 		if (this.mediator) {
 			this.boosters = {
-				'Temporal Tweaker': this.mediator.getSettingNumber('temporalTweaker') as number,
-				'Perpetual Progress': this.mediator.getSettingNumber('perpetualProgress') as number,
-				'Strategic Synapses': this.mediator.getSettingNumber('strategicSynapses') as number,
-				'Accelerated Acquisition': this.mediator.getSettingNumber('acceleratedAcquisition') as number,
-				'Linkers Lode': this.mediator.getSettingNumber('linkersLode') as number,
-				'Effortless Expansion': this.mediator.getSettingNumber('effortlessExpansion') as number,
-				'Recursive Reflection': this.mediator.getSettingNumber('recursiveReflection') as number,
-				'Synaptic Surge': this.mediator.getSettingNumber('synapticSurge') as number,
-				'Inspiration Infusion': this.mediator.getSettingNumber('inspirationInfusion') as number,
-				'Title Titan': this.mediator.getSettingNumber('titleTitan') as number,
-				'Precision Prism': this.mediator.getSettingNumber('precisionPrism') as number,
-				'Hyperlink Harmony': this.mediator.getSettingNumber('hyperlinkHarmony') as number,
-				'Ephemeral Euphoria': this.mediator.getSettingNumber('ephemeralEuphoria') as number,
+				'Temporal Tweaker': this.mediator.getSettingNumber('temporalTweaker'),
+				'Perpetual Progress': this.mediator.getSettingNumber('perpetualProgress'),
+				'Strategic Synapses': this.mediator.getSettingNumber('strategicSynapses'),
+				'Accelerated Acquisition': this.mediator.getSettingNumber('acceleratedAcquisition'),
+				'Linkers Lode': this.mediator.getSettingNumber('linkersLode'),
+				'Effortless Expansion': this.mediator.getSettingNumber('effortlessExpansion'),
+				'Recursive Reflection': this.mediator.getSettingNumber('recursiveReflection'),
+				'Synaptic Surge': this.mediator.getSettingNumber('synapticSurge'),
+				'Inspiration Infusion': this.mediator.getSettingNumber('inspirationInfusion'),
+				'Title Titan': this.mediator.getSettingNumber('titleTitan'),
+				'Precision Prism': this.mediator.getSettingNumber('precisionPrism'),
+				'Hyperlink Harmony': this.mediator.getSettingNumber('hyperlinkHarmony'),
+				'Ephemeral Euphoria': this.mediator.getSettingNumber('ephemeralEuphoria'),
 				'Fortune Infusion': 1,
 			};
 		}
@@ -411,23 +411,23 @@ export class MultiSelectModal extends Modal {
 			if(debugLogs) console.debug(`acquireIngredients();`)
 			this.mediator.acquireIngredients(1,1,10)
 		} else if (labelText=='Temporal Tweaker'){
-
+			if(debugLogs) console.debug(`left empty by intention as Temporal Tweaker not implemented yet`);
 		} else if (labelText=='Perpetual Progress'){
 			this.mediator.setSettingBoolean('boosterFactorPerpetualProgress', true)
 		} else if (labelText=='Strategic Synapses'){
 			this.mediator.setSettingBoolean('boosterFactorStrategicSynapses', true)
 		} else if (labelText=='Accelerated Acquisition'){
-
+			if(debugLogs) console.debug(`left empty by intention as Accelerated Acquisition not implemented yet`);
 		} else if (labelText=='Linkers Lode'){
 			this.mediator.setSettingBoolean('boosterFactorLinkersLode', true)
 		} else if (labelText=='Effortless Expansion'){
-
+			if(debugLogs) console.debug(`left empty by intention as Effortless Expansion not implemented yet`);
 		} else if (labelText=='Recursive Reflection'){
 			this.mediator.setSettingBoolean('boosterFactorRecursiveReflection', true)
 		} else if (labelText=='Synaptic Surge'){
 			this.mediator.setSettingBoolean('boosterFactorSynapticSurge', true)
 		} else if (labelText=='Inspiration Infusion'){
-
+			if(debugLogs) console.debug(`left empty by intention as Inspiration Infusion not implemented yet`);
 		} else if (labelText=='Title Titan'){
 			this.mediator.setSettingBoolean('boosterFactorTitleTitan', true)
 		} else if (labelText=='Precision Prism'){
