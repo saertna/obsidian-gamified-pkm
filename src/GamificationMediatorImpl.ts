@@ -137,14 +137,14 @@ export class GamificationMediatorImpl implements GamificationMediator {
 				const uniqueEarnedIngredients = Array.from(earnedIngredientCounts.values());
 
 				// Construct the HTML message for the Notice
-				const messageFragment = document.createDocumentFragment();
-				messageFragment.appendChild(document.createTextNode('You earned:\n'));
+				const messageFragment = activeDocument.createDocumentFragment();
+				messageFragment.appendChild(activeDocument.createTextNode('You earned:\n'));
 
 				uniqueEarnedIngredients.forEach((item, index) => {
 					const ingredientHtml = createEarnedIngredientHtml(item.ingredient, item.count);
 					messageFragment.appendChild(ingredientHtml);
 					if (index < uniqueEarnedIngredients.length - 1) {
-						messageFragment.appendChild(document.createTextNode('\n'));
+						messageFragment.appendChild(activeDocument.createTextNode('\n'));
 					}
 				});
 
