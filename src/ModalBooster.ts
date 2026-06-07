@@ -409,9 +409,6 @@ export class ModalBooster extends Modal {
 
 		craftingCard.createEl('h3', { text: 'Crafting Station', cls: 'choice-card-title' });
 
-
-
-
 		craftingCard.onclick = () => {
 			this.close();
 			multiSelectModal.setUseBooster(false);
