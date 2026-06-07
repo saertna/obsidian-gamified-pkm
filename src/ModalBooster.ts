@@ -1,6 +1,7 @@
 import { App, Modal } from 'obsidian';
 import { GamificationMediatorImpl } from './GamificationMediatorImpl';
 import { MultiSelectModal } from './MultiSelectModal';
+import {appendSafeSvg} from "./Utils";
 
 const craftingIconSvg = `<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <svg
@@ -396,16 +397,7 @@ export class ModalBooster extends Modal {
 
 
 		const craftingIconHolder = craftingCard.createDiv({ cls: 'choice-card-icon' });
-
-		const parser = new DOMParser();
-		const doc = parser.parseFromString(craftingIconSvg, 'text/html');
-
-		const svgElement = doc.querySelector('svg');
-
-		if (svgElement) {
-			svgElement.removeAttribute('onload');
-			craftingIconHolder.appendChild(svgElement);
-		}
+		appendSafeSvg(craftingIconHolder, craftingIconSvg);
 
 		craftingCard.createEl('h3', { text: 'Crafting Station', cls: 'choice-card-title' });
 
@@ -418,25 +410,9 @@ export class ModalBooster extends Modal {
 		const boosterCard = choicesContainer.createDiv({ cls: 'choice-card' });
 		boosterCard.setAttribute('data-action', 'open-booster'); // Useful for CSS targeting or JS
 
-		/*
-		const boosterIconHolder = boosterCard.createDiv({ cls: 'choice-card-icon' });
-		boosterIconHolder.innerHTML = boosterIconSvg;
-		boosterCard.createEl('h3', { text: 'Booster Hub', cls: 'choice-card-title' });
-		*/
-
 		const boosterIconHolder = boosterCard.createDiv({ cls: 'choice-card-icon' });
 
-		// 1. Use 'text/html' - it ignores the leading newline and handles Inkscape tags gracefully
-		const parserBoosterIcon = new DOMParser();
-		const docBoosterIcon = parserBoosterIcon.parseFromString(boosterIconSvg, 'text/html');
-
-		// 2. Grab the <svg> element from the parsed body
-		const svgElementBoosterIcon = docBoosterIcon.querySelector('svg');
-
-		if (svgElementBoosterIcon) {
-			svgElementBoosterIcon.removeAttribute('onload');
-			boosterIconHolder.appendChild(svgElementBoosterIcon);
-		}
+		appendSafeSvg(boosterIconHolder, craftingIconSvg);
 
 		boosterCard.createEl('h3', { text: 'Booster Hub', cls: 'choice-card-title' });
 
