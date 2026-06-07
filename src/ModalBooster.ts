@@ -396,9 +396,24 @@ export class ModalBooster extends Modal {
 		const craftingCard = choicesContainer.createDiv({ cls: 'choice-card' });
 		craftingCard.setAttribute('data-action', 'open-crafting'); // Useful for CSS targeting or JS
 
+		//const craftingIconHolder = craftingCard.createDiv({ cls: 'choice-card-icon' });
+		//craftingIconHolder.innerHTML = craftingIconSvg;
+		//craftingCard.createEl('h3', { text: 'Crafting Station', cls: 'choice-card-title' });
+
 		const craftingIconHolder = craftingCard.createDiv({ cls: 'choice-card-icon' });
-		craftingIconHolder.innerHTML = craftingIconSvg;
+
+		// usage of parser for a secure svg icon use avoiding any arbitrary JavaScript execution
+		const parser = new DOMParser();
+		const svgDoc = parser.parseFromString(craftingIconSvg, 'image/svg+xml');
+		const svgElement = svgDoc.documentElement;
+
+		// Append the actual DOM node so the svgElement is used
+		craftingIconHolder.appendChild(svgElement);
+
+		// creating the crafting table with the set settings.
 		craftingCard.createEl('h3', { text: 'Crafting Station', cls: 'choice-card-title' });
+
+
 
 		craftingCard.onclick = () => {
 			this.close();
