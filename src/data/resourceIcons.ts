@@ -135,7 +135,6 @@ export function createBoosterDisplay(containerEl: HTMLElement, booster: Booster,
 
 	// 1. Booster Icon
 	const iconHolder = containerEl.createDiv({ cls: 'gamified-pkm-booster-icon-holder' });
-	//iconHolder.innerHTML = booster.svg;
 	appendSafeSvg(iconHolder, booster.svg);
 	iconHolder.setAttribute('title', `${booster.description}`);
 	iconHolder.style.color = booster.color;
@@ -161,7 +160,6 @@ export function createStatusBarBoosterDisplay(containerEl: HTMLElement, booster:
 
 		// 1. Booster Icon
 	const iconHolder = containerEl.createDiv({ cls: 'gamified-pkm-booster-icon-holder' });
-	//iconHolder.innerHTML = booster.svg;
 	appendSafeSvg(iconHolder, booster.svg);
 	iconHolder.setAttribute('title', `${booster.description}`);
 	iconHolder.style.color = booster.color;
