@@ -1,9 +1,9 @@
 import { App, Modal } from 'obsidian';
 import { GamificationMediatorImpl } from './GamificationMediatorImpl';
 import { MultiSelectModal } from './MultiSelectModal';
+import {appendSafeSvg} from "./Utils";
 
-const craftingIconSvg = `
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+const craftingIconSvg = `<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <svg
    viewBox="0 0 1024 1024"
    fill="none"
@@ -132,8 +132,7 @@ const craftingIconSvg = `
 </svg>
 `;
 
-const boosterIconSvg = `
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+const boosterIconSvg = `<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <svg
    viewBox="0 0 1024 1024"
    fill="none"
@@ -396,8 +395,10 @@ export class ModalBooster extends Modal {
 		const craftingCard = choicesContainer.createDiv({ cls: 'choice-card' });
 		craftingCard.setAttribute('data-action', 'open-crafting'); // Useful for CSS targeting or JS
 
+
 		const craftingIconHolder = craftingCard.createDiv({ cls: 'choice-card-icon' });
-		craftingIconHolder.innerHTML = craftingIconSvg;
+		appendSafeSvg(craftingIconHolder, craftingIconSvg);
+
 		craftingCard.createEl('h3', { text: 'Crafting Station', cls: 'choice-card-title' });
 
 		craftingCard.onclick = () => {
@@ -410,8 +411,11 @@ export class ModalBooster extends Modal {
 		boosterCard.setAttribute('data-action', 'open-booster'); // Useful for CSS targeting or JS
 
 		const boosterIconHolder = boosterCard.createDiv({ cls: 'choice-card-icon' });
-		boosterIconHolder.innerHTML = boosterIconSvg;
+
+		appendSafeSvg(boosterIconHolder, boosterIconSvg);
+
 		boosterCard.createEl('h3', { text: 'Booster Hub', cls: 'choice-card-title' });
+
 
 		boosterCard.onclick = () => {
 			this.close(); // Close this modal

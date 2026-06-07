@@ -176,19 +176,19 @@ export class MultiSelectModal extends Modal {
 	readBoostersStock() {
 		if (this.mediator) {
 			this.boosters = {
-				'Temporal Tweaker': this.mediator.getSettingNumber('temporalTweaker') as number,
-				'Perpetual Progress': this.mediator.getSettingNumber('perpetualProgress') as number,
-				'Strategic Synapses': this.mediator.getSettingNumber('strategicSynapses') as number,
-				'Accelerated Acquisition': this.mediator.getSettingNumber('acceleratedAcquisition') as number,
-				'Linkers Lode': this.mediator.getSettingNumber('linkersLode') as number,
-				'Effortless Expansion': this.mediator.getSettingNumber('effortlessExpansion') as number,
-				'Recursive Reflection': this.mediator.getSettingNumber('recursiveReflection') as number,
-				'Synaptic Surge': this.mediator.getSettingNumber('synapticSurge') as number,
-				'Inspiration Infusion': this.mediator.getSettingNumber('inspirationInfusion') as number,
-				'Title Titan': this.mediator.getSettingNumber('titleTitan') as number,
-				'Precision Prism': this.mediator.getSettingNumber('precisionPrism') as number,
-				'Hyperlink Harmony': this.mediator.getSettingNumber('hyperlinkHarmony') as number,
-				'Ephemeral Euphoria': this.mediator.getSettingNumber('ephemeralEuphoria') as number,
+				'Temporal Tweaker': this.mediator.getSettingNumber('temporalTweaker'),
+				'Perpetual Progress': this.mediator.getSettingNumber('perpetualProgress'),
+				'Strategic Synapses': this.mediator.getSettingNumber('strategicSynapses'),
+				'Accelerated Acquisition': this.mediator.getSettingNumber('acceleratedAcquisition'),
+				'Linkers Lode': this.mediator.getSettingNumber('linkersLode'),
+				'Effortless Expansion': this.mediator.getSettingNumber('effortlessExpansion'),
+				'Recursive Reflection': this.mediator.getSettingNumber('recursiveReflection'),
+				'Synaptic Surge': this.mediator.getSettingNumber('synapticSurge'),
+				'Inspiration Infusion': this.mediator.getSettingNumber('inspirationInfusion'),
+				'Title Titan': this.mediator.getSettingNumber('titleTitan'),
+				'Precision Prism': this.mediator.getSettingNumber('precisionPrism'),
+				'Hyperlink Harmony': this.mediator.getSettingNumber('hyperlinkHarmony'),
+				'Ephemeral Euphoria': this.mediator.getSettingNumber('ephemeralEuphoria'),
 				'Fortune Infusion': 1,
 			};
 		}
@@ -198,14 +198,14 @@ export class MultiSelectModal extends Modal {
 	readIngrementStock() {
 		if (this.mediator) {
 			this.remainingStock = {
-				'Nexus Node': this.mediator.getSettingNumber('nexusNode') as number,
-				'Connection Crystal': this.mediator.getSettingNumber('connectionCrystal') as number,
-				'Mastery Scroll': this.mediator.getSettingNumber('masteryScroll') as number,
-				'Insight Prism': this.mediator.getSettingNumber('insightPrism') as number,
-				'Reflective Essence': this.mediator.getSettingNumber('reflectiveEssence') as number,
-				'Amplification Crystal': this.mediator.getSettingNumber('amplificationCrystal') as number,
-				'Creative Catalyst': this.mediator.getSettingNumber('creativeCatalyst') as number,
-				'Precision Lens': this.mediator.getSettingNumber('precisionLens') as number,
+				'Nexus Node': this.mediator.getSettingNumber('nexusNode'),
+				'Connection Crystal': this.mediator.getSettingNumber('connectionCrystal'),
+				'Mastery Scroll': this.mediator.getSettingNumber('masteryScroll'),
+				'Insight Prism': this.mediator.getSettingNumber('insightPrism'),
+				'Reflective Essence': this.mediator.getSettingNumber('reflectiveEssence'),
+				'Amplification Crystal': this.mediator.getSettingNumber('amplificationCrystal'),
+				'Creative Catalyst': this.mediator.getSettingNumber('creativeCatalyst'),
+				'Precision Lens': this.mediator.getSettingNumber('precisionLens'),
 			};
 		}
 	}
@@ -340,7 +340,7 @@ export class MultiSelectModal extends Modal {
 			if (!isMinutesPassed(momentDate, cooldownDurationMinutes)) {
 				const hoursRemaining = hoursUntilMinutesPassed(momentDate, cooldownDurationMinutes);
 				if (debugLogs) console.debug(`Booster ${labelText} is still in cooldown for ${hoursRemaining.toFixed(1)} hours`);
-				if (debugLogs) console.log(`createBoosterList: Stock amount ${stock}`);
+				if (debugLogs) console.debug(`createBoosterList: Stock amount ${stock}`);
 
 				createBoosterDisplay(boosterDetailsContainer, boosterDefinition, stock);
 
@@ -411,23 +411,23 @@ export class MultiSelectModal extends Modal {
 			if(debugLogs) console.debug(`acquireIngredients();`)
 			this.mediator.acquireIngredients(1,1,10)
 		} else if (labelText=='Temporal Tweaker'){
-
+			if(debugLogs) console.debug(`left empty by intention as Temporal Tweaker not implemented yet`);
 		} else if (labelText=='Perpetual Progress'){
 			this.mediator.setSettingBoolean('boosterFactorPerpetualProgress', true)
 		} else if (labelText=='Strategic Synapses'){
 			this.mediator.setSettingBoolean('boosterFactorStrategicSynapses', true)
 		} else if (labelText=='Accelerated Acquisition'){
-
+			if(debugLogs) console.debug(`left empty by intention as Accelerated Acquisition not implemented yet`);
 		} else if (labelText=='Linkers Lode'){
 			this.mediator.setSettingBoolean('boosterFactorLinkersLode', true)
 		} else if (labelText=='Effortless Expansion'){
-
+			if(debugLogs) console.debug(`left empty by intention as Effortless Expansion not implemented yet`);
 		} else if (labelText=='Recursive Reflection'){
 			this.mediator.setSettingBoolean('boosterFactorRecursiveReflection', true)
 		} else if (labelText=='Synaptic Surge'){
 			this.mediator.setSettingBoolean('boosterFactorSynapticSurge', true)
 		} else if (labelText=='Inspiration Infusion'){
-
+			if(debugLogs) console.debug(`left empty by intention as Inspiration Infusion not implemented yet`);
 		} else if (labelText=='Title Titan'){
 			this.mediator.setSettingBoolean('boosterFactorTitleTitan', true)
 		} else if (labelText=='Precision Prism'){
@@ -513,7 +513,7 @@ export class MultiSelectModal extends Modal {
 
 
 	private checkIngredientsAvailability(booster: Booster): boolean {
-		if(debugLogs) console.log(`Checking ingredients for Booster: ${booster.name}`);
+		if(debugLogs) console.debug(`Checking ingredients for Booster: ${booster.name}`);
 
 		for (const requiredIngredient of booster.ingredients) {
 			const fullIngredientDefinition: IngredientElement | undefined = elements.find(el => el.shortName === requiredIngredient.type);
@@ -526,7 +526,7 @@ export class MultiSelectModal extends Modal {
 			const currentStock = this.remainingStock[fullIngredientDefinition.name] || 0;
 
 			if (currentStock < requiredIngredient.quantity) {
-				if(debugLogs) console.log(`Not enough ${fullIngredientDefinition.name} for ${booster.name}. Needed: ${requiredIngredient.quantity}, Have: ${currentStock}.`);
+				if(debugLogs) console.debug(`Not enough ${fullIngredientDefinition.name} for ${booster.name}. Needed: ${requiredIngredient.quantity}, Have: ${currentStock}.`);
 				return false;
 			}
 		}
@@ -579,7 +579,7 @@ export class MultiSelectModal extends Modal {
 
 
 	private async useIngrediments(booster: Booster): Promise<void> {
-		console.log(`Using ingredients for Booster: ${booster.name}`);
+		console.debug(`Using ingredients for Booster: ${booster.name}`);
 
 		let changesMade = false;
 
@@ -600,7 +600,7 @@ export class MultiSelectModal extends Modal {
 
 				this.mediator.setSettingNumber(fullIngredientDefinition.varName, newStock);
 				changesMade = true;
-				console.log(`Reduced ${fullIngredientDefinition.name} by ${requiredIngredient.quantity}. New stock: ${newStock}`);
+				console.debug(`Reduced ${fullIngredientDefinition.name} by ${requiredIngredient.quantity}. New stock: ${newStock}`);
 			} else if (newStock === currentStock && requiredIngredient.quantity > 0) {
 				console.warn(`Attempted to reduce ${fullIngredientDefinition.name} by ${requiredIngredient.quantity}, but stock did not change from ${currentStock}.`);
 			}

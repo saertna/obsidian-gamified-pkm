@@ -137,8 +137,21 @@ export function parseBadgeCSV2Dict(csvString: string): Record<string, { date: st
 export function getBoosterRunTimeFromVarName(boosterVarName: string) {
 	for (const element of boosterRecipes) {
 		if (element.varname === boosterVarName) {
-			return element.boosterRunTime as number;
+			return element.boosterRunTime;
 		}
 	}
 	return 0; // Return null if no matching element is found
+}
+
+
+export function appendSafeSvg(parent: HTMLElement, svgString: string): void {
+	const parser = new DOMParser();
+	const doc = parser.parseFromString(svgString, 'text/html');
+	const svg = doc.querySelector('svg');
+	if (svg) {
+		// Remove potentially malicious attributes
+		svg.removeAttribute('onload');
+		svg.removeAttribute('onerror');
+		parent.appendChild(svg);
+	}
 }

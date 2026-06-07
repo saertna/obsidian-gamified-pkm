@@ -69,10 +69,10 @@ export class GamificationMediatorImpl implements GamificationMediator {
 
 	setBadgeSave(newBadge: Badge, date: string, level: string){
 		const currentBadgeString:string = this.getSettingString('receivedBadges');
-		if(debugLogs) console.log(`currentBadgeString: ${currentBadgeString}`)
+		if(debugLogs) console.debug(`currentBadgeString: ${currentBadgeString}`)
 		const newBadgeString = currentBadgeString + newBadge.name + ',' + date + ',' + level + '##';
 		//window.moment().format('YYYY-MM-DD') + ',' + this.getSettingNumber('statusLevel') + '\n';
-		if(debugLogs) console.log(`newBadgeString: ${newBadgeString}`)
+		if(debugLogs) console.debug(`newBadgeString: ${newBadgeString}`)
 		this.setSettingString('receivedBadges',newBadgeString);
 		this.saveSettings();
 	}
@@ -137,14 +137,14 @@ export class GamificationMediatorImpl implements GamificationMediator {
 				const uniqueEarnedIngredients = Array.from(earnedIngredientCounts.values());
 
 				// Construct the HTML message for the Notice
-				const messageFragment = document.createDocumentFragment();
-				messageFragment.appendChild(document.createTextNode('You earned:\n'));
+				const messageFragment = activeDocument.createDocumentFragment();
+				messageFragment.appendChild(activeDocument.createTextNode('You earned:\n'));
 
 				uniqueEarnedIngredients.forEach((item, index) => {
 					const ingredientHtml = createEarnedIngredientHtml(item.ingredient, item.count);
 					messageFragment.appendChild(ingredientHtml);
 					if (index < uniqueEarnedIngredients.length - 1) {
-						messageFragment.appendChild(document.createTextNode('\n'));
+						messageFragment.appendChild(activeDocument.createTextNode('\n'));
 					}
 				});
 

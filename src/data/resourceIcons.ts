@@ -3,6 +3,7 @@
 // element, making them easy to style dynamically with CSS or JavaScript.
 // I've also set default width/height to 24 for better icon sizing.
 import { Booster } from '../interfaces/Booster'
+import {appendSafeSvg} from "../Utils";
 
 export const connectionCrystalSvg = `
   <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
@@ -101,7 +102,7 @@ export function createResourceDisplay(containerEl: HTMLElement, resourceName: st
 	const wrapper = containerEl.createDiv({ cls: 'gamified-pkm-resource-item' });
 
 	const iconHolder = wrapper.createDiv({ cls: 'gamified-pkm-resource-icon-holder' });
-	iconHolder.innerHTML = svgContent;
+	appendSafeSvg(iconHolder, svgContent);
 	iconHolder.setAttribute('title', resourceName); // Tooltip on hover
 
 	wrapper.createSpan({text: `${resourceName}`, cls: 'gamified-pkm-resource-title' });
@@ -114,7 +115,7 @@ export function createResourceDisplay(containerEl: HTMLElement, resourceName: st
 
 export function createRecipeDisplay(containerEl: HTMLElement, resourceName: string, quantity: number, svgContent: string): void { // Changed return type to void
 	const iconHolder = containerEl.createDiv({ cls: 'gamified-pkm-resource-icon-holder recipe-ingredient-icon-holder' });
-	iconHolder.innerHTML = svgContent;
+	appendSafeSvg(iconHolder, svgContent);
 	iconHolder.setAttribute('title', resourceName); // Tooltip on hover
 
 	containerEl.createSpan({ text: `${quantity}`, cls: 'gamified-pkm-resource-quantity recipe-ingredient-quantity' });
@@ -134,7 +135,7 @@ export function createBoosterDisplay(containerEl: HTMLElement, booster: Booster,
 
 	// 1. Booster Icon
 	const iconHolder = containerEl.createDiv({ cls: 'gamified-pkm-booster-icon-holder' });
-	iconHolder.innerHTML = booster.svg;
+	appendSafeSvg(iconHolder, booster.svg);
 	iconHolder.setAttribute('title', `${booster.description}`);
 	iconHolder.style.color = booster.color;
 
@@ -147,3 +148,24 @@ export function createBoosterDisplay(containerEl: HTMLElement, booster: Booster,
 
 }
 
+export function createStatusBarBoosterDisplay(containerEl: HTMLElement, booster: Booster): void {
+	/**
+	 * Populates a given container element with the booster's icon, name, and quantity.
+	 * The container is expected to have 'display: flex' and 'gap' styles applied by its parent.
+	 *
+	 * @param containerEl The HTMLElement to which the booster display elements will be appended.
+	 * @param booster The Booster definition object.
+	 * @param quantity The stock quantity of the booster.
+	 */
+
+		// 1. Booster Icon
+	const iconHolder = containerEl.createDiv({ cls: 'gamified-pkm-booster-icon-holder' });
+	appendSafeSvg(iconHolder, booster.svg);
+	iconHolder.setAttribute('title', `${booster.description}`);
+	iconHolder.style.color = booster.color;
+
+	// 2. Booster Name
+	const nameSpan = containerEl.createSpan({ text: booster.name, cls: 'gamified-pkm-booster-name' });
+	nameSpan.setAttribute('title', `${booster.description}`); // Optionally add description as tooltip for the name too
+
+}

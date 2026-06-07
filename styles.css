@@ -546,3 +546,12 @@
 	line-height: 1.2;
 }
 /* --- Booster Modal End --- */
+
+.modal-checkbox-container {
+	margin-bottom: 10px;
+	display: flex;
+	align-items: center;
+}
+.modal-checkbox-container input[type="checkbox"] {
+	margin-right: 5px;
+}

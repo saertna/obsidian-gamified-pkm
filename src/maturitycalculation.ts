@@ -404,7 +404,7 @@ export class MaturityCalculator {
 			const {app: {metadataCache: {resolvedLinks}}} = this;
 			const {path} = file;
 
-			if (debugLogs) console.log('Resolved Links Data:', resolvedLinks); // Add this line
+			if (debugLogs) console.debug('Resolved Links Data:', resolvedLinks); // Add this line
 
 			const sumInlinks = Object.values(resolvedLinks)
 				.map((val: { [key: string]: number }) => val[path] ?? 0)
