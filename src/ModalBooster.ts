@@ -418,9 +418,28 @@ export class ModalBooster extends Modal {
 		const boosterCard = choicesContainer.createDiv({ cls: 'choice-card' });
 		boosterCard.setAttribute('data-action', 'open-booster'); // Useful for CSS targeting or JS
 
+		/*
 		const boosterIconHolder = boosterCard.createDiv({ cls: 'choice-card-icon' });
 		boosterIconHolder.innerHTML = boosterIconSvg;
 		boosterCard.createEl('h3', { text: 'Booster Hub', cls: 'choice-card-title' });
+		*/
+
+		const boosterIconHolder = boosterCard.createDiv({ cls: 'choice-card-icon' });
+
+		// 1. Use 'text/html' - it ignores the leading newline and handles Inkscape tags gracefully
+		const parserBoosterIcon = new DOMParser();
+		const docBoosterIcon = parserBoosterIcon.parseFromString(boosterIconSvg, 'text/html');
+
+		// 2. Grab the <svg> element from the parsed body
+		const svgElementBoosterIcon = docBoosterIcon.querySelector('svg');
+
+		if (svgElementBoosterIcon) {
+			svgElementBoosterIcon.removeAttribute('onload');
+			boosterIconHolder.appendChild(svgElementBoosterIcon);
+		}
+
+		boosterCard.createEl('h3', { text: 'Booster Hub', cls: 'choice-card-title' });
+
 
 		boosterCard.onclick = () => {
 			this.close(); // Close this modal
