@@ -198,14 +198,14 @@ export class MultiSelectModal extends Modal {
 	readIngrementStock() {
 		if (this.mediator) {
 			this.remainingStock = {
-				'Nexus Node': this.mediator.getSettingNumber('nexusNode') as number,
-				'Connection Crystal': this.mediator.getSettingNumber('connectionCrystal') as number,
-				'Mastery Scroll': this.mediator.getSettingNumber('masteryScroll') as number,
-				'Insight Prism': this.mediator.getSettingNumber('insightPrism') as number,
-				'Reflective Essence': this.mediator.getSettingNumber('reflectiveEssence') as number,
-				'Amplification Crystal': this.mediator.getSettingNumber('amplificationCrystal') as number,
-				'Creative Catalyst': this.mediator.getSettingNumber('creativeCatalyst') as number,
-				'Precision Lens': this.mediator.getSettingNumber('precisionLens') as number,
+				'Nexus Node': this.mediator.getSettingNumber('nexusNode'),
+				'Connection Crystal': this.mediator.getSettingNumber('connectionCrystal'),
+				'Mastery Scroll': this.mediator.getSettingNumber('masteryScroll'),
+				'Insight Prism': this.mediator.getSettingNumber('insightPrism'),
+				'Reflective Essence': this.mediator.getSettingNumber('reflectiveEssence'),
+				'Amplification Crystal': this.mediator.getSettingNumber('amplificationCrystal'),
+				'Creative Catalyst': this.mediator.getSettingNumber('creativeCatalyst'),
+				'Precision Lens': this.mediator.getSettingNumber('precisionLens'),
 			};
 		}
 	}
