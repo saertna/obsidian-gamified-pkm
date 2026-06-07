@@ -412,7 +412,7 @@ export class ModalBooster extends Modal {
 
 		const boosterIconHolder = boosterCard.createDiv({ cls: 'choice-card-icon' });
 
-		appendSafeSvg(boosterIconHolder, craftingIconSvg);
+		appendSafeSvg(boosterIconHolder, boosterIconSvg);
 
 		boosterCard.createEl('h3', { text: 'Booster Hub', cls: 'choice-card-title' });
 
