@@ -1,5 +1,6 @@
 import { getResourceColor, resourceSvgMap } from '../data/resourceIcons'; // Adjust path
-import { IngredientElement } from '../data/constants'; // Assuming this is where IngredientElement is defined
+import { IngredientElement } from '../data/constants';
+import {appendSafeSvg} from "../Utils"; // Assuming this is where IngredientElement is defined
 
 /**
  * Creates an HTMLElement containing an ingredient's icon, name, and quantity, styled for an Obsidian Notice.
@@ -24,7 +25,7 @@ export function createEarnedIngredientHtml(ingredient: IngredientElement, count:
 	if (svgContent) {
 		const iconHolder = document.createElement('span');
 		iconHolder.classList.add('gamified-pkm-notice-icon');
-		iconHolder.innerHTML = svgContent;
+		appendSafeSvg(iconHolder, svgContent);
 		iconHolder.style.color = getResourceColor(ingredient.name);
 		container.appendChild(iconHolder);
 	}

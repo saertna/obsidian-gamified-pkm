@@ -9,7 +9,7 @@ import {
 } from './data/constants';
 import { ModalInformationbox } from 'ModalInformationbox';
 import { GamificationMediator } from './GamificationMediator';
-import {hoursUntilMinutesPassed, isMinutesPassed} from "./Utils";
+import {appendSafeSvg, hoursUntilMinutesPassed, isMinutesPassed} from "./Utils";
 import {
 	createResourceDisplay,
 	createBoosterDisplay,
@@ -253,7 +253,7 @@ export class MultiSelectModal extends Modal {
 
 				// Booster Icon
 				const boosterIconHolder = boosterIdentity.createDiv({ cls: 'gamified-pkm-booster-icon-holder' });
-				boosterIconHolder.innerHTML = booster.svg;
+				appendSafeSvg(boosterIconHolder, booster.svg);
 				boosterIconHolder.style.color = booster.color;
 				boosterIconHolder.setAttribute('title', booster.description);
 
