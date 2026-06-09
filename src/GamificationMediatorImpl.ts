@@ -23,23 +23,27 @@ export class GamificationMediatorImpl implements GamificationMediator {
 	}
 
 	closeProfileView(){
-		this.plugin.closeProfileView();
+		void this.plugin.closeProfileView();
 	}
 
-	updateProfileLeaf() {
-		this.plugin.actualizeProfileLeaf();
+	async updateProfileLeaf() {
+		try {
+			await this.plugin.actualizeProfileLeaf();
+		} catch (error) {
+			console.error("Failed to update Profile Leaf:", error);
+		}
 	}
 
 	updateProfileLeafPic() {
-		this.plugin.profileLeafUpdatePicture();
+		void this.plugin.profileLeafUpdatePicture();
 	}
 
 	updateChartWeeklyColorReceived(value: string){
-		this.plugin.updateChartWeeklyColorReceived(value);
+		void this.plugin.updateChartWeeklyColorReceived(value);
 	}
 
 	updateChartWeeklyColorToGo(value: string){
-		this.plugin.updateChartWeeklyColorToGo(value);
+		void this.plugin.updateChartWeeklyColorToGo(value);
 	}
 
 	getSettingString(key: string): string {
@@ -64,7 +68,7 @@ export class GamificationMediatorImpl implements GamificationMediator {
 	setSettingString(key: string, value: string) {
 		// Set a specific setting
 		this.settings[key] = encryptString(value);
-		this.saveSettings();
+		void this.saveSettings();
 	}
 
 	setBadgeSave(newBadge: Badge, date: string, level: string){
@@ -73,22 +77,22 @@ export class GamificationMediatorImpl implements GamificationMediator {
 		const newBadgeString = currentBadgeString + newBadge.name + ',' + date + ',' + level + '##';
 		//window.moment().format('YYYY-MM-DD') + ',' + this.getSettingNumber('statusLevel') + '\n';
 		if(debugLogs) console.debug(`newBadgeString: ${newBadgeString}`)
-		this.setSettingString('receivedBadges',newBadgeString);
-		this.saveSettings();
+		void this.setSettingString('receivedBadges',newBadgeString);
+		void this.saveSettings();
 	}
 
 
 	setSettingNumber(key: string, value: number) {
 		// Set a specific setting
 		this.settings[key] = encryptNumber(value);
-		this.saveSettings();
+		void this.saveSettings();
 	}
 
 
 	setSettingBoolean(key: string, value: boolean) {
 		// Set a specific setting
 		this.settings[key] = encryptBoolean(value);
-		this.saveSettings();
+		void this.saveSettings();
 	}
 
 	async saveSettings(): Promise<void> {
