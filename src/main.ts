@@ -229,8 +229,14 @@ export default class gamification extends Plugin {
 				this.actualizeProfileLeaf().then(() => {if(debugLogs) console.debug('Profile updated successfully')});
 			});
 
-			this.addRibbonIcon("target", "gamification side overview", () => {
-				this.activateView().then(() => {if(debugLogs) console.debug('Profile view activated')});
+			this.addRibbonIcon("chevrons-right", "update overview leaf", () => {
+				this.actualizeProfileLeaf()
+					.then(() => {
+						if(debugLogs) console.debug('Profile updated successfully');
+					})
+					.catch((err) => {
+						console.error('Error updating profile:', err);
+					});
 			});
 
 		}
