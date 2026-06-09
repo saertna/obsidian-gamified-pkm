@@ -122,11 +122,15 @@ export class GamificationMediatorImpl implements GamificationMediator {
 				const randomIngredientIndex = this.getRandomInt(0, listOfUseableIngredientsToBeShown.length-1);
 				const earnedIngredient = elements[randomIngredientIndex];
 				const elementCount = this.getSettingNumber(earnedIngredient.varName);
+				const existingEntry = earnedIngredientCounts.get(earnedIngredient.name);
 
-				if (earnedIngredientCounts.has(earnedIngredient.name)) {
-					earnedIngredientCounts.get(earnedIngredient.name)!.count++;
+				if (existingEntry) {
+					existingEntry.count++;
 				} else {
-					earnedIngredientCounts.set(earnedIngredient.name, { ingredient: earnedIngredient, count: 1 });
+					earnedIngredientCounts.set(earnedIngredient.name, {
+						ingredient: earnedIngredient,
+						count: 1
+					});
 				}
 
 				if (elementCount !== null) {
