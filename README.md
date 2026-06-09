@@ -1,4 +1,4 @@
-# obsidian-gamified-pkm
+# Gamificate your PKM
 
 ## **🌟 Elevate Your Knowledge Management with the Obsidian Gamification Plugin! 🚀**
 
