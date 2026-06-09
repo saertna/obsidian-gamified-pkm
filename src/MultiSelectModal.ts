@@ -660,7 +660,7 @@ export class MultiSelectModal extends Modal {
 				if (debugLogs) console.debug(`craft booster ${boosterName}`);
 				this.updateBoosterStock(boosterName, 1);
 				this.mediator.setSettingNumber(this.getBoosterVarNameFromName(boosterName), this.boosters[boosterName]); // Adjust getBoosterVarNameFromName if it needs boosterId
-				this.useIngrediments(selectedBooster);
+				void this.useIngrediments(selectedBooster);
 				this.updateStockInformation();
 			} else {
 				if (debugLogs) console.debug(`not enough ingredients for booster ${boosterName} in stock`);
