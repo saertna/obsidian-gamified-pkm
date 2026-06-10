@@ -259,7 +259,7 @@ export default class gamification extends Plugin {
 
 			this.addCommand({
 				id: 'booster',
-				name: 'Open booster pallete',
+				name: 'Open booster palette',
 				callback: async () => {
 					new ModalBooster(this.app, ` `, this.mediator).open();
 				},
@@ -307,7 +307,7 @@ export default class gamification extends Plugin {
 		// command: rate note maturity
 		this.addCommand({
 			id: 'rate-note-maturity',
-			name: 'Rate note majurity',
+			name: 'Rate note maturity',
 			checkCallback: (checking: boolean) => {
 				const view = this.app.workspace.getActiveViewOfType(MarkdownView);
 				if (view) {
