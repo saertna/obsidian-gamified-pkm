@@ -428,7 +428,7 @@ export class GamificationPluginSettings extends PluginSettingTab {
 					.setValue(this.mediator.getSettingBoolean('enableInitCommand'))
 					.onChange((value) => {
 						this.mediator.setSettingBoolean('enableInitCommand', value);
-						this.mediator.saveSettings();
+						void this.mediator.saveSettings();
 					}),
 			);
 

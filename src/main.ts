@@ -578,7 +578,7 @@ export default class gamification extends Plugin {
         this.mediator.setSettingNumber('badgeBoosterFactor', 1);
         await this.giveStatusPoints(0,'');
         await this.updateStatusBar(this.statusbarGamification);
-        this.mediator.updateProfileLeaf();
+        await this.mediator.updateProfileLeaf();
 		new ModalInformationbox(this.app, `The Game is now reset.`).open();
     }
 
@@ -589,7 +589,7 @@ export default class gamification extends Plugin {
 
 		const fileCountMap: TFile[] | null = await this.maturityCalculator.getFileMap(this.app, this.mediator.getSettingString('tagsExclude'), this.mediator.getSettingString('folderExclude'));
 		if (fileCountMap !== null) {
-			let pointsReceived = 0; // to have one message at the end how many points received
+			let pointsReceived = 0; // To have one message at the end, how many points received
 
 			for (const fileName of fileCountMap) {
 				const file = fileName
@@ -836,7 +836,7 @@ export default class gamification extends Plugin {
 			try {
 				await this.app.fileManager.processFrontMatter(file, (frontmatter) => {
 					if (frontmatter) {
-						let pointsReceived = 0; // to have one message at the end how many points received
+						let pointsReceived = 0; // to have one message at the end, how many points received
 						if (rateDirectionForStatusPoints(frontmatter['note-maturity'], noteMajurity) >= 1){
 							if(debugLogs) console.debug(`note-maturity >=1`)
 							//pointsReceived += pointsNoteMajurity*rateDirectionForStatusPoints(frontmatter['note-maturity'], noteMajurity)
@@ -1232,7 +1232,7 @@ export default class gamification extends Plugin {
 			newBoosterFactor = 80;
 		}
 
-		// Send message if newBoosterFactor crosses a multiple of 5
+		// Send the message if newBoosterFactor crosses a multiple of 5
 		const oldIntegerPart = Math.floor(oldBoosterFactor);
 		const newIntegerPart = Math.floor(newBoosterFactor);
 		if (oldBoosterFactor <= 80 && newBoosterFactor <= 80 && newBoosterFactor > oldBoosterFactor &&
@@ -1401,7 +1401,7 @@ export default class gamification extends Plugin {
 
 
 	async writeBadgeCSV(newBadge: Badge, date: string, level: string){
-		// check first if badge is already in
+		// check first if the badge is already in
 		const badgeDict = parseBadgeCSV2Dict(this.mediator.getSettingString('receivedBadges'));
         if (!badgeDict[newBadge.name]) {
 			this.mediator.setBadgeSave(newBadge, date, level);
