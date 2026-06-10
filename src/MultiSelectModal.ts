@@ -125,7 +125,7 @@ export class MultiSelectModal extends Modal {
 			return this.createBoosterList(labelText);
 		}
 		console.warn("createItemContainer called with useBooster=false. This path should be unreachable if onOpen is correct.");
-		return document.createElement('div');
+		return activeDocument.createElement('div');
 	}
 
 
