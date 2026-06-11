@@ -101,7 +101,7 @@ export class GamificationMediatorImpl implements GamificationMediator {
 
 	async loadSettings() {
 		this.settings = Object.assign({}, defaultSettings, await this.plugin.loadData());
-		if(debugLogs) console.debug('loadSettings()')
+		console.debug('loadSettings()')
 	}
 
 	async acquireIngredients(chance:number, min:number, max:number) {
