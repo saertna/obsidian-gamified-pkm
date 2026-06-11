@@ -7,6 +7,13 @@ on:
 jobs:
   validate:
     runs-on: ubuntu-latest
+
+    # CRITICAL: Give GitHub the required permissions to sign your files
+    permissions:
+        id-token: write
+        contents: read
+        attestations: write
+
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v3
@@ -31,3 +38,20 @@ jobs:
             main.js
             manifest.json
 
+        # 6. Generate the cryptographic attestations for your built files
+      - name: Attest Build Provenance
+        uses: actions/attest-build-provenance@v2
+        with:
+            subject-path: 'dist/*'
+
+        # 7. Automatically create a GitHub Release and attach the files
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+            generate_release_notes: true
+            files: |
+                dist/main.js
+                dist/styles.css
+                dist/manifest.json
+        env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
