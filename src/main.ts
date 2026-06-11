@@ -72,7 +72,7 @@ export default class gamification extends Plugin {
 
 		const delayLoadTime = this.mediator.getSettingNumber('delayLoadTime') * 1000;
 
-		setTimeout(() => {
+		window.setTimeout(() => {
 			// Use onLayoutReady to ensure the workspace is ready
 			this.app.workspace.onLayoutReady(() => {
 				void this.mediator.loadSettings();
@@ -372,7 +372,7 @@ export default class gamification extends Plugin {
 			clearTimeout(this.editTimers[activeFile.path]);
 		}
 
-		this.editTimers[activeFile.path] = setTimeout(() => {
+		this.editTimers[activeFile.path] = window.setTimeout(() => {
 			// Check if no further edits happened within the delay
 			if (this.lastEditTimes[activeFile.path] === currentTime) {
 				// Trigger your action here
@@ -691,7 +691,7 @@ export default class gamification extends Plugin {
 
 
 		// Inside your function where you want to introduce a delay
-		setTimeout(async () => {
+		window.setTimeout(async () => {
 			// Code that you want to execute after the delay
 			const initBadge: Badge = getBadgeForInitLevel(this.mediator.getSettingNumber('statusLevel'));
 			new Notice(`You've earned the "${initBadge.name}" badge. ${initBadge.description}`,this.mediator.getSettingNumber('timeShowNotice') * mil2sec * 1.2)
