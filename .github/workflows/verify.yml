@@ -40,15 +40,6 @@ jobs:
             manifest.json
             styles.css
 
-        # 5. Archive verified build (Matches root directory)
-      - name: Archive verified build
-        uses: actions/upload-artifact@v4.6.2
-        with:
-            name: dist-verified
-            path: |
-                main.js
-                manifest.json
-                styles.css
 
         # 6. Generate the cryptographic attestations for your built files
       - name: Attest Build Provenance
