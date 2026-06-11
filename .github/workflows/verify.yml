@@ -38,6 +38,7 @@ jobs:
           path: |
             main.js
             manifest.json
+            styles.css
 
         # 5. Archive verified build (Matches root directory)
       - name: Archive verified build
