@@ -49,7 +49,8 @@ export default class gamification extends Plugin {
 	private statusbarGamification = this.statusBarItem.createEl("span", { text: "" });
 	public settings: ISettings;
 	private lastEditTimes: Record<string, number> = {};
-	private editTimers: Record<string, ReturnType<typeof setTimeout>> = {};
+	//private editTimers: Record<string, ReturnType<typeof setTimeout>> = {};
+	private editTimers: Record<string, number> = {};
 	mediator: GamificationMediatorImpl;
 	private maturityCalculator: MaturityCalculator;
 	private isProfileViewOpen = false;
