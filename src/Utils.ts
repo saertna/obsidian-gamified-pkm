@@ -37,7 +37,7 @@ export const checkGamifiedPkmVersion = async (app: App) => {
 	} catch (e) {
 		console.error({ where: "Utils/checkGamifiedPkmVersion", error: e });
 	}
-	setTimeout(() => (versionUpdateChecked = false), 28800000); //reset after 8 hours
+	window.setTimeout(() => (versionUpdateChecked = false), 28800000); //reset after 8 hours
 };
 
 export const isVersionNewerThanOther = (version: string, otherVersion: string): boolean => {
