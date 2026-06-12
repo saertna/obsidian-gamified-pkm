@@ -1,13 +1,16 @@
 import { TFile, App, } from 'obsidian';
 import {debugLogs} from "./data/constants";
 import { DataviewApi} from "obsidian-dataview";
+import { getAPI } from "obsidian-dataview";
 
 export class MaturityCalculator {
 	private app: App;
-	dataview: DataviewApi | null;
+	//dataview: DataviewApi | null;
+	dataview: DataviewApi | null = null;
 
 	constructor(app: App) {
 		this.app = app;
+		this.dataview = getAPI(this.app);
 	}
 
 	/*public rateProgressiveSummarization(charCountTotal: number, layer2count: number, layer3count: number): number {
