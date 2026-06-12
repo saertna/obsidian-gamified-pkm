@@ -547,30 +547,11 @@ export class MultiSelectModal extends Modal {
 		if(debugLogs) console.debug(`total amount of ingredients: ${totalAvailableIngredients}`)
 
 		if (totalAvailableIngredients >= 1000) {
-			// Second pass: identify proportional amounts to burn
-			listOfUseableIngredientsToBeShown.forEach(ingredientName => {
-				const currentStock = this.remainingStock[ingredientName] || 0;
-				if (currentStock > 0) {
-					// Calculate proportional amount to burn
-					// Ensure proportionalAmount does not exceed currentStock
-					const rawProportionalAmount = (currentStock / totalAvailableIngredients) * 1000;
-					const proportionalAmountToBurn = Math.min(
-						currentStock, // Do not burn more than is available
-						Math.ceil(rawProportionalAmount) // Round up to ensure at least 1000 are burnt total
-					);
+			if (ingredientsToUpdate.length > 0) {
+				await this.mediator.updateMultipleIngredients(ingredientsToUpdate);
+			}
 
-					const newAmount = currentStock - proportionalAmountToBurn;
-					ingredientsToUpdate.push({ name: ingredientName, newAmount: newAmount });
-				}
-			});
-
-			// Execute all updates concurrently and wait for them to finish
-			const updatePromises = ingredientsToUpdate.map(item =>
-				this.mediator.updateIngredientStock(item.name, item.newAmount)
-			);
-			await Promise.all(updatePromises); // Wait for all individual ingredient updates to save
-
-			this.updateStockInformation(); // Refresh modal display after all burns are complete
+			this.updateStockInformation();
 			return true;
 		}
 

@@ -187,4 +187,20 @@ export class GamificationMediatorImpl implements GamificationMediator {
 		await this.saveSettings(); // Save immediately after each change
 	}
 
+	// In GamificationMediator
+	async updateMultipleIngredients(updates: { name: string, newAmount: number }[]): Promise<void> {
+		for (const update of updates) {
+			const ingredient = elements.find(el => el.name === update.name);
+			if (ingredient) {
+				// Update in-memory cache
+				this.remainingStock[update.name] = update.newAmount;
+				// Update settings (without saving yet)
+				this.setSettingNumber(ingredient.varName, update.newAmount);
+			}
+		}
+		// SAVE ONCE at the end
+		await this.saveSettings();
+	}
+
+
 }

@@ -24,5 +24,7 @@ export interface GamificationMediator {
 
 	updateIngredientStock(ingredientName: string, newAmount: number ):  Promise<void> | void;
 
+	updateMultipleIngredients(updates: { name: string, newAmount: number }[]): Promise<void>
+
 	loadSettings(): Promise<void> | void;
 }
