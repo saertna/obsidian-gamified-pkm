@@ -7,9 +7,10 @@ export class MaturityCalculator {
 	//dataview: DataviewApi | null;
 	dataview: DataviewApi | null | undefined = null;
 
-	constructor(app: App) {
+	constructor(app: App, dataview?: DataviewApi | null) {
 		this.app = app;
 		this.dataview = getAPI(this.app);
+		this.dataview = dataview ?? getAPI(this.app);
 	}
 
 	/*public rateProgressiveSummarization(charCountTotal: number, layer2count: number, layer3count: number): number {
