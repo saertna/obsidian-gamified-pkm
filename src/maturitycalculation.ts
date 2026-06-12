@@ -5,7 +5,7 @@ import { DataviewApi, getAPI} from "obsidian-dataview";
 export class MaturityCalculator {
 	private app: App;
 	//dataview: DataviewApi | null;
-	dataview: DataviewApi | null = null;
+	dataview: DataviewApi | null | undefined = null;
 
 	constructor(app: App) {
 		this.app = app;
@@ -426,100 +426,104 @@ export class MaturityCalculator {
 
 
 	public getFileCountMap = async (app: App, excludeTag: string, excludeFolder: string): Promise<Map<string, number> | null> => {
-
 		try {
-			const {vault} = app;
+			const { vault } = app;
 
-			// files with this #tags in to ignore
-			let excludedSubstrings: string[] = []
-			if (excludeTag == undefined) {
-				excludedSubstrings = []
-			} else {
-				excludedSubstrings = excludeTag.split(', ');
+			// 1. Process Tags to ignore (Clean whitespace)
+			let excludedSubstrings: string[] = [];
+			if (excludeTag && excludeTag.trim().length > 0) {
+				excludedSubstrings = excludeTag.split(',').map(t => t.trim());
 			}
 
-
-			// folders to ignore .md-files in
-			let excludedFolders: string[] = []
-			if (excludeFolder == undefined) {
-				excludedFolders = []
-			} else {
-				excludedFolders = excludeFolder.split(', ');
+			// 2. Process Folders to ignore
+			let excludedFolders: string[] = [];
+			if (excludeFolder && excludeFolder.trim().length > 0) {
+				excludedFolders = excludeFolder.split(',').map(f => f.trim());
 			}
-			excludedFolders.push('.obsidian', '.trash'); // hardcode the basic folders
+
+			// FIX: Dynamic config folder for Obsidian scanner compliance
+			excludedFolders.push(app.vault.configDir, '.trash');
 
 			const fileCountMap = new Map<string, number>();
-
 			const files = await vault.getMarkdownFiles();
 
 			for (const file of files) {
+				// 3. Folder Exclusion Check (Fastest check first)
+				const isInExcludedFolder = excludedFolders.some(folder =>
+					file.path === folder || file.path.startsWith(folder + '/')
+				);
+				if (isInExcludedFolder) continue;
 
-				const fileName = file.basename;
-
-				const currentCount = fileCountMap.get(fileName) || 0;
-
-				fileCountMap.set(fileName, currentCount + 1);
-
+				// 4. Tag Exclusion Check (Requires reading file)
 				const fileContents = await app.vault.read(file);
+				const hasExcludedTag = excludedSubstrings.length > 0 &&
+					excludedSubstrings.some(substring => fileContents.includes(substring));
 
-				if (!excludedSubstrings.some(substring => fileContents.includes(substring)) &&
-					!excludedFolders.some(folder => file.path.includes(folder))) {
+				if (hasExcludedTag) continue;
 
-					const fileName = file.basename;
-
-					const currentCount = fileCountMap.get(fileName) || 0;
-
-					fileCountMap.set(fileName, currentCount + 1);
-				}
-
+				// 5. Update Map (Only for files that pass both filters)
+				const fileName = file.basename;
+				const currentCount = fileCountMap.get(fileName) || 0;
+				fileCountMap.set(fileName, currentCount + 1);
 			}
 
 			return fileCountMap;
 		} catch (e) {
-			console.error(e);
-			return null
+			console.error("Error in getFileCountMap:", e);
+			return null;
 		}
 	};
 
 
 	public getFileMap = async (app: App, excludeTag: string, excludeFolder: string): Promise<TFile[] | null> => {
 		try {
-			const {vault} = app;
+			const { vault } = app;
 
-			// files with this #tags in to ignore
-			let excludedSubstrings: string[] = []
-			if (excludeTag == undefined) {
-				excludedSubstrings = []
-			} else {
-				excludedSubstrings = excludeTag.split(', ');
+			// 1. Process Tags to ignore
+			let excludedSubstrings: string[] = [];
+			if (excludeTag && excludeTag.trim().length > 0) {
+				excludedSubstrings = excludeTag.split(',').map(t => t.trim());
 			}
-			//if(debugLogs) console.debug(`excludedSubstrings: ${excludedSubstrings}`)
-			// folders to ignore .md-files in
-			let excludedFolders: string[] = []
-			if (excludeFolder == undefined) {
-				excludedFolders = []
-			} else {
-				excludedFolders = excludeFolder.split(', ');
+
+			// 2. Process Folders to ignore
+			let excludedFolders: string[] = [];
+			if (excludeFolder && excludeFolder.trim().length > 0) {
+				excludedFolders = excludeFolder.split(',').map(f => f.trim());
 			}
-			excludedFolders.push('.obsidian', '.trash'); // hardcode the basic folders
-			//if(debugLogs) console.debug(`excludedFolders: ${excludedFolders}`)
+
+			// 3. FIX: Use dynamic configDir instead of hardcoded '.obsidian'
+			// Also include the trash folder
+			excludedFolders.push(app.vault.configDir, '.trash');
+
 			const fileArray: TFile[] = [];
 			const files = await vault.getMarkdownFiles();
-			for (const file of files) {
 
+			for (const file of files) {
+				// A: Check if the file is inside an excluded folder
+				// We use startsWith to ensure we only catch folders, not files with similar names
+				const isInExcludedFolder = excludedFolders.some(folder =>
+					file.path === folder || file.path.startsWith(folder + '/')
+				);
+
+				if (isInExcludedFolder) continue; // Skip this file immediately
+
+				// B: Check file content for excluded tags
+				// Optimization: Only read the file if we haven't already excluded it by folder
 				const fileContents = await app.vault.read(file);
-				//if(debugLogs) console.debug(`file.path: ${file.path}`)
-				if ((!excludedSubstrings.some(substring => fileContents.includes(substring)) || excludeTag.length === 0) &&
-					!excludedFolders.some(folder => file.path.includes(folder))) {
-					//if(debugLogs) console.debug(`file ${file} get's added.`)
-					fileArray.push(file)
+				const hasExcludedTag = excludedSubstrings.length > 0 &&
+					excludedSubstrings.some(substring => fileContents.includes(substring));
+
+				if (!hasExcludedTag) {
+					fileArray.push(file);
 				}
 			}
+
 			return fileArray;
 		} catch (e) {
-			console.error(e);
+			console.error("Error in getFileMap:", e);
 			return null;
 		}
 	};
+
 
 }
