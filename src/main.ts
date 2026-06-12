@@ -370,7 +370,7 @@ export default class gamification extends Plugin {
 
 		// Clear previous timer if exists
 		if (this.editTimers[activeFile.path]) {
-			clearTimeout(this.editTimers[activeFile.path]);
+			window.clearTimeout(this.editTimers[activeFile.path]);
 		}
 
 		this.editTimers[activeFile.path] = window.setTimeout(() => {
@@ -726,7 +726,7 @@ export default class gamification extends Plugin {
 		}
 
 		for (const timerId in this.editTimers) {
-			clearTimeout(this.editTimers[timerId]);
+			window.clearTimeout(this.editTimers[timerId]);
 		}
 
 		this.app.workspace.detachLeavesOfType(VIEW_TYPE_GAMIFICATION_PROFILE);
