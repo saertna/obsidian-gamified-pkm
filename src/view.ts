@@ -8,7 +8,7 @@ export const VIEW_TYPE_GAMIFICATION_PROFILE = "gamified-pkm-profile";
 export class GamifiedPkmProfileView extends ItemView {
 	chart: Chart;
 	chartWeekly: Chart;
-	dataview: DataviewApi | null;
+	dataview: DataviewApi | null=null;
 	levelSpan: HTMLElement;
 	pointsSpan: HTMLElement;
 	boosterSpan: HTMLElement;

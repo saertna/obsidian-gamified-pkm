@@ -1,7 +1,6 @@
 import { TFile, App, } from 'obsidian';
 import {debugLogs} from "./data/constants";
-import { DataviewApi} from "obsidian-dataview";
-import { getAPI } from "obsidian-dataview";
+import { DataviewApi, getAPI} from "obsidian-dataview";
 
 export class MaturityCalculator {
 	private app: App;
