@@ -8,7 +8,7 @@ export const VIEW_TYPE_GAMIFICATION_PROFILE = "gamified-pkm-profile";
 export class GamifiedPkmProfileView extends ItemView {
 	chart: Chart;
 	chartWeekly: Chart;
-	dataview: DataviewApi | null=null;
+	dataview: DataviewApi | null | undefined = null;
 	levelSpan: HTMLElement;
 	pointsSpan: HTMLElement;
 	boosterSpan: HTMLElement;
@@ -106,33 +106,28 @@ export class GamifiedPkmProfileView extends ItemView {
 	}
 
 	updateMaturityCounts() {
-		if (!this.dataview) {
+		const dv = this.dataview;
+
+		// 2. Perform the check on the local constant
+		if (!dv) {
 			console.debug('dataview plugin is not available to update maturity counts');
 			return;
 		}
 
-		// Array of maturity levels to check
 		const maturityLevels = [5, 4, 3, 2, 1, 0];
 
 		maturityLevels.forEach(level => {
-			// 1. DATA LOGIC: Calculate the count
-			/*const count = this.dataview.pages()
-				.where((p: any) =>
-					[level, `${level}`, `${level}➡️`, `${level}⬇️`, `${level}⬆️`]
-						.includes(p.file.frontmatter['note-maturity'])
-				)
-				.length;*/
-			const count = this.dataview.pages()
+			const count = dv.pages()
 				.where((p: any) => this.isMaturityMatch(p.file.frontmatter, level))
 				.length;
 
-			// 2. VIEW UPDATE: Use the direct reference instead of searching the DOM
 			const span = this.maturitySpans[level];
 			if (span) {
 				span.setText(count.toString());
 			}
 		});
 	}
+
 
 	private isMaturityMatch(frontmatter: any, targetLevel: number): boolean {
 		const val = frontmatter['note-maturity'];
