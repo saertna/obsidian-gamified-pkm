@@ -22,7 +22,7 @@ export interface GamificationMediator {
 
 	closeProfileView(): void
 
-	updateIngredientStock(ingredientName: string, newAmount: number ):  void
+	updateIngredientStock(ingredientName: string, newAmount: number ):  Promise<void> | void;
 
 	loadSettings(): Promise<void> | void;
 }
