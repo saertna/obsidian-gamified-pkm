@@ -555,3 +555,8 @@
 .modal-checkbox-container input[type="checkbox"] {
 	margin-right: 5px;
 }
+
+.gpkm-release-note-footer {
+	text-align: right;
+	margin-top: 1rem;
+}

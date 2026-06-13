@@ -52,7 +52,7 @@ export class ReleaseNotes extends Modal {
 
     this.contentEl.createEl("p", { text: "" }, (el) => {
       //files manually follow one of two options:
-      el.style.textAlign = "right";
+		el.addClass("gpkm-release-note-footer");
       const bOk = el.createEl("button", { text: "Close" });
       bOk.onclick = () => this.close();
     });
