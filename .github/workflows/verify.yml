@@ -11,7 +11,7 @@ jobs:
     # CRITICAL: Give GitHub the required permissions to sign your files
     permissions:
         id-token: write
-        contents: read
+        contents: write # to grant action can create a release.
         attestations: write
 
     steps:
@@ -29,6 +29,12 @@ jobs:
 
       - name: Run Jest
         run: npm run test
+
+      - name: Get Version
+        id: get_version
+        run: |
+            VERSION=$(jq -r .version manifest.json)
+            echo "version=$VERSION" >> $GITHUB_OUTPUT
 
       - name: Archive verified build
         uses: actions/upload-artifact@v4.6.2
@@ -55,6 +61,8 @@ jobs:
         if: github.event_name == 'push' && github.ref == 'refs/heads/main' # Only release on main
         uses: softprops/action-gh-release@v2
         with:
+            tag_name: ${{ steps.get_version.outputs.version }}
+            name: Release ${{ steps.get_version.outputs.version }}
             generate_release_notes: true
             files: |
                 main.js

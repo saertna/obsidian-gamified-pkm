@@ -15,6 +15,10 @@ I develop this plugin as a hobby, spending my free time doing this. If you find 
 
 It would mean a lot to me.
 `,
+"0.0.100": 	`
+## Fixes
+- addressing several linter findings for compatibility, performance, and maintainability
+`,
 "0.0.99": 	`
 ## Fixed Risks
 - Unsafe assignment to innerHTML
