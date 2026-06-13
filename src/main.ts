@@ -291,13 +291,12 @@ export default class gamification extends Plugin {
 				id: 'reset-game',
 				name: 'Reset game',
 				callback: async () => {
-					// Use your custom ConfirmationModal
 					new ConfirmationModal(
-						this.app, // Pass the Obsidian app instance
+						this.app,
 						"Are you absolutely sure you want to reset your gamification progress? This action is irreversible!",
 						"Confirm to reset",
-						async () => {
-							await this.resetGame();
+						() => {
+							void this.resetGame();
 						}
 					).open();
 				},
