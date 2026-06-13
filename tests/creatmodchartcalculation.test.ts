@@ -193,14 +193,14 @@ describe('replaceChartContent', () => {
 
 	it('should log and return if the file does not exist', async () => {
 		const consoleSpy = jest.spyOn(console, 'debug');
-		await replaceChartContent('nonexistent', 'New Content', mockVault, true);
+		await replaceChartContent('nonexistent', 'New Content', mockVault);
 		expect(consoleSpy).toHaveBeenCalledWith('File nonexistent.md does not exist');
 		consoleSpy.mockRestore();
 	});
 
 	it('should handle file with no ^ChartMonth', async () => {
 		mockVault.addFile('nochart.md', 'Line 1\nLine 2\nLine 3');
-		await replaceChartContent('nochart', 'New Content', mockVault, true);
+		await replaceChartContent('nochart', 'New Content', mockVault);
 		const modifiedContent = await mockVault.read({ path: 'nochart.md' } as FileInterface);
 		expect(modifiedContent).toBe('Line 1\nLine 2\nLine 3');
 	});
