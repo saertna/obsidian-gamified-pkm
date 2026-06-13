@@ -144,7 +144,8 @@ export function createBoosterDisplay(containerEl: HTMLElement, booster: Booster,
 	nameSpan.setAttribute('title', `${booster.description}`); // Optionally add description as tooltip for the name too
 
 	// 3. Stock Information (Quantity)
-	const quantitySpan = containerEl.createSpan({ text: `[${quantity}]`, cls: 'gamified-pkm-booster-quantity' });
+	// Prepared, but commented out to make linter happy.
+	//const quantitySpan = containerEl.createSpan({ text: `[${quantity}]`, cls: 'gamified-pkm-booster-quantity' });
 
 }
 

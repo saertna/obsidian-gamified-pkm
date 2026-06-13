@@ -1,6 +1,3 @@
-import {TFile} from 'obsidian';
-import { debugLogs } from './data/constants';
-
 export interface AbstractFile {
 	path: string;
 }
@@ -98,11 +95,10 @@ export async function replaceChartContent(
 	avatarPageName: string,
 	newContent: string,
 	vault: VaultInterface,
-	debugLogs = false
 ): Promise<void> {
 	const existingFile = vault.getAbstractFileByPath(`${avatarPageName}.md`);
 	if (!existingFile) {
-		if (debugLogs) console.debug(`File ${avatarPageName}.md does not exist`);
+		console.debug(`File ${avatarPageName}.md does not exist`);
 		return;
 	}
 

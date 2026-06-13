@@ -19,7 +19,9 @@ export function withCodeblockState<T>(): StateProvider<T> {
 		let state: State<T> = {};
 		try {
 			state = parseYaml(source) ?? {};
-		} catch (_) {}
+		} catch (error) {
+			console.debug("Failed to sync PKM data:", error);
+		}
 
 		const setState: SetState<T> = (stateSetter) => {
 			const newState = { ...state };

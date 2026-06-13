@@ -419,7 +419,8 @@ export class GamificationPluginSettings extends PluginSettingTab {
 					}),
 			);
 
-		containerEl.createEl('h2', {text: 'Other'});
+		new Setting(containerEl).setName('Other').setHeading()
+
 		new Setting(containerEl)
 			.setName('Disable init command')
 			.setDesc('You can remove the init command from command prompt by switching off.\nrestart needed.')
