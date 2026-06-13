@@ -784,7 +784,7 @@ export default class gamification extends Plugin {
 
 
 	async calculateNoteMajurity(){
-		const file: TFile | null= this.app.workspace.getActiveFile();
+		const file = this.app.workspace.getActiveFile();
 		if (file == null) {
 			console.error('got no file, probably none is active')
 		}
