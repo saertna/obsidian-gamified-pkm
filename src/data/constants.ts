@@ -7,8 +7,6 @@ export const pointsForWeeklyChallenge = 2000;
 export const streakboosterDecrease = 0.2;
 export const streakboosterIncreaseDaily = 0.1;
 export const streakboosterIncreaseWeekly = 1;
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-export const CryptoJS = require("crypto-js");
 export const secretKey = "2ZU^12y#QmNB5$yEin5^";
 export const debugLogs = false;
 export const mil2sec = 1000;

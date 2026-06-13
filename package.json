@@ -19,7 +19,6 @@
   "license": "MIT",
   "dependencies": {
     "chart.js": "^4.4.4",
-    "crypto-js": "^4.1.1",
     "date-fns": "^2.30.0",
     "dompurify": "^3.4.8",
     "markdown-it": "^13.0.1",
@@ -36,7 +35,6 @@
     "@rollup/plugin-terser": "^0.4.4",
     "@rollup/plugin-typescript": "^11.1.2",
     "@tsconfig/svelte": "^3.0.0",
-    "@types/crypto-js": "^4.1.1",
     "@types/jest": "^29.5.4",
     "@types/node": "^16.11.6",
     "@types/react": "^18.2.0",
