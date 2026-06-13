@@ -729,7 +729,6 @@ export default class gamification extends Plugin {
 			window.clearTimeout(this.editTimers[timerId]);
 		}
 
-		this.app.workspace.detachLeavesOfType(VIEW_TYPE_GAMIFICATION_PROFILE);
 		this.isProfileViewOpen = false; // Reset the flag when the plugin is unloaded
 	}
 
