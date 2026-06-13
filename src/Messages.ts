@@ -15,6 +15,10 @@ I develop this plugin as a hobby, spending my free time doing this. If you find 
 
 It would mean a lot to me.
 `,
+"0.0.101": 	`
+## Stability and Performance
+- switching from unmaintained package to maintained node package for performance and security
+`,
 "0.0.100": 	`
 ## Fixes
 - addressing several linter findings for compatibility, performance, and maintainability
