@@ -125,7 +125,7 @@ export class MultiSelectModal extends Modal {
 			return this.createBoosterList(labelText);
 		}
 		console.warn("createItemContainer called with useBooster=false. This path should be unreachable if onOpen is correct.");
-		return document.createElement('div');
+		return activeDocument.createElement('div');
 	}
 
 
@@ -547,30 +547,11 @@ export class MultiSelectModal extends Modal {
 		if(debugLogs) console.debug(`total amount of ingredients: ${totalAvailableIngredients}`)
 
 		if (totalAvailableIngredients >= 1000) {
-			// Second pass: identify proportional amounts to burn
-			listOfUseableIngredientsToBeShown.forEach(ingredientName => {
-				const currentStock = this.remainingStock[ingredientName] || 0;
-				if (currentStock > 0) {
-					// Calculate proportional amount to burn
-					// Ensure proportionalAmount does not exceed currentStock
-					const rawProportionalAmount = (currentStock / totalAvailableIngredients) * 1000;
-					const proportionalAmountToBurn = Math.min(
-						currentStock, // Do not burn more than is available
-						Math.ceil(rawProportionalAmount) // Round up to ensure at least 1000 are burnt total
-					);
+			if (ingredientsToUpdate.length > 0) {
+				await this.mediator.updateMultipleIngredients(ingredientsToUpdate);
+			}
 
-					const newAmount = currentStock - proportionalAmountToBurn;
-					ingredientsToUpdate.push({ name: ingredientName, newAmount: newAmount });
-				}
-			});
-
-			// Execute all updates concurrently and wait for them to finish
-			const updatePromises = ingredientsToUpdate.map(item =>
-				this.mediator.updateIngredientStock(item.name, item.newAmount)
-			);
-			await Promise.all(updatePromises); // Wait for all individual ingredient updates to save
-
-			this.updateStockInformation(); // Refresh modal display after all burns are complete
+			this.updateStockInformation();
 			return true;
 		}
 
@@ -660,7 +641,7 @@ export class MultiSelectModal extends Modal {
 				if (debugLogs) console.debug(`craft booster ${boosterName}`);
 				this.updateBoosterStock(boosterName, 1);
 				this.mediator.setSettingNumber(this.getBoosterVarNameFromName(boosterName), this.boosters[boosterName]); // Adjust getBoosterVarNameFromName if it needs boosterId
-				this.useIngrediments(selectedBooster);
+				void this.useIngrediments(selectedBooster);
 				this.updateStockInformation();
 			} else {
 				if (debugLogs) console.debug(`not enough ingredients for booster ${boosterName} in stock`);

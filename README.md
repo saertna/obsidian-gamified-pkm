@@ -1,4 +1,4 @@
-# obsidian-gamified-pkm
+# Gamificate your PKM
 
 ## **🌟 Elevate Your Knowledge Management with the Obsidian Gamification Plugin! 🚀**
 
@@ -7,7 +7,7 @@ Hello, fellow learners and knowledge seekers! 📚 If you're as passionate about
 ## Hey there! 👋 
 Imagine transforming your knowledge management into an adventure where every step forward is a celebration. Introducing the Obsidian Gamification Plugin – a tool designed to harness the motivating power of game techniques and apply it to our pursuit of knowledge.
 
-This plugin reimagines the way we interact with our knowledge base. By integrating game-like elements, it offers rewards for your progress, nurtures consistency, and makes the journey of learning a truly motivating experience. From achieving milestones to conquering challenges that shape your learning path, this plugin adds a layer of excitement to your knowledge management process.
+This plugin reimagines the way we interact with our knowledge base. By integrating game-like elements, it offers rewards for your progress, nurtures consistency, and makes the journey of learning a truly motivating experience. From achieving milestones to conquering challenges which shape your learning path, this plugin adds a layer of excitement to your knowledge management process.
 
 The purpose of this plugin is to support you to foster your personal knowledge. The principal idea is to have a positive impact on society by connecting ideas across your knowledge, work, and personal life through better thinking. This is a big thing to say, and I still believe in it. This is relevant whether your knowledge management is for personal improvement, for business reasons or for charity. With better thinking comes better outcomes. Personal knowledge management takes time to pay out, and this plugin will help you bridge the time till then. It generates fun and excitement, maintaining high motivation even long after your PKM has started to provide returns on the time you've invested.
 
@@ -30,7 +30,7 @@ If you resonate with the idea of infusing motivational game techniques into pers
 Thank you for being a part of this movement to revolutionize our approach to knowledge management. Let's harness the power of motivation and level up our learning journey together! 🌐🌱
 
 ## Installation
-Follow the steps below to install 'Gamificate your PKM'.
+Follow the steps below to install "Gamificate your PKM".
 
 1. Search for "Gamificate your PKM" in Obsidian's community plugins browser
 2. Enable the plugin in your Obsidian settings (find "Gamificate your PKM" under "Community plugins").
@@ -42,7 +42,7 @@ Follow the steps below to install 'Gamificate your PKM'.
 
 **Embark on a Motivational Journey!**
 
-### Additional config informations
+### Additional config information
 
 In some cases, the same vault is used for other activities as well as the knowledge management shall stay separated. Then you can exclude #tags and/or folders, which shall not be used when initialized. By default, the folder 'Excalidraw' is entered. You can ignore this setting if you want to use all files in your vault for your pkm.
 ![Settings for exclude TAGs and folders](/docs/images/SettingsExcludeTagsFolders.png)
@@ -52,7 +52,7 @@ In some cases, the same vault is used for other activities as well as the knowle
 ### Initialise game
 
 When not already done during installation, hit `CTRL+P` and run the command `Initialize gamification ratings`. 
-This command will rate all you notes (the ones which are not excluded by TAG and/or folder). You will be informed when the initialisation is finished.
+This command will rate all you notes (the ones which are not excluded by TAG and/or folder). You will be informed when the initialization is finished.
 The resulting points, level, and distribution of note ratings will be displayed in the leaf. When the leaf is not open, you can open it with the command `Open Profile Leave`.
 
 ![Gamification Initialization Command](/docs/images/GamificationInitializationCommand.png)
@@ -73,35 +73,35 @@ Rating of a new note will bring you a chance to collect ingredients, with which 
 
 ![Booster Menu](docs/images/GamificteYourPKM-Boosters.png)
 
-For each booster you can display a description by using the `?` button, or just hoovering above the icon. Hoovering with the mouse over the ingredient icon will show also show its name.
+For each booster you can display a description by using the `?` button, or just hoovering above the icon. Hoovering with the mouse over the ingredient icon will display its name.
 
-### Ractings
+### Ratings
 
-There are four rating categorties with which your note will be rated
+There are four rating categories with which your note will be rated
 - title
 - note length
-- inklinks
+- inlinks
 - outlinks
-  Out of this four categories, an overall rating will be calculated (`note-maturity`).
+  Out of this four category, an overall rating will be calculated (`note-maturity`).
 
 The ratings are based on statistics, so it's a pure calculation. There's no reflection on the content itself.
 
 ###### Title
-A very short or a very long title (filename) will get a low rating. When you have a meaningful and to the point title expressing the core of your thought, the title will have a certain range of length. This leads to a high rating.
+A very short or a very long title (filename) will get a low rating. When you have a meaningful and to the point title expressing the core of your thought, the title will have a certain range of lengths. This leads to a high rating.
 On the other hand, when you need a long title to express what's your note about, you should work at it to increase the rating.
 
 This said, when you feel pretty fine with your title, but it's a low rating, don't mind and keep it as it is. The rating is based on character length, not content.
 
 ###### Note length / summarization
 
-A very short note (a sentence) get's a low rating. A long text about several pages will get a low rating as well.
+A very short note (a sentence) gets a low rating. A long text about several pages will get a low rating as well.
 A note which has roughly the length of an A5 index card will get a high rating.
-###### Inklinks
-A good amount of links from other notes to the rated one will increase the rating. Overlinking will decrease it.
+###### Inlinks
+A good number of links from other notes to the rated one will increase the rating. Overlinking will decrease it.
 
 (It's on the roadmap to deal with Hub/MOC notes which have by nature high link numbers)
 ###### Outlinks
-A good amount of links from the rated one to  other notes will increase the rating. Overlinking will decrease it.
+A good number of links from the rated one to other notes will increase the rating. Overlinking will decrease it.
 
 (It's on the roadmap to deal with Hub/MOC notes which have by nature high link numbers)
 
@@ -113,7 +113,7 @@ You can use the Discussion Area here at GitHub to speak about issues, ideas, and
 Upcoming developments are in store for the Gamification Plugin! Here's a glimpse into the future:
 
 - further metrics to generate points
-	- points for index/MOC creation & quality levels
+	- points for index/MOC creation and quality levels
 	- points for the chain of thoughts
 - overview in the sidebar for game elements
 	- Challenge status

@@ -428,7 +428,7 @@ export class GamificationPluginSettings extends PluginSettingTab {
 					.setValue(this.mediator.getSettingBoolean('enableInitCommand'))
 					.onChange((value) => {
 						this.mediator.setSettingBoolean('enableInitCommand', value);
-						this.mediator.saveSettings();
+						void this.mediator.saveSettings();
 					}),
 			);
 
@@ -440,7 +440,7 @@ export class GamificationPluginSettings extends PluginSettingTab {
 					.setValue(this.mediator.getSettingBoolean('autoRateOnChange'))
 					.onChange((value) => {
 						this.mediator.setSettingBoolean('autoRateOnChange', value);
-						this.mediator.saveSettings();
+						void this.mediator.saveSettings();
 					}),
 			);
 		new Setting(containerEl)
@@ -465,7 +465,7 @@ export class GamificationPluginSettings extends PluginSettingTab {
 				.setValue(this.mediator.getSettingNumber('delayLoadTime').toString())
 				.onChange(async (value) => {
 					this.mediator.setSettingNumber('delayLoadTime', parseInt(value));
-					this.mediator.saveSettings();
+					await this.mediator.saveSettings();
 				}));
 
 		new Setting(containerEl)
@@ -476,7 +476,7 @@ export class GamificationPluginSettings extends PluginSettingTab {
 				.setValue(this.mediator.getSettingNumber('timeShowNotice').toString())
 				.onChange(async (value) => {
 					this.mediator.setSettingNumber('timeShowNotice', parseInt(value));
-					this.mediator.saveSettings();
+					await this.mediator.saveSettings();
 				}));
 
 		new Setting(containerEl)
@@ -488,7 +488,7 @@ export class GamificationPluginSettings extends PluginSettingTab {
 				.onChange(async (value) => {
 					// if(debugLogs) console.debug('folder to exclude: ' + value);
 					this.mediator.setSettingString('progressiveSumLayer2', value);
-					this.mediator.saveSettings();
+					await this.mediator.saveSettings();
 				}))
 			.addText(text => text
 				.setPlaceholder('Layer 3 is usually ==')
@@ -496,7 +496,7 @@ export class GamificationPluginSettings extends PluginSettingTab {
 				.onChange(async (value) => {
 					// if(debugLogs) console.debug('folder to exclude: ' + value);
 					this.mediator.setSettingString('progressiveSumLayer3', value);
-					this.mediator.saveSettings();
+					await this.mediator.saveSettings();
 				}));
 
 		new Setting(containerEl)
@@ -507,7 +507,7 @@ export class GamificationPluginSettings extends PluginSettingTab {
 					.setValue(this.mediator.getSettingBoolean('showReleaseNotes'))
 					.onChange((value) => {
 						this.mediator.setSettingBoolean('showReleaseNotes', value);
-						this.mediator.saveSettings();
+						void this.mediator.saveSettings();
 					}),
 			);
 

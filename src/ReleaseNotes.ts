@@ -21,7 +21,7 @@ export class ReleaseNotes extends Modal {
 		} else {
 			this.titleEl.setText(`Welcome to the Gamified PKM ${this.version ?? ""}`);
 		}
-		this.createForm();
+		void this.createForm();
 	}
 
 	async onClose() {

@@ -3,6 +3,7 @@ module.exports = {
 	testEnvironment: 'node',
 	moduleNameMapper: {
 		'^obsidian$': 'obsidian',
+		'^obsidian-dataview$': '<rootDir>/tests/__mocks__/obsidian-dataview.ts',
 	},
 	collectCoverage: true,
 	collectCoverageFrom: ["./src/**"],

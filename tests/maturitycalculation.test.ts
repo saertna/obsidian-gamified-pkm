@@ -19,7 +19,7 @@ describe('rateProgressiveSummarization', () => {
 				processFrontMatter: jest.fn()
 			}
 		};
-		maturityCalculator = new MaturityCalculator(mockApp);
+		maturityCalculator = new MaturityCalculator(mockApp, null);
 	});
 
 	afterEach(() => {

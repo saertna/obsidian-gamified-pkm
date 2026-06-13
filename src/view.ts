@@ -8,7 +8,13 @@ export const VIEW_TYPE_GAMIFICATION_PROFILE = "gamified-pkm-profile";
 export class GamifiedPkmProfileView extends ItemView {
 	chart: Chart;
 	chartWeekly: Chart;
-	dataview: DataviewApi | null;
+	dataview: DataviewApi | null | undefined = null;
+	levelSpan: HTMLElement;
+	pointsSpan: HTMLElement;
+	boosterSpan: HTMLElement;
+	dailyNotesSpan: HTMLElement;
+	weeklyNotesSpan: HTMLElement;
+	maturitySpans: Record<number, HTMLElement> = {};
 	private readonly mediator: GamificationMediator;
     constructor(leaf: WorkspaceLeaf, mediator: GamificationMediator) {
       super(leaf);
@@ -28,80 +34,64 @@ export class GamifiedPkmProfileView extends ItemView {
 	}
 
 	async onOpen() {
-		const container = this.containerEl.children[1];
-		container.empty();
-
-		const profileContainer = container.createDiv({ cls: 'avatar-profile' });
-
+		// TIP: Use this.contentEl instead of children[1] for better stability
+		const { contentEl } = this;
+		contentEl.empty();
+		const profileContainer = contentEl.createDiv({ cls: 'avatar-profile' });
 		this.updateProfilePicture();
+		// 1. Level and Points
 		const levelAndPointsContainer = profileContainer.createDiv({ cls: 'level-and-points' });
-		levelAndPointsContainer.innerHTML = `
-        <p><strong>Level:</strong> <span id="level-value"></span></p>
-        <p><strong>Points:</strong> <span id="points-value"></span></p>
-    `;
-
+		const levelP = levelAndPointsContainer.createEl('p');
+		levelP.createEl('strong', { text: 'Level: ' });
+		// Store reference instead of searching by ID later
+		this.levelSpan = levelP.createEl('span', { attr: { id: 'level-value' } });
+		const pointsP = levelAndPointsContainer.createEl('p');
+		pointsP.createEl('strong', { text: 'Points: ' });
+		this.pointsSpan = pointsP.createEl('span', { attr: { id: 'points-value' } });
+		// 2. Chart
 		const chartContainer = profileContainer.createDiv({ cls: 'chart-container' });
-		// @ts-ignore
-		const canvas = chartContainer.createEl('canvas', { id: 'points-chart' });
+		const canvas = chartContainer.createEl('canvas', { attr: { id: 'points-chart' } });
 		this.initializeChart(canvas);
-
+		// 3. Booster Factor
 		const boosterFactorContainer = profileContainer.createDiv({ cls: 'booster-factor' });
-		boosterFactorContainer.innerHTML = `
-        <p><strong>Booster Factor:</strong> <span id="booster-factor-value"></span></p>
-    `;
+		const boosterP = boosterFactorContainer.createEl('p');
+		boosterP.createEl('strong', { text: 'Booster Factor: ' });
+		this.boosterSpan = boosterP.createEl('span', { attr: { id: 'booster-factor-value' } });
+
 
 		const dailyNotesContainer = profileContainer.createDiv({ cls: 'daily-notes' });
-		dailyNotesContainer.innerHTML = `
-        <p><strong>Daily Notes:</strong> <span id="daily-notes-value"></span></p>
-    `;
+		const dailyP = dailyNotesContainer.createEl('p');
+		dailyP.createEl('strong', { text: 'Daily Notes: ' });
+		this.dailyNotesSpan = dailyP.createEl('span', { attr: { id: 'daily-notes' } });
+
 
 		const weeklyNotesContainer = profileContainer.createDiv({ cls: 'weekly-notes' });
-		weeklyNotesContainer.innerHTML = `
-        <p><strong>Weekly Notes:</strong> <span id="weekly-notes-value"></span></p>
-    `;
+		const weeklyP = weeklyNotesContainer.createEl('p');
+		weeklyP.createEl('strong', { text: 'WeeklyNotes: ' });
+		this.weeklyNotesSpan = weeklyP.createEl('span', { attr: { id: 'weekly-notes' } });
 
 		const chartContainerWeekly = profileContainer.createDiv({ cls: 'chart-container' });
 		// @ts-ignore
 		const canvasWeekly = chartContainerWeekly.createEl('canvas', { id: 'weekly-chart' });
 		this.initializeChartWeekly(canvasWeekly);
 
+		// 4. Maturity Table (The "Big" innerHTML replacement)
 		const maturityLevelContainer = profileContainer.createDiv({ cls: 'maturity-level-container' });
-		maturityLevelContainer.innerHTML = `
-			<table class="maturity-table">
-				<thead>
-					<tr>
-						<th>Level</th>
-						<th>Count</th>
-					</tr>
-				</thead>
-				<tbody>
-					<tr>
-						<td>Majurity 5</td>
-						<td id="maturity-5-count"></td>
-					</tr>
-					<tr>
-						<td>Majurity 4</td>
-						<td id="maturity-4-count"></td>
-					</tr>
-					<tr>
-						<td>Majurity 3</td>
-						<td id="maturity-3-count"></td>
-					</tr>
-					<tr>
-						<td>Majurity 2</td>
-						<td id="maturity-2-count"></td>
-					</tr>
-					<tr>
-						<td>Majurity 1</td>
-						<td id="maturity-1-count"></td>
-					</tr>
-					<tr>
-						<td>Majurity 0</td>
-						<td id="maturity-0-count"></td>
-					</tr>
-				</tbody>
-			</table>
-		`;
+		const table = maturityLevelContainer.createEl('table', { cls: 'maturity-table' });
+
+		const thead = table.createEl('thead').createEl('tr');
+		thead.createEl('th', { text: 'Level' });
+		thead.createEl('th', { text: 'Count' });
+		const tbody = table.createEl('tbody');
+		for (let i = 5; i >= 0; i--) {
+			const row = tbody.createEl('tr');
+			row.createEl('td', { text: `Maturity ${i}` });
+			// Store the reference in our Record object
+			this.maturitySpans[i] = row.createEl('td', {
+				attr: { id: `maturity-${i}-count` }
+			});
+		}
+
 
 		this.initializeDataview();
 	}
@@ -116,24 +106,33 @@ export class GamifiedPkmProfileView extends ItemView {
 	}
 
 	updateMaturityCounts() {
-		if (!this.dataview) {
-			console.debug('dataview plugin is not available to update maturity counts')
+		const dv = this.dataview;
+
+		// 2. Perform the check on the local constant
+		if (!dv) {
+			console.debug('dataview plugin is not available to update maturity counts');
 			return;
 		}
 
-		// Array of maturity levels to check
 		const maturityLevels = [5, 4, 3, 2, 1, 0];
 
 		maturityLevels.forEach(level => {
-			const count = this.dataview.pages()
-				.where((p: { file: { frontmatter: { [x: string]: string | number; }; }; }) => [level, `${level}`, `${level}➡️`, `${level}⬇️`, `${level}⬆️`].includes(p.file.frontmatter['note-maturity']))
+			const count = dv.pages()
+				.where((p: any) => this.isMaturityMatch(p.file.frontmatter, level))
 				.length;
 
-			const maturityCountElement = this.containerEl.querySelector(`#maturity-${level}-count`);
-			if (maturityCountElement) {
-				maturityCountElement.textContent = count.toString();
+			const span = this.maturitySpans[level];
+			if (span) {
+				span.setText(count.toString());
 			}
 		});
+	}
+
+
+	private isMaturityMatch(frontmatter: any, targetLevel: number): boolean {
+		const val = frontmatter['note-maturity'];
+		const validMatches = [targetLevel, `${targetLevel}`, `${targetLevel}➡️`, `${targetLevel}⬇️`, `${targetLevel}⬆️`];
+		return validMatches.includes(val);
 	}
 
 	initializeChart(canvas: HTMLCanvasElement) {
