@@ -730,10 +730,6 @@ export default class gamification extends Plugin {
 
 
 	async openProfileView() {
-		if (this.isProfileViewOpen) {
-			return;
-		}
-
 		const existingLeaf = this.app.workspace.getLeavesOfType(VIEW_TYPE_GAMIFICATION_PROFILE)[0];
 
 		if (existingLeaf) {
@@ -741,33 +737,28 @@ export default class gamification extends Plugin {
 			if (requireApiVersion("1.7.2")) {
 				await existingLeaf.loadIfDeferred();
 			}
-			if (existingLeaf.view instanceof GamifiedPkmProfileView) {
-				this.isProfileViewOpen = true;
-				this.mediator.setSettingBoolean('showProfileLeaf', true);
-				return;
-			}
-		}
 
-		const leaf = this.app.workspace.getRightLeaf(false);
+			this.isProfileViewOpen = true;
+			this.mediator.setSettingBoolean('showProfileLeaf', true);
 
-		if (!leaf) {
-			console.error("Failed to get a right leaf. Cannot open the profile view.");
+			await this.actualizeProfileLeaf();
 			return;
 		}
 
-		await leaf.setViewState({ type: VIEW_TYPE_GAMIFICATION_PROFILE });
+		const leaf = this.app.workspace.getRightLeaf(false);
+		if (!leaf) return;
 
-		if (requireApiVersion("1.7.2")) {
-			await leaf.loadIfDeferred();
-		}
-
+		await leaf.setViewState({ type: VIEW_TYPE_GAMIFICATION_PROFILE, active: true });
 		await this.app.workspace.revealLeaf(leaf);
 
+		this.isProfileViewOpen = true;
+		this.mediator.setSettingBoolean('showProfileLeaf', true);
+
 		if (leaf.view instanceof GamifiedPkmProfileView) {
-			this.isProfileViewOpen = true;
-			this.mediator.setSettingBoolean('showProfileLeaf', true);
+			await this.actualizeProfileLeaf();
 		}
 	}
+
 
 
 	closeProfileView() {
