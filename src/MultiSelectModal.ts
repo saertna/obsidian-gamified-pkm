@@ -59,6 +59,7 @@ export class MultiSelectModal extends Modal {
 	}
 
 	onOpen() {
+		this.refresh();
 		const { contentEl } = this;
 		contentEl.empty(); // Clears any existing content
 
@@ -195,6 +196,23 @@ export class MultiSelectModal extends Modal {
 	}
 
 
+	refresh() {
+		const scrollPos = this.contentEl.scrollTop;
+
+		this.contentEl.empty();
+		const layout = this.createCraftingLayout();
+
+		if (layout) {
+			this.contentEl.appendChild(layout);
+		}
+
+		requestAnimationFrame(() => {
+			this.contentEl.scrollTop = scrollPos;
+		});
+	}
+
+
+
 	readIngrementStock() {
 		if (this.mediator) {
 			this.remainingStock = {
@@ -213,6 +231,8 @@ export class MultiSelectModal extends Modal {
 	// Layout to Craft boosters
 	private createCraftingLayout(): HTMLDivElement {
 		this.readIngrementStock();
+		this.readBoostersStock();
+
 		const mainContent = this.containerEl.createEl('div');
 		mainContent.className = 'modal-crafting-wrapper';
 
@@ -260,6 +280,14 @@ export class MultiSelectModal extends Modal {
 				// Booster Name
 				boosterIdentity.createEl('span', { text: booster.name, cls: 'booster-name' });
 
+				const stock = this.boosters[booster.name] || 0;
+				const stockDisplay = boosterIdentity.createEl('span', {
+					text: ` [Stock: ${stock}]`,
+					cls: 'booster-stock-count-crafting'
+				});
+				// Visual cue: if stock is 0, make it a bit more subtle
+				if (stock === 0) stockDisplay.style.color = 'var(--text-muted)';
+
 				// Wrapper for Ingredients (two line display)
 				const boosterRecipeIngredients = boosterInfoAndIngredients.createDiv({ cls: 'booster-recipe-ingredients' });
 
@@ -285,7 +313,10 @@ export class MultiSelectModal extends Modal {
 				// Crafting Actions (buttons)
 				const buttonGroup = recipeItem.createDiv({ cls: 'crafting-booster-actions' });
 				const craftButton = buttonGroup.createEl('button', { text: 'Craft' });
-				craftButton.onclick = () => this.craftBoosterItem(booster);
+				craftButton.onclick = () => {
+					void this.craftBoosterItem(booster);
+					this.refresh();
+				}
 
 				const useInfoButton = buttonGroup.createEl('button', { text: '?' });
 				useInfoButton.onclick = () => {

@@ -566,3 +566,9 @@
 	cursor: not-allowed;
 }
 
+.gpkm-booster-stock-count-crafting {
+	font-size: 0.8em;
+	margin-left: 5px;
+	font-weight: bold;
+}
+
