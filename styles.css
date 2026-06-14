@@ -560,3 +560,9 @@
 	text-align: right;
 	margin-top: 1rem;
 }
+
+.gpkm-out-of-stock {
+	opacity: 0.5;
+	cursor: not-allowed;
+}
+

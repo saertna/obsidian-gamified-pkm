@@ -210,7 +210,7 @@ export class MultiSelectModal extends Modal {
 		}
 	}
 
-
+	// Layout to Craft boosters
 	private createCraftingLayout(): HTMLDivElement {
 		this.readIngrementStock();
 		const mainContent = this.containerEl.createEl('div');
@@ -298,16 +298,15 @@ export class MultiSelectModal extends Modal {
 	}
 
 
-
+	// Layout to use Boosters
 	private createBoosterList(labelText: string): HTMLDivElement | undefined {
 		const boosterDefinition = getBoosterByName(labelText);
 
 		if (!boosterDefinition) {
 			console.warn(`Booster definition not found for: ${labelText}. Skipping display.`);
-			return undefined; // Explicitly return undefined
+			return undefined;
 		}
 
-		// 1. Create the outer container for the entire booster list item
 		const container = this.containerEl.createEl('div');
 		container.className = 'modal-checkbox-container';
 
@@ -315,9 +314,15 @@ export class MultiSelectModal extends Modal {
 
 		// 2. Create the inner div that will hold the icon, name, and stock information.
 		const boosterDetailsContainer = container.createEl('div', { cls: `booster-item-${boosterDefinition.id}` });
-
 		boosterDetailsContainer.addClass('booster-list-item-icon');
 
+		// --- ADDED: Stock display field ---
+		const stockDisplay = boosterDetailsContainer.createEl('span', {
+			text: ` (Stock: ${stock})`,
+			cls: 'booster-stock-count'
+		});
+		// Optional: make it look a bit different if empty
+		if (stock === 0) stockDisplay.style.color = 'var(--text-muted)';
 
 		// 3. Create the 'Use' button
 		const useButton = container.createEl('button');
@@ -334,34 +339,33 @@ export class MultiSelectModal extends Modal {
 		const cooldownDurationMinutes = cooldownDurationSeconds / 60;
 		const momentDateString = this.mediator.getSettingString(boosterDefinition.boosterDateSettingKey);
 
+		// Initial helper call
+		createBoosterDisplay(boosterDetailsContainer, boosterDefinition, stock);
+
+		// LOGIC FOR BUTTON STATE
 		if (momentDateString) {
 			const momentDate = window.moment(momentDateString, 'YYYY-MM-DD HH:mm:ss');
 
 			if (!isMinutesPassed(momentDate, cooldownDurationMinutes)) {
+				// CASE 1: Cooldown Active
 				const hoursRemaining = hoursUntilMinutesPassed(momentDate, cooldownDurationMinutes);
-				if (debugLogs) console.debug(`Booster ${labelText} is still in cooldown for ${hoursRemaining.toFixed(1)} hours`);
-				if (debugLogs) console.debug(`createBoosterList: Stock amount ${stock}`);
-
-				createBoosterDisplay(boosterDetailsContainer, boosterDefinition, stock);
-
 				useButton.innerText = `cooldown ${hoursRemaining.toFixed(1)} hours`;
 				useButton.disabled = true;
 				useButton.addClass('cooldown');
 				useButton.onclick = () => {
 					new ModalInformationbox(this.app, `${labelText} is for ${hoursRemaining.toFixed(1)} hours in cooldown and can only then be used again.`).open();
 				};
-			} else {
-				createBoosterDisplay(boosterDetailsContainer, boosterDefinition, stock);
-
-				useButton.innerText = 'Use';
-				useButton.disabled = false;
-				useButton.onclick = () => {
-					this.useBoosterItem(labelText);
-				};
+				return container; // Exit early for this item
 			}
-		} else {
-			createBoosterDisplay(boosterDetailsContainer, boosterDefinition, stock);
+		}
 
+		// CASE 2: No Cooldown, but check Stock
+		if (stock <= 0) {
+			useButton.innerText = 'Out of Stock';
+			useButton.disabled = true;
+			useButton.addClass('gpkm-out-of-stock');
+		} else {
+			// CASE 3: Ready to use
 			useButton.innerText = 'Use';
 			useButton.disabled = false;
 			useButton.onclick = () => {
@@ -371,6 +375,7 @@ export class MultiSelectModal extends Modal {
 
 		return container;
 	}
+
 
 
 
