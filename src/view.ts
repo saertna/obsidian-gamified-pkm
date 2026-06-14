@@ -274,23 +274,26 @@ export class GamifiedPkmProfileView extends ItemView {
 	}
 
 	updateLevel(newLevel: number) {
-		const levelValue = this.containerEl.querySelector('#level-value');
-		if (levelValue) {
-			levelValue.textContent = newLevel.toString();
+		if (this.levelSpan) {
+			this.levelSpan.textContent = newLevel.toString();
+		} else {
+			console.error("updateLevel reference is missing");
 		}
 	}
 
 	updatePoints(newPoints: number) {
-		const pointsValue = this.containerEl.querySelector('#points-value');
-		if (pointsValue) {
-			pointsValue.textContent = Math.round(newPoints).toString();
+		if (this.pointsSpan) {
+			this.pointsSpan.textContent = Math.round(newPoints).toString();
+		} else {
+			console.error("updatePoints reference is missing");
 		}
 	}
 
 	updateBoosterFactor(newFactor: number) {
-		const boosterFactorValue = this.containerEl.querySelector('#booster-factor-value');
-		if (boosterFactorValue) {
-			boosterFactorValue.textContent = newFactor.toFixed(1);
+		if (this.boosterSpan) {
+			this.boosterSpan.textContent = newFactor.toFixed(1);
+		} else {
+			console.error("updateBoosterFactor reference is missing");
 		}
 	}
 
