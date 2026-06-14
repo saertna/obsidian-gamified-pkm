@@ -2,29 +2,22 @@
 import tsparser from "@typescript-eslint/parser";
 import { defineConfig } from "eslint/config";
 import obsidianmd from "eslint-plugin-obsidianmd";
+import globals from "globals";
 
 export default defineConfig([
-	// 1. GLOBAL IGNORES
-	// This must be the first object and only contain an 'ignores' key
 	{
 		ignores: [
-			"main.js",
-			"dist/**/*",
-			"node_modules/**/*",
+			"**/main.js",
+			"**/dist/**/*",
+			"**/node_modules/**/*",
 			"*.config.js",
 			"*.config.mjs",
-			"version-bump.mjs",
 			"package.json",
-			"package-lock.json",
-			"manifest.json",
 			"coverage/**/*"
 		]
 	},
-
-	// 2. TYPESCRIPT SPECIFIC CONFIG
 	{
 		files: ["**/*.ts", "**/*.tsx"],
-		// Apply the recommended Obsidian rules ONLY to TS files
 		plugins: {
 			obsidianmd: obsidianmd
 		},
@@ -32,17 +25,21 @@ export default defineConfig([
 			parser: tsparser,
 			parserOptions: {
 				project: "./tsconfig.json",
-				// This is crucial: it tells the parser where the root is
 				tsconfigRootDir: import.meta.dirname,
 			},
+			// FIX: This tells ESLint that console/window/document are valid globals
+			globals: {
+				...globals.browser,
+				...globals.node,
+				activeDocument: "readonly", // Specific to Obsidian
+				app: "readonly"             // Specific to Obsidian
+			}
 		},
-		// Spread the recommended rules here
 		rules: {
 			...obsidianmd.configs.recommended[0].rules,
 
 			"obsidianmd/sample-names": "off",
 			"obsidianmd/prefer-file-manager-trash-file": "error",
-
 		},
 	}
 ]);
