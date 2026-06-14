@@ -94,6 +94,7 @@ export class GamifiedPkmProfileView extends ItemView {
 
 
 		this.initializeDataview();
+		this.mediator.updateProfileLeaf();
 	}
 
 	initializeDataview() {

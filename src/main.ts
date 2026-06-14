@@ -422,27 +422,33 @@ export default class gamification extends Plugin {
 	}
 
 
-	async getLeafAndView() {
-		const showProfileLeaf = this.mediator.getSettingBoolean('showProfileLeaf');
-		if (!showProfileLeaf) {
-			return { leaf: null, view: null };
-		}
-
+	async getLeafAndView(): Promise<GamifiedPkmProfileView | null> {
 		const { workspace } = this.app;
-		let leaf = null;
-		const leaves = this.app.workspace.getLeavesOfType(VIEW_TYPE_GAMIFICATION_PROFILE);
 
-		if (leaves.length > 0) {
-			leaf = leaves[0];
-		} else {
-			leaf = workspace.getRightLeaf(false);
-			// @ts-ignore
-			await leaf.setViewState({ type: VIEW_TYPE_GAMIFICATION_PROFILE, active: true });
+		let leaf = workspace.getLeavesOfType(VIEW_TYPE_GAMIFICATION_PROFILE)[0];
+
+		if (!leaf) {
+			const newLeaf = workspace.getRightLeaf(false);
+			if (!newLeaf) {
+				console.error("Could not create a right leaf. Workspace might not be ready.");
+				return null;
+			}
+			leaf = newLeaf;
+
+			await leaf.setViewState({
+				type: VIEW_TYPE_GAMIFICATION_PROFILE,
+				active: true
+			});
 		}
 
-		// @ts-ignore
-		return leaf.view;
+		if (leaf && leaf.view instanceof GamifiedPkmProfileView) {
+			return leaf.view;
+		}
+
+		return null;
 	}
+
+
 
 
 	async activateView() {
@@ -718,6 +724,8 @@ export default class gamification extends Plugin {
 		}
 
 		this.isProfileViewOpen = false; // Reset the flag when the plugin is unloaded
+
+		this.app.workspace.detachLeavesOfType(VIEW_TYPE_GAMIFICATION_PROFILE);
 	}
 
 
