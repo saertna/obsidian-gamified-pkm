@@ -172,17 +172,16 @@ export default class gamification extends Plugin {
 
 				//const obsidianJustInstalled = this.settings.previousRelease === "0.0.0"
 
-/*
 				new ReleaseNotes(
 					this.app,
 					this.mediator,
 					//obsidianJustInstalled ? null :
 					PLUGIN_VERSION
 				).open();
-*/
-				console.log("Es sollte nun eine Logmessage kommen.")
-				await this.profileLeafUpdateDailyNotes(Math.round(pointsForDailyChallenge * (this.mediator.getSettingNumber('badgeBoosterFactor') + this.mediator.getSettingNumber('streakbooster'))) + 'EP | ' + this.mediator.getSettingNumber('dailyNoteCreationTask') + '/2')
-				await this.profileLeafUpdateWeeklyNotes(Math.round(pointsForWeeklyChallenge * (this.mediator.getSettingNumber('badgeBoosterFactor') + this.mediator.getSettingNumber('streakbooster'))) + 'EP | ' + this.mediator.getSettingNumber('weeklyNoteCreationTask') + '/7')
+
+				//await this.profileLeafUpdateDailyNotes('1/2')
+				//await this.profileLeafUpdateDailyNotes(Math.round(pointsForDailyChallenge * (this.mediator.getSettingNumber('badgeBoosterFactor') + this.mediator.getSettingNumber('streakbooster'))) + 'EP | ' + this.mediator.getSettingNumber('dailyNoteCreationTask') + '/2')
+				//await this.profileLeafUpdateWeeklyNotes(Math.round(pointsForWeeklyChallenge * (this.mediator.getSettingNumber('badgeBoosterFactor') + this.mediator.getSettingNumber('streakbooster'))) + 'EP | ' + this.mediator.getSettingNumber('weeklyNoteCreationTask') + '/7')
 
 
 				//await this.giveStatusPoints(10000,'')

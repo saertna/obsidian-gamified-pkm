@@ -295,19 +295,21 @@ export class GamifiedPkmProfileView extends ItemView {
 	}
 
 	updateDailyNotes(newValue: string) {
-		const dailyNotesValue = this.containerEl.querySelector('#daily-notes-value');
-		if (dailyNotesValue) {
-			dailyNotesValue.textContent = newValue;
-			console.log(`updateDailyNotes triggered with value: $newValue`)
+		if (this.dailyNotesSpan) {
+			this.dailyNotesSpan.textContent = newValue;
+		} else {
+			console.error("dailyNotesSpan reference is missing");
 		}
 	}
 
 	updateWeeklyNotes(newValue: string) {
-		const weeklyNotesValue = this.containerEl.querySelector('#weekly-notes-value');
-		if (weeklyNotesValue) {
-			weeklyNotesValue.textContent = newValue;
+		if (this.weeklyNotesSpan) {
+			this.weeklyNotesSpan.textContent = newValue;
+		} else {
+			console.error("weeklyNotesSpan reference is missing");
 		}
 	}
+
 
 	updateChartWeekly(days: number) {
 		if (this.chartWeekly) {
