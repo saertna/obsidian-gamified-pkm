@@ -725,7 +725,7 @@ export default class gamification extends Plugin {
 
 		this.isProfileViewOpen = false; // Reset the flag when the plugin is unloaded
 
-		this.app.workspace.detachLeavesOfType(VIEW_TYPE_GAMIFICATION_PROFILE);
+		//this.app.workspace.detachLeavesOfType(VIEW_TYPE_GAMIFICATION_PROFILE);
 	}
 
 
