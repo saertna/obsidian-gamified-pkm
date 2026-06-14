@@ -1,7 +1,6 @@
 import replace from "@rollup/plugin-replace";
 import typescript from "rollup-plugin-typescript2";
-import resolve from '@rollup/plugin-node-resolve';
-import { nodeResolve } from '@rollup/plugin-node-resolve';
+import { nodeResolve } from '@rollup/plugin-node-resolve'; // Use just this one
 import fs from 'fs';
 
 const manifestStr = fs.readFileSync("manifest.json", "utf-8");

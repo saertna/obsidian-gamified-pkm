@@ -298,6 +298,7 @@ export class GamifiedPkmProfileView extends ItemView {
 		const dailyNotesValue = this.containerEl.querySelector('#daily-notes-value');
 		if (dailyNotesValue) {
 			dailyNotesValue.textContent = newValue;
+			console.log(`updateDailyNotes triggered with value: $newValue`)
 		}
 	}
 

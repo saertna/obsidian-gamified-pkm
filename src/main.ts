@@ -32,10 +32,6 @@ import {
 	rateDirectionForStatusPoints
 } from './Utils'
 import {ReleaseNotes} from "./ReleaseNotes";
-import {renderCodeBlockProcessor} from "./avatar/renderCodeBlockProcessor";
-// @ts-ignore
-import AvatarView from "./avatar/AvatarView.svelte";
-import {withCodeblockState} from "./avatar/stateProviders";
 import { GamificationMediatorImpl } from './GamificationMediatorImpl';
 import { MaturityCalculator } from './maturitycalculation'
 import { ConfirmationModal } from './ConfirmationModal';
@@ -119,16 +115,6 @@ export default class gamification extends Plugin {
 		}
 		// import ends here
 
-		// This portion of code is adapted from the following source under the MIT License:
-		// https://github.com/froehlichA/obsidian-avatar
-		// Copyright (c) [2024], [froehlichA]
-		// License: MIT
-		this.registerMarkdownCodeBlockProcessor("gamification-avatar", renderCodeBlockProcessor(
-			AvatarView,
-			{ app: this.app, plugin: this },
-			withCodeblockState()
-		));
-		// import ends here
 
 		if (this.mediator.getSettingBoolean('showProfileLeaf')) {
 			this.app.workspace.onLayoutReady(async () => {
@@ -186,13 +172,17 @@ export default class gamification extends Plugin {
 
 				//const obsidianJustInstalled = this.settings.previousRelease === "0.0.0"
 
-
+/*
 				new ReleaseNotes(
 					this.app,
 					this.mediator,
 					//obsidianJustInstalled ? null :
 					PLUGIN_VERSION
 				).open();
+*/
+				console.log("Es sollte nun eine Logmessage kommen.")
+				await this.profileLeafUpdateDailyNotes(Math.round(pointsForDailyChallenge * (this.mediator.getSettingNumber('badgeBoosterFactor') + this.mediator.getSettingNumber('streakbooster'))) + 'EP | ' + this.mediator.getSettingNumber('dailyNoteCreationTask') + '/2')
+				await this.profileLeafUpdateWeeklyNotes(Math.round(pointsForWeeklyChallenge * (this.mediator.getSettingNumber('badgeBoosterFactor') + this.mediator.getSettingNumber('streakbooster'))) + 'EP | ' + this.mediator.getSettingNumber('weeklyNoteCreationTask') + '/7')
 
 
 				//await this.giveStatusPoints(10000,'')
