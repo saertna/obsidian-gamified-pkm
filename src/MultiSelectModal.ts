@@ -445,7 +445,7 @@ export class MultiSelectModal extends Modal {
 		if(debugLogs) console.debug(`use Booster ${labelText}`);
 		if(labelText=='Fortune Infusion'){
 			if(debugLogs) console.debug(`acquireIngredients();`)
-			this.mediator.acquireIngredients(1,1,10)
+			void this.mediator.acquireIngredients(1,1,10)
 		} else if (labelText=='Temporal Tweaker'){
 			if(debugLogs) console.debug(`left empty by intention as Temporal Tweaker not implemented yet`);
 		} else if (labelText=='Perpetual Progress'){
