@@ -332,7 +332,7 @@ export class MaturityCalculator {
 	}
 
 
-	public getNumberOfOutlinks(activeFile: TFile, app: App = this.app): number {
+	public getNumberOfOutlinks(activeFile: TFile): number {
 		if (!this.dataview) {
 			if (!activeFile) {
 				return 0;

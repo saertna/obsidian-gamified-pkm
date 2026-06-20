@@ -123,7 +123,7 @@ export function createRecipeDisplay(containerEl: HTMLElement, resourceName: stri
 	iconHolder.style.color = getResourceColor(resourceName); // Use the helper
 }
 
-export function createBoosterDisplay(containerEl: HTMLElement, booster: Booster, quantity: number): void {
+export function createBoosterDisplay(containerEl: HTMLElement, booster: Booster): void {
 	/**
 	 * Populates a given container element with the booster's icon, name, and quantity.
 	 * The container is expected to have 'display: flex' and 'gap' styles applied by its parent.

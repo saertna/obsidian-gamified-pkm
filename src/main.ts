@@ -605,7 +605,7 @@ export default class gamification extends Plugin {
 				const fileNameRate = this.maturityCalculator.rateLengthFilename(file.name);
 				const inlinkNumber = this.maturityCalculator.count_inlinks(file);
 				const inlinkClass = this.maturityCalculator.rateInlinks(inlinkNumber)//, fileCountMap.size);
-				const rateOut = this.maturityCalculator.rateOutlinks(this.maturityCalculator.getNumberOfOutlinks(file, this.app));
+				const rateOut = this.maturityCalculator.rateOutlinks(this.maturityCalculator.getNumberOfOutlinks(file));
 				const noteMajurity = this.maturityCalculator.rateLevelOfMaturity(rateFileLength, fileNameRate, inlinkClass, rateOut, rateProgressiveSum);
 
 				try {
@@ -811,7 +811,7 @@ export default class gamification extends Plugin {
 			fileNameRate = this.maturityCalculator.rateLengthFilename(file.name ?? '');
 			inlinkNumber = this.maturityCalculator.count_inlinks(file);
 			inlinkClass = this.maturityCalculator.rateInlinks(inlinkNumber)//, numAllFiles)
-			rateOut = this.maturityCalculator.rateOutlinks(this.maturityCalculator.getNumberOfOutlinks(file, this.app));
+			rateOut = this.maturityCalculator.rateOutlinks(this.maturityCalculator.getNumberOfOutlinks(file));
 
 			const noteMajurity = this.maturityCalculator.rateLevelOfMaturity(rateFileLength, fileNameRate, inlinkClass, rateOut, rateProgressiveSum);
 			
@@ -1257,7 +1257,7 @@ export default class gamification extends Plugin {
 
 
 	async giveBadge(currenLevel: number){
-		const badge = getBadgeForLevel(currenLevel,true)
+		const badge = getBadgeForLevel(currenLevel)
 		const badgeDict = parseBadgeCSV2Dict(this.mediator.getSettingString('receivedBadges'));
 		if (!badgeDict[badge.name]) {
 			await this.writeBadgeCSV(badge, window.moment().format('YYYY-MM-DD'), 'level ' + currenLevel.toString())
@@ -1279,7 +1279,7 @@ export default class gamification extends Plugin {
 
 			if (isNewLevel) {
 				const currentLevel = this.mediator.getSettingNumber('statusLevel');
-				const badge: Badge = getBadgeForLevel(currentLevel, false);
+				const badge: Badge = getBadgeForLevel(currentLevel);
 
 				const noticeDuration = this.mediator.getSettingNumber('timeShowNotice') * mil2sec * 1.2;
 				new Notice(`You've earned the "${badge.name}" badge. ${badge.description}`, noticeDuration);
@@ -1341,7 +1341,7 @@ export default class gamification extends Plugin {
 		try {
 			let nextBadgeLevel = 0
 			for (let i = currentLevel; i < 110; i++){
-				const badge : Badge = getBadgeForLevel(i, true)
+				const badge : Badge = getBadgeForLevel(i)
 				// Regular expression to match the level number
 				const levelRegex = /level (\d+)/;
 				// Extract the level number using the regular expression

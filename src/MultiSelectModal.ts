@@ -371,7 +371,7 @@ export class MultiSelectModal extends Modal {
 		const momentDateString = this.mediator.getSettingString(boosterDefinition.boosterDateSettingKey);
 
 		// Initial helper call
-		createBoosterDisplay(boosterDetailsContainer, boosterDefinition, stock);
+		createBoosterDisplay(boosterDetailsContainer, boosterDefinition);
 
 		// LOGIC FOR BUTTON STATE
 		if (momentDateString) {
@@ -505,7 +505,7 @@ export class MultiSelectModal extends Modal {
 			stockInfo.empty();
 
 			// 2. Pass the booster definition and stock to the display function
-			createBoosterDisplay(stockInfo, boosterDefinition, stock);
+			createBoosterDisplay(stockInfo, boosterDefinition);
 		} else {
 			console.warn(`Display element (selector: ${stockInfoSelector}) not found for booster: ${labelText}. Ensure it's rendered.`);
 		}
