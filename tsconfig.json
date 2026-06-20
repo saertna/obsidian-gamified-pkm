@@ -12,7 +12,7 @@
     "isolatedModules": true,
     "jsx": "react",
 	"strictNullChecks": true,
-    "types": ["jest", "obsidian"],
+    "types": ["jest", "obsidian", "node"],
 	"allowSyntheticDefaultImports": true,
     "target": "ES2021",
 	"lib": [
