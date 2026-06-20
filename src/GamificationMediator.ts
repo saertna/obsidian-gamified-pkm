@@ -12,7 +12,7 @@ export interface GamificationMediator {
 
 	saveSettings(): Promise<void>;
 
-	updateProfileLeaf(): void;
+	updateProfileLeaf(): Promise<void>;
 
 	updateProfileLeafPic(): void;
 
