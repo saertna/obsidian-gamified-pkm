@@ -3,6 +3,12 @@ import Chart from 'chart.js/auto';
 import { DataviewApi, getAPI} from "obsidian-dataview";
 import { GamificationMediator } from './GamificationMediator';
 
+interface DataviewPage {
+	file: {
+		frontmatter: Record<string, any>;
+	};
+}
+
 export const VIEW_TYPE_GAMIFICATION_PROFILE = "gamified-pkm-profile";
 
 export class GamifiedPkmProfileView extends ItemView {
@@ -108,20 +114,18 @@ export class GamifiedPkmProfileView extends ItemView {
 
 	updateMaturityCounts() {
 		const dv = this.dataview;
-
-		// 2. Perform the check on the local constant
 		if (!dv) {
 			console.debug('dataview plugin is not available to update maturity counts');
 			return;
 		}
-
 		const maturityLevels = [5, 4, 3, 2, 1, 0];
-
 		maturityLevels.forEach(level => {
 			const count = dv.pages()
-				.where((p: any) => this.isMaturityMatch(p.file.frontmatter, level))
+				.where((p: unknown) => {
+					const page = p as DataviewPage;
+					return this.isMaturityMatch(page.file.frontmatter, level);
+				})
 				.length;
-
 			const span = this.maturitySpans[level];
 			if (span) {
 				span.setText(count.toString());
@@ -130,7 +134,7 @@ export class GamifiedPkmProfileView extends ItemView {
 	}
 
 
-	private isMaturityMatch(frontmatter: any, targetLevel: number): boolean {
+	private isMaturityMatch(frontmatter: Record<string, any>, targetLevel: number): boolean {
 		const val = frontmatter['note-maturity'];
 		const validMatches = [targetLevel, `${targetLevel}`, `${targetLevel}➡️`, `${targetLevel}⬇️`, `${targetLevel}⬆️`];
 		return validMatches.includes(val);
