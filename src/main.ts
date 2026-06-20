@@ -36,6 +36,17 @@ import { GamificationMediatorImpl } from './GamificationMediatorImpl';
 import { MaturityCalculator } from './maturitycalculation'
 import { ConfirmationModal } from './ConfirmationModal';
 
+// 1. Define the specific "Maturity" keys we expect in frontmatter
+interface NoteFrontmatter {
+	[key: string]: any; // This allows other existing frontmatter fields
+	'title-class'?: string | number;
+	'note-length-class'?: string | number;
+	'inlink-class'?: string | number;
+	'outlink-class'?: string | number;
+	'progressive-summarization-maturity'?: string | number;
+	'note-maturity'?: string | number;
+}
+
 let pointsToReceived = 0;
 
 export default class gamification extends Plugin {
@@ -700,14 +711,58 @@ export default class gamification extends Plugin {
 	}
 
 
-	private writeFrontmatter(frontmatter: any, fileNameRate: number, rateFileLength: number, inlinkClass: number, rateOut: number, rateProgressiveSum: number, noteMajurity: number) {
-		frontmatter['title-class'] = this.maturityCalculator.rateDirection(frontmatter['title-class'], fileNameRate)
-		frontmatter['note-length-class'] = this.maturityCalculator.rateDirection(frontmatter['note-length-class'], rateFileLength)
-		frontmatter['inlink-class'] = this.maturityCalculator.rateDirection(frontmatter['inlink-class'], inlinkClass)
-		frontmatter['outlink-class'] = this.maturityCalculator.rateDirection(frontmatter['outlink-class'], rateOut)
-		frontmatter['progressive-summarization-maturity'] = this.maturityCalculator.rateDirection(frontmatter['progressive-summarization-maturity'], rateProgressiveSum)
-		frontmatter['note-maturity'] = this.maturityCalculator.rateDirection(frontmatter['note-maturity'], noteMajurity)
+	private writeFrontmatter(
+		frontmatter: NoteFrontmatter,
+		fileNameRate: number,
+		rateFileLength: number,
+		inlinkClass: number,
+		rateOut: number,
+		rateProgressiveSum: number,
+		noteMaturity: number // Fixed the typo here too!
+	) {
+
+		frontmatter['title-class'] = this.maturityCalculator.rateDirection(
+			frontmatter['title-class']?.toString() ?? "",
+			fileNameRate
+		);
+
+		frontmatter['note-length-class'] = this.maturityCalculator.rateDirection(
+			frontmatter['note-length-class']?.toString() ?? "",
+			rateFileLength
+		);
+
+		frontmatter['inlink-class'] = this.maturityCalculator.rateDirection(
+			frontmatter['inlink-class']?.toString() ?? "",
+			inlinkClass
+		);
+
+		frontmatter['outlink-class'] = this.maturityCalculator.rateDirection(
+			frontmatter['outlink-class']?.toString() ?? "",
+			rateOut
+		);
+
+		frontmatter['progressive-summarization-maturity'] = this.maturityCalculator.rateDirection(
+			frontmatter['progressive-summarization-maturity']?.toString() ?? "",
+			rateProgressiveSum
+		);
+
+		frontmatter['note-maturity'] = this.maturityCalculator.rateDirection(
+			frontmatter['note-maturity']?.toString() ?? "",
+			noteMaturity
+		);
 	}
+
+
+	/*
+	private writeFrontmatter2(frontmatter: any, fileNameRate: number, rateFileLength: number, inlinkClass: number, rateOut: number, rateProgressiveSum: number, noteMajurity: number) {
+			frontmatter['title-class'] = this.maturityCalculator.rateDirection(frontmatter['title-class'], fileNameRate)
+			frontmatter['note-length-class'] = this.maturityCalculator.rateDirection(frontmatter['note-length-class'], rateFileLength)
+			frontmatter['inlink-class'] = this.maturityCalculator.rateDirection(frontmatter['inlink-class'], inlinkClass)
+			frontmatter['outlink-class'] = this.maturityCalculator.rateDirection(frontmatter['outlink-class'], rateOut)
+			frontmatter['progressive-summarization-maturity'] = this.maturityCalculator.rateDirection(frontmatter['progressive-summarization-maturity'], rateProgressiveSum)
+			frontmatter['note-maturity'] = this.maturityCalculator.rateDirection(frontmatter['note-maturity'], noteMajurity)
+		}
+	*/
 
 
 	onunload() {

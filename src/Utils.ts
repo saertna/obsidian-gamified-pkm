@@ -3,33 +3,44 @@ import type {Moment} from "moment/moment";
 import {boosterRecipes, PLUGIN_VERSION} from "./data/constants"
 
 
+interface GitHubRelease {
+	tag_name: string;
+	published_at: string;
+	[key: string]: any; // Allows other fields without specifying them all
+}
+
+
+interface MappedRelease {
+	version: string;
+	published: Date;
+}
+
 let versionUpdateChecked = false;
 export const checkGamifiedPkmVersion = async (app: App) => {
 	if (versionUpdateChecked) {
 		return;
 	}
 	versionUpdateChecked = true;
-
 	try {
-		const gitAPIrequest = async () => {
-			return JSON.parse(
-				await request({
-					url: `https://api.github.com/repos/saertna/obsidian-gamified-pkm/releases?per_page=5&page=1`,
-				}),
-			);
+		const gitAPIrequest = async (): Promise<GitHubRelease[]> => {
+			const response = await request({
+				url: `https://api.github.com/repos/saertna/obsidian-gamified-pkm/releases?per_page=5&page=1`,
+			});
+			return JSON.parse(response);
 		};
-
-		const latestVersion = (await gitAPIrequest())
-			.map((el: any) => {
+		const releases = await gitAPIrequest();
+		const latestVersion = releases
+			.map((el: GitHubRelease): MappedRelease => {
 				return {
 					version: el.tag_name,
 					published: new Date(el.published_at),
 				};
 			})
-			.filter((el: any) => el.version.match(/^\d+\.\d+\.\d+$/))
-			.sort((el1: any, el2: any) => el2.published - el1.published)[0].version;
-
-		if (isVersionNewerThanOther(latestVersion,PLUGIN_VERSION)) {
+			.filter((el: MappedRelease) => el.version.match(/^\d+\.\d+\.\d+$/))
+			.sort((el1: MappedRelease, el2: MappedRelease) =>
+				el2.published.getTime() - el1.published.getTime()
+			)[0].version;
+		if (isVersionNewerThanOther(latestVersion, PLUGIN_VERSION)) {
 			new Notice(
 				`A newer version of Gamificate your PKM is available in Community Plugins.\n\nYou are using ${PLUGIN_VERSION}.\n\nThe latest is ${latestVersion}`,
 			);
@@ -37,7 +48,7 @@ export const checkGamifiedPkmVersion = async (app: App) => {
 	} catch (e) {
 		console.error({ where: "Utils/checkGamifiedPkmVersion", error: e });
 	}
-	window.setTimeout(() => (versionUpdateChecked = false), 28800000); //reset after 8 hours
+	window.setTimeout(() => (versionUpdateChecked = false), 28800000); // reset after 8 hours
 };
 
 export const isVersionNewerThanOther = (version: string, otherVersion: string): boolean => {
