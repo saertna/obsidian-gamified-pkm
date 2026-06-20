@@ -715,7 +715,7 @@ export default class gamification extends Plugin {
 
 		// Clear the timer when the plugin is unloaded
 		if (this.timerId !== null) {
-			clearInterval(this.timerId);
+			window.clearInterval(this.timerId);
 			this.timerId = null;
 		}
 
