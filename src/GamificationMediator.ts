@@ -1,18 +1,18 @@
 export interface GamificationMediator {
-	getSettingNumber(key: string):number;
-	getSettingString(key: string): string;
-	getSettingBoolean(key: string):boolean;
+	getSettingNumber(_key: string):number;
+	getSettingString(_key: string): string;
+	getSettingBoolean(_key: string):boolean;
 
 
-	setSettingString(key: string, value: string): void;
-	setSettingNumber(key: string, value: number): void;
-	setSettingBoolean(key: string, value: boolean): void;
+	setSettingString(_key: string, value: string): void;
+	setSettingNumber(_key: string, value: number): void;
+	setSettingBoolean(_key: string, value: boolean): void;
 
 	acquireIngredients(chance:number, min:number, max:number): Promise<void> | void;
 
 	saveSettings(): Promise<void>;
 
-	updateProfileLeaf(): void;
+	updateProfileLeaf(): Promise<void>;
 
 	updateProfileLeafPic(): void;
 

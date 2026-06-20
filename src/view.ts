@@ -3,6 +3,12 @@ import Chart from 'chart.js/auto';
 import { DataviewApi, getAPI} from "obsidian-dataview";
 import { GamificationMediator } from './GamificationMediator';
 
+interface DataviewPage {
+	file: {
+		frontmatter: Record<string, any>;
+	};
+}
+
 export const VIEW_TYPE_GAMIFICATION_PROFILE = "gamified-pkm-profile";
 
 export class GamifiedPkmProfileView extends ItemView {
@@ -94,6 +100,14 @@ export class GamifiedPkmProfileView extends ItemView {
 
 
 		this.initializeDataview();
+		this.mediator.updateProfileLeaf();
+
+		this.registerEvent(
+			this.app.metadataCache.on("dataview:metadata-change" as any, () => {
+				console.debug("Dataview index updated, refreshing maturity counts...");
+				this.updateMaturityCounts();
+			})
+		);
 	}
 
 	initializeDataview() {
@@ -102,25 +116,24 @@ export class GamifiedPkmProfileView extends ItemView {
 			console.error("Dataview plugin is not enabled.");
 			return;
 		}
+		// Initial update when the view opens
 		this.updateMaturityCounts();
 	}
 
 	updateMaturityCounts() {
 		const dv = this.dataview;
-
-		// 2. Perform the check on the local constant
 		if (!dv) {
 			console.debug('dataview plugin is not available to update maturity counts');
 			return;
 		}
-
 		const maturityLevels = [5, 4, 3, 2, 1, 0];
-
 		maturityLevels.forEach(level => {
 			const count = dv.pages()
-				.where((p: any) => this.isMaturityMatch(p.file.frontmatter, level))
+				.where((p: unknown) => {
+					const page = p as DataviewPage;
+					return this.isMaturityMatch(page.file.frontmatter, level);
+				})
 				.length;
-
 			const span = this.maturitySpans[level];
 			if (span) {
 				span.setText(count.toString());
@@ -129,7 +142,7 @@ export class GamifiedPkmProfileView extends ItemView {
 	}
 
 
-	private isMaturityMatch(frontmatter: any, targetLevel: number): boolean {
+	private isMaturityMatch(frontmatter: Record<string, any>, targetLevel: number): boolean {
 		const val = frontmatter['note-maturity'];
 		const validMatches = [targetLevel, `${targetLevel}`, `${targetLevel}➡️`, `${targetLevel}⬇️`, `${targetLevel}⬆️`];
 		return validMatches.includes(val);
@@ -274,39 +287,45 @@ export class GamifiedPkmProfileView extends ItemView {
 	}
 
 	updateLevel(newLevel: number) {
-		const levelValue = this.containerEl.querySelector('#level-value');
-		if (levelValue) {
-			levelValue.textContent = newLevel.toString();
+		if (this.levelSpan) {
+			this.levelSpan.textContent = newLevel.toString();
+		} else {
+			console.error("updateLevel reference is missing");
 		}
 	}
 
 	updatePoints(newPoints: number) {
-		const pointsValue = this.containerEl.querySelector('#points-value');
-		if (pointsValue) {
-			pointsValue.textContent = Math.round(newPoints).toString();
+		if (this.pointsSpan) {
+			this.pointsSpan.textContent = Math.round(newPoints).toString();
+		} else {
+			console.error("updatePoints reference is missing");
 		}
 	}
 
 	updateBoosterFactor(newFactor: number) {
-		const boosterFactorValue = this.containerEl.querySelector('#booster-factor-value');
-		if (boosterFactorValue) {
-			boosterFactorValue.textContent = newFactor.toFixed(1);
+		if (this.boosterSpan) {
+			this.boosterSpan.textContent = newFactor.toFixed(1);
+		} else {
+			console.error("updateBoosterFactor reference is missing");
 		}
 	}
 
 	updateDailyNotes(newValue: string) {
-		const dailyNotesValue = this.containerEl.querySelector('#daily-notes-value');
-		if (dailyNotesValue) {
-			dailyNotesValue.textContent = newValue;
+		if (this.dailyNotesSpan) {
+			this.dailyNotesSpan.textContent = newValue;
+		} else {
+			console.error("dailyNotesSpan reference is missing");
 		}
 	}
 
 	updateWeeklyNotes(newValue: string) {
-		const weeklyNotesValue = this.containerEl.querySelector('#weekly-notes-value');
-		if (weeklyNotesValue) {
-			weeklyNotesValue.textContent = newValue;
+		if (this.weeklyNotesSpan) {
+			this.weeklyNotesSpan.textContent = newValue;
+		} else {
+			console.error("weeklyNotesSpan reference is missing");
 		}
 	}
+
 
 	updateChartWeekly(days: number) {
 		if (this.chartWeekly) {

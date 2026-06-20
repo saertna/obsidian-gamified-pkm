@@ -59,6 +59,7 @@ export class MultiSelectModal extends Modal {
 	}
 
 	onOpen() {
+		this.refresh();
 		const { contentEl } = this;
 		contentEl.empty(); // Clears any existing content
 
@@ -195,6 +196,23 @@ export class MultiSelectModal extends Modal {
 	}
 
 
+	refresh() {
+		const scrollPos = this.contentEl.scrollTop;
+
+		this.contentEl.empty();
+		const layout = this.createCraftingLayout();
+
+		if (layout) {
+			this.contentEl.appendChild(layout);
+		}
+
+		requestAnimationFrame(() => {
+			this.contentEl.scrollTop = scrollPos;
+		});
+	}
+
+
+
 	readIngrementStock() {
 		if (this.mediator) {
 			this.remainingStock = {
@@ -210,9 +228,11 @@ export class MultiSelectModal extends Modal {
 		}
 	}
 
-
+	// Layout to Craft boosters
 	private createCraftingLayout(): HTMLDivElement {
 		this.readIngrementStock();
+		this.readBoostersStock();
+
 		const mainContent = this.containerEl.createEl('div');
 		mainContent.className = 'modal-crafting-wrapper';
 
@@ -260,6 +280,14 @@ export class MultiSelectModal extends Modal {
 				// Booster Name
 				boosterIdentity.createEl('span', { text: booster.name, cls: 'booster-name' });
 
+				const stock = this.boosters[booster.name] || 0;
+				const stockDisplay = boosterIdentity.createEl('span', {
+					text: ` [Stock: ${stock}]`,
+					cls: 'booster-stock-count-crafting'
+				});
+				// Visual cue: if stock is 0, make it a bit more subtle
+				if (stock === 0) stockDisplay.style.color = 'var(--text-muted)';
+
 				// Wrapper for Ingredients (two line display)
 				const boosterRecipeIngredients = boosterInfoAndIngredients.createDiv({ cls: 'booster-recipe-ingredients' });
 
@@ -285,7 +313,10 @@ export class MultiSelectModal extends Modal {
 				// Crafting Actions (buttons)
 				const buttonGroup = recipeItem.createDiv({ cls: 'crafting-booster-actions' });
 				const craftButton = buttonGroup.createEl('button', { text: 'Craft' });
-				craftButton.onclick = () => this.craftBoosterItem(booster);
+				craftButton.onclick = () => {
+					void this.craftBoosterItem(booster);
+					this.refresh();
+				}
 
 				const useInfoButton = buttonGroup.createEl('button', { text: '?' });
 				useInfoButton.onclick = () => {
@@ -298,16 +329,15 @@ export class MultiSelectModal extends Modal {
 	}
 
 
-
+	// Layout to use Boosters
 	private createBoosterList(labelText: string): HTMLDivElement | undefined {
 		const boosterDefinition = getBoosterByName(labelText);
 
 		if (!boosterDefinition) {
 			console.warn(`Booster definition not found for: ${labelText}. Skipping display.`);
-			return undefined; // Explicitly return undefined
+			return undefined;
 		}
 
-		// 1. Create the outer container for the entire booster list item
 		const container = this.containerEl.createEl('div');
 		container.className = 'modal-checkbox-container';
 
@@ -315,9 +345,15 @@ export class MultiSelectModal extends Modal {
 
 		// 2. Create the inner div that will hold the icon, name, and stock information.
 		const boosterDetailsContainer = container.createEl('div', { cls: `booster-item-${boosterDefinition.id}` });
-
 		boosterDetailsContainer.addClass('booster-list-item-icon');
 
+		// --- ADDED: Stock display field ---
+		const stockDisplay = boosterDetailsContainer.createEl('span', {
+			text: ` (Stock: ${stock})`,
+			cls: 'booster-stock-count'
+		});
+		// Optional: make it look a bit different if empty
+		if (stock === 0) stockDisplay.style.color = 'var(--text-muted)';
 
 		// 3. Create the 'Use' button
 		const useButton = container.createEl('button');
@@ -334,34 +370,33 @@ export class MultiSelectModal extends Modal {
 		const cooldownDurationMinutes = cooldownDurationSeconds / 60;
 		const momentDateString = this.mediator.getSettingString(boosterDefinition.boosterDateSettingKey);
 
+		// Initial helper call
+		createBoosterDisplay(boosterDetailsContainer, boosterDefinition);
+
+		// LOGIC FOR BUTTON STATE
 		if (momentDateString) {
 			const momentDate = window.moment(momentDateString, 'YYYY-MM-DD HH:mm:ss');
 
 			if (!isMinutesPassed(momentDate, cooldownDurationMinutes)) {
+				// CASE 1: Cooldown Active
 				const hoursRemaining = hoursUntilMinutesPassed(momentDate, cooldownDurationMinutes);
-				if (debugLogs) console.debug(`Booster ${labelText} is still in cooldown for ${hoursRemaining.toFixed(1)} hours`);
-				if (debugLogs) console.debug(`createBoosterList: Stock amount ${stock}`);
-
-				createBoosterDisplay(boosterDetailsContainer, boosterDefinition, stock);
-
 				useButton.innerText = `cooldown ${hoursRemaining.toFixed(1)} hours`;
 				useButton.disabled = true;
 				useButton.addClass('cooldown');
 				useButton.onclick = () => {
 					new ModalInformationbox(this.app, `${labelText} is for ${hoursRemaining.toFixed(1)} hours in cooldown and can only then be used again.`).open();
 				};
-			} else {
-				createBoosterDisplay(boosterDetailsContainer, boosterDefinition, stock);
-
-				useButton.innerText = 'Use';
-				useButton.disabled = false;
-				useButton.onclick = () => {
-					this.useBoosterItem(labelText);
-				};
+				return container; // Exit early for this item
 			}
-		} else {
-			createBoosterDisplay(boosterDetailsContainer, boosterDefinition, stock);
+		}
 
+		// CASE 2: No Cooldown, but check Stock
+		if (stock <= 0) {
+			useButton.innerText = 'Out of Stock';
+			useButton.disabled = true;
+			useButton.addClass('gpkm-out-of-stock');
+		} else {
+			// CASE 3: Ready to use
 			useButton.innerText = 'Use';
 			useButton.disabled = false;
 			useButton.onclick = () => {
@@ -371,6 +406,7 @@ export class MultiSelectModal extends Modal {
 
 		return container;
 	}
+
 
 
 
@@ -409,7 +445,7 @@ export class MultiSelectModal extends Modal {
 		if(debugLogs) console.debug(`use Booster ${labelText}`);
 		if(labelText=='Fortune Infusion'){
 			if(debugLogs) console.debug(`acquireIngredients();`)
-			this.mediator.acquireIngredients(1,1,10)
+			void this.mediator.acquireIngredients(1,1,10)
 		} else if (labelText=='Temporal Tweaker'){
 			if(debugLogs) console.debug(`left empty by intention as Temporal Tweaker not implemented yet`);
 		} else if (labelText=='Perpetual Progress'){
@@ -459,7 +495,7 @@ export class MultiSelectModal extends Modal {
 			return;
 		}
 
-		const stock = this.boosters[labelText] || 0;
+		const _stock = this.boosters[labelText] || 0;
 
 		// Use the booster's 'id' for a consistent DOM element selector
 		const stockInfoSelector = `.booster-item-${boosterDefinition.id}`; // Example class: 'booster-item-temporalTweaker'
@@ -469,7 +505,7 @@ export class MultiSelectModal extends Modal {
 			stockInfo.empty();
 
 			// 2. Pass the booster definition and stock to the display function
-			createBoosterDisplay(stockInfo, boosterDefinition, stock);
+			createBoosterDisplay(stockInfo, boosterDefinition);
 		} else {
 			console.warn(`Display element (selector: ${stockInfoSelector}) not found for booster: ${labelText}. Ensure it's rendered.`);
 		}

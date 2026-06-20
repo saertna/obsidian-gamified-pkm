@@ -18,7 +18,7 @@ export function checkIfReceiveABadge(levelOld: number, levelNew: number): boolea
 
 
 
-export function getBadgeForLevel(level: number, inform: boolean): Badge {
+export function getBadgeForLevel(level: number): Badge {
     let index = 0;
     for (let i = 0; i < badgeLevels.length; i++) {
       if (level >= badgeLevels[i]) {

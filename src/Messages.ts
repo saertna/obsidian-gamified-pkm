@@ -15,6 +15,12 @@ I develop this plugin as a hobby, spending my free time doing this. If you find 
 
 It would mean a lot to me.
 `,
+"0.0.102": 	`
+## Fix
+- Maturity list in profile leafe get's updated directly
+## Stability and Performance
+- solving linter findings for stability, performance, and maintainability
+`,
 "0.0.101": 	`
 ## Stability and Performance
 - switching from unmaintained package to maintained node package for performance and security

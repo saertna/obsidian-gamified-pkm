@@ -913,7 +913,7 @@ describe('getNumberOfOutlinks', () => {
 	test('should return 0 if activeFile has no links', () => {
 		const activeFile: TFile = {} as TFile;
 		mockApp.metadataCache.getFileCache.mockReturnValue(null);
-		const result = maturityCalculator.getNumberOfOutlinks(activeFile, mockApp);
+		const result = maturityCalculator.getNumberOfOutlinks(activeFile);
 		expect(result).toBe(0);
 		expect(mockApp.metadataCache.getFileCache).toHaveBeenCalledWith(activeFile);
 	});

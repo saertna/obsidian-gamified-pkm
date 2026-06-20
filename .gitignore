@@ -32,3 +32,4 @@ obsidian-gamified-pkm/obsidian-gamified-pkm.zip
 ncryption
 *.html
 *.xml
+/package-lock.json

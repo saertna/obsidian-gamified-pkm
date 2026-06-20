@@ -1,8 +1,7 @@
 import esbuild from "esbuild";
 import process from "process";
-import builtins from "builtin-modules";
-import esbuildSvelte from "esbuild-svelte";
-import sveltePreprocess from "svelte-preprocess";
+import { builtinModules } from 'node:module';
+
 
 const banner =
 `/*
@@ -19,12 +18,6 @@ const context = await esbuild.context({
 	},
 	entryPoints: ["main.ts"],
 	bundle: true,
-	plugins: [
-		esbuildSvelte({
-			compilerOptions: { css: true },
-			preprocess: sveltePreprocess(),
-		}),
-	],
 	external: [
 		"obsidian",
 		"electron",
@@ -39,7 +32,7 @@ const context = await esbuild.context({
 		"@lezer/common",
 		"@lezer/highlight",
 		"@lezer/lr",
-		...builtins],
+		...builtinModules],
 	format: "cjs",
 	target: "es2018",
 	logLevel: "info",

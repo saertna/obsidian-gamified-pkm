@@ -4,19 +4,19 @@ import {Badge} from "./badges";
 import {debugLogs, elements, listOfUseableIngredientsToBeShown, mil2sec, IngredientElement} from "./data/constants";
 import {Notice} from 'obsidian';
 //import {concatenateStrings} from "./Utils";
-import {defaultSettings} from "./settings";
+import {defaultSettings, ISettings } from "./settings";
 import gamification from "./main";
 import { createEarnedIngredientHtml } from './ui/noticeUtils';
 import { resourceSvgMap } from './data/resourceIcons';
 
 
 export class GamificationMediatorImpl implements GamificationMediator {
-	private settings: any;
+	private settings: ISettings;
 	private plugin: gamification;
 	public resourceSvgMap: Record<string, string>;
 	private remainingStock: Record<string, number> = {};
 
-	constructor(settings: any, plugin: gamification) {
+	constructor(settings: ISettings, plugin: gamification) {
 		this.settings = settings;
 		this.plugin = plugin;
 		this.resourceSvgMap = resourceSvgMap;
@@ -46,26 +46,26 @@ export class GamificationMediatorImpl implements GamificationMediator {
 		void this.plugin.updateChartWeeklyColorToGo(value);
 	}
 
-	getSettingString(key: string): string {
+	getSettingString(key: keyof ISettings): string {
 		const decryptedValue = this.settings[key] !== undefined ? this.settings[key].toString() : ''
 		//if(debugLogs) console.debug(`String: decrypted ${key} is ${decryptString(decryptedValue)}`)
 		return decryptString(decryptedValue);
 	}
 
-	getSettingNumber(key: string) {
+	getSettingNumber(key: keyof ISettings):number {
 		const decryptedValue = this.settings[key] !== undefined ? this.settings[key].toString() : ''
 		//if(debugLogs) console.debug(`Number: decrypted ${key} is ${decryptNumber(decryptedValue)}`)
 		return decryptNumber(decryptedValue);
 	}
 
-	getSettingBoolean(key: string) {
+	getSettingBoolean(key: keyof ISettings): boolean {
 		const decryptedValue = this.settings[key] !== undefined ? this.settings[key].toString() : ''
 		//if(debugLogs) console.debug(`Boolean: decrypted ${key} is ${decryptBoolean(decryptedValue)}`)
 		return decryptBoolean(decryptedValue);
 	}
 
 
-	setSettingString(key: string, value: string) {
+	setSettingString(key: keyof ISettings, value: string) {
 		// Set a specific setting
 		this.settings[key] = encryptString(value);
 		void this.saveSettings();
@@ -82,14 +82,14 @@ export class GamificationMediatorImpl implements GamificationMediator {
 	}
 
 
-	setSettingNumber(key: string, value: number) {
+	setSettingNumber(key: keyof ISettings, value: number) {
 		// Set a specific setting
 		this.settings[key] = encryptNumber(value);
 		void this.saveSettings();
 	}
 
 
-	setSettingBoolean(key: string, value: boolean) {
+	setSettingBoolean(key: keyof ISettings, value: boolean) {
 		// Set a specific setting
 		this.settings[key] = encryptBoolean(value);
 		void this.saveSettings();

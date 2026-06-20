@@ -70,20 +70,20 @@ describe('checkIfReceiveABadge', () => {
 
 describe('getBadgeForLevel', () => {
     it('should return "Enlightened Novice" when level < 10', () => {
-    const actual = getBadgeForLevel(1,false);
+    const actual = getBadgeForLevel(1);
     const expected: Badge = {"description": "Huzzah! You've embarked on the path of knowledge and earned the title of 'Enlightened Novice.' The journey has just begun, and you're already radiating wisdom like a baby sun!", "level": "level 5", "name": "Enlightened Novice"};
     //const expected = false;
     expect(actual).toStrictEqual(expected);
     });
     
     it('should return "Enlightened Novice" when level < 10', () => {
-    const actual = getBadgeForLevel(7,false);
+    const actual = getBadgeForLevel(7);
     const expected = {"description": "Huzzah! You've embarked on the path of knowledge and earned the title of 'Enlightened Novice.' The journey has just begun, and you're already radiating wisdom like a baby sun!", "level": "level 5", "name": "Enlightened Novice"};
     expect(actual).toStrictEqual(expected);
     });
     
     it('should return "Zen Knowledge Keeper" when >= 82 <90', () => {
-    const actual = getBadgeForLevel(89,false);
+    const actual = getBadgeForLevel(89);
     const expected = {"description": "Serenity achieved! As a 'Zen Knowledge Keeper,' you maintain a tranquil mind while managing vast pools of knowledge with grace and poise.", "level": "level 82", "name": "Zen Knowledge Keeper"};
     expect(actual).toStrictEqual(expected);
     });

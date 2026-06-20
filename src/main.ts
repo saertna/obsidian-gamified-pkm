@@ -32,13 +32,20 @@ import {
 	rateDirectionForStatusPoints
 } from './Utils'
 import {ReleaseNotes} from "./ReleaseNotes";
-import {renderCodeBlockProcessor} from "./avatar/renderCodeBlockProcessor";
-// @ts-ignore
-import AvatarView from "./avatar/AvatarView.svelte";
-import {withCodeblockState} from "./avatar/stateProviders";
 import { GamificationMediatorImpl } from './GamificationMediatorImpl';
 import { MaturityCalculator } from './maturitycalculation'
 import { ConfirmationModal } from './ConfirmationModal';
+
+// 1. Define the specific "Maturity" keys we expect in frontmatter
+interface NoteFrontmatter {
+	[key: string]: any; // This allows other existing frontmatter fields
+	'title-class'?: string | number;
+	'note-length-class'?: string | number;
+	'inlink-class'?: string | number;
+	'outlink-class'?: string | number;
+	'progressive-summarization-maturity'?: string | number;
+	'note-maturity'?: string | number;
+}
 
 let pointsToReceived = 0;
 
@@ -119,16 +126,6 @@ export default class gamification extends Plugin {
 		}
 		// import ends here
 
-		// This portion of code is adapted from the following source under the MIT License:
-		// https://github.com/froehlichA/obsidian-avatar
-		// Copyright (c) [2024], [froehlichA]
-		// License: MIT
-		this.registerMarkdownCodeBlockProcessor("gamification-avatar", renderCodeBlockProcessor(
-			AvatarView,
-			{ app: this.app, plugin: this },
-			withCodeblockState()
-		));
-		// import ends here
 
 		if (this.mediator.getSettingBoolean('showProfileLeaf')) {
 			this.app.workspace.onLayoutReady(async () => {
@@ -186,13 +183,16 @@ export default class gamification extends Plugin {
 
 				//const obsidianJustInstalled = this.settings.previousRelease === "0.0.0"
 
-
 				new ReleaseNotes(
 					this.app,
 					this.mediator,
 					//obsidianJustInstalled ? null :
 					PLUGIN_VERSION
 				).open();
+
+				//await this.profileLeafUpdateDailyNotes('1/2')
+				//await this.profileLeafUpdateDailyNotes(Math.round(pointsForDailyChallenge * (this.mediator.getSettingNumber('badgeBoosterFactor') + this.mediator.getSettingNumber('streakbooster'))) + 'EP | ' + this.mediator.getSettingNumber('dailyNoteCreationTask') + '/2')
+				//await this.profileLeafUpdateWeeklyNotes(Math.round(pointsForWeeklyChallenge * (this.mediator.getSettingNumber('badgeBoosterFactor') + this.mediator.getSettingNumber('streakbooster'))) + 'EP | ' + this.mediator.getSettingNumber('weeklyNoteCreationTask') + '/7')
 
 
 				//await this.giveStatusPoints(10000,'')
@@ -433,27 +433,33 @@ export default class gamification extends Plugin {
 	}
 
 
-	async getLeafAndView() {
-		const showProfileLeaf = this.mediator.getSettingBoolean('showProfileLeaf');
-		if (!showProfileLeaf) {
-			return { leaf: null, view: null };
-		}
-
+	async getLeafAndView(): Promise<GamifiedPkmProfileView | null> {
 		const { workspace } = this.app;
-		let leaf = null;
-		const leaves = this.app.workspace.getLeavesOfType(VIEW_TYPE_GAMIFICATION_PROFILE);
 
-		if (leaves.length > 0) {
-			leaf = leaves[0];
-		} else {
-			leaf = workspace.getRightLeaf(false);
-			// @ts-ignore
-			await leaf.setViewState({ type: VIEW_TYPE_GAMIFICATION_PROFILE, active: true });
+		let leaf = workspace.getLeavesOfType(VIEW_TYPE_GAMIFICATION_PROFILE)[0];
+
+		if (!leaf) {
+			const newLeaf = workspace.getRightLeaf(false);
+			if (!newLeaf) {
+				console.error("Could not create a right leaf. Workspace might not be ready.");
+				return null;
+			}
+			leaf = newLeaf;
+
+			await leaf.setViewState({
+				type: VIEW_TYPE_GAMIFICATION_PROFILE,
+				active: true
+			});
 		}
 
-		// @ts-ignore
-		return leaf.view;
+		if (leaf && leaf.view instanceof GamifiedPkmProfileView) {
+			return leaf.view;
+		}
+
+		return null;
 	}
+
+
 
 
 	async activateView() {
@@ -610,7 +616,7 @@ export default class gamification extends Plugin {
 				const fileNameRate = this.maturityCalculator.rateLengthFilename(file.name);
 				const inlinkNumber = this.maturityCalculator.count_inlinks(file);
 				const inlinkClass = this.maturityCalculator.rateInlinks(inlinkNumber)//, fileCountMap.size);
-				const rateOut = this.maturityCalculator.rateOutlinks(this.maturityCalculator.getNumberOfOutlinks(file, this.app));
+				const rateOut = this.maturityCalculator.rateOutlinks(this.maturityCalculator.getNumberOfOutlinks(file));
 				const noteMajurity = this.maturityCalculator.rateLevelOfMaturity(rateFileLength, fileNameRate, inlinkClass, rateOut, rateProgressiveSum);
 
 				try {
@@ -705,14 +711,58 @@ export default class gamification extends Plugin {
 	}
 
 
-	private writeFrontmatter(frontmatter: any, fileNameRate: number, rateFileLength: number, inlinkClass: number, rateOut: number, rateProgressiveSum: number, noteMajurity: number) {
-		frontmatter['title-class'] = this.maturityCalculator.rateDirection(frontmatter['title-class'], fileNameRate)
-		frontmatter['note-length-class'] = this.maturityCalculator.rateDirection(frontmatter['note-length-class'], rateFileLength)
-		frontmatter['inlink-class'] = this.maturityCalculator.rateDirection(frontmatter['inlink-class'], inlinkClass)
-		frontmatter['outlink-class'] = this.maturityCalculator.rateDirection(frontmatter['outlink-class'], rateOut)
-		frontmatter['progressive-summarization-maturity'] = this.maturityCalculator.rateDirection(frontmatter['progressive-summarization-maturity'], rateProgressiveSum)
-		frontmatter['note-maturity'] = this.maturityCalculator.rateDirection(frontmatter['note-maturity'], noteMajurity)
+	private writeFrontmatter(
+		frontmatter: NoteFrontmatter,
+		fileNameRate: number,
+		rateFileLength: number,
+		inlinkClass: number,
+		rateOut: number,
+		rateProgressiveSum: number,
+		noteMaturity: number // Fixed the typo here too!
+	) {
+
+		frontmatter['title-class'] = this.maturityCalculator.rateDirection(
+			frontmatter['title-class']?.toString() ?? "",
+			fileNameRate
+		);
+
+		frontmatter['note-length-class'] = this.maturityCalculator.rateDirection(
+			frontmatter['note-length-class']?.toString() ?? "",
+			rateFileLength
+		);
+
+		frontmatter['inlink-class'] = this.maturityCalculator.rateDirection(
+			frontmatter['inlink-class']?.toString() ?? "",
+			inlinkClass
+		);
+
+		frontmatter['outlink-class'] = this.maturityCalculator.rateDirection(
+			frontmatter['outlink-class']?.toString() ?? "",
+			rateOut
+		);
+
+		frontmatter['progressive-summarization-maturity'] = this.maturityCalculator.rateDirection(
+			frontmatter['progressive-summarization-maturity']?.toString() ?? "",
+			rateProgressiveSum
+		);
+
+		frontmatter['note-maturity'] = this.maturityCalculator.rateDirection(
+			frontmatter['note-maturity']?.toString() ?? "",
+			noteMaturity
+		);
 	}
+
+
+	/*
+	private writeFrontmatter2(frontmatter: any, fileNameRate: number, rateFileLength: number, inlinkClass: number, rateOut: number, rateProgressiveSum: number, noteMajurity: number) {
+			frontmatter['title-class'] = this.maturityCalculator.rateDirection(frontmatter['title-class'], fileNameRate)
+			frontmatter['note-length-class'] = this.maturityCalculator.rateDirection(frontmatter['note-length-class'], rateFileLength)
+			frontmatter['inlink-class'] = this.maturityCalculator.rateDirection(frontmatter['inlink-class'], inlinkClass)
+			frontmatter['outlink-class'] = this.maturityCalculator.rateDirection(frontmatter['outlink-class'], rateOut)
+			frontmatter['progressive-summarization-maturity'] = this.maturityCalculator.rateDirection(frontmatter['progressive-summarization-maturity'], rateProgressiveSum)
+			frontmatter['note-maturity'] = this.maturityCalculator.rateDirection(frontmatter['note-maturity'], noteMajurity)
+		}
+	*/
 
 
 	onunload() {
@@ -720,7 +770,7 @@ export default class gamification extends Plugin {
 
 		// Clear the timer when the plugin is unloaded
 		if (this.timerId !== null) {
-			clearInterval(this.timerId);
+			window.clearInterval(this.timerId);
 			this.timerId = null;
 		}
 
@@ -729,14 +779,12 @@ export default class gamification extends Plugin {
 		}
 
 		this.isProfileViewOpen = false; // Reset the flag when the plugin is unloaded
+
+		//this.app.workspace.detachLeavesOfType(VIEW_TYPE_GAMIFICATION_PROFILE);
 	}
 
 
 	async openProfileView() {
-		if (this.isProfileViewOpen) {
-			return;
-		}
-
 		const existingLeaf = this.app.workspace.getLeavesOfType(VIEW_TYPE_GAMIFICATION_PROFILE)[0];
 
 		if (existingLeaf) {
@@ -744,33 +792,28 @@ export default class gamification extends Plugin {
 			if (requireApiVersion("1.7.2")) {
 				await existingLeaf.loadIfDeferred();
 			}
-			if (existingLeaf.view instanceof GamifiedPkmProfileView) {
-				this.isProfileViewOpen = true;
-				this.mediator.setSettingBoolean('showProfileLeaf', true);
-				return;
-			}
-		}
 
-		const leaf = this.app.workspace.getRightLeaf(false);
+			this.isProfileViewOpen = true;
+			this.mediator.setSettingBoolean('showProfileLeaf', true);
 
-		if (!leaf) {
-			console.error("Failed to get a right leaf. Cannot open the profile view.");
+			await this.actualizeProfileLeaf();
 			return;
 		}
 
-		await leaf.setViewState({ type: VIEW_TYPE_GAMIFICATION_PROFILE });
+		const leaf = this.app.workspace.getRightLeaf(false);
+		if (!leaf) return;
 
-		if (requireApiVersion("1.7.2")) {
-			await leaf.loadIfDeferred();
-		}
-
+		await leaf.setViewState({ type: VIEW_TYPE_GAMIFICATION_PROFILE, active: true });
 		await this.app.workspace.revealLeaf(leaf);
 
+		this.isProfileViewOpen = true;
+		this.mediator.setSettingBoolean('showProfileLeaf', true);
+
 		if (leaf.view instanceof GamifiedPkmProfileView) {
-			this.isProfileViewOpen = true;
-			this.mediator.setSettingBoolean('showProfileLeaf', true);
+			await this.actualizeProfileLeaf();
 		}
 	}
+
 
 
 	closeProfileView() {
@@ -823,7 +866,7 @@ export default class gamification extends Plugin {
 			fileNameRate = this.maturityCalculator.rateLengthFilename(file.name ?? '');
 			inlinkNumber = this.maturityCalculator.count_inlinks(file);
 			inlinkClass = this.maturityCalculator.rateInlinks(inlinkNumber)//, numAllFiles)
-			rateOut = this.maturityCalculator.rateOutlinks(this.maturityCalculator.getNumberOfOutlinks(file, this.app));
+			rateOut = this.maturityCalculator.rateOutlinks(this.maturityCalculator.getNumberOfOutlinks(file));
 
 			const noteMajurity = this.maturityCalculator.rateLevelOfMaturity(rateFileLength, fileNameRate, inlinkClass, rateOut, rateProgressiveSum);
 			
@@ -1269,7 +1312,7 @@ export default class gamification extends Plugin {
 
 
 	async giveBadge(currenLevel: number){
-		const badge = getBadgeForLevel(currenLevel,true)
+		const badge = getBadgeForLevel(currenLevel)
 		const badgeDict = parseBadgeCSV2Dict(this.mediator.getSettingString('receivedBadges'));
 		if (!badgeDict[badge.name]) {
 			await this.writeBadgeCSV(badge, window.moment().format('YYYY-MM-DD'), 'level ' + currenLevel.toString())
@@ -1291,7 +1334,7 @@ export default class gamification extends Plugin {
 
 			if (isNewLevel) {
 				const currentLevel = this.mediator.getSettingNumber('statusLevel');
-				const badge: Badge = getBadgeForLevel(currentLevel, false);
+				const badge: Badge = getBadgeForLevel(currentLevel);
 
 				const noticeDuration = this.mediator.getSettingNumber('timeShowNotice') * mil2sec * 1.2;
 				new Notice(`You've earned the "${badge.name}" badge. ${badge.description}`, noticeDuration);
@@ -1353,7 +1396,7 @@ export default class gamification extends Plugin {
 		try {
 			let nextBadgeLevel = 0
 			for (let i = currentLevel; i < 110; i++){
-				const badge : Badge = getBadgeForLevel(i, true)
+				const badge : Badge = getBadgeForLevel(i)
 				// Regular expression to match the level number
 				const levelRegex = /level (\d+)/;
 				// Extract the level number using the regular expression
