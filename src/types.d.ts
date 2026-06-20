@@ -1,26 +1,32 @@
 // types.d.ts
-import { App } from "obsidian";
+import { App, TFile, Link } from "obsidian";
 
 declare module "obsidian-dataview" {
-	// 1. Define what a DataArray looks like (the collection dv.pages() returns)
 	export interface DataArray<T> {
 		length: number;
-		/** Filters the data array by a predicate. */
 		where(predicate: (obj: T) => boolean): DataArray<T>;
-		/** Maps the data array. */
 		map<U>(mapper: (obj: T) => U): DataArray<U>;
-		/** Accesses the raw array. */
 		array(): T[];
-		// Add other methods if you use them (e.g., sort, limit)
+	}
+
+	// Define the structure of a Dataview Page
+	export interface DataviewPage {
+		file: {
+			path: string;
+			name: string;
+			frontmatter: Record<string, any>;
+			inlinks: DataArray<Link>;  // or Link[]
+			outlinks: DataArray<Link>; // or Link[]
+			[key: string]: any;
+		};
+		[key: string]: any;
 	}
 
 	export interface DataviewApi {
-		page(path: string): Record<string, unknown> | undefined;
-
-		// 2. Change Array<...> to DataArray<...>
-		pages(query?: string): DataArray<Record<string, unknown>>;
-
-		fileValues(path: string): Record<string, unknown>;
+		// Change from Record<string, unknown> to DataviewPage
+		page(path: string): DataviewPage | undefined;
+		pages(query?: string): DataArray<DataviewPage>;
+		fileValues(path: string): Record<string, any>;
 	}
 
 	export function getAPI(app?: App): DataviewApi | undefined;

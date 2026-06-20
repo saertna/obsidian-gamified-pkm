@@ -101,6 +101,13 @@ export class GamifiedPkmProfileView extends ItemView {
 
 		this.initializeDataview();
 		this.mediator.updateProfileLeaf();
+
+		this.registerEvent(
+			this.app.metadataCache.on("dataview:metadata-change" as any, () => {
+				console.debug("Dataview index updated, refreshing maturity counts...");
+				this.updateMaturityCounts();
+			})
+		);
 	}
 
 	initializeDataview() {
@@ -109,6 +116,7 @@ export class GamifiedPkmProfileView extends ItemView {
 			console.error("Dataview plugin is not enabled.");
 			return;
 		}
+		// Initial update when the view opens
 		this.updateMaturityCounts();
 	}
 
