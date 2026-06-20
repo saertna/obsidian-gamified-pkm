@@ -1,5 +1,5 @@
 // types.d.ts
-import { App, TFile, Link } from "obsidian";
+import { App, _TFile, Link } from "obsidian";
 
 declare module "obsidian-dataview" {
 	export interface DataArray<T> {

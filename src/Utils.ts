@@ -16,7 +16,7 @@ interface MappedRelease {
 }
 
 let versionUpdateChecked = false;
-export const checkGamifiedPkmVersion = async (app: App) => {
+export const checkGamifiedPkmVersion = async (_app: App) => {
 	if (versionUpdateChecked) {
 		return;
 	}

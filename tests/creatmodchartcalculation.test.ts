@@ -3,7 +3,7 @@ import { describe } from 'node:test';
 
 
 // Mock data
-interface MockFile {
+interface _MockFile {
 	stat: {
 		ctime: number;
 		mtime: number;
@@ -139,13 +139,13 @@ describe('getModificationDates', () => {
 describe('createChartFormat', () => {
   it('should return chart full length', () => {
   const actual = createChartFormat("Jan 22, Feb 22, Mar 22, April 22", "0, 1, 2, 3", 0);
-  const expected = '```chart\ntype: bar\nlabels: [Jan 22, Feb 22, Mar 22, April 22]\nseries:\n  - title: modified\n    data: [0, 1, 2, 3]\ntension: 0.2\nwidth: 80 %\nlabelColors: false\nfill: false\nbeginAtZero: false\nbestFit: false\nbestFitTitle: undefined\nbestFitNumber: 0\nstacked: true\nyTitle: \"Number of Notes\"\nxTitle: \"Months\"\nxMin: 0\n```'
+  const expected = '```chart\ntype: bar\nlabels: [Jan 22, Feb 22, Mar 22, April 22]\nseries:\n  - title: modified\n    data: [0, 1, 2, 3]\ntension: 0.2\nwidth: 80 %\nlabelColors: false\nfill: false\nbeginAtZero: false\nbestFit: false\nbestFitTitle: undefined\nbestFitNumber: 0\nstacked: true\nyTitle: "Number of Notes"\nxTitle: "Months"\nxMin: 0\n```'
   expect(actual).toStrictEqual(expected);
   });
   
   it('should return chart with only 2 months visible', () => {
     const actual = createChartFormat("Jan 22, Feb 22, Mar 22, April 22", "0, 1, 2, 3", 2);
-    const expected = '```chart\ntype: bar\nlabels: [Jan 22, Feb 22, Mar 22, April 22]\nseries:\n  - title: modified\n    data: [0, 1, 2, 3]\ntension: 0.2\nwidth: 80 %\nlabelColors: false\nfill: false\nbeginAtZero: false\nbestFit: false\nbestFitTitle: undefined\nbestFitNumber: 0\nstacked: true\nyTitle: \"Number of Notes\"\nxTitle: \"Months\"\nxMin: 2\n```'
+    const expected = '```chart\ntype: bar\nlabels: [Jan 22, Feb 22, Mar 22, April 22]\nseries:\n  - title: modified\n    data: [0, 1, 2, 3]\ntension: 0.2\nwidth: 80 %\nlabelColors: false\nfill: false\nbeginAtZero: false\nbestFit: false\nbestFitTitle: undefined\nbestFitNumber: 0\nstacked: true\nyTitle: "Number of Notes"\nxTitle: "Months"\nxMin: 2\n```'
     expect(actual).toBe(expected);
   });
   

@@ -495,7 +495,7 @@ export class MultiSelectModal extends Modal {
 			return;
 		}
 
-		const stock = this.boosters[labelText] || 0;
+		const _stock = this.boosters[labelText] || 0;
 
 		// Use the booster's 'id' for a consistent DOM element selector
 		const stockInfoSelector = `.booster-item-${boosterDefinition.id}`; // Example class: 'booster-item-temporalTweaker'

@@ -26,6 +26,11 @@
   "include": [
 	  "node_modules/@types",
 	  "src/**/*.ts",
-	  "**/ReactView.tsx"
-, "jest.config.test"  ]
+	  "**/ReactView.tsx",
+	  "**/*.tsx"
+, "jest.config.test"  ],
+	"exclude": [
+		"node_modules",
+		"dist"
+	]
 }

@@ -6,7 +6,7 @@ import { createRoot } from "react-dom/client";
 
 const VIEW_TYPE_EXAMPLE = "example-view";
 
-class ExampleView extends ItemView {
+class _ExampleView extends ItemView {
   constructor(leaf: WorkspaceLeaf) {
     super(leaf);
   }
