@@ -15,6 +15,10 @@ I develop this plugin as a hobby, spending my free time doing this. If you find 
 
 It would mean a lot to me.
 `,
+"0.0.104": 	`
+## Fix
+- fixing crash on mobile devices #105
+`,
 "0.0.103": 	`
 ## hot Fix
 - typing delay #107
