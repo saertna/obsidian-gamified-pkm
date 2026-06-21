@@ -120,41 +120,6 @@ Special shout out for lulunac27a, who stayed tuned and asked to enable the new b
 <div class="gPKM-videoWrapper"><div>
 <iframe width="560" height="315" src="https://www.youtube.com/embed/BOc5jzh_WtM?si=861K3FNrfAu0jJNI" title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 </div></div>
-
-Replace the first table and bar graph with this and you get the new layout. (don't worry, the data will update with the next received points):
-\`\`\`
-\`\`\`gamification-avatar
-image: 
-description: |-2
-    |           |         |
-    | --------- | ------- |
-  | **Level**  | **0** |
-  | Points | 0    |
-  ^levelAndPoints
-  \`\`\`chart
-  type: bar
-  labels: [Experience]
-  series:
-    - title: points reached
-      data: [0]
-    - title: points to earn to level up
-      data: [1000]
-  xMin: 0
-  xMax: 1000
-  tension: 0.2
-  width: 70%
-  labelColors: false
-  fill: false
-  beginAtZero: false
-  bestFit: false
-  bestFitTitle: undefined
-  bestFitNumber: 0
-  stacked: true
-  indexAxis: y
-  xTitle: "progress"
-  legend: false
-\`\`\`
-
 `,
 "0.0.89": `
 ## New
