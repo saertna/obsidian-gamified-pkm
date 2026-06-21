@@ -1,4 +1,4 @@
-import { ItemView, WorkspaceLeaf } from "obsidian";
+import { ItemView, WorkspaceLeaf, debounce } from "obsidian";
 import Chart from 'chart.js/auto';
 import { DataviewApi, getAPI} from "obsidian-dataview";
 import { GamificationMediator } from './GamificationMediator';
@@ -102,12 +102,18 @@ export class GamifiedPkmProfileView extends ItemView {
 		this.initializeDataview();
 		this.mediator.updateProfileLeaf();
 
+		this.updateMaturityCounts();
+
+		const debouncedUpdate = debounce(() => {
+			this.updateMaturityCounts();
+		}, 2500, true);
+
 		this.registerEvent(
 			this.app.metadataCache.on("dataview:metadata-change" as any, () => {
-				console.debug("Dataview index updated, refreshing maturity counts...");
-				this.updateMaturityCounts();
+				debouncedUpdate();
 			})
 		);
+
 	}
 
 	initializeDataview() {
@@ -121,25 +127,38 @@ export class GamifiedPkmProfileView extends ItemView {
 	}
 
 	updateMaturityCounts() {
-		const dv = this.dataview;
-		if (!dv) {
-			console.debug('dataview plugin is not available to update maturity counts');
+		// GATEKEEPER: If the profile leave is not shown, don't update it.
+		if (!this.containerEl.isShown()) {
+			console.debug('Gamification view is hidden, skipping update.');
 			return;
 		}
-		const maturityLevels = [5, 4, 3, 2, 1, 0];
-		maturityLevels.forEach(level => {
-			const count = dv.pages()
-				.where((p: unknown) => {
-					const page = p as DataviewPage;
-					return this.isMaturityMatch(page.file.frontmatter, level);
-				})
-				.length;
-			const span = this.maturitySpans[level];
-			if (span) {
-				span.setText(count.toString());
+
+		const dv = this.dataview;
+		if (!dv) return;
+
+		// single-pass logic
+		const counts: Record<number, number> = { 0: 0, 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 };
+
+		dv.pages().array().forEach((p: any) => {
+			const fm = p.file.frontmatter;
+			if (!fm) return;
+
+			const val = fm['note-maturity'];
+			for (let level = 0; level <= 5; level++) {
+				const validMatches = [level, `${level}`, `${level}➡️`, `${level}⬇️`, `${level}⬆️`];
+				if (validMatches.includes(val)) {
+					counts[level]++;
+					break;
+				}
 			}
 		});
+
+		for (let level = 0; level <= 5; level++) {
+			const span = this.maturitySpans[level];
+			if (span) span.setText(counts[level].toString());
+		}
 	}
+
 
 
 	private isMaturityMatch(frontmatter: Record<string, any>, targetLevel: number): boolean {
