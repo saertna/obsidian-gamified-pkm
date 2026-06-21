@@ -15,6 +15,10 @@ I develop this plugin as a hobby, spending my free time doing this. If you find 
 
 It would mean a lot to me.
 `,
+"0.0.103": 	`
+## hot Fix
+- typing delay #107
+`,
 "0.0.102": 	`
 ## Fix
 - Maturity list in profile leafe get's updated directly
