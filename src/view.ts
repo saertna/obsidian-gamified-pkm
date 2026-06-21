@@ -128,36 +128,38 @@ export class GamifiedPkmProfileView extends ItemView {
 
 	updateMaturityCounts() {
 		// GATEKEEPER: If the profile leave is not shown, don't update it.
-		if (!this.containerEl.isShown()) {
-			console.debug('Gamification view is hidden, skipping update.');
-			return;
-		}
+		if (!this.containerEl.isShown()) return;
 
 		const dv = this.dataview;
 		if (!dv) return;
 
-		// single-pass logic
+		// Initialize counters for single-pass logic instead of loops
 		const counts: Record<number, number> = { 0: 0, 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 };
 
-		dv.pages().array().forEach((p: any) => {
-			const fm = p.file.frontmatter;
+		(dv.pages().array() as DataviewPage[]).forEach((page) => {
+			const fm = page.file.frontmatter;
 			if (!fm) return;
 
 			const val = fm['note-maturity'];
+			if (val === undefined) return;
+
 			for (let level = 0; level <= 5; level++) {
-				const validMatches = [level, `${level}`, `${level}➡️`, `${level}⬇️`, `${level}⬆️`];
-				if (validMatches.includes(val)) {
+				if (this.isMaturityMatch(fm, level)) {
 					counts[level]++;
 					break;
 				}
 			}
 		});
 
+		// Update the UI
 		for (let level = 0; level <= 5; level++) {
 			const span = this.maturitySpans[level];
-			if (span) span.setText(counts[level].toString());
+			if (span) {
+				span.setText(counts[level].toString());
+			}
 		}
 	}
+
 
 
 
