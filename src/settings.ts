@@ -5,7 +5,7 @@ import gamification from './main'
 
 
 export const defaultSettings: Partial<ISettings> = {
-  enableInitCommand: "U2FsdGVkX1+7lWe/h95uqzgl27JBGW2iki7sBwk44YQ=",
+  enableInitCommand: "U2FsdGVkX1/FCp2zWbm+HCn6W7OPZu+9EeMrcDw5cq8=",
   bindEnter: "U2FsdGVkX18RzGkyLEaTSnYuglT9lfhjvsi1mmI8BLo=",
   bindTab: "U2FsdGVkX18hvqMohlkOlQWRrDXthNh0Y6iIU31+fgM=",
   avatarPageName: "U2FsdGVkX19tx7HOhFe//jFZyT7M8iP/57yVK108QS6jyjHSUe6mc5Wqzpt2vdiQ",
