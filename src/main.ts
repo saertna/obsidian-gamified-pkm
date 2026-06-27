@@ -708,6 +708,7 @@ export default class gamification extends Plugin {
 
 			new ModalInformationbox(this.app, `Finalized gamification initialization. \nCongratulation, you earned ${pointsReceived} Points! \n\nCheck the Profile Leave. \n\nYou received an initialisation Booster active for your first level ups. Game on!`).open();
 		}
+		await this.mediator.updateProfileLeaf();
 	}
 
 
