@@ -66,6 +66,7 @@ export default class gamification extends Plugin {
 	async onload() {
 		console.debug('obsidian-pkm-gamification loaded!');
 
+		this.settings = {} as ISettings;
 		this.mediator = new GamificationMediatorImpl(this.settings, this);
 		this.maturityCalculator = new MaturityCalculator(this.app);
 
