@@ -5,7 +5,7 @@ import gamification from './main'
 
 
 export const defaultSettings: Partial<ISettings> = {
-  enableInitCommand: "U2FsdGVkX1+7lWe/h95uqzgl27JBGW2iki7sBwk44YQ=",
+  enableInitCommand: "U2FsdGVkX19hfY82P6WPBRcM/nSiKT9Giiw4EAjyrD0=",
   bindEnter: "U2FsdGVkX18RzGkyLEaTSnYuglT9lfhjvsi1mmI8BLo=",
   bindTab: "U2FsdGVkX18hvqMohlkOlQWRrDXthNh0Y6iIU31+fgM=",
   avatarPageName: "U2FsdGVkX19tx7HOhFe//jFZyT7M8iP/57yVK108QS6jyjHSUe6mc5Wqzpt2vdiQ",
@@ -100,11 +100,11 @@ export const defaultSettings: Partial<ISettings> = {
   delayLoadTime: "U2FsdGVkX19TLndonGY4Y8vHuZFfLJ5gZ2t/CLprh0o=",
   timeShowNotice: "U2FsdGVkX190u8cOsylOs1cQ8MeZFq+i+Wv4ox6qq0k=",
   receivedBadges: "U2FsdGVkX1/skTUHmzuMYD86hDA/uF1kElPVYm04ijQ=",
-  showNewVersionNotification: "U2FsdGVkX1+7lWe/h95uqzgl27JBGW2iki7sBwk44YQ=",
+  showNewVersionNotification: "U2FsdGVkX1/y6Pr7QM3tNgbu3vlzEtuoixAjhiP2U2Q=",
   autoRateOnChange: "U2FsdGVkX1/KT5I5txOiZ+r6Aa1F5RuE5b4eqpaZAqQ=",
   autoRateOnChangeDelayTime: "U2FsdGVkX1/RiGtHePLD9og+g+w+DL31vVK02vCSkQQ=",
   previousRelease: "U2FsdGVkX1+z55uCXdMxdGtgg5oBmTGQPDroIP0PDIk=",
-  showReleaseNotes: "U2FsdGVkX1+7lWe/h95uqzgl27JBGW2iki7sBwk44YQ=",
+  showReleaseNotes: "U2FsdGVkX1/okPzDCrfduJda//7xOrIXyUWGb1SO3Us=",
   avatarPicture: "U2FsdGVkX18zJk4m8pNboYxTAVmT5KytaqxAsTw/50I=",
   colorBarReceived: "U2FsdGVkX19GLvJtvLLriVKTDDLMVt+P7ysHKoOcIb0=",
   colorBarToGo: "U2FsdGVkX1/8uFFZ/kZeDb2YWMKM8h8rzssbPWBGZ7c=",

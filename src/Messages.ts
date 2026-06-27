@@ -15,6 +15,11 @@ I develop this plugin as a hobby, spending my free time doing this. If you find 
 
 It would mean a lot to me.
 `,
+"0.0.105": 	`
+## Fix
+- show init command on fresh installation
+- actualize profile leave after fresh initialisation
+`,
 "0.0.104": 	`
 ## Fix
 - fixing crash on mobile devices #105
