@@ -108,7 +108,8 @@ export const defaultSettings: Partial<ISettings> = {
   avatarPicture: "U2FsdGVkX18zJk4m8pNboYxTAVmT5KytaqxAsTw/50I=",
   colorBarReceived: "U2FsdGVkX19GLvJtvLLriVKTDDLMVt+P7ysHKoOcIb0=",
   colorBarToGo: "U2FsdGVkX1/8uFFZ/kZeDb2YWMKM8h8rzssbPWBGZ7c=",
-  showProfileLeaf: "U2FsdGVkX1+7lWe/h95uqzgl27JBGW2iki7sBwk44YQ="
+  showProfileLeaf: "U2FsdGVkX1+7lWe/h95uqzgl27JBGW2iki7sBwk44YQ=",
+  selectionLogicForRating: "U2FsdGVkX1/1/9F4IhoD0pKoms3dszIeOl/RhIVuAAY="
 };
 
 export interface DynamicSettings {
@@ -208,6 +209,7 @@ export interface ISettings extends DynamicSettings{
   colorBarReceived: string
   colorBarToGo: string
   showProfileLeaf: string
+  selectionLogicForRating: string
 	//[key: string]: number | string | boolean | MomentInput;
 }
 
@@ -308,6 +310,7 @@ export class GamificationPluginSettings extends PluginSettingTab {
 	public colorBarReceived: string;
 	public colorBarToGo: string;
     public showProfileLeaf: string;
+	public selectionLogicForRating: string;
 
 	constructor(app: App, plugin: gamification, mediator: GamificationMediator) {
 		super(app, plugin as never);
@@ -334,32 +337,6 @@ export class GamificationPluginSettings extends PluginSettingTab {
 					}),
 			);
 
-		new Setting(containerEl)
-			.setName('#tags to ignore')
-			.setDesc('Enter tags without # and separate with ", ". Include nested tags.')
-			.addText(text =>
-				text
-					.setPlaceholder('Enter your tag1, tag2/subtag, …')
-					.setValue(this.mediator.getSettingString('tagsExclude'))
-					.onChange(async (value) => {
-						this.mediator.setSettingString('tagsExclude', value);
-						await this.mediator.saveSettings();
-					}),
-			);
-
-
-		new Setting(containerEl)
-			.setName('Folder to ignore')
-			.setDesc('Enter folders whose content shall be ignored. Separate with ", ".')
-			.addText(text =>
-				text
-					.setPlaceholder('Enter your folder1, folder2, …')
-					.setValue(this.mediator.getSettingString('folderExclude'))
-					.onChange(async (value) => {
-						this.mediator.setSettingString('folderExclude', value);
-						await this.mediator.saveSettings();
-					}),
-			);
 
 		new Setting(containerEl)
 			.setName('Show profile leaf')
@@ -416,6 +393,46 @@ export class GamificationPluginSettings extends PluginSettingTab {
 						this.mediator.setSettingString('avatarPicture', value);
 						await this.mediator.saveSettings();
 						this.mediator.updateProfileLeafPic();
+					}),
+			);
+
+		new Setting(containerEl).setName('Selection').setHeading().setDesc("If you don't want to include all files, you can specify this here. You can choose if you follow the principle to tell what to include, or what to exclude.")
+
+		new Setting(containerEl)
+			.setName('Include logic or exclude logic')
+			.setDesc('You can define if you want to follow an include logic `off` or an exclude logic `on`')
+			.addToggle((toggle) =>
+				toggle
+					.setValue(this.mediator.getSettingBoolean('selectionLogicForRating'))
+					.onChange(async (value) => {
+						this.mediator.setSettingBoolean('selectionLogicForRating', value);
+						await this.mediator.saveSettings();
+					}),
+			);
+
+		new Setting(containerEl)
+			.setName('#tags to include/exclude, depending on setting')
+			.setDesc('Enter tags without # and separate with ", ". Include nested tags.')
+			.addText(text =>
+				text
+					.setPlaceholder('Enter your tag1, tag2/subtag, …')
+					.setValue(this.mediator.getSettingString('tagsExclude'))
+					.onChange(async (value) => {
+						this.mediator.setSettingString('tagsExclude', value);
+						await this.mediator.saveSettings();
+					}),
+			);
+
+		new Setting(containerEl)
+			.setName('Folder to include/exclude, depending on setting')
+			.setDesc('Enter folders whose content shall be included or ignored. Separate with ", ".')
+			.addText(text =>
+				text
+					.setPlaceholder('Enter your folder1, folder2, …')
+					.setValue(this.mediator.getSettingString('folderExclude'))
+					.onChange(async (value) => {
+						this.mediator.setSettingString('folderExclude', value);
+						await this.mediator.saveSettings();
 					}),
 			);
 

@@ -589,12 +589,15 @@ export default class gamification extends Plugin {
 		new ModalInformationbox(this.app, `The Game is now reset.`).open();
     }
 
-
     private async initializeGame(statusbarGamification: HTMLSpanElement) {
 		this.mediator.setSettingString('gamificationStartDate', format(new Date(), 'yyyy-MM-dd'));
 		await this.saveSettings();
 
-		const fileCountMap: TFile[] | null = await this.maturityCalculator.getFileMap(this.app, this.mediator.getSettingString('tagsExclude'), this.mediator.getSettingString('folderExclude'));
+		const fileCountMap: TFile[] | null = await this.maturityCalculator.getFileMap(
+			this.app, this.mediator.getSettingString('tagsExclude'),
+			this.mediator.getSettingString('folderExclude'),
+			this.mediator.getSettingBoolean('selectionLogicForRating')
+		);
 		if (fileCountMap !== null) {
 			let pointsReceived = 0; // To have one message at the end, how many points received
 
