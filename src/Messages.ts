@@ -15,6 +15,10 @@ I develop this plugin as a hobby, spending my free time doing this. If you find 
 
 It would mean a lot to me.
 `,
+"0.0.106": 	`
+## new
+- define in settings if you want use an include logic or exclude logic when using tags and folders when initializing the game.
+`,
 "0.0.105": 	`
 ## Fix
 - show init command on fresh installation
