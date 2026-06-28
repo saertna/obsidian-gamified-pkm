@@ -591,7 +591,7 @@ export default class gamification extends Plugin {
 
     private async initializeGame(statusbarGamification: HTMLSpanElement) {
 		this.mediator.setSettingString('gamificationStartDate', format(new Date(), 'yyyy-MM-dd'));
-		await this.saveSettings();
+		await this.mediator.saveSettings();
 
 		const fileCountMap: TFile[] | null = await this.maturityCalculator.getFileMap(
 			this.app, this.mediator.getSettingString('tagsExclude'),
