@@ -25,8 +25,8 @@ It would mean a lot to me.
 |No tags, no folders | ✅ All files (except system) | ✅ All files (except system)|
 |Tags specified, no folders | ✅ Only files with those tags | ✅ Excludes files with those tags|
 |Folders specified, no tags | ✅ Only files in those folders | ✅ Excludes files in those folders|
-|Both specified | ✅ Must match both (AND) | ❌ Excluded if matches either (OR)|
-|.trash / .obsidian | ❌ Always excluded | ❌ Always excluded|
+|Both specified | ✅ Must match both (AND) | ❌ Excluded if matches either (OR)|
+|.trash / .obsidian | ❌ Always excluded | ❌ Always excluded|
 ## fix
 - when initializing game, data.json could be empty and all init xp lost
 `,
@@ -68,7 +68,7 @@ It would mean a lot to me.
 - Creating and attaching "style" elements is not allowed. 
 `,
 "0.0.97": `
-This release deals fully with the representation of the boosters and ingredients. Beside adding graphical representations for them, also the style is now improved. Have a look at the crafting table!
+This release deals fully with the representation of the boosters and ingredients. Besides adding graphical representations for them, also the style is now improved. Have a look at the crafting table!
 ## New
 - visual redesigned booster area with symbols
 - Introducing ingredient symbols
