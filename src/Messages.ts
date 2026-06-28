@@ -15,6 +15,21 @@ I develop this plugin as a hobby, spending my free time doing this. If you find 
 
 It would mean a lot to me.
 `,
+"0.0.106": 	`
+## new
+- define in settings if you want use an include logic or exclude logic when using tags and folders when initializing the game.
+
+
+|Scenario | Include Mode (false) | Exclude Mode (true)|
+|-- | -- | --|
+|No tags, no folders | ✅ All files (except system) | ✅ All files (except system)|
+|Tags specified, no folders | ✅ Only files with those tags | ✅ Excludes files with those tags|
+|Folders specified, no tags | ✅ Only files in those folders | ✅ Excludes files in those folders|
+|Both specified | ✅ Must match both (AND) | ❌ Excluded if matches either (OR)|
+|.trash / .obsidian | ❌ Always excluded | ❌ Always excluded|
+## fix
+- when initializing game, data.json could be empty and all init xp lost
+`,
 "0.0.105": 	`
 ## Fix
 - show init command on fresh installation
@@ -53,7 +68,7 @@ It would mean a lot to me.
 - Creating and attaching "style" elements is not allowed. 
 `,
 "0.0.97": `
-This release deals fully with the representation of the boosters and ingredients. Beside adding graphical representations for them, also the style is now improved. Have a look at the crafting table!
+This release deals fully with the representation of the boosters and ingredients. Besides adding graphical representations for them, also the style is now improved. Have a look at the crafting table!
 ## New
 - visual redesigned booster area with symbols
 - Introducing ingredient symbols

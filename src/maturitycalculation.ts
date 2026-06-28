@@ -476,46 +476,66 @@ export class MaturityCalculator {
 	};
 
 
-	public getFileMap = async (app: App, excludeTag: string, excludeFolder: string): Promise<TFile[] | null> => {
+	public getFileMap = async (
+		app: App,
+		excludeTag: string,
+		excludeFolder: string,
+		includeMode: boolean,  // ← NEW parameter: true=exclude, false=include
+	): Promise<TFile[] | null> => {
 		try {
 			const { vault } = app;
 
-			// 1. Process Tags to ignore
-			let excludedSubstrings: string[] = [];
+			// 1. Process Tags
+			let filterTags: string[] = [];
 			if (excludeTag && excludeTag.trim().length > 0) {
-				excludedSubstrings = excludeTag.split(',').map(t => t.trim());
+				filterTags = excludeTag.split(',').map(t => t.trim());
 			}
 
-			// 2. Process Folders to ignore
-			let excludedFolders: string[] = [];
+			// 2. Process Folders
+			let filterFolders: string[] = [];
 			if (excludeFolder && excludeFolder.trim().length > 0) {
-				excludedFolders = excludeFolder.split(',').map(f => f.trim());
+				filterFolders = excludeFolder.split(',').map(f => f.trim());
 			}
 
-			// 3. FIX: Use dynamic configDir instead of hardcoded '.obsidian'
-			// Also include the trash folder
-			excludedFolders.push(app.vault.configDir, '.trash');
+			// 3. Always exclude system folders (regardless of mode)
+			const systemFolders = [app.vault.configDir, '.trash'];
 
 			const fileArray: TFile[] = [];
 			const files = await vault.getMarkdownFiles();
 
 			for (const file of files) {
-				// A: Check if the file is inside an excluded folder
-				// We use startsWith to ensure we only catch folders, not files with similar names
-				const isInExcludedFolder = excludedFolders.some(folder =>
+				// A: ALWAYS skip system folders
+				const isInSystemFolder = systemFolders.some(folder =>
+					file.path === folder || file.path.startsWith(folder + '/')
+				);
+				if (isInSystemFolder) continue;
+
+				// B: Check folder & tag filtering based on mode
+				const fileContents = await app.vault.read(file);
+
+				const isInFilteredFolder = filterFolders.some(folder =>
 					file.path === folder || file.path.startsWith(folder + '/')
 				);
 
-				if (isInExcludedFolder) continue; // Skip this file immediately
+				const hasFilteredTag = filterTags.length > 0 &&
+					filterTags.some(tag => fileContents.includes(tag));
 
-				// B: Check file content for excluded tags
-				// Optimization: Only read the file if we haven't already excluded it by folder
-				const fileContents = await app.vault.read(file);
-				const hasExcludedTag = excludedSubstrings.length > 0 &&
-					excludedSubstrings.some(substring => fileContents.includes(substring));
-
-				if (!hasExcludedTag) {
+				if (includeMode) {
+					// 🟢 EXCLUDE MODE (selectionLogicForRating = true)
+					// Skip files matching the filters
+					if (isInFilteredFolder) continue;
+					if (hasFilteredTag) continue;
 					fileArray.push(file);
+
+				} else {
+					// 🔵 INCLUDE MODE (selectionLogicForRating = false)
+					// Only keep files that match the filters
+					const matchesFolder = filterFolders.length === 0 || isInFilteredFolder;
+					const matchesTag = filterTags.length === 0 || hasFilteredTag;
+
+					if (matchesFolder && matchesTag) {
+						fileArray.push(file);
+					}
 				}
 			}
 
@@ -525,6 +545,7 @@ export class MaturityCalculator {
 			return null;
 		}
 	};
+
 
 
 }
