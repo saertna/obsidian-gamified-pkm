@@ -206,7 +206,7 @@ export class MultiSelectModal extends Modal {
 			this.contentEl.appendChild(layout);
 		}
 
-		requestAnimationFrame(() => {
+		window.requestAnimationFrame(() => {
 			this.contentEl.scrollTop = scrollPos;
 		});
 	}
@@ -286,7 +286,9 @@ export class MultiSelectModal extends Modal {
 					cls: 'booster-stock-count-crafting'
 				});
 				// Visual cue: if stock is 0, make it a bit more subtle
-				if (stock === 0) stockDisplay.style.color = 'var(--text-muted)';
+				if (stock === 0) stockDisplay.classList.add('gpkm-stock-empty');
+				else stockDisplay.classList.remove('gpkm-stock-empty');
+
 
 				// Wrapper for Ingredients (two line display)
 				const boosterRecipeIngredients = boosterInfoAndIngredients.createDiv({ cls: 'booster-recipe-ingredients' });
@@ -353,7 +355,9 @@ export class MultiSelectModal extends Modal {
 			cls: 'booster-stock-count'
 		});
 		// Optional: make it look a bit different if empty
-		if (stock === 0) stockDisplay.style.color = 'var(--text-muted)';
+		if (stock === 0) stockDisplay.classList.add('gpkm-stock-empty');
+		else stockDisplay.classList.remove('gpkm-stock-empty');
+
 
 		// 3. Create the 'Use' button
 		const useButton = container.createEl('button');
