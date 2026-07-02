@@ -26,7 +26,7 @@ export class ReleaseNotes extends Modal {
 
 	async onClose() {
 		this.contentEl.empty();
-		await this.mediator.loadSettings(); // Assuming loadSettings is now part of the mediator
+		//await this.mediator.loadSettings();
 		this.mediator.setSettingString('previousRelease', PLUGIN_VERSION);
 	}
 
