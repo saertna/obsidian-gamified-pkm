@@ -70,9 +70,9 @@ export default class gamification extends Plugin {
 		this.mediator = new GamificationMediatorImpl(this.settings, this);
 		this.maturityCalculator = new MaturityCalculator(this.app);
 
-		this.addSettingTab(new GamificationPluginSettings(this.app, this, this.mediator));
-
 		await this.mediator.loadSettings();
+
+		this.addSettingTab(new GamificationPluginSettings(this.app, this, this.mediator));
 
 		if(this.mediator.getSettingBoolean('showNewVersionNotification')) {
 			await checkGamifiedPkmVersion(this.app);
@@ -151,7 +151,7 @@ export default class gamification extends Plugin {
 				//this.mediator.setSettingString('weeklyNoteCreationDate', window.moment().subtract(1, 'day').format('DD.MM.YYYY'))
 				//this.mediator.setSettingString('weeklyNoteCreationDate', window.moment().format('DD.MM.YYYY'))
 				//this.mediator.setSettingString('weeklyNoteCreationDate', window.moment().format('DD.MM.YYYY'))
-				//await this.saveSettings();
+				//await this.mediator.saveSettings();
 
 				//new ModalBooster(this.app, ` `, this).open();
 
@@ -1000,7 +1000,7 @@ export default class gamification extends Plugin {
 		if(!isSameDay(window.moment(this.mediator.getSettingString('dailyNoteCreationDate'), 'DD.MM.YYYY'))){
 			this.mediator.setSettingNumber('dailyNoteCreationTask', 0);
 			this.mediator.setSettingString('dailyNoteCreationDate', window.moment().format('DD.MM.YYYY'))
-			await this.saveSettings();
+			await this.mediator.saveSettings();
 			if(debugLogs) console.debug(`reset daily Challenge`)
 			reset = true;
 		}
@@ -1011,7 +1011,7 @@ export default class gamification extends Plugin {
 			this.mediator.setSettingString('weeklyNoteCreationDate', window.moment().subtract(1, 'day').format('DD.MM.YYYY'))
 			await this.decreaseStreakbooster();
 			if(debugLogs) console.debug(`${daysPassed} days passed`)
-			await this.saveSettings();
+			await this.mediator.saveSettings();
 			await this.updateStatusBar(this.statusbarGamification)
 			if(debugLogs) console.debug(`reset weekly Challenge`)
 			reset = true;
@@ -1019,7 +1019,7 @@ export default class gamification extends Plugin {
 		if(isOneDayBefore(window.moment(this.mediator.getSettingString('weeklyNoteCreationDate'), 'DD.MM.YYYY')) && this.mediator.getSettingNumber('weeklyNoteCreationTask') == 7){
 			this.mediator.setSettingNumber('weeklyNoteCreationTask', 0);
 			this.mediator.setSettingString('weeklyNoteCreationDate', window.moment().subtract(1, 'day').format('DD.MM.YYYY'))
-			await this.saveSettings();
+			await this.mediator.saveSettings();
 			reset = true;
 		}
 		if (reset){
@@ -1072,14 +1072,14 @@ export default class gamification extends Plugin {
         if (newDailyNoteCreationTask < 2){
 			newDailyNoteCreationTask ++;
 			this.mediator.setSettingNumber('dailyNoteCreationTask', newDailyNoteCreationTask);
-			await this.saveSettings();
+			await this.mediator.saveSettings();
 
 			if(newDailyNoteCreationTask == 1){
 				await this.actualizeProfileLeaf();
 				if(debugLogs) console.debug(`${newDailyNoteCreationTask}/2 Notes created today.`)
 			} else if (newDailyNoteCreationTask == 2) {
 				await this.increaseStreakbooster(streakboosterIncreaseDaily)
-				await this.saveSettings();
+				await this.mediator.saveSettings();
 				await this.updateStatusBar(this.statusbarGamification)
 				await this.giveStatusPoints(pointsForDailyChallenge,'formIncreaseDailyCreatedNoteCount')
 				const message = getRandomMessageTwoNoteChallenge(pointsForDailyChallenge * (this.mediator.getSettingNumber('badgeBoosterFactor') + this.mediator.getSettingNumber('streakbooster')));
@@ -1104,7 +1104,7 @@ export default class gamification extends Plugin {
 			this.mediator.setSettingString('weeklyNoteCreationDate', window.moment().format('DD.MM.YYYY'))
 			this.mediator.setSettingNumber('weeklyNoteCreationTask', 1);
 			this.mediator.setSettingNumber('weeklyNoteCreationTaskContinuously', 1);
-			await this.saveSettings();
+			await this.mediator.saveSettings();
 		}
 	}
 
@@ -1118,7 +1118,7 @@ export default class gamification extends Plugin {
 			this.mediator.setSettingString('weeklyNoteCreationDate', window.moment().format('DD.MM.YYYY'))
 			this.mediator.setSettingNumber('weeklyNoteCreationTask', currentWeeklyCreatedNotes);
 			this.mediator.setSettingNumber('weeklyNoteCreationTaskContinuously', weeklyNoteCreationTaskContinuously);
-			await this.saveSettings();
+			await this.mediator.saveSettings();
 			await this.checkForContinuouslyNoteCreation(weeklyNoteCreationTaskContinuously)
 			await this.checkForWeeklyNoteChallengeEvaluation(currentWeeklyCreatedNotes);
 		}
@@ -1147,7 +1147,7 @@ export default class gamification extends Plugin {
 			if(debugLogs) console.debug(`${newWeeklyNoteCreationTask}/7 Notes created in a chain.`)
 		} else if (newWeeklyNoteCreationTask == 7) {
 			await this.increaseStreakbooster(streakboosterIncreaseWeekly);
-			await this.saveSettings();
+			await this.mediator.saveSettings();
 			await this.updateStatusBar(this.statusbarGamification)
 			await this.giveStatusPoints(pointsForWeeklyChallenge, 'fromCheckForWeeklyNoteChallengeEvaluation')
 			if(debugLogs) console.debug(`Weekly Challenge reached! ${newWeeklyNoteCreationTask}/7 created in a chain.`)
