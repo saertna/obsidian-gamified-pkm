@@ -348,7 +348,7 @@ export class GamificationPluginSettings extends PluginSettingTab {
 						this.mediator.setSettingBoolean('showProfileLeaf', value);
 						await this.mediator.saveSettings();
 						if(value) {
-							this.mediator.updateProfileLeaf();
+							void this.mediator.updateProfileLeaf();
 						} else {
 							this.mediator.closeProfileView();
 						}

@@ -473,14 +473,13 @@
 	white-space: nowrap;
 }
 
-
-
 .modal-hub-header {
 	text-align: center;
 	margin-bottom: 25px; /* Space before the choice cards */
 	padding-bottom: 15px;
 	border-bottom: 1px solid var(--background-modifier-border); /* Subtle separator */
 }
+
 .modal-hub-title {
 	font-size: 1.8em; /* Larger, more impactful title */
 	font-weight: 700;
@@ -564,6 +563,10 @@
 .gpkm-out-of-stock {
 	opacity: 0.5;
 	cursor: not-allowed;
+}
+
+.gpkm-stock-empty {
+	color: var(--text-muted) !important;
 }
 
 .gpkm-booster-stock-count-crafting {
