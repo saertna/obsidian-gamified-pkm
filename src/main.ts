@@ -79,6 +79,7 @@ export default class gamification extends Plugin {
 		}
 
 
+		/*
 		const delayLoadTime = this.mediator.getSettingNumber('delayLoadTime') * 1000;
 
 		window.setTimeout(() => {
@@ -88,6 +89,8 @@ export default class gamification extends Plugin {
 				this.initializeAfterLayoutReady();
 			});
 		}, 1000 + delayLoadTime);
+
+		 */
 
 
 		// to set timer for reset daily and weekly goals
@@ -996,7 +999,7 @@ export default class gamification extends Plugin {
 
 	async resetDailyGoals(){
 		let reset = false;
-		await this.mediator.loadSettings()
+		//await this.mediator.loadSettings()
 		if(!isSameDay(window.moment(this.mediator.getSettingString('dailyNoteCreationDate'), 'DD.MM.YYYY'))){
 			this.mediator.setSettingNumber('dailyNoteCreationTask', 0);
 			this.mediator.setSettingString('dailyNoteCreationDate', window.moment().format('DD.MM.YYYY'))

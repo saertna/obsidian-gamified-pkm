@@ -15,6 +15,13 @@ I develop this plugin as a hobby, spending my free time doing this. If you find 
 
 It would mean a lot to me.
 `,
+"0.0.108": `
+## hot-fix
+- a race condition could have been set all progress back to initial values, causing progress loss 
+
+Sorry for the short updates after each other. This was a tricky one to catch, and I tried fast to prevent for anyone loosing progress. 
+`,
+
 "0.0.107": `
 ## hot-fix
 - there could have been a situation where all data get's lost during saving them 

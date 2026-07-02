@@ -15,6 +15,7 @@ export class GamificationMediatorImpl implements GamificationMediator {
 	private plugin: gamification;
 	public resourceSvgMap: Record<string, string>;
 	private remainingStock: Record<string, number> = {};
+	private saveTimeoutId: number | null = null;
 
 	constructor(settings: ISettings, plugin: gamification) {
 		this.settings = settings;
@@ -96,12 +97,22 @@ export class GamificationMediatorImpl implements GamificationMediator {
 	}
 
 	async saveSettings(): Promise<void> {
-		await this.plugin.saveData(this.settings);
+		// Debounce: cancel pending save, schedule new one
+		if (this.saveTimeoutId !== null) {
+			window.clearTimeout(this.saveTimeoutId);
+		}
+
+		this.saveTimeoutId = window.setTimeout(async () => {
+			await this.plugin.saveData(this.settings);
+			this.saveTimeoutId = null;
+		}, 100);  // 100ms debounce
 	}
 
 	async loadSettings() {
-		this.settings = Object.assign({}, defaultSettings, await this.plugin.loadData());
-		console.debug('loadSettings()')
+		const loadedData = await this.plugin.loadData();
+		Object.assign(this.settings, defaultSettings, loadedData);
+
+		console.debug('loadSettings() completed', Object.keys(this.settings).length, 'keys loaded');
 	}
 
 	async acquireIngredients(chance:number, min:number, max:number) {
