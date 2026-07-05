@@ -566,7 +566,7 @@
 }
 
 .gpkm-stock-empty {
-	color: var(--text-muted) !important;
+	color: var(--text-muted);
 }
 
 .gpkm-booster-stock-count-crafting {
@@ -574,4 +574,130 @@
 	margin-left: 5px;
 	font-weight: bold;
 }
+
+/* ─── Badge Modal ─────────────────────────────────── */
+.pkm-badge-modal h2 {
+	margin-top: 0;
+	margin-bottom: 1rem;
+	font-size: 1.4em;
+	text-align: center;
+}
+
+/* ─── Empty State ──────────────────────────────────── */
+.pkm-badge-empty-state {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	text-align: center;
+	padding: 24px 16px;
+}
+
+.pkm-badge-empty-icon {
+	font-size: 3em;
+	margin-bottom: 12px;
+}
+
+.pkm-badge-empty-title {
+	font-size: 1.1em;
+	font-weight: 600;
+	color: var(--text-normal);
+	margin: 0 0 8px 0;
+	line-height: 1.5;
+}
+
+.pkm-badge-empty-subtitle {
+	font-size: 0.95em;
+	color: var(--text-muted);
+	margin: 0 0 20px 0;
+	line-height: 1.5;
+}
+
+.pkm-badge-empty-tips {
+	text-align: left;
+	list-style: none;
+	padding: 0;
+	margin: 0;
+}
+
+.badge-empty-tips li {
+	padding: 6px 0;
+	font-size: 0.9em;
+	color: var(--text-muted);
+	line-height: 1.4;
+}
+
+/* ─── Badge List ───────────────────────────────────── */
+.pkm-badge-list {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+	max-height: 400px;
+	overflow-y: auto;
+}
+
+.pkm-badge-item {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	padding: 10px 14px;
+	border-radius: 8px;
+	background: var(--background-secondary);
+	border: 1px solid var(--background-modifier-border);
+	transition: background 0.15s ease, box-shadow 0.15s ease;
+	cursor: default;
+}
+
+.pkm-badge-item:hover {
+	background: var(--background-secondary-alt);
+	box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+}
+
+.pkm-badge-icon {
+	font-size: 1.6em;
+	flex-shrink: 0;
+	width: 36px;
+	text-align: center;
+}
+
+.pkm-badge-info {
+	flex: 1;
+	min-width: 0;
+}
+
+.pkm-badge-name {
+	font-weight: 600;
+	font-size: 1.05em;
+	color: var(--text-normal);
+}
+
+.pkm-badge-meta {
+	display: flex;
+	gap: 12px;
+	margin-top: 2px;
+	font-size: 0.85em;
+	color: var(--text-muted);
+}
+
+.pkm-badge-level {
+	background: var(--interactive-accent);
+	color: var(--text-on-accent);
+	padding: 0 6px;
+	border-radius: 4px;
+	font-size: 0.8em;
+	font-weight: 500;
+}
+
+/* ─── Badge Button in Profile ─────────────────────── */
+.pkm-badge-button-container {
+	margin-top: 16px;
+	text-align: center;
+}
+
+.pkm-show-badges-button {
+	padding: 8px 20px;
+	font-size: 1em;
+	cursor: pointer;
+}
+
+
 

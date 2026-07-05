@@ -1,5 +1,5 @@
 import { Badge } from '../badges'
-export const PLUGIN_VERSION = '0.0.108';
+export const PLUGIN_VERSION = '0.0.109';
 export const pointsNoteMajurity = 100;
 export const pointsMajurity = 10;
 export const pointsForDailyChallenge = 500;
@@ -129,6 +129,13 @@ export const boosterRecipes = [
 </svg>
 `, description: "Infuse your knowledge journey with a dash of randomness using the Fortune Infusion booster. Upon activation, you'll receive a randomized amount of valuable ingredients to aid your knowledge crafting endeavors. Sometimes, you'll strike it lucky with a bountiful yield of 10 ingredients, while most of the time, you'll secure a more modest 2. The rarer, the more ingredients you might acquire. Add a twist of unpredictability to your knowledge management strategy and see how your points soar!" },
 ];
+
+//TODO: add an 'icon' field in badgeNames, badgeNamesInit, and Badge, where the icon definition will be.
+// e.g.:
+// export const badgeNames: Badge[] = [
+//   { name: "Enlightened Novice", description: "...", level: "level 5", icon: "📜" },
+//   // ...
+// ];
 
 export const badgeLevels: number[] = [5, 10, 20, 27, 35, 42, 50, 60, 75, 82, 90, 100];
 export const badgeNames: Badge[] = [
