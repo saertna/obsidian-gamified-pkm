@@ -130,6 +130,13 @@ export const boosterRecipes = [
 `, description: "Infuse your knowledge journey with a dash of randomness using the Fortune Infusion booster. Upon activation, you'll receive a randomized amount of valuable ingredients to aid your knowledge crafting endeavors. Sometimes, you'll strike it lucky with a bountiful yield of 10 ingredients, while most of the time, you'll secure a more modest 2. The rarer, the more ingredients you might acquire. Add a twist of unpredictability to your knowledge management strategy and see how your points soar!" },
 ];
 
+//TODO: add an 'icon' field in badgeNames, badgeNamesInit, and Badge, where the icon definition will be.
+// e.g.:
+// export const badgeNames: Badge[] = [
+//   { name: "Enlightened Novice", description: "...", level: "level 5", icon: "📜" },
+//   // ...
+// ];
+
 export const badgeLevels: number[] = [5, 10, 20, 27, 35, 42, 50, 60, 75, 82, 90, 100];
 export const badgeNames: Badge[] = [
   { name: "Enlightened Novice", description: "Huzzah! You've embarked on the path of knowledge and earned the title of 'Enlightened Novice.' The journey has just begun, and you're already radiating wisdom like a baby sun!", level: "level 5" },
