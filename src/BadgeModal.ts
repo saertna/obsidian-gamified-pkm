@@ -27,7 +27,7 @@ export class BadgeModal extends Modal {
 	onOpen() {
 		const { contentEl } = this;
 		contentEl.empty();
-		contentEl.addClass('gpkm-badge-modal');
+		contentEl.addClass('pkm-badge-modal');
 
 		contentEl.createEl('h2', { text: '🏆 Your Badges' });
 
@@ -35,32 +35,29 @@ export class BadgeModal extends Modal {
 		const badges = this.parseBadges(rawBadges);
 
 		if (badges.length === 0) {
-			contentEl.createEl('p', {
-				text: 'No badges earned yet. Start your journey to collect them all!',
-				cls: 'badge-empty-message'
-			});
+			this.renderEmptyState(contentEl);
 			return;
 		}
 
 		// Sort by date (earliest → latest)
 		badges.sort((a, b) => a.sortDate.getTime() - b.sortDate.getTime());
 
-		const listEl = contentEl.createDiv({ cls: 'badge-list' });
+		const listEl = contentEl.createDiv({ cls: 'pkm-badge-list' });
 
 		for (const badge of badges) {
-			const badgeEl = listEl.createDiv({ cls: 'badge-item' });
+			const badgeEl = listEl.createDiv({ cls: 'pkm-badge-item' });
 
 			// Icon placeholder
-			badgeEl.createSpan({ cls: 'badge-icon', text: '🏅' });
+			badgeEl.createSpan({ cls: 'pkm-badge-icon', text: '🏅' });
 
 			// Info block
-			const infoEl = badgeEl.createDiv({ cls: 'badge-info' });
-			infoEl.createDiv({ cls: 'badge-name', text: badge.name });
+			const infoEl = badgeEl.createDiv({ cls: 'pkm-badge-info' });
+			infoEl.createDiv({ cls: 'pkm-badge-name', text: badge.name });
 
-			const metaEl = infoEl.createDiv({ cls: 'badge-meta' });
+			const metaEl = infoEl.createDiv({ cls: 'pkm-badge-meta' });
 			metaEl.createSpan({ cls: 'badge-date', text: badge.displayDate });
 			if (badge.level) {
-				metaEl.createSpan({ cls: 'badge-level', text: badge.level });
+				metaEl.createSpan({ cls: 'pkmbadge-level', text: badge.level });
 			}
 
 			// Hover tooltip
@@ -70,11 +67,36 @@ export class BadgeModal extends Modal {
 		}
 	}
 
+	// ─── Empty State ───────────────────────────────────────
+	private renderEmptyState(container: HTMLElement) {
+		const emptyEl = container.createDiv({ cls: 'pkm-badge-empty-state' });
+
+		// Encouraging icon
+		emptyEl.createDiv({ cls: 'pkm-badge-empty-icon', text: '🌱' });
+
+		// Main encouraging message
+		emptyEl.createEl('p', {
+			cls: 'pkm-badge-empty-title',
+			text: 'No badges yet — but every great web of knowledge starts with a single note.'
+		});
+
+		// Action-oriented subtext
+		emptyEl.createEl('p', {
+			cls: 'pkm-badge-empty-subtitle',
+			text: 'Keep capturing ideas, connecting thoughts, and rating your notes with note-maturity. Your first badge is closer than you think!'
+		});
+
+		// Quick tips on how to earn badges
+		const tipsList = emptyEl.createEl('ul', { cls: 'pkm-badge-empty-tips' });
+		tipsList.createEl('li', { text: '✍️  Create new notes to earn Init badges (Lore Seeker Initiate → Eternal Archivist)' });
+		tipsList.createEl('li', { text: '⭐  Rate your notes with note-maturity to earn Achievement badges (Enlightened Novice → Omniscient Sage)' });
+		tipsList.createEl('li', { text: '🔥  Write daily notes to earn Streak badges (Consistent Lore Weaver → Divine Omniscience Overlord)' });
+	}
+
 	// ─── Parsing Logic ─────────────────────────────────────
 	private parseBadges(raw: string): ParsedBadge[] {
 		if (!raw) return [];
 
-		// Build a unified description lookup (name → description) from ALL badge arrays
 		const descriptionMap = this.buildDescriptionMap();
 
 		const parts = raw.split('##');
@@ -93,7 +115,6 @@ export class BadgeModal extends Modal {
 				? fields.slice(2).join(',').trim()
 				: '';
 
-			// Look up description from the unified map
 			const description = descriptionMap.get(name) ?? '';
 
 			// Normalize date
@@ -101,12 +122,10 @@ export class BadgeModal extends Modal {
 			let displayDate: string;
 
 			if (dateStr.length === 10 && dateStr[4] === '-') {
-				// Format: YYYY-MM-DD
 				const [y, m, d] = dateStr.split('-');
 				sortDate = new Date(Number(y), Number(m) - 1, Number(d));
 				displayDate = dateStr;
 			} else {
-				// Format: YY-MM-DD  →  YYYY-MM-DD
 				const [y, m, d] = dateStr.split('-');
 				sortDate = new Date(2000 + Number(y), Number(m) - 1, Number(d));
 				displayDate = `20${y}-${m}-${d}`;
@@ -124,20 +143,12 @@ export class BadgeModal extends Modal {
 		return badges;
 	}
 
-	/**
-	 * Merges all badge arrays from constants.ts into a single Map.
-	 * This ensures every possible badge name gets its description,
-	 * regardless of which array it lives in.
-	 */
 	private buildDescriptionMap(): Map<string, string> {
 		const map = new Map<string, string>();
-
 		const allBadgeArrays = [badgeNames, badgeNamesInit, badges];
 
 		for (const arr of allBadgeArrays) {
 			for (const badge of arr) {
-				// Only set if not already present (first match wins;
-				// you can change priority by reordering the array above)
 				if (!map.has(badge.name)) {
 					map.set(badge.name, badge.description);
 				}

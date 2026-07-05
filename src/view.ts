@@ -99,10 +99,10 @@ export class GamifiedPkmProfileView extends ItemView {
 		}
 
 		// ── 5. Badge Button ───────────────────────────────
-		const badgeButtonContainer = profileContainer.createDiv({ cls: 'badge-button-container' });
+		const badgeButtonContainer = profileContainer.createDiv({ cls: 'pkm-badge-button-container' });
 		const badgeButton = badgeButtonContainer.createEl('button', {
 			text: '🏆 Show Badges',
-			cls: 'show-badges-button'
+			cls: 'pkm-show-badges-button'
 		});
 		badgeButton.addEventListener('click', () => {
 			// Dynamic import avoids a circular dependency at the top of the file

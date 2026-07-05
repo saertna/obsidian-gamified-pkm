@@ -566,7 +566,7 @@
 }
 
 .gpkm-stock-empty {
-	color: var(--text-muted) !important;
+	color: var(--text-muted);
 }
 
 .gpkm-booster-stock-count-crafting {
@@ -576,20 +576,58 @@
 }
 
 /* ─── Badge Modal ─────────────────────────────────── */
-.badge-modal h2 {
+.pkm-badge-modal h2 {
 	margin-top: 0;
 	margin-bottom: 1rem;
 	font-size: 1.4em;
 	text-align: center;
 }
 
-.badge-empty-message {
+/* ─── Empty State ──────────────────────────────────── */
+.pkm-badge-empty-state {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
 	text-align: center;
-	opacity: 0.7;
-	font-style: italic;
+	padding: 24px 16px;
 }
 
-.badge-list {
+.pkm-badge-empty-icon {
+	font-size: 3em;
+	margin-bottom: 12px;
+}
+
+.pkm-badge-empty-title {
+	font-size: 1.1em;
+	font-weight: 600;
+	color: var(--text-normal);
+	margin: 0 0 8px 0;
+	line-height: 1.5;
+}
+
+.pkm-badge-empty-subtitle {
+	font-size: 0.95em;
+	color: var(--text-muted);
+	margin: 0 0 20px 0;
+	line-height: 1.5;
+}
+
+.pkm-badge-empty-tips {
+	text-align: left;
+	list-style: none;
+	padding: 0;
+	margin: 0;
+}
+
+.badge-empty-tips li {
+	padding: 6px 0;
+	font-size: 0.9em;
+	color: var(--text-muted);
+	line-height: 1.4;
+}
+
+/* ─── Badge List ───────────────────────────────────── */
+.pkm-badge-list {
 	display: flex;
 	flex-direction: column;
 	gap: 8px;
@@ -597,7 +635,7 @@
 	overflow-y: auto;
 }
 
-.badge-item {
+.pkm-badge-item {
 	display: flex;
 	align-items: center;
 	gap: 12px;
@@ -609,30 +647,30 @@
 	cursor: default;
 }
 
-.badge-item:hover {
+.pkm-badge-item:hover {
 	background: var(--background-secondary-alt);
 	box-shadow: 0 2px 8px rgba(0,0,0,0.12);
 }
 
-.badge-icon {
+.pkm-badge-icon {
 	font-size: 1.6em;
 	flex-shrink: 0;
 	width: 36px;
 	text-align: center;
 }
 
-.badge-info {
+.pkm-badge-info {
 	flex: 1;
 	min-width: 0;
 }
 
-.badge-name {
+.pkm-badge-name {
 	font-weight: 600;
 	font-size: 1.05em;
 	color: var(--text-normal);
 }
 
-.badge-meta {
+.pkm-badge-meta {
 	display: flex;
 	gap: 12px;
 	margin-top: 2px;
@@ -640,7 +678,7 @@
 	color: var(--text-muted);
 }
 
-.badge-level {
+.pkm-badge-level {
 	background: var(--interactive-accent);
 	color: var(--text-on-accent);
 	padding: 0 6px;
@@ -650,15 +688,16 @@
 }
 
 /* ─── Badge Button in Profile ─────────────────────── */
-.badge-button-container {
+.pkm-badge-button-container {
 	margin-top: 16px;
 	text-align: center;
 }
 
-.gpkm-show-badges-button {
+.pkm-show-badges-button {
 	padding: 8px 20px;
 	font-size: 1em;
 	cursor: pointer;
 }
+
 
 
