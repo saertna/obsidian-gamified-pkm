@@ -3,6 +3,7 @@ export interface Badge {
     name: string;
     description: string;
     level: string;
+	icon: string;
   }
 
 export function checkIfReceiveABadge(levelOld: number, levelNew: number): boolean {
@@ -48,7 +49,7 @@ export function getBadgeForLevel(level: number): Badge {
   export  function getBadgeDetails(badgeNameString: string): Badge {
     "Rückgabe der Badge details wenn der Badge name übergeben wird."
     let index = null;
-    let badgeFound : Badge = { name: "", description: "", level: "" }
+    let badgeFound : Badge = { name: "", description: "", level: "" , icon: ""}
     for (let i = 0; i < badgeNames.length; i++) {
       if (badgeNameString == badgeNames[i].name) {
         index = i;
@@ -79,7 +80,7 @@ export function getBadge(badgeName: string): Badge {
 if(targetBadge){
   return targetBadge;
 } else {
-  return {name: '', description:'',level:''}
+  return {name: '', description:'',level:'', icon:''}
 }
 
 

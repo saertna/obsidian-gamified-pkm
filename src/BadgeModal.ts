@@ -5,6 +5,8 @@ import {
 	badgeNamesInit,
 	badges
 } from './data/constants';
+import { Badge } from './badges'
+import { appendSafeSvg } from './Utils';
 
 // ─── Types ───────────────────────────────────────────────
 interface ParsedBadge {
@@ -13,7 +15,9 @@ interface ParsedBadge {
 	sortDate: Date;
 	level: string;
 	description: string;
+	icon: string;
 }
+
 
 // ─── Modal ───────────────────────────────────────────────
 export class BadgeModal extends Modal {
@@ -27,7 +31,7 @@ export class BadgeModal extends Modal {
 	onOpen() {
 		const { contentEl } = this;
 		contentEl.empty();
-		contentEl.addClass('pkm-badge-modal');
+		contentEl.addClass('badge-modal');
 
 		contentEl.createEl('h2', { text: '🏆 Your Badges' });
 
@@ -42,52 +46,56 @@ export class BadgeModal extends Modal {
 		// Sort by date (earliest → latest)
 		badges.sort((a, b) => a.sortDate.getTime() - b.sortDate.getTime());
 
-		const listEl = contentEl.createDiv({ cls: 'pkm-badge-list' });
+		const listEl = contentEl.createDiv({ cls: 'badge-list' });
 
 		for (const badge of badges) {
-			const badgeEl = listEl.createDiv({ cls: 'pkm-badge-item' });
+			// ── Card container ──
+			const cardEl = listEl.createDiv({ cls: 'badge-card' });
 
-			// Icon placeholder
-			badgeEl.createSpan({ cls: 'pkm-badge-icon', text: '🏅' });
+			// ── Top row: icon + name + meta ──
+			const topRow = cardEl.createDiv({ cls: 'badge-card-top' });
 
-			// Info block
-			const infoEl = badgeEl.createDiv({ cls: 'pkm-badge-info' });
-			infoEl.createDiv({ cls: 'pkm-badge-name', text: badge.name });
+			// Icon
+			const iconEl = topRow.createSpan({ cls: 'badge-icon' });
+			if (badge.icon) {
+				appendSafeSvg(iconEl, badge.icon);
+			} else {
+				iconEl.setText('🏅');
+			}
 
-			const metaEl = infoEl.createDiv({ cls: 'pkm-badge-meta' });
+			// Name + meta
+			const infoEl = topRow.createDiv({ cls: 'badge-info' });
+			infoEl.createDiv({ cls: 'badge-name', text: badge.name });
+
+			const metaEl = infoEl.createDiv({ cls: 'badge-meta' });
 			metaEl.createSpan({ cls: 'badge-date', text: badge.displayDate });
 			if (badge.level) {
-				metaEl.createSpan({ cls: 'pkmbadge-level', text: badge.level });
+				metaEl.createSpan({ cls: 'badge-level', text: badge.level });
 			}
 
-			// Hover tooltip
-			if (badge.description) {
-				badgeEl.title = badge.description;
-			}
+			// ── Description row (always visible) ──
+			const descEl = cardEl.createDiv({ cls: 'badge-description' });
+			descEl.setText(badge.description || 'A mysterious badge awaiting its story...');
 		}
 	}
 
 	// ─── Empty State ───────────────────────────────────────
 	private renderEmptyState(container: HTMLElement) {
-		const emptyEl = container.createDiv({ cls: 'pkm-badge-empty-state' });
+		const emptyEl = container.createDiv({ cls: 'badge-empty-state' });
 
-		// Encouraging icon
-		emptyEl.createDiv({ cls: 'pkm-badge-empty-icon', text: '🌱' });
+		emptyEl.createDiv({ cls: 'badge-empty-icon', text: '🌱' });
 
-		// Main encouraging message
 		emptyEl.createEl('p', {
-			cls: 'pkm-badge-empty-title',
+			cls: 'badge-empty-title',
 			text: 'No badges yet — but every great web of knowledge starts with a single note.'
 		});
 
-		// Action-oriented subtext
 		emptyEl.createEl('p', {
-			cls: 'pkm-badge-empty-subtitle',
+			cls: 'badge-empty-subtitle',
 			text: 'Keep capturing ideas, connecting thoughts, and rating your notes with note-maturity. Your first badge is closer than you think!'
 		});
 
-		// Quick tips on how to earn badges
-		const tipsList = emptyEl.createEl('ul', { cls: 'pkm-badge-empty-tips' });
+		const tipsList = emptyEl.createEl('ul', { cls: 'badge-empty-tips' });
 		tipsList.createEl('li', { text: '✍️  Create new notes to earn Init badges (Lore Seeker Initiate → Eternal Archivist)' });
 		tipsList.createEl('li', { text: '⭐  Rate your notes with note-maturity to earn Achievement badges (Enlightened Novice → Omniscient Sage)' });
 		tipsList.createEl('li', { text: '🔥  Write daily notes to earn Streak badges (Consistent Lore Weaver → Divine Omniscience Overlord)' });
@@ -97,7 +105,7 @@ export class BadgeModal extends Modal {
 	private parseBadges(raw: string): ParsedBadge[] {
 		if (!raw) return [];
 
-		const descriptionMap = this.buildDescriptionMap();
+		const badgeDefMap = this.buildBadgeDefMap();
 
 		const parts = raw.split('##');
 		const badges: ParsedBadge[] = [];
@@ -115,7 +123,9 @@ export class BadgeModal extends Modal {
 				? fields.slice(2).join(',').trim()
 				: '';
 
-			const description = descriptionMap.get(name) ?? '';
+			const badgeDef = badgeDefMap.get(name);
+			const description = badgeDef?.description ?? '';
+			const icon       = badgeDef?.icon ?? '';
 
 			// Normalize date
 			let sortDate: Date;
@@ -136,21 +146,22 @@ export class BadgeModal extends Modal {
 				displayDate,
 				sortDate,
 				level: levelStr,
-				description
+				description,
+				icon
 			});
 		}
 
 		return badges;
 	}
 
-	private buildDescriptionMap(): Map<string, string> {
-		const map = new Map<string, string>();
+	private buildBadgeDefMap(): Map<string, Badge> {
+		const map = new Map<string, Badge>();
 		const allBadgeArrays = [badgeNames, badgeNamesInit, badges];
 
 		for (const arr of allBadgeArrays) {
 			for (const badge of arr) {
 				if (!map.has(badge.name)) {
-					map.set(badge.name, badge.description);
+					map.set(badge.name, badge);
 				}
 			}
 		}
