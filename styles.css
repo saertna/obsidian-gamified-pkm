@@ -576,15 +576,102 @@
 }
 
 /* ─── Badge Modal ─────────────────────────────────── */
-.pkm-badge-modal h2 {
+.badge-modal h2 {
 	margin-top: 0;
 	margin-bottom: 1rem;
 	font-size: 1.4em;
 	text-align: center;
 }
 
-/* ─── Empty State ──────────────────────────────────── */
-.pkm-badge-empty-state {
+/* ─── Badge List ──────────────────────────────────── */
+.badge-list {
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+	max-height: 450px;
+	overflow-y: auto;
+}
+
+/* ─── Badge Card ──────────────────────────────────── */
+.badge-card {
+	display: flex;
+	flex-direction: column;
+	padding: 12px 14px;
+	border-radius: 10px;
+	background: var(--background-secondary);
+	border: 1px solid var(--background-modifier-border);
+	transition: background 0.15s ease, box-shadow 0.15s ease;
+}
+
+.badge-card:hover {
+	background: var(--background-secondary-alt);
+	box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+}
+
+/* Top row: icon + name + meta */
+.badge-card-top {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+}
+
+/* ─── Icon: control SVG size here ─────────────────── */
+.badge-icon {
+	flex-shrink: 0;
+	width: 44px;
+	height: 44px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.badge-icon svg {
+	width: 64px;
+	height: 64px;
+	display: block;
+}
+
+/* ─── Info: name + meta ───────────────────────────── */
+.badge-info {
+	flex: 1;
+	min-width: 0;
+}
+
+.badge-name {
+	font-weight: 600;
+	font-size: 1.05em;
+	color: var(--text-normal);
+}
+
+.badge-meta {
+	display: flex;
+	gap: 10px;
+	margin-top: 2px;
+	font-size: 0.82em;
+	color: var(--text-muted);
+}
+
+.badge-level {
+	background: var(--interactive-accent);
+	color: var(--text-on-accent);
+	padding: 0 6px;
+	border-radius: 4px;
+	font-size: 0.8em;
+	font-weight: 500;
+}
+
+/* ─── Description (always visible) ────────────────── */
+.badge-description {
+	margin-top: 8px;
+	padding-top: 8px;
+	border-top: 1px solid var(--background-modifier-border);
+	font-size: 0.85em;
+	line-height: 1.5;
+	color: var(--text-muted);
+}
+
+/* ─── Empty State ─────────────────────────────────── */
+.badge-empty-state {
 	display: flex;
 	flex-direction: column;
 	align-items: center;
@@ -592,12 +679,12 @@
 	padding: 24px 16px;
 }
 
-.pkm-badge-empty-icon {
+.badge-empty-icon {
 	font-size: 3em;
 	margin-bottom: 12px;
 }
 
-.pkm-badge-empty-title {
+.badge-empty-title {
 	font-size: 1.1em;
 	font-weight: 600;
 	color: var(--text-normal);
@@ -605,14 +692,14 @@
 	line-height: 1.5;
 }
 
-.pkm-badge-empty-subtitle {
+.badge-empty-subtitle {
 	font-size: 0.95em;
 	color: var(--text-muted);
 	margin: 0 0 20px 0;
 	line-height: 1.5;
 }
 
-.pkm-badge-empty-tips {
+.badge-empty-tips {
 	text-align: left;
 	list-style: none;
 	padding: 0;
@@ -626,67 +713,6 @@
 	line-height: 1.4;
 }
 
-/* ─── Badge List ───────────────────────────────────── */
-.pkm-badge-list {
-	display: flex;
-	flex-direction: column;
-	gap: 8px;
-	max-height: 400px;
-	overflow-y: auto;
-}
-
-.pkm-badge-item {
-	display: flex;
-	align-items: center;
-	gap: 12px;
-	padding: 10px 14px;
-	border-radius: 8px;
-	background: var(--background-secondary);
-	border: 1px solid var(--background-modifier-border);
-	transition: background 0.15s ease, box-shadow 0.15s ease;
-	cursor: default;
-}
-
-.pkm-badge-item:hover {
-	background: var(--background-secondary-alt);
-	box-shadow: 0 2px 8px rgba(0,0,0,0.12);
-}
-
-.pkm-badge-icon {
-	font-size: 1.6em;
-	flex-shrink: 0;
-	width: 36px;
-	text-align: center;
-}
-
-.pkm-badge-info {
-	flex: 1;
-	min-width: 0;
-}
-
-.pkm-badge-name {
-	font-weight: 600;
-	font-size: 1.05em;
-	color: var(--text-normal);
-}
-
-.pkm-badge-meta {
-	display: flex;
-	gap: 12px;
-	margin-top: 2px;
-	font-size: 0.85em;
-	color: var(--text-muted);
-}
-
-.pkm-badge-level {
-	background: var(--interactive-accent);
-	color: var(--text-on-accent);
-	padding: 0 6px;
-	border-radius: 4px;
-	font-size: 0.8em;
-	font-weight: 500;
-}
-
 /* ─── Badge Button in Profile ─────────────────────── */
 .pkm-badge-button-container {
 	margin-top: 16px;
@@ -698,6 +724,7 @@
 	font-size: 1em;
 	cursor: pointer;
 }
+
 
 
 

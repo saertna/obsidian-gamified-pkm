@@ -17,7 +17,9 @@ It would mean a lot to me.
 `,
 "0.0.109": `
 ## new
-- received badges can be displayed again from profile leaf.
+- Badges are back 
+  - received badges can be displayed again from profile leaf.
+  - every badge has an image now 
 `,
 "0.0.108": `
 ## hot-fix
