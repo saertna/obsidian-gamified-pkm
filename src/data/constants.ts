@@ -130,28 +130,184 @@ export const boosterRecipes = [
 `, description: "Infuse your knowledge journey with a dash of randomness using the Fortune Infusion booster. Upon activation, you'll receive a randomized amount of valuable ingredients to aid your knowledge crafting endeavors. Sometimes, you'll strike it lucky with a bountiful yield of 10 ingredients, while most of the time, you'll secure a more modest 2. The rarer, the more ingredients you might acquire. Add a twist of unpredictability to your knowledge management strategy and see how your points soar!" },
 ];
 
-//TODO: add an 'icon' field in badgeNames, badgeNamesInit, and Badge, where the icon definition will be.
-// e.g.:
-// export const badgeNames: Badge[] = [
-//   { name: "Enlightened Novice", description: "...", level: "level 5", icon: "📜" },
-//   // ...
-// ];
 
 export const badgeLevels: number[] = [5, 10, 20, 27, 35, 42, 50, 60, 75, 82, 90, 100];
 export const badgeNames: Badge[] = [
-  { name: "Enlightened Novice", description: "Huzzah! You've embarked on the path of knowledge and earned the title of 'Enlightened Novice.' The journey has just begun, and you're already radiating wisdom like a baby sun!", level: "level 5", icon: ``},
-  { name: "Curious Connoisseur", description: "Fantastic! You've embraced the wonders of learning and become a 'Curious Connoisseur.' Your appetite for knowledge is insatiable, like a bottomless bowl of ice cream!" , level: "level 10", icon: `` },
-  { name: "Brainiac Trailblazer", description: "Bravo! As a 'Brainiac Trailblazer,' you've carved your way through a jungle of information and emerged victorious. Your intellect is a beacon shining brightly for others to follow!" , level: "level 20", icon: `` },
-  { name: "Scholarly Trailblazer", description: "Impressive! You're now a 'Scholarly Trailblazer,' boldly venturing through a sea of knowledge with a compass of curiosity and a map of intellect!" , level: "level 27", icon: `` },
-  { name: "Info Ninja Master", description: "Incredible! You've reached the pinnacle of stealthy knowledge management. As an 'Info Ninja Master,' you can snatch information from the shadows like a digital ninja!" , level: "level 35", icon: `` },
-  { name: "Wise Owl Guru", description: "Whoo-hoo! You've achieved 'Wise Owl Guru' status. Your wisdom is legendary, and your hoots of knowledge echo through the forest of ignorance!" , level: "level 42", icon: `` },
-  { name: "Einstein Incarnate", description: "Eureka! You've become an 'Einstein Incarnate,' pushing the boundaries of understanding and bending the fabric of knowledge to your will!" , level: "level 50", icon: `` },
-  { name: "Mastermind Sage", description: "Magnificent! You've ascended to the rank of 'Mastermind Sage,' guiding the rivers of information and enlightening all who seek wisdom!" , level: "level 60", icon: `` },
-  { name: "Cerebral Maestro", description: "Bravissimo! You're now a 'Cerebral Maestro,' conducting the symphony of knowledge with the finesse of a virtuoso conductor!" , level: "level 75", icon: `` },
-  { name: "Zen Knowledge Keeper", description: "Serenity achieved! As a 'Zen Knowledge Keeper,' you maintain a tranquil mind while managing vast pools of knowledge with grace and poise." , level: "level 82", icon: `` },
-  { name: "Grand Archivist Overlord", description: "All hail the 'Grand Archivist Overlord!' You wield the knowledge of ages and hold the keys to unlock the gates of wisdom!" , level: "level 90", icon: `` },
-  { name: "Omniscient Sage of Everything", description: "Congratulations, oh wise one! You've attained the highest level of enlightenment as the 'Omniscient Sage of Everything.' Your understanding knows no bounds, and your wisdom is as vast as the cosmos itself!", level: "level 100", icon: ``  },
+  {
+	  name: "Enlightened Novice",
+	  description: "Huzzah! You've embarked on the path of knowledge and earned the title of 'Enlightened Novice.' The journey has just begun, and you're already radiating wisdom like a baby sun!",
+	  level: "level 5",
+	  icon: `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <circle cx="12" cy="12" r="11" fill="var(--background-secondary)" stroke="var(--background-modifier-border)" stroke-width="1"/>
+  <path d="M12 7V3M15.5 8L18 5.5M8.5 8L6 5.5M19 12H21M3 12H5" stroke="var(--interactive-accent)" stroke-width="1.5" stroke-linecap="round"/>
+  <path d="M12 8C14.2091 8 16 9.79086 16 12C16 14.2091 14.2091 16 12 16C9.79086 16 8 14.2091 8 12C8 9.79086 9.79086 8 12 8Z" fill="var(--interactive-accent)" fill-opacity="0.1" stroke="var(--interactive-accent)" stroke-width="1.5"/>
+  <path d="M11 19C11 19 11.5 16 12.5 14C13.5 12 14.5 10 14.5 8C14.5 8 12.5 9 11.5 11C10.5 13 10.5 15.5 10.5 17.5L10 20" stroke="var(--text-normal)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M10.5 17.5L12.5 16.5M11 15L13 14" stroke="var(--text-normal)" stroke-width="1" stroke-linecap="round"/>
+</svg>`},
+  {
+	  name: "Curious Connoisseur",
+	  description: "Fantastic! You've embraced the wonders of learning and become a 'Curious Connoisseur.' Your appetite for knowledge is insatiable, like a bottomless bowl of ice cream!" ,
+	  level: "level 10",
+	  icon: `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Badge Background: Hexagon -->
+  <path d="M12 2L20.6603 7V17L12 22L3.33975 17V7L12 2Z" fill="var(--background-secondary)" stroke="var(--background-modifier-border)" stroke-width="1.5" stroke-linejoin="round"/>
+  
+  <!-- Stylized Book / Note Page Lines -->
+  <path d="M7 8H17M7 12H11M7 16H12" stroke="var(--text-muted)" stroke-width="1.5" stroke-linecap="round"/>
+  
+  <!-- Magnifying Glass Morphing into Book Structure -->
+  <g stroke="var(--interactive-accent)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <!-- The Lens -->
+    <circle cx="15" cy="14.5" r="3.5"/>
+    <!-- The Handle / Connection to the "Spine" -->
+    <path d="M12.5 12L12.5 6C12.5 6 13.5 5 17 5C20.5 5 21 6 21 6V11"/>
+    <path d="M12.5 12C12.5 12 11.5 11 8 11C4.5 11 4 12 4 12V6C4 6 4.5 5 8 5C11.5 5 12.5 6 12.5 6V12Z" stroke="var(--text-normal)"/>
+    <!-- Lens Reflection/Accent -->
+    <path d="M16 13.5C16 13.5 15.5 13 14.5 13" stroke-width="1"/>
+  </g>
+</svg>` },
+  {
+	  name: "Brainiac Trailblazer",
+	  description: "Bravo! As a 'Brainiac Trailblazer,' you've carved your way through a jungle of information and emerged victorious. Your intellect is a beacon shining brightly for others to follow!" ,
+	  level: "level 20",
+	  icon: `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <circle cx="12" cy="12" r="11" fill="var(--background-secondary)" stroke="var(--background-modifier-border)" stroke-width="1"/>
+  <circle cx="12" cy="12" r="9" stroke="var(--text-muted)" stroke-width="0.75" stroke-dasharray="1 2"/>
+  <path d="M12 3V5M12 19V21M3 12H5M19 12H21" stroke="var(--text-muted)" stroke-width="1.5" stroke-linecap="round"/>
+  <path d="M12 12L14 15L12 21L10 15L12 12Z" fill="var(--background-modifier-border)" stroke="var(--text-muted)" stroke-width="1" stroke-linejoin="round"/>
+  <path d="M12 3L13.5 9L11 11L13 13L12 12L10.5 6L13 4L12 3Z" fill="var(--interactive-accent)" stroke="var(--interactive-accent)" stroke-width="1" stroke-linejoin="round"/>
+  <circle cx="12" cy="12" r="1.5" fill="var(--background-secondary)" stroke="var(--interactive-accent)" stroke-width="1.5"/>
+</svg>` },
+  {
+	  name: "Scholarly Trailblazer",
+	  description: "Impressive! You're now a 'Scholarly Trailblazer,' boldly venturing through a sea of knowledge with a compass of curiosity and a map of intellect!" ,
+	  level: "level 27",
+	  icon: `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <circle cx="12" cy="12" r="11" fill="var(--background-secondary)" stroke="var(--background-modifier-border)" stroke-width="1.5"/>
+  <path d="M11 16L11 6L17 11L11 11" fill="var(--interactive-accent)" stroke="var(--interactive-accent)" stroke-width="1.5" stroke-linejoin="round"/>
+  <path d="M10 16L10 8L6 11L10 11" fill="var(--text-normal)" stroke="var(--text-normal)" stroke-width="1.5" stroke-linejoin="round"/>
+  <path d="M5 15.5C6.5 14.5 8.5 14.5 10 15.5C11.5 16.5 13.5 16.5 15 15.5C16.5 14.5 18.5 14.5 20 15.5" stroke="var(--text-muted)" stroke-width="1.5" stroke-linecap="round"/>
+  <path d="M4 18.5C5.5 17.5 7.5 17.5 9 18.5C10.5 19.5 12.5 19.5 14 18.5C15.5 17.5 17.5 17.5 19 18.5" stroke="var(--text-muted)" stroke-width="1.5" stroke-linecap="round" opacity="0.6"/>
+  <path d="M6 21C7.5 20.2 9.5 20.2 11 21C12.5 21.8 14.5 21.8 16 21C17.5 20.2 19.5 20.2 21 21" stroke="var(--text-muted)" stroke-width="1.5" stroke-linecap="round" opacity="0.3"/>
+</svg>` },
+  {
+	  name: "Info Ninja Master",
+	  description: "Incredible! You've reached the pinnacle of stealthy knowledge management. As an 'Info Ninja Master,' you can snatch information from the shadows like a digital ninja!" ,
+	  level: "level 35",
+	  icon: `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path d="M12 2L21 6.5V17.5L12 22L3 17.5V6.5L12 2Z" fill="var(--background-secondary)" stroke="var(--background-modifier-border)" stroke-width="1.5" stroke-linejoin="round"/>
+  <path d="M12 3L13.5 10.5H21L14 13.5L12 21L10.5 13.5H3L10 10.5L12 3Z" fill="var(--interactive-accent)" stroke="var(--interactive-accent)" stroke-width="1.5" stroke-linejoin="round"/>
+  <path d="M10.5 10.5V13.5H13.5" stroke="var(--background-secondary)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M10.5 10.5L13.5 13.5" stroke="var(--background-secondary)" stroke-width="1.5" stroke-linecap="round"/>
+  <circle cx="12" cy="12" r="1.5" fill="var(--background-secondary)"/>
+</svg>
+` },
+  {
+	  name: "Wise Owl Guru",
+	  description: "Whoo-hoo! You've achieved 'Wise Owl Guru' status. Your wisdom is legendary, and your hoots of knowledge echo through the forest of ignorance!" ,
+	  level: "level 42",
+	  icon: `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path d="M12 2L21 6.5V17.5L12 22L3 17.5V6.5L12 2Z" fill="var(--background-secondary)" stroke="var(--background-modifier-border)" stroke-width="1.5" stroke-linejoin="round"/>
+  <circle cx="8" cy="13" r="3" stroke="var(--interactive-accent)" stroke-width="2"/>
+  <circle cx="16" cy="13" r="3" stroke="var(--interactive-accent)" stroke-width="2"/>
+  <circle cx="8" cy="13" r="1" fill="var(--text-normal)"/>
+  <circle cx="16" cy="13" r="1" fill="var(--text-normal)"/>
+  <path d="M5 10C5 10 8 7 12 11C16 7 19 10 19 10" stroke="var(--text-normal)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M11 11L12 13L13 11" stroke="var(--interactive-accent)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+` },
+  {
+	  name: "Einstein Incarnate",
+	  description: "Eureka! You've become an 'Einstein Incarnate,' pushing the boundaries of understanding and bending the fabric of knowledge to your will!" ,
+	  level: "level 50",
+	  icon: `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path d="M12 2L21 6.5V17.5L12 22L3 17.5V6.5L12 2Z" fill="var(--background-secondary)" stroke="var(--background-modifier-border)" stroke-width="1.5" stroke-linejoin="round"/>
+  <ellipse cx="12" cy="12" rx="8" ry="3" transform="rotate(45 12 12)" stroke="var(--text-muted)" stroke-width="1.2"/>
+  <ellipse cx="12" cy="12" rx="8" ry="3" transform="rotate(-45 12 12)" stroke="var(--text-muted)" stroke-width="1.2"/>
+  <ellipse cx="12" cy="12" rx="8" ry="3" transform="rotate(90 12 12)" stroke="var(--text-muted)" stroke-width="1.2"/>
+  <circle cx="12" cy="12" r="2.5" fill="var(--interactive-accent)" fill-opacity="0.2"/>
+  <path d="M12 9.5L13 11.5H11L12 14.5" stroke="var(--interactive-accent)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="12" cy="12" r="1" fill="var(--interactive-accent)"/>
+</svg>
+` },
+  {
+	  name: "Mastermind Sage",
+	  description: "Magnificent! You've ascended to the rank of 'Mastermind Sage,' guiding the rivers of information and enlightening all who seek wisdom!" ,
+	  level: "level 60",
+	  icon: `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path d="M12 2L21 6.5V17.5L12 22L3 17.5V6.5L12 2Z" fill="var(--background-secondary)" stroke="var(--background-modifier-border)" stroke-width="1.5" stroke-linejoin="round"/>
+  <path d="M12 2V22M3 6.5L21 17.5M21 6.5L3 17.5" stroke="var(--text-muted)" stroke-width="1" opacity="0.5"/>
+  <path d="M12 12L21 6.5M12 12L21 17.5M12 12L12 22M12 12L3 17.5M12 12L3 6.5M12 12L12 2" stroke="var(--interactive-accent)" stroke-width="1.5" stroke-linecap="round"/>
+  <circle cx="12" cy="12" r="3" fill="var(--background-secondary)" stroke="var(--interactive-accent)" stroke-width="1.5"/>
+  <circle cx="12" cy="12" r="1" fill="var(--text-normal)"/>
+  <circle cx="12" cy="2" r="1" fill="var(--interactive-accent)"/>
+  <circle cx="21" cy="6.5" r="1" fill="var(--interactive-accent)"/>
+  <circle cx="21" cy="17.5" r="1" fill="var(--interactive-accent)"/>
+  <circle cx="12" cy="22" r="1" fill="var(--interactive-accent)"/>
+  <circle cx="3" cy="17.5" r="1" fill="var(--interactive-accent)"/>
+  <circle cx="3" cy="6.5" r="1" fill="var(--interactive-accent)"/>
+</svg>
+` },
+  {
+	  name: "Cerebral Maestro",
+	  description: "Bravissimo! You're now a 'Cerebral Maestro,' conducting the symphony of knowledge with the finesse of a virtuoso conductor!" ,
+	  level: "level 75",
+	  icon: `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path d="M12 2L21 6.5V17.5L12 22L3 17.5V6.5L12 2Z" fill="var(--background-secondary)" stroke="var(--background-modifier-border)" stroke-width="1.5" stroke-linejoin="round"/>
+  <path d="M6 8C9 8 10 6 13 6C16 6 18 8 18 11C18 14 16 16 13 16C12.5 16 12 15.8 11.5 15.5" stroke="var(--text-muted)" stroke-width="1.5" stroke-linecap="round"/>
+  <path d="M6 11C9 11 10 9 13 9C16 9 17.5 10.5 17.5 12.5C17.5 14.5 16 15.5 14 15.5" stroke="var(--interactive-accent)" stroke-width="1.5" stroke-linecap="round"/>
+  <path d="M6 14C9 14 10 12 13 12C14.5 12 15.5 13 15.5 14C15.5 15 14.5 15.5 13.5 15.5" stroke="var(--text-normal)" stroke-width="1.5" stroke-linecap="round"/>
+  <circle cx="6" cy="8" r="1" fill="var(--text-muted)"/>
+  <circle cx="6" cy="11" r="1" fill="var(--interactive-accent)"/>
+  <circle cx="6" cy="14" r="1" fill="var(--text-normal)"/>
+  <path d="M12 16V18" stroke="var(--background-modifier-border)" stroke-width="1.5" stroke-linecap="round"/>
+</svg>
+` },
+  {
+	  name: "Zen Knowledge Keeper",
+	  description: "Serenity achieved! As a 'Zen Knowledge Keeper,' you maintain a tranquil mind while managing vast pools of knowledge with grace and poise." ,
+	  level: "level 82",
+	  icon: `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path d="M12 2L21 6.5V17.5L12 22L3 17.5V6.5L12 2Z" fill="var(--background-secondary)" stroke="var(--background-modifier-border)" stroke-width="1.5" stroke-linejoin="round"/>
+  <path d="M6 17.5H18" stroke="var(--text-muted)" stroke-width="1.5" stroke-linecap="round"/>
+  <path d="M12 17.5C12 17.5 9 14.5 9 11.5C9 9.5 10.5 8.5 12 8.5C13.5 8.5 15 9.5 15 11.5C15 14.5 12 17.5 12 17.5Z" stroke="var(--interactive-accent)" stroke-width="1.5" stroke-linejoin="round"/>
+  <path d="M12 17.5C12 17.5 15 16.5 17 14.5C19 12.5 18 10.5 16.5 10C15 9.5 13.5 11 12 13" stroke="var(--text-normal)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M12 17.5C12 17.5 9 16.5 7 14.5C5 12.5 6 10.5 7.5 10C9 9.5 10.5 11 12 13" stroke="var(--text-normal)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="12" cy="6" r="1" fill="var(--interactive-accent)"/>
+</svg>
+` },
+  {
+	  name: "Grand Archivist Overlord",
+	  description: "All hail the 'Grand Archivist Overlord!' You wield the knowledge of ages and hold the keys to unlock the gates of wisdom!" ,
+	  level: "level 90",
+	  icon: `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path d="M12 2L4 5V11C4 16.5 12 22 12 22C12 22 20 16.5 20 11V5L12 2Z" fill="var(--background-secondary)" stroke="var(--background-modifier-border)" stroke-width="1.5" stroke-linejoin="round"/>
+  <circle cx="12" cy="8" r="3" stroke="var(--interactive-accent)" stroke-width="2"/>
+  <path d="M12 11V18M12 14H15M12 16H15M12 18H15" stroke="var(--text-normal)" stroke-width="2" stroke-linecap="round"/>
+  <circle cx="12" cy="8" r="1" fill="var(--interactive-accent)"/>
+</svg>
+` },
+  {
+	  name: "Omniscient Sage of Everything",
+	  description: "Congratulations, oh wise one! You've attained the highest level of enlightenment as the 'Omniscient Sage of Everything.' Your understanding knows no bounds, and your wisdom is as vast as the cosmos itself!",
+	  level: "level 100",
+	  icon: `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <circle cx="12" cy="12" r="11" fill="var(--background-secondary)" stroke="var(--background-modifier-border)" stroke-width="1.5"/>
+  <path d="M12 5L20 17H4L12 5Z" stroke="var(--text-muted)" stroke-width="1.5" stroke-linejoin="round"/>
+  <path d="M8 13.5C8 13.5 9.5 11 12 11C14.5 11 16 13.5 16 13.5C16 13.5 14.5 16 12 16C9.5 16 8 13.5 8 13.5Z" stroke="var(--interactive-accent)" stroke-width="1.5" stroke-linejoin="round"/>
+  <circle cx="12" cy="13.5" r="1.5" fill="var(--text-normal)"/>
+  <circle cx="12" cy="2" r="0.8" fill="var(--interactive-accent)"/>
+  <circle cx="19.1" cy="4.9" r="0.6" fill="var(--interactive-accent)" opacity="0.6"/>
+  <circle cx="22" cy="12" r="0.8" fill="var(--interactive-accent)"/>
+  <circle cx="19.1" cy="19.1" r="0.6" fill="var(--interactive-accent)" opacity="0.6"/>
+  <circle cx="12" cy="22" r="0.8" fill="var(--interactive-accent)"/>
+  <circle cx="4.9" cy="19.1" r="0.6" fill="var(--interactive-accent)" opacity="0.6"/>
+  <circle cx="2" cy="12" r="0.8" fill="var(--interactive-accent)"/>
+  <circle cx="4.9" cy="4.9" r="0.6" fill="var(--interactive-accent)" opacity="0.6"/>
+</svg>
+`  },
 ];
+
 export const badgeInitLevels: number[] = [0, 3, 7, 15, 23, 30, 35, 42, 50, 60, 75, 82, 90, 100];
 export const badgeNamesInit: Badge[] = [
   { name: "Lore Seeker Initiate", description: "Welcome to the journey of knowledge! As a 'Lore Seeker Initiate,' you've taken your first steps into the world of organized wisdom. Your quest has just begun, and with each note you make, you lay the foundation for a future rich with insights and understanding. Your journey starts here, and the path ahead is filled with potential and discovery.", level: "level 1", icon: ``},
