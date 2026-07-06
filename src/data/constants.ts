@@ -310,20 +310,188 @@ export const badgeNames: Badge[] = [
 
 export const badgeInitLevels: number[] = [0, 3, 7, 15, 23, 30, 35, 42, 50, 60, 75, 82, 90, 100];
 export const badgeNamesInit: Badge[] = [
-  { name: "Lore Seeker Initiate", description: "Welcome to the journey of knowledge! As a 'Lore Seeker Initiate,' you've taken your first steps into the world of organized wisdom. Your quest has just begun, and with each note you make, you lay the foundation for a future rich with insights and understanding. Your journey starts here, and the path ahead is filled with potential and discovery.", level: "level 1", icon: ``},
-  { name: "Lore Apprentice", description: "You've hit the ground running with your existing knowledge treasures! You're already an 'Lore Apprentice,' armed with a wealth of wisdom and ready to shape it further.", level: "level 3", icon: `` },
-  { name: "Savvy Scholar", description: "Your existing notes have given you a head start! You're now a 'Savvy Scholar,' confidently diving into the sea of information with a treasure trove of insights." , level: "level 7", icon: `` },
-  { name: "Sage's Foundation", description: "Building upon your pre-existing notes, you're establishing the 'Sage's Foundation' for an even grander edifice of knowledge. Your groundwork is impressive!" , level: "level 15", icon: `` },
-  { name: "Wisdom Seedling", description: "Your existing notes have nurtured the growth of a 'Wisdom Seedling.' You're cultivating your garden of knowledge with care and patience." , level: "level 23", icon: `` },
-  { name: "Prodigious Preparer", description: "Thanks to your prior efforts, you're a 'Prodigious Preparer,' standing tall among your notes and ready to conquer new realms of understanding." , level: "level 30", icon: `` },
-  { name: "Epic Epiphany Explorer", description: "Your past notes have led you to the grand 'Epic Epiphany Explorer' status! You've already been down a few rabbit holes and come out with dazzling discoveries." , level: "level 35", icon: `` },
-  { name: "Lore Luminary", description: "With your existing notes illuminating your path, you've become a 'Lore Luminary,' shining light on the mysteries of the universe, one idea at a time." , level: "level 42", icon: `` },
-  { name: "Scribe of the Ancients", description: "Your mastery of personal knowledge management has elevated you to the esteemed rank of the 'Scribe of the Ancients.' Your existing notes have transformed into treasures, bridging the gap between old wisdom and new discoveries." , level: "level 50", icon: `` },
-  { name: "Eureka Maestro", description: "Armed with your existing notes, you're the 'Eureka Maestro,' composing a symphony of insights that harmonize with the melody of discovery." , level: "level 60", icon: `` },
-  { name: "Chronicles Champion", description: "With your existing notes standing as a testament, you've ascended to the illustrious 'Chronicles Champion' level. Your journey through time's tapestry has brought forth a symphony of insights that harmonize past and present." , level: "level 75", icon: `` },
-  { name: "The Curious Cartographer", description: "As 'The Curious Cartographer,' your existing notes have mapped out uncharted territories of understanding. Your curiosity knows no bounds, and your notes are the compass guiding your exploration." , level: "level 82", icon: `` },
-  { name: "Sultan of Synthesis", description: "Your existing notes have made you the 'Sultan of Synthesis.' You're the master weaver, threading together threads of information into a rich tapestry of insight." , level: "level 90", icon: `` },
-  { name: "Eternal Archivist", description: "At the pinnacle of personal knowledge mastery, you're now revered as the 'Eternal Archivist.' Your existing notes, carefully curated and nurtured, stand as immortal beacons, guiding seekers through the labyrinth of knowledge across ages." , level: "level 100", icon: `` },
+  {
+	  name: "Lore Seeker Initiate",
+	  description: "Welcome to the journey of knowledge! As a 'Lore Seeker Initiate,' you've taken your first steps into the world of organized wisdom. Your quest has just begun, and with each note you make, you lay the foundation for a future rich with insights and understanding. Your journey starts here, and the path ahead is filled with potential and discovery.",
+	  level: "level 1",
+	  icon: `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect x="3" y="3" width="18" height="18" rx="4" fill="var(--background-secondary)" stroke="var(--background-modifier-border)" stroke-width="1.5"/>
+  <path d="M7 16H17" stroke="var(--interactive-accent)" stroke-width="2" stroke-linecap="round"/>
+  <path d="M14 6H7V13H17V9L14 6Z" stroke="var(--text-normal)" stroke-width="1.5" stroke-linejoin="round"/>
+  <path d="M14 6V9H17" stroke="var(--text-normal)" stroke-width="1.5" stroke-linejoin="round"/>
+</svg>
+`},
+  {
+	  name: "Lore Apprentice",
+	  description: "You've hit the ground running with your existing knowledge treasures! You're already an 'Lore Apprentice,' armed with a wealth of wisdom and ready to shape it further.",
+	  level: "level 3",
+	  icon: `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect x="4" y="4" width="16" height="16" rx="2" fill="var(--background-secondary)" stroke="var(--background-modifier-border)" stroke-width="1.5"/>
+  <path d="M7 16L12 11M9 18L14 13" stroke="var(--text-muted)" stroke-width="1.5" stroke-linecap="round"/>
+  <path d="M11.5 12.5L16 8" stroke="var(--text-normal)" stroke-width="1.5" stroke-linecap="round"/>
+  <path d="M15 7L17 9" stroke="var(--text-normal)" stroke-width="1.5" stroke-linecap="round"/>
+  <path d="M7 9L11 7L13 11L9 13L7 9Z" fill="var(--interactive-accent)" stroke="var(--interactive-accent)" stroke-width="1.5" stroke-linejoin="round"/>
+  <path d="M11 7L13 9" stroke="var(--background-secondary)" stroke-width="1.5" stroke-linecap="round"/>
+</svg>
+` },
+  {
+	  name: "Savvy Scholar",
+	  description: "Your existing notes have given you a head start! You're now a 'Savvy Scholar,' confidently diving into the sea of information with a treasure trove of insights." ,
+	  level: "level 7",
+	  icon: `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path d="M4 10C4 8.89543 4.89543 8 6 8H18C19.1046 8 20 8.89543 20 10V18C20 19.1046 19.1046 20 18 20H6C4.89543 20 4 19.1046 4 18V10Z" fill="var(--background-secondary)" stroke="var(--background-modifier-border)" stroke-width="1.5"/>
+  <path d="M4 12H20" stroke="var(--background-modifier-border)" stroke-width="1.5"/>
+  <rect x="10" y="11" width="4" height="3" rx="0.5" fill="var(--background-secondary)" stroke="var(--text-muted)" stroke-width="1.5"/>
+  <path d="M12 6L14 8L12 10L10 8L12 6Z" fill="var(--interactive-accent)"/>
+  <path d="M8 5L9.5 7L8 9L6.5 7L8 5Z" fill="var(--text-normal)"/>
+  <path d="M16 5L17.5 7L16 9L14.5 7L16 5Z" fill="var(--text-normal)"/>
+</svg>
+` },
+  {
+	  name: "Sage's Foundation",
+	  description: "Building upon your pre-existing notes, you're establishing the 'Sage's Foundation' for an even grander edifice of knowledge. Your groundwork is impressive!" ,
+	  level: "level 15",
+	  icon: `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path d="M12 2L21 6.5V17.5L12 22L3 17.5V6.5L12 2Z" fill="var(--background-secondary)" stroke="var(--background-modifier-border)" stroke-width="1.5" stroke-linejoin="round"/>
+  <rect x="6" y="16" width="12" height="2" rx="0.5" fill="var(--interactive-accent)"/>
+  <rect x="7.5" y="13" width="9" height="2" rx="0.5" fill="var(--text-normal)"/>
+  <rect x="9" y="10" width="6" height="2" rx="0.5" fill="var(--text-muted)"/>
+  <path d="M12 7V9" stroke="var(--interactive-accent)" stroke-width="1.5" stroke-linecap="round"/>
+</svg>
+` },
+  {
+	  name: "Wisdom Seedling",
+	  description: "Your existing notes have nurtured the growth of a 'Wisdom Seedling.' You're cultivating your garden of knowledge with care and patience." ,
+	  level: "level 23",
+	  icon: `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <circle cx="12" cy="12" r="10" fill="var(--background-secondary)" stroke="var(--background-modifier-border)" stroke-width="1.5"/>
+  <path d="M7 17H17" stroke="var(--text-muted)" stroke-width="1.5" stroke-linecap="round"/>
+  <path d="M12 17V11" stroke="var(--interactive-accent)" stroke-width="1.5" stroke-linecap="round"/>
+  <path d="M12 13C12 13 13 10 16 10C16 10 15 13 12 13Z" fill="var(--interactive-accent)"/>
+  <path d="M12 11C12 11 11 8 8 8C8 8 9 11 12 11Z" fill="var(--text-normal)"/>
+</svg>
+` },
+  {
+	  name: "Prodigious Preparer",
+	  description: "Thanks to your prior efforts, you're a 'Prodigious Preparer,' standing tall among your notes and ready to conquer new realms of understanding." ,
+	  level: "level 30",
+	  icon: `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path d="M12 2L20 7V17L12 22L4 17V7L12 2Z" fill="var(--background-secondary)" stroke="var(--background-modifier-border)" stroke-width="1.5" stroke-linejoin="round"/>
+  <path d="M12 22V12L20 7" stroke="var(--text-muted)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M12 12L4 7" stroke="var(--text-muted)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M12 7.5L16 5M12 12L16 9.5M8 9.5L12 7.5M8 14.5L12 12.5M12 17.5L16 15M8 5L12 3L16 5" stroke="var(--interactive-accent)" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" opacity="0.8"/>
+  <path d="M12 12L20 7L12 2L4 7L12 12Z" stroke="var(--interactive-accent)" stroke-width="1.5" stroke-linejoin="round"/>
+</svg>
+` },
+  {
+	  name: "Epic Epiphany Explorer",
+	  description: "Your past notes have led you to the grand 'Epic Epiphany Explorer' status! You've already been down a few rabbit holes and come out with dazzling discoveries." ,
+	  level: "level 35",
+	  icon: `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" fill="var(--background-secondary)" stroke="var(--background-modifier-border)" stroke-width="1.5"/>
+  <path d="M9 19H15M8 16H16M8 8H16M9 5H15M9 5C9 4 10 3 12 3C14 3 15 4 15 5" stroke="var(--text-muted)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M8 8V16M16 8V16" stroke="var(--text-muted)" stroke-width="1.5" stroke-linecap="round"/>
+  <path d="M12 9L14.5 12L12 15L9.5 12L12 9Z" fill="var(--interactive-accent)" stroke="var(--interactive-accent)" stroke-width="1" stroke-linejoin="round"/>
+  <path d="M12 9V15M9.5 12H14.5" stroke="var(--background-secondary)" stroke-width="0.5" stroke-linecap="round"/>
+</svg>
+` },
+  {
+	  name: "Lore Luminary",
+	  description: "With your existing notes illuminating your path, you've become a 'Lore Luminary,' shining light on the mysteries of the universe, one idea at a time." ,
+	  level: "level 42",
+	  icon: `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path d="M12 2L3.33975 7V17L12 22L20.6603 17V7L12 2Z" fill="var(--background-secondary)" stroke="var(--background-modifier-border)" stroke-width="1.5" stroke-linejoin="round"/>
+  <path d="M10 20L11 14H13L14 20H10Z" fill="var(--text-muted)"/>
+  <path d="M12 14L9 11.5L12 4L15 11.5L12 14Z" fill="var(--interactive-accent)"/>
+  <path d="M12 14L10 12.5L12 7.5L14 12.5L12 14Z" fill="var(--background-secondary)" opacity="0.4"/>
+  <path d="M12 14L11 13L12 10.5L13 13L12 14Z" fill="var(--background-secondary)"/>
+</svg>
+` },
+  {
+	  name: "Scribe of the Ancients",
+	  description: "Your mastery of personal knowledge management has elevated you to the esteemed rank of the 'Scribe of the Ancients.' Your existing notes have transformed into treasures, bridging the gap between old wisdom and new discoveries." ,
+	  level: "level 50",
+	  icon: `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path d="M12 2L3.33975 7V17L12 22L20.6603 17V7L12 2Z" fill="var(--background-secondary)" stroke="var(--background-modifier-border)" stroke-width="1.5" stroke-linejoin="round"/>
+  <path d="M7 6H13C14.1046 6 15 6.89543 15 8V16C15 17.1046 14.1046 18 13 18H7C5.89543 18 5 17.1046 5 16V8C5 6.89543 5.89543 6 7 6Z" stroke="var(--text-muted)" stroke-width="1.5"/>
+  <path d="M5 8.5C5 7.67157 5.67157 7 6.5 7H13.5C14.3284 7 15 7.67157 15 8.5V8.5C15 9.32843 14.3284 10 13.5 10H6.5C5.67157 10 5 9.32843 5 8.5V8.5Z" fill="var(--background-secondary)" stroke="var(--text-muted)" stroke-width="1.2"/>
+  <path d="M15 15.5C15 14.6716 15.6716 14 16.5 14H18.5" stroke="var(--interactive-accent)" stroke-width="1.5" stroke-linecap="round"/>
+  <path d="M18.5 6L16 12L17.5 18L18.5 19L19.5 18L21 12L18.5 6Z" fill="var(--interactive-accent)"/>
+  <path d="M18.5 14V19" stroke="var(--background-secondary)" stroke-width="0.8" stroke-linecap="round"/>
+  <path d="M7.5 13H12.5M7.5 15.5H11.5" stroke="var(--text-muted)" stroke-width="1.2" stroke-linecap="round"/>
+</svg>
+` },
+  {
+	  name: "Eureka Maestro",
+	  description: "Armed with your existing notes, you're the 'Eureka Maestro,' composing a symphony of insights that harmonize with the melody of discovery." ,
+	  level: "level 60",
+	  icon: `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <circle cx="12" cy="12" r="11" fill="var(--background-secondary)" stroke="var(--background-modifier-border)" stroke-width="1.5"/>
+  <path d="M9 18H15M9.5 20.5H14.5" stroke="var(--text-muted)" stroke-width="1.5" stroke-linecap="round"/>
+  <path d="M12 18V16M12 4V3M17.5 6L18.5 5M6.5 6L5.5 5M19 11H20M5 11H4" stroke="var(--background-modifier-border)" stroke-width="1" stroke-linecap="round"/>
+  <path d="M12 16C15.3137 16 18 13.3137 18 10C18 6.68629 15.3137 4 12 4C8.68629 4 6 6.68629 6 10C6 13.3137 8.68629 16 12 16Z" stroke="var(--text-normal)" stroke-width="1.5"/>
+  <path d="M11 13.5C11 13.5 13.5 13.5 13.5 11C13.5 8.5 11.5 7.5 10.5 8.5C9.5 9.5 11 11 12 11C13 11 14 10 14 8" stroke="var(--interactive-accent)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="14" cy="7.5" r="0.8" fill="var(--interactive-accent)"/>
+</svg>
+` },
+  {
+	  name: "Chronicles Champion",
+	  description: "With your existing notes standing as a testament, you've ascended to the illustrious 'Chronicles Champion' level. Your journey through time's tapestry has brought forth a symphony of insights that harmonize past and present." ,
+	  level: "level 75",
+	  icon: `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path d="M12 2L19 5V11C19 15.2784 16.0093 19.058 12 22C7.99067 19.058 5 15.2784 5 11V5L12 2Z" fill="var(--background-secondary)" stroke="var(--background-modifier-border)" stroke-width="1.5"/>
+  <path d="M8 7H16M8 11L12 14L16 11M11 14V16.5" stroke="var(--text-muted)" stroke-width="1.2" stroke-linecap="round"/>
+  <path d="M10 16.5H14V19H10V16.5Z" stroke="var(--interactive-accent)" stroke-width="1.2"/>
+  <path d="M12 7V10" stroke="var(--interactive-accent)" stroke-width="1.5" stroke-linecap="round">
+    <animate attributeName="stroke-dasharray" values="0,10;5,5" dur="3s" repeatCount="indefinite" />
+  </path>
+  <path d="M8 17.5C8 17.5 9 16.5 12 16.5C15 16.5 16 17.5 16 17.5V20C16 20 15 19 12 19C9 19 8 20 8 20V17.5Z" fill="var(--interactive-accent)" opacity="0.2"/>
+  <path d="M8 17.5C8 17.5 9 16.5 12 16.5C15 16.5 16 17.5 16 17.5M8 18.8C8 18.8 9 17.8 12 17.8C15 17.8 16 18.8 16 18.8M8 20C8 20 9 19 12 19C15 19 16 20 16 20M12 16.5V20" stroke="var(--text-normal)" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+` },
+  {
+	  name: "The Curious Cartographer",
+	  description: "As 'The Curious Cartographer,' your existing notes have mapped out uncharted territories of understanding. Your curiosity knows no bounds, and your notes are the compass guiding your exploration." ,
+	  level: "level 82",
+	  icon: `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <circle cx="12" cy="12" r="11" fill="var(--background-secondary)" stroke="var(--background-modifier-border)" stroke-width="1.5"/>
+  <circle cx="12" cy="12" r="8" stroke="var(--text-muted)" stroke-width="1" stroke-dasharray="1 2"/>
+  <circle cx="12" cy="12" r="5" stroke="var(--interactive-accent)" stroke-width="1.5"/>
+  <path d="M12 2V5M12 19V22M2 12H5M19 12H22" stroke="var(--text-muted)" stroke-width="1.5" stroke-linecap="round"/>
+  <path d="M12 12L18 6" stroke="var(--interactive-accent)" stroke-width="2" stroke-linecap="round"/>
+  <path d="M12 12L15 15" stroke="var(--text-normal)" stroke-width="2" stroke-linecap="round"/>
+  <circle cx="12" cy="12" r="1.5" fill="var(--text-normal)"/>
+  <path d="M7 17L5 19M17 7L19 5" stroke="var(--text-muted)" stroke-width="1" stroke-linecap="round"/>
+</svg>
+` },
+  {
+	  name: "Sultan of Synthesis",
+	  description: "Your existing notes have made you the 'Sultan of Synthesis.' You're the master weaver, threading together threads of information into a rich tapestry of insight." ,
+	  level: "level 90",
+	  icon: `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path d="M12 21.5L20.2272 16.75V7.25L12 2.5L3.77277 7.25V16.75L12 21.5Z" fill="var(--background-secondary)" stroke="var(--background-modifier-border)" stroke-width="1.5"/>
+  <circle cx="12" cy="12" r="3.5" stroke="var(--interactive-accent)" stroke-width="2"/>
+  <path d="M12 6V8.5" stroke="var(--text-normal)" stroke-width="1.5" stroke-linecap="round"/>
+  <path d="M12 8.5L10.5 7.5M12 8.5L13.5 7.5" stroke="var(--text-normal)" stroke-width="1.5" stroke-linecap="round"/>
+  <path d="M12 18V15.5" stroke="var(--text-normal)" stroke-width="1.5" stroke-linecap="round"/>
+  <path d="M12 15.5L10.5 16.5M12 15.5L13.5 16.5" stroke="var(--text-normal)" stroke-width="1.5" stroke-linecap="round"/>
+  <path d="M6 12H8.5" stroke="var(--text-normal)" stroke-width="1.5" stroke-linecap="round"/>
+  <path d="M8.5 12L7.5 10.5M8.5 12L7.5 13.5" stroke="var(--text-normal)" stroke-width="1.5" stroke-linecap="round"/>
+  <path d="M18 12H15.5" stroke="var(--text-normal)" stroke-width="1.5" stroke-linecap="round"/>
+  <path d="M15.5 12L16.5 10.5M15.5 12L16.5 13.5" stroke="var(--text-normal)" stroke-width="1.5" stroke-linecap="round"/>
+  <circle cx="12" cy="12" r="1" fill="var(--interactive-accent)"/>
+</svg>
+` },
+  {
+	  name: "Eternal Archivist",
+	  description: "At the pinnacle of personal knowledge mastery, you're now revered as the 'Eternal Archivist.' Your existing notes, carefully curated and nurtured, stand as immortal beacons, guiding seekers through the labyrinth of knowledge across ages." ,
+	  level: "level 100",
+	  icon: `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path d="M12 21.5L20.2272 16.75V7.25L12 2.5L3.77277 7.25V16.75L12 21.5Z" fill="var(--background-secondary)" stroke="var(--background-modifier-border)" stroke-width="1.5"/>
+  <path d="M12 16V17.5M12 16C10 16 7 15.5 5 17.5V9.5C7 7.5 10 8 12 8M12 16C14 16 17 15.5 19 17.5V9.5C17 7.5 14 8 12 8M12 16V8M12 8C12 6.5 12 5.5 12 5" stroke="var(--text-muted)" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M14.5 10.5C16.5 8.5 19.5 8.5 19.5 12C19.5 15.5 16.5 15.5 14.5 13.5L9.5 10.5C7.5 8.5 4.5 8.5 4.5 12C4.5 15.5 7.5 15.5 9.5 13.5L14.5 10.5Z" stroke="var(--interactive-accent)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+` },
 ];
 
 
