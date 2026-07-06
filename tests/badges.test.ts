@@ -1,6 +1,5 @@
 import {
     checkIfReceiveABadge,
-    getBadgeForLevel,
     getBadgeForInitLevel,
     Badge,
     getBadgeDetails,
