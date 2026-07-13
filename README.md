@@ -106,8 +106,37 @@ A good number of links from the rated one to other notes will increase the ratin
 (It's on the roadmap to deal with Hub/MOC notes which have by nature high link numbers)
 
 
-## More information and Help
-You can use the Discussion Area here at GitHub to speak about issues, ideas, and ask questions. For issues, use the issues area to raise them.
+## 🤝 Contributing
+
+This project is driven by a mission to strengthen society through better thinking. Whether you are a PKM enthusiast, a developer, or a gamification expert, your contribution helps bridge the "Second Brain Gap."
+
+I welcome contributions in the following areas:
+
+### 🧠 Share Your Insights & Feedback
+The core of this plugin is to make the "boring" parts of PKM motivating. I’d love to hear from you in the [GitHub Discussions](https://github.com/saertna/obsidian-gamified-pkm/discussions):
+*   **Motivation Mechanics:** Which game elements (boosters, levels, ratings) keep you going? What feels like a "grind"?
+*   **PKM Methodology:** How do you use the plugin with your Zettelkasten? I am particularly interested in how we can better reward **atomic notes** and **meaningful linking**.
+*   **Gamification Theory:** I follow Yu-kai Chou’s **Octalysis Framework**. If you have ideas on how to better implement Core Drives like *Development & Accomplishment* or *Epic Meaning & Calling*, let's talk!
+
+### 🐛 Bug Reporting & Quality Assurance
+As a professional in Software Qualification, I value precision.
+*   **Report Bugs:** If something isn't working, please [open an issue](https://github.com/saertna/obsidian-gamified-pkm/issues) with clear steps to reproduce it.
+*   **Onboarding Experience:** Was the setup easy? If the "First Time User Experience" was confusing, your feedback helps me improve the flow for everyone.
+
+### 💻 Code & Technical Improvements
+If you want to contribute to the codebase, Pull Requests are welcome!
+*   **Improve the Code:** Help me refine the logic or add new features from the roadmap.
+*   **Test Coverage:** This is a high priority. I am looking to increase unit test coverage and, more importantly, add **integration tests** to ensure all game mechanics work together seamlessly.
+*   **Optimization:** If you see a way to make the rating calculations more efficient, I’m all ears.
+
+### 🚀 How to get started
+1.  **Fork** the repository.
+2.  **Create a branch** for your feature or bug fix.
+3.  **Submit a Pull Request** with a detailed description of your changes.
+
+---
+*“Better thinking leads to better outcomes. Let’s build a tool that makes thinking an adventure.”*
+
 
 ## Roadmap
 Upcoming developments are in store for the Gamification Plugin! Here's a glimpse into the future:
@@ -116,12 +145,11 @@ Upcoming developments are in store for the Gamification Plugin! Here's a glimpse
 	- points for index/MOC creation and quality levels
 	- points for the chain of thoughts
 - overview in the sidebar for game elements
-	- Challenge status
 	- active boosters
 - boosters
 	- additional boosters
 - badges
-	- link to open-badges
 	- Add further badges for achievements
 - new challenges
 - Quests to follow and fulfill
+- more stats information on hoover in status bar
